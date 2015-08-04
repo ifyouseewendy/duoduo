@@ -1,4 +1,9 @@
 ActiveAdmin.register AdminUser do
+  menu\
+    priority: 21,
+    label: proc{ I18n.t("active_admin.admin_user") }
+    # if: proc{ current_user.can_edit_posts? }
+
   permit_params :email, :password, :password_confirmation
 
   index do
