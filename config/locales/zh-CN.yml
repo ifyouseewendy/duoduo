@@ -1,3 +1,6 @@
 zh-CN:
   active_admin:
     admin_user: "账户管理"
+    batch_actions:
+      labels:
+        flag: "标记"

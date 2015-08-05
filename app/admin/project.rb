@@ -34,4 +34,110 @@ ActiveAdmin.register Project do
     title :name
     body  :description
   end
+
+  filter :name
+  filter :description
+
+  scope ->{ Date.today.strftime '%A' }, :all
+
+  sidebar :help, priority: 20 do
+    span "Need help? Email us at "
+    link_to "help@example.com", "mailto:help@example.com"
+  end
+
+  collection_action :test_collection do
+    render text: 'hello world'
+  end
+
+  member_action :test_collection do
+    render text: 'hello world'
+  end
+
+  # Batch Action
+  batch_action :flag, confirm: "Are you sure??", form: {
+    type: %w[Offensive Spam Other],
+    reason: :text,
+    notes:  :textarea,
+    hide:   :checkbox,
+    date:   :datepicker
+  } do |ids|
+    render text: "hello world"
+  end
+
+  # form do |f|
+  #   inputs 'Details' do
+  #     input :name
+  #     input :created_at, label: "Publish Post At"
+  #     li "Created at #{f.object.created_at}" unless f.object.new_record?
+  #   end
+  #   panel 'Markup' do
+  #     "The following can be used in the content below..."
+  #   end
+  #   inputs 'Content', :description
+  #   para "Press cancel to return to the list without saving."
+  #   actions
+  # end
+
+  form do |f|
+    tabs do
+      tab 'Basic' do
+        f.inputs 'Basic Details' do
+          f.input :name
+          f.input :created_at
+        end
+      end
+
+      tab 'Advanced' do
+        f.inputs 'Advanced Details' do
+          f.input :description
+        end
+      end
+    end
+    f.actions
+  end
+
+  # show do
+  #   h3 project.name
+  #   div do
+  #     simple_format project.description
+  #   end
+  # end
+
+  show do
+    tabs do
+      tab "Tab 1" do
+        panel "Project Details" do
+          attributes_table_for project do
+            row :name
+            row 'Tags' do
+              project.tickets.each do |ticket|
+                a ticket.name, href: admin_project_path
+                text_node "&nbsp".html_safe
+              end
+            end
+          end
+        end
+      status_tag 'active', :ok, class: 'important', id: 'status_123', label: 'on'
+      end
+      tab "Tab 2" do
+        attributes_table do
+          row :name
+          row :description
+        end
+        active_admin_comments
+      end
+    end
+  end
+
+
+  action_item :view, only: :show do
+    link_to 'View on site', "http://baidu.com"
+  end
+
+  sidebar "Details", only: :show do
+    attributes_table_for project do
+      row :name
+      row :description
+    end
+  end
 end
