@@ -12,6 +12,7 @@ class ApplicationPolicy
   end
 
   def show?
+    return true if ActiveAdmin::Page === record
     scope.where(:id => record.id).exists?
   end
 
@@ -40,7 +41,7 @@ class ApplicationPolicy
   end
 
   def scope
-    Pundit.policy_scope!(user, record.class)
+    Scope.new(user, record.class).resolve
   end
 
   class Scope
