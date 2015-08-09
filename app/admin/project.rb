@@ -49,6 +49,11 @@ ActiveAdmin.register Project do
     render text: 'hello world'
   end
 
+  collection_action :demo do
+    require'pry';binding.pry
+    render text: 'hello world'
+  end
+
   member_action :test_collection do
     render text: 'hello world'
   end
