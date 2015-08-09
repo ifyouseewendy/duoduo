@@ -49,12 +49,13 @@ ActiveAdmin.register Project do
     render text: 'hello world'
   end
 
-  collection_action :demo do
-    require'pry';binding.pry
+  collection_action :demo_collection do
+    # Use authorized?(:demo, Project) to check status
     render text: 'hello world'
   end
 
-  member_action :test_collection do
+  member_action :demo_member do
+    # Use authorize!(:demo, Project) to raise ActiveAdmin::AccessDenied, and redirect to /admin
     render text: 'hello world'
   end
 
