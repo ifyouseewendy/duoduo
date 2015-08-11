@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150810023118) do
+ActiveRecord::Schema.define(version: 20150811025104) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,12 +50,99 @@ ActiveRecord::Schema.define(version: 20150810023118) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
+  create_table "engineering_corporations", force: :cascade do |t|
+    t.integer  "nest_id"
+    t.text     "name"
+    t.date     "start_date"
+    t.date     "project_date"
+    t.text     "project_name"
+    t.money    "project_amount",        scale: 2
+    t.money    "admin_amount",          scale: 2
+    t.money    "total_amount",          scale: 2
+    t.date     "income_date"
+    t.money    "income_amount",         scale: 2
+    t.date     "outcome_date"
+    t.text     "outcome_referee"
+    t.money    "outcome_amount",        scale: 2
+    t.text     "proof"
+    t.money    "actual_project_amount", scale: 2
+    t.money    "actual_admin_amount",   scale: 2
+    t.boolean  "already_get_contract"
+    t.boolean  "already_sign_dispatch"
+    t.text     "remark"
+    t.text     "jiyi_company_name"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "engineering_corporations", ["actual_admin_amount"], name: "index_engineering_corporations_on_actual_admin_amount", using: :btree
+  add_index "engineering_corporations", ["actual_project_amount"], name: "index_engineering_corporations_on_actual_project_amount", using: :btree
+  add_index "engineering_corporations", ["admin_amount"], name: "index_engineering_corporations_on_admin_amount", using: :btree
+  add_index "engineering_corporations", ["already_get_contract"], name: "index_engineering_corporations_on_already_get_contract", using: :btree
+  add_index "engineering_corporations", ["already_sign_dispatch"], name: "index_engineering_corporations_on_already_sign_dispatch", using: :btree
+  add_index "engineering_corporations", ["income_amount"], name: "index_engineering_corporations_on_income_amount", using: :btree
+  add_index "engineering_corporations", ["income_date"], name: "index_engineering_corporations_on_income_date", using: :btree
+  add_index "engineering_corporations", ["jiyi_company_name"], name: "index_engineering_corporations_on_jiyi_company_name", using: :btree
+  add_index "engineering_corporations", ["name"], name: "index_engineering_corporations_on_name", using: :btree
+  add_index "engineering_corporations", ["outcome_amount"], name: "index_engineering_corporations_on_outcome_amount", using: :btree
+  add_index "engineering_corporations", ["outcome_date"], name: "index_engineering_corporations_on_outcome_date", using: :btree
+  add_index "engineering_corporations", ["outcome_referee"], name: "index_engineering_corporations_on_outcome_referee", using: :btree
+  add_index "engineering_corporations", ["project_amount"], name: "index_engineering_corporations_on_project_amount", using: :btree
+  add_index "engineering_corporations", ["project_date"], name: "index_engineering_corporations_on_project_date", using: :btree
+  add_index "engineering_corporations", ["project_name"], name: "index_engineering_corporations_on_project_name", using: :btree
+  add_index "engineering_corporations", ["proof"], name: "index_engineering_corporations_on_proof", using: :btree
+  add_index "engineering_corporations", ["start_date"], name: "index_engineering_corporations_on_start_date", using: :btree
+  add_index "engineering_corporations", ["total_amount"], name: "index_engineering_corporations_on_total_amount", using: :btree
+
   create_table "milestones", force: :cascade do |t|
     t.string   "name"
     t.integer  "project_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "normal_corporations", force: :cascade do |t|
+    t.text     "name"
+    t.text     "license"
+    t.text     "taxpayer_serial"
+    t.text     "organization_serial"
+    t.text     "corporate_name"
+    t.text     "address"
+    t.text     "account"
+    t.text     "account_bank"
+    t.text     "contact"
+    t.text     "telephone"
+    t.date     "contract_due_time"
+    t.money    "contract_amount",                   scale: 2
+    t.integer  "admin_charge_type"
+    t.decimal  "admin_charge_amount", precision: 8, scale: 2
+    t.date     "expense_date"
+    t.integer  "stuff_count"
+    t.integer  "insurance_count"
+    t.text     "remark"
+    t.text     "jiyi_company_name"
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+  end
+
+  add_index "normal_corporations", ["account"], name: "index_normal_corporations_on_account", using: :btree
+  add_index "normal_corporations", ["account_bank"], name: "index_normal_corporations_on_account_bank", using: :btree
+  add_index "normal_corporations", ["address"], name: "index_normal_corporations_on_address", using: :btree
+  add_index "normal_corporations", ["admin_charge_amount"], name: "index_normal_corporations_on_admin_charge_amount", using: :btree
+  add_index "normal_corporations", ["admin_charge_type"], name: "index_normal_corporations_on_admin_charge_type", using: :btree
+  add_index "normal_corporations", ["contact"], name: "index_normal_corporations_on_contact", using: :btree
+  add_index "normal_corporations", ["contract_amount"], name: "index_normal_corporations_on_contract_amount", using: :btree
+  add_index "normal_corporations", ["contract_due_time"], name: "index_normal_corporations_on_contract_due_time", using: :btree
+  add_index "normal_corporations", ["corporate_name"], name: "index_normal_corporations_on_corporate_name", using: :btree
+  add_index "normal_corporations", ["expense_date"], name: "index_normal_corporations_on_expense_date", using: :btree
+  add_index "normal_corporations", ["insurance_count"], name: "index_normal_corporations_on_insurance_count", using: :btree
+  add_index "normal_corporations", ["jiyi_company_name"], name: "index_normal_corporations_on_jiyi_company_name", using: :btree
+  add_index "normal_corporations", ["license"], name: "index_normal_corporations_on_license", using: :btree
+  add_index "normal_corporations", ["name"], name: "index_normal_corporations_on_name", using: :btree
+  add_index "normal_corporations", ["organization_serial"], name: "index_normal_corporations_on_organization_serial", using: :btree
+  add_index "normal_corporations", ["stuff_count"], name: "index_normal_corporations_on_stuff_count", using: :btree
+  add_index "normal_corporations", ["taxpayer_serial"], name: "index_normal_corporations_on_taxpayer_serial", using: :btree
+  add_index "normal_corporations", ["telephone"], name: "index_normal_corporations_on_telephone", using: :btree
 
   create_table "projects", force: :cascade do |t|
     t.string   "name"
