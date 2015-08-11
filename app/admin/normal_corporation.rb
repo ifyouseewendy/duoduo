@@ -32,4 +32,6 @@ ActiveAdmin.register NormalCorporation do
     f.actions
   end
 
+  preserve_default_filters!
+  filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
 end
