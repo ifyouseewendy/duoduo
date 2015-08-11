@@ -1,6 +1,7 @@
 ActiveAdmin.register NormalCorporation do
   menu \
-    parent: I18n.t("activerecord.models.corporation")
+    parent: I18n.t("activerecord.models.corporation"),
+    priority: 21
 
   permit_params NormalCorporation.column_names - %w(id created_at updated_at)
 
