@@ -215,6 +215,11 @@ ActiveAdmin.setup do |config|
   #       menu.add label: "My Great Website", url: "http://www.mygreatwebsite.com", html_options: { target: :blank }
   #     end
   #   end
+  config.namespace false do |default|
+    default.build_menu do |menu|
+      menu.add label: I18n.t("activerecord.models.corporation"), priority: 2
+    end
+  end
 
   # == Download Links
   #
