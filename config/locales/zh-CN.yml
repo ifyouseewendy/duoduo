@@ -1,4 +1,12 @@
 zh-CN:
+  activerecord:
+    models:
+      corporation: "合作单位"
+      normal_corporation: "普通合作单位"
+      engineering_corporation: "工程合作单位"
+    attributes:
+      normal_corporation:
+      engineering_corporation:
   active_admin:
     admin_user: "账户管理"
     batch_actions:
