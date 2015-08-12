@@ -33,6 +33,29 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
       engineering_corporation:
+        id: '全部单位中编号'
+        nest_id: '本单位中编号'
+        name: '所属单位'
+        start_date: '开具日期'
+        project_date: '工程日期'
+        project_name: '工程名称'
+        project_amount: '劳务费'
+        admin_amount: '管理费'
+        total_amount: '费用合计'
+        income_date: '来款日期'
+        income_amount: '来款金额'
+        outcome_date: '回款日期'
+        outcome_referee: '回款人'
+        outcome_amount: '回款金额'
+        proof: '凭证'
+        actual_project_amount: '实际劳务费'
+        actual_admin_amount: '实际管理费'
+        already_get_contract: '合同是否拿回'
+        already_sign_dispatch: '代发是否签署'
+        remark: '备注'
+        jiyi_company_name: '吉易子公司'
+        created_at: "创建时间"
+        updated_at: "更新时间"
   active_admin:
     admin_user: "账户管理"
     batch_actions:

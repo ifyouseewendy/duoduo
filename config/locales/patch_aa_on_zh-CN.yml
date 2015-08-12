@@ -27,6 +27,7 @@ zh-CN:
       predicates:
         contains: "包含"
         equals: "等于"
+        eq: "等于"
         starts_with: "开头"
         ends_with: "完与"
         greater_than: "大于"
