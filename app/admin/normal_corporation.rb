@@ -5,7 +5,11 @@ ActiveAdmin.register NormalCorporation do
 
   permit_params NormalCorporation.column_names - %w(id created_at updated_at)
 
-  scope "最近七天更新" do |record|
+  scope "最近10条更新" do |record|
+    record.updated_latest_10
+  end
+
+  scope "最近7天更新" do |record|
     record.updated_in_7_days
   end
 
