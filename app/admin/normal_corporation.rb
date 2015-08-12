@@ -5,6 +5,10 @@ ActiveAdmin.register NormalCorporation do
 
   permit_params NormalCorporation.column_names - %w(id created_at updated_at)
 
+  scope "最近七天更新" do |record|
+    record.updated_in_7_days
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
 
