@@ -1,113 +1,72 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-
 [EngineeringCorporation, NormalCorporation].each(&:delete_all)
 
-[
-  {
-    id: 1,
-    nest_id: 1,
-    name: "工程合作单位1",
-    start_date: "2015-08-01",
-    project_date: "2015-08-10",
-    project_name: "工程 xx",
-    project_amount: "100.0",
-    admin_amount: "50.0",
-    total_amount: "150.0",
-    income_date: "2015-08-11",
-    income_amount: "150.0",
-    outcome_date: "2015-08-12",
-    outcome_referee: "用户1",
-    outcome_amount: "150.0",
-    proof: "",
-    actual_project_amount: "200.0",
-    actual_admin_amount: "100.0",
-    already_get_contract: true,
-    already_sign_dispatch: false,
-    remark: "备注",
-    jiyi_company_name: "吉易人力资源",
-    created_at: "2015-08-12T02:06:11.007Z",
-    updated_at: "2015-08-12T02:06:11.007Z"
-  },
-  {
-    id: 2,
-    nest_id: 2,
-    name: "工程合作单位2",
-    start_date: "2015-08-01",
-    project_date: "2015-08-02",
-    project_name: "工程 xx",
-    project_amount: "100.0",
-    admin_amount: "50.0",
-    total_amount: "150.0",
-    income_date: "2015-08-04",
-    income_amount: "150.0",
-    outcome_date: "2015-08-13",
-    outcome_referee: "用户1",
-    outcome_amount: "150.0",
-    proof: "",
-    actual_project_amount: "200.0",
-    actual_admin_amount: "100.0",
-    already_get_contract: true,
-    already_sign_dispatch: false,
-    remark: "",
-    jiyi_company_name: "吉易人力资源",
-    created_at: "2015-08-12T02:11:01.781Z",
-    updated_at: "2015-08-12T02:11:01.781Z"
-  }
-].each{|ha| EngineeringCorporation.create(ha) }
+def rand_by(len)
+  rand.to_s[2..(2+len-1)]
+end
 
-[
-  {
-    id: 1,
-    name: "普通合作单位1",
-    license: "0124578342",
-    taxpayer_serial: "2110223948",
-    organization_serial: "866732",
-    corporate_name: "用户1",
-    address: "吉林省四平市xx街xx号",
-    account: "4392223403856391",
-    account_bank: "农业银行",
-    contact: "用户2",
-    telephone: "0434-3221322",
-    contract_due_time: "2015-08-26",
-    contract_amount: "100000.0",
-    admin_charge_type: 0,
-    admin_charge_amount: "0.1",
-    expense_date: "2015-08-12",
-    stuff_count: 200,
-    insurance_count: 200,
-    remark: "",
-    jiyi_company_name: "吉易人力资源",
-    created_at: "2015-08-11T06:18:23.042Z",
-    updated_at: "2015-08-11T06:18:23.042Z"
-  },
-  {
-    id: 2,
-    name: "普通合作单位2",
-    license: "0124578342",
-    taxpayer_serial: "2110223948",
-    organization_serial: "866732",
-    corporate_name: "用户1",
-    address: "吉林省四平市xx街xx号",
-    account: "4392223403856391",
-    account_bank: "农业银行",
-    contact: "用户2",
-    telephone: "0434-3221322",
-    contract_due_time: "2015-08-26",
-    contract_amount: "200000.0",
-    admin_charge_type: 1,
-    admin_charge_amount: "100",
-    expense_date: "2015-08-12",
-    stuff_count: 400,
-    insurance_count: 300,
-    remark: "",
-    jiyi_company_name: "吉易人力资源",
-    created_at: "2015-08-10T06:18:23.042Z",
-    updated_at: "2015-08-10T06:18:23.042Z"
-  }
-].each{|ha| NormalCorporation.create(ha) }
+(1..7).each do |id|
+  (1..5).each do |nest_id|
+    number        = (id-1)*5 + nest_id
+    name          = "#{id}-#{nest_id}"
+    days          = number.days
+    amount        = number*10
+    random_number = rand_by(10)
+    charge_type   = rand(2)
+    charge_amount = case charge_type
+                    when 0 then rand.to_s[0..3]
+                    when 1 then [100,200][rand(2)]
+                    end
+
+    NormalCorporation.create(
+      id:                   number,
+      name:                 "普通合作单位#{number}",
+      license:              rand_by(10),
+      taxpayer_serial:      rand_by(10),
+      organization_serial:  rand_by(10),
+      corporate_name:       "用户#{number}",
+      address:              "四平市#{id}街#{nest_id}号",
+      account:              random_number,
+      account_bank:         "XX 银行",
+      contact:              "用户#{number}",
+      telephone:            "#{rand_by(4)}-#{rand_by(7)}",
+      contract_due_time:    "2015-01-01".to_date + days,
+      contract_amount:      1000 + amount,
+      admin_charge_type:    charge_type,
+      admin_charge_amount:  charge_amount,
+      expense_date:         "2015-07-01".to_date + days,
+      stuff_count:          rand(300),
+      insurance_count:      rand(300),
+      remark:               "备注",
+      jiyi_company_name:    Rails.application.secrets.jiyi_company_names[rand(6)],
+      created_at:           "2015-07-01".to_date + days,
+      updated_at:           "2015-07-01".to_date + days
+    )
+
+    EngineeringCorporation.create(
+      id:                     number,
+      main_id:                id,
+      nest_id:                nest_id,
+      name:                   "工程合作单位#{name}",
+      start_date:             "2015-01-01".to_date + days,
+      project_date:           "2015-01-01".to_date + days,
+      project_name:           "工程#{name}",
+      project_amount:         100.0 + amount,
+      admin_amount:           50.0 + amount,
+      total_amount:           150.0 + amount,
+      income_date:            "2015-01-01".to_date + days,
+      income_amount:          150.0 + amount,
+      outcome_date:           "2015-05-01".to_date + days,
+      outcome_referee:        "用户#{number}",
+      outcome_amount:         150.0 + amount,
+      proof:                  "凭证#{number}",
+      actual_project_amount:  200.0 + amount,
+      actual_admin_amount:    100.0 + amount,
+      already_get_contract:   [true, false][rand(2)],
+      already_sign_dispatch:  [true, false][rand(2)],
+      remark:                 "备注",
+      jiyi_company_name:      Rails.application.secrets.jiyi_company_names[rand(6)],
+      created_at:             "2015-07-01".to_date + days,
+      updated_at:             "2015-07-01".to_date + days
+    )
+  end
+end
