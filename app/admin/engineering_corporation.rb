@@ -17,7 +17,8 @@ ActiveAdmin.register EngineeringCorporation do
     f.semantic_errors *f.object.errors.keys
 
     f.inputs do
-      f.input :nest_id, as: :string
+      f.input :main_index, as: :string
+      f.input :nest_index, as: :string
       f.input :name, as: :string
       f.input :start_date, as: :datepicker
       f.input :project_date, as: :datepicker

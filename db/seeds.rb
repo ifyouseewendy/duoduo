@@ -44,8 +44,8 @@ end
 
     EngineeringCorporation.create(
       id:                     number,
-      main_id:                id,
-      nest_id:                nest_id,
+      main_index:             id,
+      nest_index:             nest_id,
       name:                   "工程合作单位#{name}",
       start_date:             "2015-01-01".to_date + days,
       project_date:           "2015-01-01".to_date + days,

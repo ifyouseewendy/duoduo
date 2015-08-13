@@ -34,8 +34,8 @@ zh-CN:
         updated_at: "更新时间"
       engineering_corporation:
         id: '编号'
-        main_id: '单位编号'
-        nest_id: '本单位中编号'
+        main_index: '单位编号'
+        nest_index: '本单位中编号'
         name: '所属单位'
         start_date: '开具日期'
         project_date: '工程日期'

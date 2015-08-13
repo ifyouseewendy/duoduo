@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150812034538) do
+ActiveRecord::Schema.define(version: 20150812040631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 20150812034538) do
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "engineering_corporations", force: :cascade do |t|
-    t.integer  "nest_id"
+    t.integer  "nest_index"
     t.text     "name"
     t.date     "start_date"
     t.date     "project_date"
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 20150812034538) do
     t.text     "jiyi_company_name"
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
-    t.integer  "main_id"
+    t.integer  "main_index"
   end
 
   add_index "engineering_corporations", ["actual_admin_amount"], name: "index_engineering_corporations_on_actual_admin_amount", using: :btree
