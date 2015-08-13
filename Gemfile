@@ -5,6 +5,8 @@ gem 'pg'
 
 # Active Admin
 gem 'activeadmin', github: 'activeadmin'
+# gem "active_admin_import" , github: "ifyouseewendy/active_admin_import"
+gem "active_admin_import" , path: 'vendor/bundle/ruby/2.2.0/bundler/gems/active_admin_import-ca7d286d0f07'
 
 # Plus integrations with:
 gem 'devise'
@@ -24,6 +26,9 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
+
+# I18n
+gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
 
 # Server
 gem 'thin'

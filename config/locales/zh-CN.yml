@@ -3,12 +3,12 @@ zh-CN:
     admin_charge_type:
       by_rate: "每人固定比例"
       by_count: "每人固定金额"
-    import: "导入"
   activerecord:
     models:
       corporation: "合作单位"
       normal_corporation: "普通合作单位"
       engineering_corporation: "工程合作单位"
+      project: "项目"
     attributes:
       normal_corporation:
         id: '编号'
@@ -58,6 +58,9 @@ zh-CN:
         jiyi_company_name: '吉易子公司'
         created_at: "创建时间"
         updated_at: "更新时间"
+      project:
+        name: "名称"
+        description: "描述"
   active_admin:
     admin_user: "账户管理"
     batch_actions:

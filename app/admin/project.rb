@@ -1,4 +1,14 @@
 ActiveAdmin.register Project do
+  active_admin_import \
+    validate: true,
+    template: 'import' ,
+    template_object: ActiveAdminImport::Model.new(
+      hint: "specify CSV options",
+      csv_options: {col_sep: ";", row_sep: nil, quote_char: nil},
+      force_encoding: :auto,
+      allow_archive: false
+  )
+
   sidebar "Project Details", only: [:show, :edit] do
     ul do
       li link_to "Tickets",    project_tickets_path(project)

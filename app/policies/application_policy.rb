@@ -56,4 +56,8 @@ class ApplicationPolicy
       scope
     end
   end
+
+  def import?
+    true
+  end
 end
