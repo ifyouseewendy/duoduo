@@ -6,7 +6,8 @@ ActiveAdmin.register Project do
       hint: "specify CSV options",
       csv_options: {col_sep: ";", row_sep: nil, quote_char: nil},
       force_encoding: :auto,
-      allow_archive: false
+      allow_archive: false,
+      batch_size: 1000
   )
 
   sidebar "Project Details", only: [:show, :edit] do

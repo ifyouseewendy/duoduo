@@ -8,7 +8,7 @@ zh-CN:
       corporation: "合作单位"
       normal_corporation: "普通合作单位"
       engineering_corporation: "工程合作单位"
-      project: "项目"
+      project: "测试项目"
     attributes:
       normal_corporation:
         id: '编号'
