@@ -3,6 +3,7 @@ zh-CN:
     admin_charge_type:
       by_rate: "每人固定比例"
       by_count: "每人固定金额"
+    import: "导入"
   activerecord:
     models:
       corporation: "合作单位"
