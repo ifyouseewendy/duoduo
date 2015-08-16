@@ -1,4 +1,6 @@
 ActiveAdmin.register Project do
+  include ImportDemo
+
   active_admin_import \
     validate: true,
     template: 'import' ,
@@ -63,18 +65,6 @@ ActiveAdmin.register Project do
   collection_action :demo_collection do
     # Use authorized?(:demo, Project) to check status
     render text: 'hello world'
-  end
-
-  collection_action :import_demo do
-    model = controller_name.classify
-    data = \
-      CSV.generate encoding: 'GBK' do |csv|
-        csv << [I18n.t("misc.import_demo.notice")]
-        csv << model.constantize.column_names - %w(id created_at updated_at)
-      end
-    send_data \
-      data,
-      :filename => I18n.t("activerecord.models.#{model.underscore}") + " - " + I18n.t("misc.import_demo.name") + '.csv'
   end
 
   member_action :demo_member do
