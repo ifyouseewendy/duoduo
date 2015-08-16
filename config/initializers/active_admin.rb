@@ -194,6 +194,7 @@ ActiveAdmin.setup do |config|
   #
   # Force the use of quotes
   # config.csv_options = { force_quotes: true }
+  config.csv_options = { encoding: 'GBK' }
 
   # == Menu System
   #
