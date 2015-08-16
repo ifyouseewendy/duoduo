@@ -68,7 +68,7 @@ ActiveAdmin.register Project do
   collection_action :import_demo do
     model = controller_name.classify
     data = \
-      CSV.generate do |csv|
+      CSV.generate encoding: 'GBK' do |csv|
         csv << [I18n.t("misc.import_demo.notice")]
         csv << model.constantize.column_names - %w(id created_at updated_at)
       end
