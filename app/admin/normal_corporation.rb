@@ -1,4 +1,17 @@
 ActiveAdmin.register NormalCorporation do
+  include ImportDemo
+
+  active_admin_import \
+    validate: true,
+    template: 'import' ,
+    batch_transaction: true,
+    template_object: ActiveAdminImport::Model.new(
+      csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
+      csv_headers: Project.column_names - %w(id created_at updated_at),
+      force_encoding: :auto,
+      allow_archive: false,
+  )
+
   menu \
     parent: I18n.t("activerecord.models.corporation"),
     priority: 21
@@ -44,12 +57,12 @@ ActiveAdmin.register NormalCorporation do
   preserve_default_filters!
   filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
 
-  collection_action :import_csv, method: :post do
-    # Do some CSV importing work here...
-    redirect_to collection_path, notice: "CSV imported successfully!"
-  end
-
-  action_item :import do
-    link_to I18n.t("misc.import") + I18n.t("activerecord.models.normal_corporation"), import_csv_normal_corporations_path, method: :post
-  end
+  # collection_action :import_csv, method: :post do
+  #   # Do some CSV importing work here...
+  #   redirect_to collection_path, notice: "CSV imported successfully!"
+  # end
+  #
+  # action_item :import do
+  #   link_to I18n.t("misc.import") + I18n.t("activerecord.models.normal_corporation"), import_csv_normal_corporations_path, method: :post
+  # end
 end
