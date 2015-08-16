@@ -4,8 +4,7 @@ gem 'rails', '4.2.2'
 gem 'pg'
 
 # Active Admin
-gem 'activeadmin', github: 'activeadmin'
-# gem "active_admin_import" , github: "ifyouseewendy/active_admin_import"
+gem 'activeadmin',          path: 'vendor/bundle/ruby/2.2.0/bundler/gems/activeadmin-3254f53b4b35'
 gem "active_admin_import" , path: 'vendor/bundle/ruby/2.2.0/bundler/gems/active_admin_import-ca7d286d0f07'
 
 # Plus integrations with:
