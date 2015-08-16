@@ -4,8 +4,8 @@ ActiveAdmin.register Project do
     template: 'import' ,
     batch_transaction: true,
     template_object: ActiveAdminImport::Model.new(
-      # hint: "specify CSV options",
-      csv_options: {col_sep: ";", row_sep: nil, quote_char: nil},
+      csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
+      csv_headers: Project.column_names - %w(id created_at updated_at),
       force_encoding: :auto,
       allow_archive: false,
   )
@@ -63,6 +63,18 @@ ActiveAdmin.register Project do
   collection_action :demo_collection do
     # Use authorized?(:demo, Project) to check status
     render text: 'hello world'
+  end
+
+  collection_action :import_demo do
+    model = controller_name.classify
+    data = \
+      CSV.generate do |csv|
+        csv << [I18n.t("misc.import_demo.notice")]
+        csv << model.constantize.column_names - %w(id created_at updated_at)
+      end
+    send_data \
+      data,
+      :filename => I18n.t("activerecord.models.#{model.underscore}") + " - " + I18n.t("misc.import_demo.name") + '.csv'
   end
 
   member_action :demo_member do

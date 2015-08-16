@@ -3,6 +3,9 @@ zh-CN:
     admin_charge_type:
       by_rate: "每人固定比例"
       by_count: "每人固定金额"
+    import_demo:
+      name: "导入示例文件"
+      notice: "请参考该文件中的列名。注：前两行为说明，请在最后保存文件前删除。"
   activerecord:
     models:
       corporation: "合作单位"
