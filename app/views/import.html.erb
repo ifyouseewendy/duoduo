@@ -4,22 +4,20 @@
 <%= semantic_form_for @active_admin_import_model, url: {action: :do_import}, html: {multipart: true} do |f| %>
   <%= f.inputs "说明" do %>
     <ol>
-      <li>上传文件需为 <a href="http://baike.baidu.com/link?url=fYvLfVX89ChyJc3JidZmCUWSeJ5iu0v-kO5It9Q1FnF2SBm7lLGrrxtdd53ZyQOfEOxXcYIh91EUYoOQeJQfxVezJ3O9mVZJWVCAi4Lgm7_">CSV 格式</a>。生成方法：使用 Excel 编辑待导入文件，另存为选择 CSV 格式即可</li>
+      <li>1. 上传文件需为 <a href="http://baike.baidu.com/link?url=fYvLfVX89ChyJc3JidZmCUWSeJ5iu0v-kO5It9Q1FnF2SBm7lLGrrxtdd53ZyQOfEOxXcYIh91EUYoOQeJQfxVezJ3O9mVZJWVCAi4Lgm7_">CSV 格式</a>。生成方法：使用 Excel 打开待导入文件，另存为选择 CSV 格式即可</li>
+      <li>2. 请参考 <a href=<%= "/#{active_admin_config.resource_class.table_name}/import_demo" %>>示例文件</a> 中的字段顺序</li>
     </ol>
   <% end %>
   <%= f.inputs do %>
-    <ol>
-      <li>请参考<a href="">示例文件</a>中的字段顺序</li>
-    </ol>
     <%= f.input :file, as: :file, label: t('active_admin_import.file') %>
   <% end %>
-  <%= f.inputs t("active_admin_import.csv_options"), for: [:csv_options, OpenStruct.new(@active_admin_import_model.csv_options)] do |csv| %>
-    <% csv.with_options input_html: {style: 'width:40px;'} do |opts| %>
-      <%= opts.input :col_sep, label: t("active_admin_import.col_sep") %>
-      <%= opts.input :row_sep, label: t("active_admin_import.row_sep") %>
-      <%= opts.input :quote_char, label: t("active_admin_import.quote_char") %>
-    <% end %>
-  <% end %>
+  <%# <%= f.inputs t("active_admin_import.csv_options"), for: [:csv_options, OpenStruct.new(@active_admin_import_model.csv_options)] do |csv| %>
+  <%#   <% csv.with_options input_html: {style: 'width:40px;'} do |opts| %>
+  <%#     <%= opts.input :col_sep, label: t("active_admin_import.col_sep") %>
+  <%#     <%= opts.input :row_sep, label: t("active_admin_import.row_sep") %>
+  <%#     <%= opts.input :quote_char, label: t("active_admin_import.quote_char") %>
+  <%#   <% end %>
+  <%# <% end %>
 
   <%= f.actions do %>
     <%= f.action :submit, label: t("active_admin_import.import_btn"), button_html: {disable_with: t("active_admin_import.import_btn_disabled")} %>
