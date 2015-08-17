@@ -2,7 +2,7 @@ class EngineeringCorporation < ActiveRecord::Base
   scope :updated_in_7_days, ->{ where('updated_at > ?', Date.today - 7.days) }
   scope :updated_latest_10, ->{ order(updated_at: :desc).limit(10) }
 
-  def self.csv_headers(all: false)
+  def self.ordered_columns(all: false)
     # Bad implementations to keep headers in order
     # Use `column_names - %w(id created_at updated_at)` before, but when migrating a new field can't change its place.
     headers = \

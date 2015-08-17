@@ -4,7 +4,7 @@ class Project < ActiveRecord::Base
 
   validates_uniqueness_of :name
 
-  def self.csv_headers
+  def self.ordered_columns
     (column_names - %w(id created_at updated_at) ).map(&:to_sym)
   end
 end

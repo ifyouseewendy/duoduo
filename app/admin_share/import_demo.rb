@@ -6,7 +6,7 @@ module ImportDemo
         data = \
           CSV.generate encoding: 'GBK' do |csv|
             csv << [I18n.t("misc.import_demo.notice")]
-            csv << model.csv_headers.map{|col| model.human_attribute_name(col) }
+            csv << model.ordered_columns.map{|col| model.human_attribute_name(col) }
           end
         send_data \
           data,

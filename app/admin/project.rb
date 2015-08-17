@@ -7,7 +7,7 @@ ActiveAdmin.register Project do
     batch_transaction: true,
     template_object: ActiveAdminImport::Model.new(
       csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
-      csv_headers: @resource.csv_headers,
+      csv_headers: @resource.ordered_columns,
       force_encoding: :auto,
       allow_archive: false,
   )
@@ -23,9 +23,7 @@ ActiveAdmin.register Project do
 
   index do
     selectable_column
-    id_column
-    column :name
-    column :description
+    Project.ordered_columns(all: true).map{|field| column field}
     actions
   end
 
