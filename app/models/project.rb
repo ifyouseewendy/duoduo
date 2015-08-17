@@ -4,7 +4,8 @@ class Project < ActiveRecord::Base
 
   validates_uniqueness_of :name
 
-  def self.ordered_columns
+  def self.ordered_columns(all: false)
+    return column_names.map(&:to_sym) if all
     (column_names - %w(id created_at updated_at) ).map(&:to_sym)
   end
 end
