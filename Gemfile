@@ -1,6 +1,11 @@
 source 'https://rubygems.org'
 
 gem 'rails', '4.2.2'
+
+# I18n
+gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
+
+# Database
 gem 'pg'
 
 # Active Admin
@@ -26,14 +31,22 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-# I18n
-gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
-
 # Server
 gem 'thin'
 
 # Env
 gem 'dotenv-rails'
+
+# Deployment
+gem 'mina'
+
+# Console
+gem 'pry-rails'
+gem "pry-doc"
+gem "awesome_print"
+
+# Cron
+gem 'whenever', :require => false
 
 group :development do
   gem 'quiet_assets'
@@ -52,9 +65,6 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 
-  gem 'pry-rails'
   gem "pry-byebug"
-
-  gem "awesome_print"
 end
 
