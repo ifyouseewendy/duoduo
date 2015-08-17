@@ -26,6 +26,12 @@ ActiveAdmin.register EngineeringCorporation do
     record.updated_in_7_days
   end
 
+  index do
+    selectable_column
+    EngineeringCorporation.csv_headers(all: true).map{|field| column field}
+    actions
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
 
