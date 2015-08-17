@@ -9,8 +9,8 @@ gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
 gem 'pg'
 
 # Active Admin
-gem 'activeadmin',          path: 'vendor/bundle/ruby/2.2.0/bundler/gems/activeadmin-3254f53b4b35'
-gem "active_admin_import" , path: 'vendor/bundle/ruby/2.2.0/bundler/gems/active_admin_import-ca7d286d0f07'
+gem 'activeadmin',          path: 'vendor/repos/activeadmin'
+gem "active_admin_import" , path: 'vendor/repos/active_admin_import'
 
 # Plus integrations with:
 gem 'devise'

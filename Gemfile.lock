@@ -8,7 +8,7 @@ GIT
       railties (~> 4.0)
 
 PATH
-  remote: vendor/bundle/ruby/2.2.0/bundler/gems/active_admin_import-ca7d286d0f07
+  remote: vendor/repos/active_admin_import
   specs:
     active_admin_import (3.0.0.pre)
       activerecord-import (~> 0.8.0)
@@ -17,7 +17,7 @@ PATH
       rubyzip (~> 1.0, >= 1.0.0)
 
 PATH
-  remote: vendor/bundle/ruby/2.2.0/bundler/gems/activeadmin-3254f53b4b35
+  remote: vendor/repos/activeadmin
   specs:
     activeadmin (1.0.0.pre1)
       arbre (~> 1.0, >= 1.0.2)
