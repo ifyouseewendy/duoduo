@@ -7,7 +7,7 @@ ActiveAdmin.register NormalCorporation do
     batch_transaction: true,
     template_object: ActiveAdminImport::Model.new(
       csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
-      csv_headers: Project.column_names - %w(id created_at updated_at),
+      csv_headers: @resource.csv_headers,
       force_encoding: :auto,
       allow_archive: false,
   )
