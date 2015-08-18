@@ -10,7 +10,8 @@ GIT
 
 GIT
   remote: git://github.com/ifyouseewendy/activeadmin.git
-  revision: 3254f53b4b354d07c85f4b59f84f551127da6b1f
+  revision: cc245551f79740b658012abee05deac8250c9ce7
+  branch: master
   specs:
     activeadmin (1.0.0.pre1)
       arbre (~> 1.0, >= 1.0.2)

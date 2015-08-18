@@ -9,7 +9,7 @@ gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
 gem 'pg'
 
 # Active Admin
-gem 'activeadmin',          github: 'ifyouseewendy/activeadmin'
+gem 'activeadmin',          github: 'ifyouseewendy/activeadmin', branch: 'master'
 gem "active_admin_import" , github: 'ifyouseewendy/active_admin_import'
 
 # Plus integrations with:
