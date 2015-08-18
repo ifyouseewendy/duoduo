@@ -1,4 +1,6 @@
 ActiveAdmin.register_page "Calendar" do
+  menu false
+
   content do
     para "Hello World"
 
