@@ -33,6 +33,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Server
 gem 'thin'
+gem 'unicorn', '~> 4.8.0'
 
 # Env
 gem 'dotenv-rails'
