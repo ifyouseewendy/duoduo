@@ -64,15 +64,3 @@ zh-CN:
       project:
         name: "名称"
         description: "描述"
-  active_admin:
-    admin_user:
-      title: "账户管理"
-      role:
-        in_administration: '管理员'
-        in_business: '业务部'
-        in_finance: '财务部'
-    comments:
-      author_role: "账户类型"
-    batch_actions:
-      labels:
-        flag: "标记"
