@@ -1,4 +1,7 @@
 zh-CN:
+  devise:
+    failure:
+      unauthenticated: "用户名 admin 密码 123123"
   active_admin:
     admin_user:
       title: "账户管理"
