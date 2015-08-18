@@ -1,0 +1,22 @@
+upstream duoduo {
+  server unix:/home/deploy/apps/duoduo/current/tmp/unicorn.sock;
+}
+server {
+  listen 80;
+  server_name 106.187.43.209;
+  root /home/deploy/apps/duoduo/current;
+  location / {
+     proxy_hide_header X-Frame-Options;
+     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+     proxy_set_header Host $http_host;
+     proxy_redirect off;
+     proxy_pass http://duoduo;
+  }
+
+  location ~ ^/(assets)/  {
+    root /home/deploy/apps/duoduo/current/public;
+    gzip_static on; # to serve pre-gzipped version
+    expires max;
+    add_header Cache-Control public;
+  }
+}
