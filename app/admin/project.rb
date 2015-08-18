@@ -12,6 +12,8 @@ ActiveAdmin.register Project do
       allow_archive: false,
   )
 
+  menu priority: 8
+
   sidebar "Project Details", only: [:show, :edit] do
     ul do
       li link_to "Tickets",    project_tickets_path(project)

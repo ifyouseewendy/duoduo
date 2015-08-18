@@ -1,6 +1,6 @@
 ActiveAdmin.register AdminUser do
   menu\
-    priority: 21,
+    priority: 9,
     label: proc{ I18n.t("active_admin.admin_user.title") }
     # if: proc{ current_user.can_edit_posts? }
 
