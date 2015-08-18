@@ -15,6 +15,3 @@
 /log/*
 !/log/.keep
 /tmp
-
-# Config
-config/database.yml
