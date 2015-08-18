@@ -1,22 +1,22 @@
 ActiveAdmin.register NormalCorporation do
-  include ImportDemo
-
-  active_admin_import \
-    validate: true,
-    template: 'import' ,
-    batch_transaction: true,
-    template_object: ActiveAdminImport::Model.new(
-      csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
-      csv_headers: @resource.ordered_columns,
-      force_encoding: :auto,
-      allow_archive: false,
-  )
+  # include ImportDemo
+  #
+  # active_admin_import \
+  #   validate: true,
+  #   template: 'import' ,
+  #   batch_transaction: true,
+  #   template_object: ActiveAdminImport::Model.new(
+  #     csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
+  #     csv_headers: @resource.ordered_columns,
+  #     force_encoding: :auto,
+  #     allow_archive: false,
+  # )
 
   menu \
     parent: I18n.t("activerecord.models.corporation"),
     priority: 21
 
-  permit_params NormalCorporation.ordered_columns
+  # permit_params NormalCorporation.ordered_columns
 
   scope "最近10条更新" do |record|
     record.updated_latest_10
@@ -26,11 +26,11 @@ ActiveAdmin.register NormalCorporation do
     record.updated_in_7_days
   end
 
-  index do
-    selectable_column
-    NormalCorporation.ordered_columns(all: true).map{|field| column field}
-    actions
-  end
+  # index do
+  #   selectable_column
+  #   NormalCorporation.ordered_columns(all: true).map{|field| column field}
+  #   actions
+  # end
 
   form do |f|
     f.semantic_errors *f.object.errors.keys

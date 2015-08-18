@@ -1,16 +1,16 @@
 ActiveAdmin.register Project do
-  include ImportDemo
-
-  active_admin_import \
-    validate: true,
-    template: 'import' ,
-    batch_transaction: true,
-    template_object: ActiveAdminImport::Model.new(
-      csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
-      csv_headers: @resource.ordered_columns,
-      force_encoding: :auto,
-      allow_archive: false,
-  )
+  # include ImportDemo
+  #
+  # active_admin_import \
+  #   validate: true,
+  #   template: 'import' ,
+  #   batch_transaction: true,
+  #   template_object: ActiveAdminImport::Model.new(
+  #     csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
+  #     csv_headers: @resource.ordered_columns,
+  #     force_encoding: :auto,
+  #     allow_archive: false,
+  # )
 
   sidebar "Project Details", only: [:show, :edit] do
     ul do
@@ -21,11 +21,11 @@ ActiveAdmin.register Project do
 
   permit_params :name
 
-  index do
-    selectable_column
-    Project.ordered_columns(all: true).map{|field| column field}
-    actions
-  end
+  # index do
+  #   selectable_column
+  #   Project.ordered_columns(all: true).map{|field| column field}
+  #   actions
+  # end
 
   index as: :grid do |project|
     div do
