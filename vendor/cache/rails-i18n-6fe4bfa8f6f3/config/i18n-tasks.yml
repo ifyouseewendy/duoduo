@@ -1,0 +1,32 @@
+base_locale: en
+
+data:
+  adapter: file_system
+  read:
+    - "rails/locale/%{locale}.yml"
+  write:
+    - "rails/locale/%{locale}.yml"
+
+search:
+  paths: ['lib/']
+
+ignore_missing:
+  - 'number.{precision, format, :.format}.{strip_insignificant_zeros, significant, format, delimiter, format.delimiter}'
+  - 'number.human.decimal_units.units.unit'
+  - 'time.{pm,am}'
+
+ignore_eq_base:
+  all:
+    - 'number.*'
+    - 'time.{pm,am,formats.*}'
+    - 'date.{order,formats.*}'
+    - '{activerecord, activemodel}.errors.format'
+    - errors.format
+    - support.array.words_connector
+
+  'fr,fr-CA,fr-CH':
+    - 'datetime.prompts.minute'
+    - 'datetime.distance_in_words.x_minutes.{one,other}'
+
+  'en-AU,en-CA,en-GB,en-IE,en-IN,en-NZ,en-US':
+    - '*'
