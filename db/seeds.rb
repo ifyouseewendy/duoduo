@@ -1,7 +1,14 @@
 [EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
 
-sub_companies = Rails.application.secrets.sub_company_names.map do |name|
-  SubCompany.create!(name: name)
+sub_companies = Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
+  sc = SubCompany.new(name: name)
+  files = (1..2).each_with_object([]) do |idx, ar|
+    ar <<  File.open("tmp/#{name}.合同#{idx}.txt") if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
+  end
+  sc.contracts = files
+  sc.save!
+
+  companies << sc
 end
 
 def rand_by(len)
