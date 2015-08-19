@@ -1,4 +1,8 @@
-[EngineeringCorporation, NormalCorporation].each(&:delete_all)
+[EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
+
+sub_companies = Rails.application.secrets.jiyi_company_names.map do |name|
+  SubCompany.create!(name: name)
+end
 
 def rand_by(len)
   rand.to_s[2..(2+len-1)]
@@ -17,7 +21,7 @@ end
                     when 1 then [100,200][rand(2)]
                     end
 
-    NormalCorporation.create(
+    NormalCorporation.create!(
       id:                   number,
       name:                 "普通合作单位#{number}",
       license:              rand_by(10),
@@ -37,12 +41,12 @@ end
       stuff_count:          rand(300),
       insurance_count:      rand(300),
       remark:               "备注",
-      jiyi_company_name:    Rails.application.secrets.jiyi_company_names[rand(6)],
+      sub_company:          sub_companies[rand(6)],
       created_at:           "2015-07-01".to_date + days,
       updated_at:           "2015-07-01".to_date + days
     )
 
-    EngineeringCorporation.create(
+    EngineeringCorporation.create!(
       id:                     number,
       main_index:             id,
       nest_index:             nest_id,
