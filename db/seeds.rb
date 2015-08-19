@@ -22,7 +22,6 @@ end
                     end
 
     NormalCorporation.create!(
-      id:                   number,
       name:                 "普通合作单位#{number}",
       license:              rand_by(10),
       taxpayer_serial:      rand_by(10),
