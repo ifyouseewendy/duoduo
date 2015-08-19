@@ -9,7 +9,7 @@ class NormalCorporation < ActiveRecord::Base
     (column_names - %w(id created_at updated_at) ).map(&:to_sym)
   end
 
-  def sub_company_name
-    sub_company.name
+  def sub_company_names
+    sub_companies.map(&:name)
   end
 end

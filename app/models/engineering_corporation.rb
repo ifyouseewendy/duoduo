@@ -34,4 +34,8 @@ class EngineeringCorporation < ActiveRecord::Base
 
     [:id] + headers + [:created_at, :updated_at]
   end
+
+  def sub_company_names
+    sub_companies.map(&:name)
+  end
 end

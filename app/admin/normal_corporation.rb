@@ -56,6 +56,16 @@ ActiveAdmin.register NormalCorporation do
     f.actions
   end
 
+  show do
+    attributes_table do
+      NormalCorporation.ordered_columns(all: true).map{|field| row field}
+      row :sub_companies do |corp|
+        corp.sub_company_names.join(', ')
+      end
+    end
+    active_admin_comments
+  end
+
   # preserve_default_filters!
   # filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
 
