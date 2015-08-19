@@ -36,6 +36,7 @@ ActiveAdmin.register NormalCorporation do
     f.semantic_errors *f.object.errors.keys
 
     f.inputs do
+      f.input :sub_companies, as: :check_boxes
       f.input :name, as: :string
       f.input :license, as: :string
       f.input :taxpayer_serial, as: :string
