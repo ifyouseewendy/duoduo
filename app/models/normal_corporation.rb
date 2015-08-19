@@ -1,5 +1,5 @@
 class NormalCorporation < ActiveRecord::Base
-  belongs_to :sub_company
+  has_and_belongs_to_many :sub_companies
 
   scope :updated_in_7_days, ->{ where('updated_at > ?', Date.today - 7.days) }
   scope :updated_latest_10, ->{ order(updated_at: :desc).limit(10) }

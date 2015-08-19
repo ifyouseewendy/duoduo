@@ -40,7 +40,7 @@ end
       stuff_count:          rand(300),
       insurance_count:      rand(300),
       remark:               "备注",
-      sub_company:          sub_companies[rand(6)],
+      sub_companies:        sub_companies.sample(rand(6)),
       created_at:           "2015-07-01".to_date + days,
       updated_at:           "2015-07-01".to_date + days
     )
