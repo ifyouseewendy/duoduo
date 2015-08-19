@@ -22,10 +22,6 @@ ActiveAdmin.register EngineeringCorporation do
     record.updated_latest_10
   end
 
-  scope "最近7天更新" do |record|
-    record.updated_in_7_days
-  end
-
   index do
     selectable_column
     EngineeringCorporation.ordered_columns(all: true).map{|field| column field}
