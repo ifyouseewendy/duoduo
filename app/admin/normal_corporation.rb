@@ -66,6 +66,16 @@ ActiveAdmin.register NormalCorporation do
     active_admin_comments
   end
 
+  sidebar "业务代理合同", only: :show do
+    resource.sub_companies.each do |comp|
+      b comp.name
+      ul do
+        li { link_to "hello", "#"  }
+        li { link_to "hello", "#"  }
+      end
+    end
+  end
+
   # preserve_default_filters!
   # filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
 
