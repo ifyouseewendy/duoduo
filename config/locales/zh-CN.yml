@@ -12,6 +12,7 @@ zh-CN:
       normal_corporation: "普通合作单位"
       engineering_corporation: "工程合作单位"
       project: "测试项目"
+      sub_company: "吉易子公司"
     attributes:
       normal_corporation:
         id: '编号'
@@ -34,6 +35,7 @@ zh-CN:
         insurance_count: '参保人数'
         remark: '备注'
         jiyi_company_name: '吉易子公司'
+        sub_company: '吉易子公司'
         created_at: "创建时间"
         updated_at: "更新时间"
       engineering_corporation:

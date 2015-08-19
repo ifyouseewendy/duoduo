@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819062053) do
+ActiveRecord::Schema.define(version: 20150819065610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(version: 20150819062053) do
     t.text     "jiyi_company_name"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
+    t.integer  "sub_company_id"
   end
 
   add_index "normal_corporations", ["account"], name: "index_normal_corporations_on_account", using: :btree
@@ -142,6 +143,7 @@ ActiveRecord::Schema.define(version: 20150819062053) do
   add_index "normal_corporations", ["name"], name: "index_normal_corporations_on_name", using: :btree
   add_index "normal_corporations", ["organization_serial"], name: "index_normal_corporations_on_organization_serial", using: :btree
   add_index "normal_corporations", ["stuff_count"], name: "index_normal_corporations_on_stuff_count", using: :btree
+  add_index "normal_corporations", ["sub_company_id"], name: "index_normal_corporations_on_sub_company_id", using: :btree
   add_index "normal_corporations", ["taxpayer_serial"], name: "index_normal_corporations_on_taxpayer_serial", using: :btree
   add_index "normal_corporations", ["telephone"], name: "index_normal_corporations_on_telephone", using: :btree
 
@@ -171,4 +173,5 @@ ActiveRecord::Schema.define(version: 20150819062053) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "normal_corporations", "sub_companies"
 end
