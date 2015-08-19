@@ -1,6 +1,6 @@
 [EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
 
-sub_companies = Rails.application.secrets.jiyi_company_names.map do |name|
+sub_companies = Rails.application.secrets.sub_company_names.map do |name|
   SubCompany.create!(name: name)
 end
 
