@@ -36,6 +36,7 @@ ActiveAdmin.register EngineeringCorporation do
     f.semantic_errors *f.object.errors.keys
 
     f.inputs do
+      f.input :sub_companies, as: :check_boxes
       f.input :main_index, as: :string
       f.input :nest_index, as: :string
       f.input :name, as: :string
@@ -55,13 +56,12 @@ ActiveAdmin.register EngineeringCorporation do
       f.input :actual_admin_amount, as: :number
       f.input :already_get_contract, as: :boolean
       f.input :already_sign_dispatch, as: :boolean
-      f.input :jiyi_company_name, as: :radio, collection: Rails.application.secrets.jiyi_company_names
       f.input :remark, as: :text
     end
 
     f.actions
   end
 
-  preserve_default_filters!
-  filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
+  # preserve_default_filters!
+  # filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
 end

@@ -59,7 +59,7 @@ zh-CN:
         already_get_contract: '合同是否拿回'
         already_sign_dispatch: '代发是否签署'
         remark: '备注'
-        jiyi_company_name: '吉易子公司'
+        sub_companies: '吉易子公司'
         created_at: "创建时间"
         updated_at: "更新时间"
       project:

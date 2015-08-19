@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819122217) do
+ActiveRecord::Schema.define(version: 20150819132617) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,7 +70,6 @@ ActiveRecord::Schema.define(version: 20150819122217) do
     t.boolean  "already_get_contract"
     t.boolean  "already_sign_dispatch"
     t.text     "remark"
-    t.text     "jiyi_company_name"
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.integer  "main_index"
@@ -83,7 +82,6 @@ ActiveRecord::Schema.define(version: 20150819122217) do
   add_index "engineering_corporations", ["already_sign_dispatch"], name: "index_engineering_corporations_on_already_sign_dispatch", using: :btree
   add_index "engineering_corporations", ["income_amount"], name: "index_engineering_corporations_on_income_amount", using: :btree
   add_index "engineering_corporations", ["income_date"], name: "index_engineering_corporations_on_income_date", using: :btree
-  add_index "engineering_corporations", ["jiyi_company_name"], name: "index_engineering_corporations_on_jiyi_company_name", using: :btree
   add_index "engineering_corporations", ["name"], name: "index_engineering_corporations_on_name", using: :btree
   add_index "engineering_corporations", ["outcome_amount"], name: "index_engineering_corporations_on_outcome_amount", using: :btree
   add_index "engineering_corporations", ["outcome_date"], name: "index_engineering_corporations_on_outcome_date", using: :btree
@@ -94,6 +92,14 @@ ActiveRecord::Schema.define(version: 20150819122217) do
   add_index "engineering_corporations", ["proof"], name: "index_engineering_corporations_on_proof", using: :btree
   add_index "engineering_corporations", ["start_date"], name: "index_engineering_corporations_on_start_date", using: :btree
   add_index "engineering_corporations", ["total_amount"], name: "index_engineering_corporations_on_total_amount", using: :btree
+
+  create_table "engineering_corporations_sub_companies", id: false, force: :cascade do |t|
+    t.integer "engineering_corporation_id", null: false
+    t.integer "sub_company_id",             null: false
+  end
+
+  add_index "engineering_corporations_sub_companies", ["engineering_corporation_id", "sub_company_id"], name: "idx_on_engineering_corporation_id_and_sub_company_id", using: :btree
+  add_index "engineering_corporations_sub_companies", ["sub_company_id", "engineering_corporation_id"], name: "idx_sub_company_id_and_engineering_corporation_id", using: :btree
 
   create_table "milestones", force: :cascade do |t|
     t.string   "name"

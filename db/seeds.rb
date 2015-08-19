@@ -46,7 +46,6 @@ end
     )
 
     EngineeringCorporation.create!(
-      id:                     number,
       main_index:             id,
       nest_index:             nest_id,
       name:                   "工程合作单位#{name}",
@@ -67,7 +66,7 @@ end
       already_get_contract:   [true, false][rand(2)],
       already_sign_dispatch:  [true, false][rand(2)],
       remark:                 "备注",
-      jiyi_company_name:      Rails.application.secrets.jiyi_company_names[rand(6)],
+      sub_companies:          sub_companies.sample(rand(6)),
       created_at:             "2015-07-01".to_date + days,
       updated_at:             "2015-07-01".to_date + days
     )
