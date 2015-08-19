@@ -34,7 +34,6 @@ zh-CN:
         stuff_count: '员工人数'
         insurance_count: '参保人数'
         remark: '备注'
-        jiyi_company_name: '吉易子公司'
         sub_company: '吉易子公司'
         created_at: "创建时间"
         updated_at: "更新时间"

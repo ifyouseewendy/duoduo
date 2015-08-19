@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819065610) do
+ActiveRecord::Schema.define(version: 20150819072424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,7 +121,6 @@ ActiveRecord::Schema.define(version: 20150819065610) do
     t.integer  "stuff_count"
     t.integer  "insurance_count"
     t.text     "remark"
-    t.text     "jiyi_company_name"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
     t.integer  "sub_company_id"
@@ -138,7 +137,6 @@ ActiveRecord::Schema.define(version: 20150819065610) do
   add_index "normal_corporations", ["corporate_name"], name: "index_normal_corporations_on_corporate_name", using: :btree
   add_index "normal_corporations", ["expense_date"], name: "index_normal_corporations_on_expense_date", using: :btree
   add_index "normal_corporations", ["insurance_count"], name: "index_normal_corporations_on_insurance_count", using: :btree
-  add_index "normal_corporations", ["jiyi_company_name"], name: "index_normal_corporations_on_jiyi_company_name", using: :btree
   add_index "normal_corporations", ["license"], name: "index_normal_corporations_on_license", using: :btree
   add_index "normal_corporations", ["name"], name: "index_normal_corporations_on_name", using: :btree
   add_index "normal_corporations", ["organization_serial"], name: "index_normal_corporations_on_organization_serial", using: :btree

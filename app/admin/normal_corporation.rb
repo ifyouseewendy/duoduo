@@ -53,15 +53,14 @@ ActiveAdmin.register NormalCorporation do
       f.input :expense_date, as: :datepicker
       f.input :stuff_count, as: :number
       f.input :insurance_count, as: :number
-      f.input :jiyi_company_name, as: :radio, collection: Rails.application.secrets.jiyi_company_names
       f.input :remark, as: :text
     end
 
     f.actions
   end
 
-  preserve_default_filters!
-  filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
+  # preserve_default_filters!
+  # filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
 
   # collection_action :import_csv, method: :post do
   #   # Do some CSV importing work here...
