@@ -1,0 +1,43 @@
+language: ruby
+
+rvm:
+ - 2.0
+ - 2.1
+ - 2.2
+ - ruby-head
+ - jruby
+ - jruby-head
+
+gemfile:
+  - Gemfile
+  - gemfiles/rails-4-0-stable.gemfile
+  - gemfiles/rails-4-1-stable.gemfile
+  - gemfiles/rails-4-2-stable.gemfile
+  - gemfiles/rails-master.gemfile
+
+sudo: false
+
+before_script:
+  - psql -c 'create database carrierwave_test;' -U postgres
+
+matrix:
+  exclude:
+    - rvm: 2.0
+      gemfile: gemfiles/rails-master.gemfile
+    - rvm: jruby
+      gemfile: gemfiles/rails-master.gemfile
+    - rvm: jruby-head
+      gemfile: gemfiles/rails-master.gemfile
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: jruby-head
+
+notifications:
+  email: false
+  slack:
+    secure: Npzanyv/LXLIRlrNs8iTUbZNRhXlP+K2ZpjZoS2UKkr09jYyP1qdf5a//R3Lu7Yat7g2b4qTJGbaZBEMUQSVaJ6UX6quiBJjVWxjxjQ4Ugk8k/yOIAcGEGYPfS6YzRXemRwo9j4uy76cmwlv8cwEuYTSTBRK4XrdYHslX6pKSXM=
+
+addons:
+  postgresql: "9.3"
+  apt_packages:
+    - libmagic-dev

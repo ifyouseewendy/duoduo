@@ -1,4 +1,14 @@
 GIT
+  remote: git://github.com/carrierwaveuploader/carrierwave.git
+  revision: c60ee75291de332fa341308d837f4cb0c15d44ca
+  specs:
+    carrierwave (0.10.0)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      json (>= 1.7)
+      mime-types (>= 1.16)
+
+GIT
   remote: git://github.com/ifyouseewendy/active_admin_import.git
   revision: d787669c0a091a6ea69956f6e7ce8ef53b8a1c00
   specs:
@@ -283,6 +293,7 @@ DEPENDENCIES
   awesome_print
   byebug
   cancan
+  carrierwave!
   coffee-rails (~> 4.1.0)
   devise
   devise-i18n
