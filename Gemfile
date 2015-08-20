@@ -52,6 +52,9 @@ gem "awesome_print"
 # Cron
 gem 'whenever', :require => false
 
+# Pinyin
+gem 'chinese_pinyin'
+
 group :development do
   gem 'quiet_assets'
 
