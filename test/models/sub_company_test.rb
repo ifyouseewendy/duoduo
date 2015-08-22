@@ -17,5 +17,18 @@ class SubCompanyTest < ActiveSupport::TestCase
     @one.add_file(Rails.root.join('config.ru'), override: true)
     assert 1, @one.contracts.count
     assert 'config.ru', @one.contracts.first.file.identifier
+
+    @one.add_file(Rails.root.join('Gemfile'), template: true)
+    assert 1, @one.contracts.count
+    assert 1, @one.contract_templates.count
+
+    @one.add_file(Rails.root.join('Rakefile'), template: true)
+    assert 1, @one.contracts.count
+    assert 2, @one.contract_templates.count
+
+    @one.add_file(Rails.root.join('config.ru'), template: true, override: true)
+    assert 1, @one.contracts.count
+    assert 1, @one.contract_templates.count
+    assert 'config.ru', @one.contract_templates.first.file.identifier
   end
 end

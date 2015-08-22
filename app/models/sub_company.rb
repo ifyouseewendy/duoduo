@@ -5,11 +5,12 @@ class SubCompany < ActiveRecord::Base
   mount_uploaders :contracts, ContractUploader
   mount_uploaders :contract_templates, ContractTemplateUploader
 
-  def add_file(filename, override: false)
+  def add_file(filename, override: false, template: false)
+    field = template ? :contract_templates : :contracts
     if override
-      self.contracts = [File.open(filename)]
+      self.send "#{field}=", [File.open(filename)]
     else
-      self.contracts = self.contracts + [File.open(filename)]
+      self.send "#{field}=", self.contracts + [File.open(filename)]
     end
 
     self.save!
