@@ -31,4 +31,24 @@ class SubCompanyTest < ActiveSupport::TestCase
     assert 1, @one.contract_templates.count
     assert 'config.ru', @one.contract_templates.first.file.identifier
   end
+
+  def test_generate_docx
+    file_path = Rails.root.join('test').join('resources').join('origin.docx')
+    @one.add_file(file_path, template: true, override: true)
+
+    docx = @one.generate_docx(gsub: {user_name: "wendi", user_email: "wd@example.com"}, file_path: file_path)
+
+    temp_path = SubCompany::TempPath.generate
+    FileUtils.mv docx, temp_path
+    Dir.chdir(temp_path)
+
+    `unzip #{docx.basename}`
+    data = File.read('word/document.xml')
+
+    assert data.index('wendi')
+    assert data.index('wd@example.com')
+  ensure
+    Dir.chdir(Rails.root)
+    temp_path.rmtree
+  end
 end
