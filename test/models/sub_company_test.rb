@@ -38,17 +38,14 @@ class SubCompanyTest < ActiveSupport::TestCase
 
     docx = @one.generate_docx(gsub: {user_name: "wendi", user_email: "wd@example.com"}, file_path: file_path)
 
-    temp_path = SubCompany::TempPath.generate
-    FileUtils.mv docx, temp_path
-    Dir.chdir(temp_path)
+    SubCompany::TempPath.execute do |temp_path|
+      FileUtils.mv docx, temp_path
 
-    `unzip #{docx.basename}`
-    data = File.read('word/document.xml')
+      `unzip #{docx.basename}`
+      data = File.read('word/document.xml')
 
-    assert data.index('wendi')
-    assert data.index('wd@example.com')
-  ensure
-    Dir.chdir(Rails.root)
-    temp_path.rmtree
+      assert data.index('wendi')
+      assert data.index('wd@example.com')
+    end
   end
 end
