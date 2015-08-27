@@ -1,3 +1,16 @@
+<% sub_company.contract_files.each do |cf| %>
+  <ul>
+    <li>
+      <span><%= cf.contract_identifier %></span>
+      <span>( <%= link_to '下载', cf.contract.url %> 
+        <%= form_tag(contract_file_path(cf), method: :delete, class: 'form_tag')  do %>
+          <%= link_to "删除",  "#", :onclick=>"$(this).closest('form').submit()" %>
+        <% end %>
+         )
+      </span>
+    </li>
+  </ul>
+<% end %>
 
 <%= semantic_form_for sub_company.contract_files.new, url: contract_files_path do |f| %>
   <%= f.inputs do %>

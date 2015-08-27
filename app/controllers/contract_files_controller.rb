@@ -8,9 +8,18 @@ class ContractFilesController < ApplicationController
     end
   end
 
+  def destroy
+    contract_file.delete
+    redirect_to :back, notice: "成功删除合同文件"
+  end
+
   private
 
    def contract_file_params
      params.require(:contract_file).permit!
+   end
+
+   def contract_file
+     ContractFile.find(params.require(:id))
    end
 end
