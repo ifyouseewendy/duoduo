@@ -16,7 +16,7 @@ ActiveAdmin.register NormalCorporation do
     parent: I18n.t("activerecord.models.corporation"),
     priority: 21
 
-  permit_params *NormalCorporation.ordered_columns(without_base_keys: true, without_foreign_keys: true), contracts: []
+  permit_params *NormalCorporation.ordered_columns(without_base_keys: true, without_foreign_keys: true), :index, contracts: []
 
   scope "最近10条更新" do |record|
     record.updated_latest_10
@@ -90,4 +90,18 @@ ActiveAdmin.register NormalCorporation do
     end
   end
 
+  member_action :remove_contract do
+    resource = NormalCorporation.find(permitted_params[:id])
+    index = permitted_params[:index].to_i
+
+    contracts = resource.contracts
+    contracts.delete_at(index)
+    resource.contracts = contracts
+
+    if resource.save
+      redirect_to normal_corporation_path(resource), notice: "成功删除合同文件"
+    else
+      redirect_to normal_corporation_path(resource), alert: "保存失败：#{resource.errors.full_messages.join(', ')}"
+    end
+  end
 end
