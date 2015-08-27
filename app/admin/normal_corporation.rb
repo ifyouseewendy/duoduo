@@ -7,7 +7,7 @@ ActiveAdmin.register NormalCorporation do
     batch_transaction: true,
     template_object: ActiveAdminImport::Model.new(
       csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
-      csv_headers: @resource.ordered_columns,
+      csv_headers: @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true),
       force_encoding: :auto,
       allow_archive: false,
   )
@@ -16,7 +16,7 @@ ActiveAdmin.register NormalCorporation do
     parent: I18n.t("activerecord.models.corporation"),
     priority: 21
 
-  permit_params NormalCorporation.ordered_columns
+  permit_params *NormalCorporation.ordered_columns(without_base_keys: true, without_foreign_keys: true), contracts: []
 
   scope "最近10条更新" do |record|
     record.updated_latest_10
@@ -24,7 +24,7 @@ ActiveAdmin.register NormalCorporation do
 
   index do
     selectable_column
-    NormalCorporation.ordered_columns(all: true).map{|field| column field}
+    NormalCorporation.ordered_columns(without_foreign_keys: true).map{|field| column field}
     actions
   end
 
@@ -58,22 +58,23 @@ ActiveAdmin.register NormalCorporation do
 
   show do
     attributes_table do
-      NormalCorporation.ordered_columns(all: true).map{|field| row field}
+      NormalCorporation.ordered_columns(without_foreign_keys: true).map{|field| row field}
       row :sub_companies do |corp|
         corp.sub_company_names.join(', ')
       end
     end
-    active_admin_comments
-  end
 
-  sidebar "业务代理合同", only: :show do
-    resource.sub_companies.each do |comp|
-      b comp.name
-      ul do
-        li { link_to "hello", "#"  }
-        li { link_to "hello", "#"  }
+    panel "业务代理合同" do
+      tabs do
+        resource.sub_companies.each do |comp|
+          tab comp.name do
+            render partial: "shared/contract", locals: {company: comp, corporation: resource}
+          end
+        end
       end
     end
+
+    active_admin_comments
   end
 
   # preserve_default_filters!

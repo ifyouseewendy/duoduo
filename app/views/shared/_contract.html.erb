@@ -1,0 +1,17 @@
+<%# <%= form_for corporation, html: { multipart: true } do |f| %>
+<%#   <p>
+<%#     <label>上传合同文件</label>
+<%#     <%= f.file_field :contracts, multiple: true %>
+<%#     <%= f.hidden_field :contracts_cache %>
+<%#     <%= f.submit '上传' %>
+<%#   </p>
+<%# <% end %>
+
+<%= semantic_form_for corporation do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :contracts, as: :file, label: '合同文件', input_html: {multiple: true} %>
+  <% end %>
+  <%= f.actions do %>
+    <%= f.action :submit, label: '上传' %>
+  <% end %>
+<% end %>
