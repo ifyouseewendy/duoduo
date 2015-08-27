@@ -77,15 +77,17 @@ ActiveAdmin.register NormalCorporation do
     active_admin_comments
   end
 
-  # preserve_default_filters!
-  # filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
+  # Controller
+  member_action :append_contracts, method: :patch do
+    resource = NormalCorporation.find(permitted_params[:id])
+    contracts = permitted_params[:normal_corporation][:contracts]
 
-  # collection_action :import_csv, method: :post do
-  #   # Do some CSV importing work here...
-  #   redirect_to collection_path, notice: "CSV imported successfully!"
-  # end
-  #
-  # action_item :import do
-  #   link_to I18n.t("misc.import") + I18n.t("activerecord.models.normal_corporation"), import_csv_normal_corporations_path, method: :post
-  # end
+    resource.contracts = resource.contracts + contracts
+    if resource.save
+      redirect_to normal_corporation_path(resource), notice: "成功上传合同文件"
+    else
+      redirect_to normal_corporation_path(resource), alert: "上传失败：#{resource.errors.full_messages.join(', ')}"
+    end
+  end
+
 end

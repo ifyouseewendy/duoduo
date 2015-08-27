@@ -1,13 +1,13 @@
-<%# <%= form_for corporation, html: { multipart: true } do |f| %>
-<%#   <p>
-<%#     <label>上传合同文件</label>
-<%#     <%= f.file_field :contracts, multiple: true %>
-<%#     <%= f.hidden_field :contracts_cache %>
-<%#     <%= f.submit '上传' %>
-<%#   </p>
-<%# <% end %>
+<% corporation.contracts.each_with_index do |cont, index| %>
+  <ul>
+    <li>
+      <span><%= cont.file.identifier %></span>
+      <span>( <%= link_to '下载', cont.url %> <%= link_to '删除', '#' %> )</span>
+    </li>
+  </ul>
+<% end %>
 
-<%= semantic_form_for corporation do |f| %>
+<%= semantic_form_for corporation, url: append_contracts_normal_corporation_path do |f| %>
   <%= f.inputs do %>
     <%= f.input :contracts, as: :file, label: '合同文件', input_html: {multiple: true} %>
   <% end %>
