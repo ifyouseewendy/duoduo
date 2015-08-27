@@ -1,5 +1,15 @@
-<% sub_company.contract_files.each do |cf| %>
-  <ul>
+<ul>
+  <% sub_company.contract_templates.each_with_index do |ct, idx| %>
+    <li>
+      <span><%= ct.file.basename %></span>
+      <span>( <%= link_to '生成合同文件', generate_and_download_contract_files_path + "?sub_company_id=#{sub_company.id}&template=#{idx}" %> )
+      </span>
+    </li>
+  <% end %>
+</ul>
+
+<ul>
+  <% sub_company.contract_files.custom.each do |cf| %>
     <li>
       <span><%= cf.contract_identifier %></span>
       <span>( <%= link_to '下载', cf.contract.url %> 
@@ -9,8 +19,8 @@
          )
       </span>
     </li>
-  </ul>
-<% end %>
+  <% end %>
+</ul>
 
 <%= semantic_form_for sub_company.contract_files.new, url: contract_files_path do |f| %>
   <%= f.inputs do %>

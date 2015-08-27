@@ -11,7 +11,7 @@ class SubCompany < ActiveRecord::Base
     if override
       self.send "#{field}=", [File.open(filename)]
     else
-      self.send "#{field}=", self.contracts + [File.open(filename)]
+      self.send "#{field}=", self.send(field) + [File.open(filename)]
     end
 
     self.save!
