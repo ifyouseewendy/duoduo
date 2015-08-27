@@ -1,15 +1,8 @@
-<% corporation.contracts.each_with_index do |cont, index| %>
-  <ul>
-    <li>
-      <span><%= cont.file.identifier %></span>
-      <span>( <%= link_to '下载', cont.url %> <%= link_to '删除', remove_contract_normal_corporation_path(corporation) + "?index=#{index}" %> )</span>
-    </li>
-  </ul>
-<% end %>
 
-<%= semantic_form_for corporation, url: append_contracts_normal_corporation_path do |f| %>
+<%= semantic_form_for sub_company.contract_files.new, url: contract_files_path do |f| %>
   <%= f.inputs do %>
-    <%= f.input :contracts, as: :file, label: '合同文件', input_html: {multiple: true} %>
+    <%= f.input :contract, as: :file, label: '合同文件' %>
+    <%= f.input :sub_company_id, as: :hidden, input_html: {value: sub_company.id} %>
   <% end %>
   <%= f.actions do %>
     <%= f.action :submit, label: '上传' %>

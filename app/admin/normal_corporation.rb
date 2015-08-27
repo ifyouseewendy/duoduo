@@ -16,7 +16,7 @@ ActiveAdmin.register NormalCorporation do
     parent: I18n.t("activerecord.models.corporation"),
     priority: 21
 
-  permit_params *NormalCorporation.ordered_columns(without_base_keys: true, without_foreign_keys: true), :index, contracts: []
+  permit_params *NormalCorporation.ordered_columns(without_base_keys: true, without_foreign_keys: true)
 
   scope "最近10条更新" do |record|
     record.updated_latest_10
@@ -68,7 +68,7 @@ ActiveAdmin.register NormalCorporation do
       tabs do
         resource.sub_companies.each do |comp|
           tab comp.name do
-            render partial: "shared/contract", locals: {company: comp, corporation: resource}
+            render partial: "shared/contract", locals: {sub_company: comp, corporation: resource}
           end
         end
       end
