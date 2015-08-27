@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150822025938) do
+ActiveRecord::Schema.define(version: 20150827055509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -127,8 +127,9 @@ ActiveRecord::Schema.define(version: 20150822025938) do
     t.integer  "stuff_count"
     t.integer  "insurance_count"
     t.text     "remark"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
+    t.text     "contracts",                                   default: [],              array: true
   end
 
   add_index "normal_corporations", ["account"], name: "index_normal_corporations_on_account", using: :btree
