@@ -1,14 +1,26 @@
 ActiveAdmin.register NormalStaff do
+  include ImportDemo
+
+  active_admin_import \
+    validate: true,
+    template: 'import' ,
+    batch_transaction: true,
+    template_object: ActiveAdminImport::Model.new(
+      csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
+      csv_headers: @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true),
+      force_encoding: :auto,
+      allow_archive: false,
+  )
 
   menu \
     parent: I18n.t("activerecord.models.staff"),
     priority: 21
 
-  permit_params NormalStaff.column_names
+  permit_params *NormalStaff.ordered_columns(without_base_keys: true, without_foreign_keys: true)
 
   index do
     selectable_column
-    NormalStaff.column_names.map(&:to_sym).map do |field|
+    NormalStaff.ordered_columns.map(&:to_sym).map do |field|
       if field == :gender
         # enum
         column :gender do |obj|
@@ -70,7 +82,7 @@ ActiveAdmin.register NormalStaff do
   show do
     attributes_table do
       boolean_columns = NormalStaff.columns_of(:boolean)
-      NormalStaff.column_names.map(&:to_sym).map do |field|
+      NormalStaff.ordered_columns.map(&:to_sym).map do |field|
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
         else
