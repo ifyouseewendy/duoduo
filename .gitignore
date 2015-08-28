@@ -19,3 +19,4 @@
 public/resources
 .envrc
 .env.*
+config/database.yml
