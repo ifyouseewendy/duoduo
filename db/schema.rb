@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828014104) do
+ActiveRecord::Schema.define(version: 20150828015248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -234,6 +234,7 @@ ActiveRecord::Schema.define(version: 20150828014104) do
   add_index "normal_staffs", ["name"], name: "index_normal_staffs_on_name", using: :btree
   add_index "normal_staffs", ["nation"], name: "index_normal_staffs_on_nation", using: :btree
   add_index "normal_staffs", ["nest_id"], name: "index_normal_staffs_on_nest_id", using: :btree
+  add_index "normal_staffs", ["normal_corporation_id"], name: "index_normal_staffs_on_normal_corporation_id", using: :btree
   add_index "normal_staffs", ["remark"], name: "index_normal_staffs_on_remark", using: :btree
   add_index "normal_staffs", ["social_insurance_base"], name: "index_normal_staffs_on_social_insurance_base", using: :btree
   add_index "normal_staffs", ["social_insurance_serial"], name: "index_normal_staffs_on_social_insurance_serial", using: :btree
@@ -270,4 +271,5 @@ ActiveRecord::Schema.define(version: 20150828014104) do
   end
 
   add_foreign_key "contract_files", "sub_companies"
+  add_foreign_key "normal_staffs", "normal_corporations"
 end
