@@ -55,6 +55,9 @@ gem 'whenever', :require => false
 # Pinyin
 gem 'chinese_pinyin'
 
+# Fake Chinese name
+gem 'jia'
+
 group :development do
   gem 'quiet_assets'
 

@@ -150,6 +150,8 @@ GEM
     jbuilder (2.3.0)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
+    jia (0.0.1)
+      ruby-pinyin
     jquery-rails (4.0.4)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -237,6 +239,9 @@ GEM
     request_store (1.2.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    rmmseg-cpp (0.2.9)
+    ruby-pinyin (0.4.6)
+      rmmseg-cpp (~> 0.2)
     rubyzip (1.1.7)
     sass (3.4.15)
     sass-rails (5.0.3)
@@ -302,6 +307,7 @@ DEPENDENCIES
   dotenv-rails
   draper
   jbuilder (~> 2.0)
+  jia
   jquery-rails
   mina
   pg
