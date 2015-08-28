@@ -94,31 +94,4 @@ ActiveAdmin.register NormalCorporation do
     active_admin_comments
   end
 
-  # Controller
-  member_action :append_contracts, method: :patch do
-    resource = NormalCorporation.find(permitted_params[:id])
-    contracts = permitted_params[:normal_corporation][:contracts]
-
-    resource.contracts = resource.contracts + contracts
-    if resource.save
-      redirect_to normal_corporation_path(resource), notice: "成功上传合同文件"
-    else
-      redirect_to normal_corporation_path(resource), alert: "上传失败：#{resource.errors.full_messages.join(', ')}"
-    end
-  end
-
-  member_action :remove_contract do
-    resource = NormalCorporation.find(permitted_params[:id])
-    index = permitted_params[:index].to_i
-
-    contracts = resource.contracts
-    contracts.delete_at(index)
-    resource.contracts = contracts
-
-    if resource.save
-      redirect_to normal_corporation_path(resource), notice: "成功删除合同文件"
-    else
-      redirect_to normal_corporation_path(resource), alert: "保存失败：#{resource.errors.full_messages.join(', ')}"
-    end
-  end
 end
