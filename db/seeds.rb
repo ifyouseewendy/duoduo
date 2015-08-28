@@ -4,8 +4,10 @@ puts "--> Cleaning DB data"
 sub_companies = Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
   sc = SubCompany.create(name: name)
   (1..2).each_with_object([]) do |idx, ar|
-    contract = File.open("tmp/#{name}.合同#{idx}.txt") if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
-    sc.contract_files.create(contract: contract)
+    if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
+      contract = File.open("tmp/#{name}.合同#{idx}.txt")
+      sc.contract_files.create(contract: contract)
+    end
   end
 
   companies << sc
