@@ -45,7 +45,7 @@ ActiveAdmin.register NormalCorporation do
       f.input :telephone, as: :phone
       f.input :contract_due_time, as: :datepicker
       f.input :contract_amount, as: :number
-      f.input :admin_charge_type, as: :radio, collection: Rails.application.secrets.admin_charge_type.map{|n| I18n.t("misc.admin_charge_type.#{n}")}
+      f.input :admin_charge_type, as: :radio, collection: NormalCorporation.admin_charge_types_option
       f.input :admin_charge_amount, as: :number
       f.input :expense_date, as: :datepicker
       f.input :stuff_count, as: :number

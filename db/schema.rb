@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828015248) do
+ActiveRecord::Schema.define(version: 20150828025013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,14 +131,14 @@ ActiveRecord::Schema.define(version: 20150828015248) do
     t.text     "telephone"
     t.date     "contract_due_time"
     t.money    "contract_amount",                   scale: 2
-    t.integer  "admin_charge_type"
+    t.integer  "admin_charge_type",                           default: 0
     t.decimal  "admin_charge_amount", precision: 8, scale: 2
     t.date     "expense_date"
     t.integer  "stuff_count"
     t.integer  "insurance_count"
     t.text     "remark"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
   end
 
   add_index "normal_corporations", ["account"], name: "index_normal_corporations_on_account", using: :btree
@@ -202,8 +202,8 @@ ActiveRecord::Schema.define(version: 20150828015248) do
     t.text     "work_place"
     t.text     "work_type"
     t.text     "remark"
-    t.datetime "created_at",                                                   null: false
-    t.datetime "updated_at",                                                   null: false
+    t.datetime "created_at",                                                               null: false
+    t.datetime "updated_at",                                                               null: false
     t.integer  "normal_corporation_id"
   end
 

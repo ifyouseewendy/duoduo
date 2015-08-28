@@ -1,8 +1,5 @@
 zh-CN:
   misc:
-    admin_charge_type:
-      by_rate: "每人固定比例"
-      by_count: "每人固定金额"
     import_demo:
       name: "导入文件示例"
       notice: "请参考下行中列名，导入数据需要按此列名顺序。注：导入文件中不应包含各个列名。"
@@ -39,6 +36,9 @@ zh-CN:
         contract_due_time: '合同签订期限'
         contract_amount: '合同金额'
         admin_charge_type: '管理费收取方式'
+        admin_charge_types:
+          by_rate: "每人固定比例"
+          by_count: "每人固定金额"
         admin_charge_amount: '管理费收取比例/金额'
         expense_date: '单位开支日期'
         stuff_count: '员工人数'
