@@ -20,6 +20,9 @@ zh-CN:
       engineering_corporation: "工程合作单位"
       project: "测试项目"
       sub_company: "吉易子公司"
+      staff: "员工信息"
+      normal_staff: "普通员工信息"
+      engineering_staff: "工程员工信息"
     attributes:
       normal_corporation:
         id: '编号'
@@ -72,3 +75,45 @@ zh-CN:
       project:
         name: "名称"
         description: "描述"
+      normal_staff:
+        id: '编号'
+        nest_id: '本单位中编号'
+        name: '姓名'
+        company_name: '公司名称'
+        account: '银行卡号'
+        account_bank: '开户行'
+        identity_card: '身份证号'
+        birth: '出生年月日'
+        age: '年龄（周岁）'
+        gender: '性别'
+        genders:
+          male: '男'
+          female: '女'
+        nation: '民族'
+        grade: '学历'
+        address: '家庭地址'
+        telephone: '联系电话'
+        social_insurance_start_date: '社保参加工作时间'
+        current_social_insurance_start_date: '本单位社保参保时间'
+        current_medical_insurance_start_date: '本单位医保参保时间'
+        social_insurance_base: '社保基数'
+        medical_insurance_base: '医保基数'
+        has_social_insurance: '是否参社保'
+        has_medical_insurance: '是否参医保'
+        in_service: '在职'
+        in_release: '解除'
+        house_accumulation_base: '住房公积金基数'
+        arrive_current_company_at: '到本单位时间'
+        contract_start_date: '合同起始时间'
+        contract_end_date: '合同终止时间'
+        social_insurance_serial: '社保个人编号'
+        medical_insurance_serial: '医保个人编号'
+        medical_insurance_card: '医保卡号'
+        backup_date: '备案时间'
+        backup_place: '备案地'
+        work_place: '工作地点'
+        work_type: '工种'
+        remark: '备注'
+        normal_corporation: '所属单位'
+        created_at: "创建时间"
+        updated_at: "更新时间"
