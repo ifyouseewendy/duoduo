@@ -97,7 +97,7 @@ puts "--> Creating NormalStaff and EngineeringStaff"
 
     NormalStaff.create!(
       normal_corporation: nc,
-      nest_id: nest_id,
+      nest_index: nest_id,
       name: staff.full_name,
       company_name: nc.name,
       account: rand_by(10),

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828025013) do
+ActiveRecord::Schema.define(version: 20150828102740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,7 +168,7 @@ ActiveRecord::Schema.define(version: 20150828025013) do
   add_index "normal_corporations_sub_companies", ["sub_company_id", "normal_corporation_id"], name: "idx_sub_company_id_and_normal_corporation_id", using: :btree
 
   create_table "normal_staffs", force: :cascade do |t|
-    t.text     "nest_id"
+    t.text     "nest_index"
     t.text     "name"
     t.text     "company_name"
     t.text     "account"
@@ -233,7 +233,7 @@ ActiveRecord::Schema.define(version: 20150828025013) do
   add_index "normal_staffs", ["medical_insurance_serial"], name: "index_normal_staffs_on_medical_insurance_serial", using: :btree
   add_index "normal_staffs", ["name"], name: "index_normal_staffs_on_name", using: :btree
   add_index "normal_staffs", ["nation"], name: "index_normal_staffs_on_nation", using: :btree
-  add_index "normal_staffs", ["nest_id"], name: "index_normal_staffs_on_nest_id", using: :btree
+  add_index "normal_staffs", ["nest_index"], name: "index_normal_staffs_on_nest_index", using: :btree
   add_index "normal_staffs", ["normal_corporation_id"], name: "index_normal_staffs_on_normal_corporation_id", using: :btree
   add_index "normal_staffs", ["remark"], name: "index_normal_staffs_on_remark", using: :btree
   add_index "normal_staffs", ["social_insurance_base"], name: "index_normal_staffs_on_social_insurance_base", using: :btree

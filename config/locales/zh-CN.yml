@@ -77,7 +77,7 @@ zh-CN:
         description: "描述"
       normal_staff:
         id: '编号'
-        nest_id: '本单位中编号'
+        nest_index: '本单位中编号'
         name: '姓名'
         company_name: '公司名称'
         account: '银行卡号'
