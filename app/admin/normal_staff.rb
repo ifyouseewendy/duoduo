@@ -6,6 +6,20 @@ ActiveAdmin.register NormalStaff do
 
   permit_params NormalStaff.column_names
 
+  index do
+    selectable_column
+    NormalStaff.column_names.map(&:to_sym).map do |field|
+      if field == :gender
+        column :gender do |obj|
+          obj.gender_i18n
+        end
+      else
+        column field
+      end
+    end
+    actions
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
 

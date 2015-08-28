@@ -8,4 +8,8 @@ class NormalStaff < ActiveRecord::Base
       genders.keys.map.with_index{|k,i| [I18n.t("activerecord.attributes.normal_staff.genders.#{k}"), i]}
     end
   end
+
+  def gender_i18n
+    I18n.t("activerecord.attributes.normal_staff.genders.#{gender}")
+  end
 end
