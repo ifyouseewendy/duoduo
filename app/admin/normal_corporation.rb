@@ -67,7 +67,15 @@ ActiveAdmin.register NormalCorporation do
 
   show do
     attributes_table do
-      NormalCorporation.ordered_columns(without_foreign_keys: true).map{|field| row field}
+      NormalCorporation.ordered_columns(without_foreign_keys: true).map do|field|
+        if field == :admin_charge_type
+          row :admin_charge_type do |obj|
+            obj.admin_charge_type_i18n
+          end
+        else
+          row field
+        end
+      end
       row :sub_companies do |corp|
         corp.sub_company_names.join(', ')
       end
