@@ -26,6 +26,7 @@ ActiveAdmin.register NormalCorporation do
     selectable_column
     NormalCorporation.ordered_columns(without_foreign_keys: true).map do |field|
       if field == :admin_charge_type
+        # enum
         column :admin_charge_type do |obj|
           obj.admin_charge_type_i18n
         end

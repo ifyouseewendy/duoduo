@@ -10,9 +10,12 @@ ActiveAdmin.register NormalStaff do
     selectable_column
     NormalStaff.column_names.map(&:to_sym).map do |field|
       if field == :gender
+        # enum
         column :gender do |obj|
           obj.gender_i18n
         end
+      elsif field == :normal_corporation_id
+        column :normal_corporation, sortable: :normal_corporation_id
       else
         column field
       end
