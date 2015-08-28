@@ -66,4 +66,25 @@ ActiveAdmin.register NormalStaff do
 
     f.actions
   end
+
+  show do
+    attributes_table do
+      boolean_columns = NormalStaff.columns_of(:boolean)
+      NormalStaff.column_names.map(&:to_sym).map do |field|
+        if boolean_columns.include? field
+          row(field) { status_tag resource.send(field).to_s }
+        else
+          if field == :gender
+            row :gender do |obj|
+              obj.gender_i18n
+            end
+          elsif field == :normal_corporation_id
+            row :normal_corporation
+          else
+            row field
+          end
+        end
+      end
+    end
+  end
 end
