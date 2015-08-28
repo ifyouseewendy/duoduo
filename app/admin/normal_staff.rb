@@ -19,7 +19,7 @@ ActiveAdmin.register NormalStaff do
       f.input :identity_card, as: :string
       f.input :birth, as: :datepicker
       f.input :age, as: :number
-      f.input :gender, as: :radio
+      f.input :gender, as: :radio, collection: NormalStaff.genders_option
       f.input :nation, as: :string
       f.input :grade, as: :string
       f.input :address, as: :string
