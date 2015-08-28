@@ -7,7 +7,7 @@ ActiveAdmin.register EngineeringCorporation do
     batch_transaction: true,
     template_object: ActiveAdminImport::Model.new(
       csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
-      csv_headers: @resource.ordered_columns,
+      csv_headers: @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true),
       force_encoding: :auto,
       allow_archive: false,
   )
@@ -16,7 +16,7 @@ ActiveAdmin.register EngineeringCorporation do
     parent: I18n.t("activerecord.models.corporation"),
     priority: 22
 
-  permit_params EngineeringCorporation.ordered_columns
+  permit_params *EngineeringCorporation.ordered_columns(without_base_keys: true, without_foreign_keys: true)
 
   scope "最近10条更新" do |record|
     record.updated_latest_10
@@ -24,7 +24,7 @@ ActiveAdmin.register EngineeringCorporation do
 
   index do
     selectable_column
-    EngineeringCorporation.ordered_columns(all: true).map{|field| column field}
+    EngineeringCorporation.ordered_columns(without_foreign_keys: true).map{|field| column field}
     actions
   end
 
@@ -60,7 +60,7 @@ ActiveAdmin.register EngineeringCorporation do
 
   show do
     attributes_table do
-      EngineeringCorporation.ordered_columns(all: true).map{|field| row field}
+      EngineeringCorporation.ordered_columns(without_foreign_keys: true).map{|field| row field}
       row :sub_companies do |corp|
         corp.sub_company_names.join(', ')
       end
