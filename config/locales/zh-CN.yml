@@ -117,3 +117,21 @@ zh-CN:
         normal_corporation: '所属单位'
         created_at: "创建时间"
         updated_at: "更新时间"
+      engineering_staff:
+        id: '编号'
+        nest_index: '本单位中编号'
+        name: '姓名'
+        company_name: '公司名称'
+        identity_card: '身份证号'
+        birth: '出生年月日'
+        age: '年龄（周岁）'
+        gender: '性别'
+        genders:
+          male: '男'
+          female: '女'
+        nation: '民族'
+        address: '家庭住址'
+        remark: '备注'
+        engineering_corporation: '所属单位'
+        created_at: "创建时间"
+        updated_at: "更新时间"

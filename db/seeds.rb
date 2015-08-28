@@ -1,4 +1,5 @@
-[NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
+puts "--> Cleaning DB data"
+[EngineeringStaff, NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
 
 sub_companies = Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
   sc = SubCompany.create(name: name)
@@ -86,10 +87,12 @@ end
 puts "--> Creating NormalStaff and EngineeringStaff"
 (1..7).each do |id|
   nc = NormalCorporation.offset(id).take
+  ec = EngineeringCorporation.offset(id).take
 
   (1..5).each do |nest_id|
     bank          = ['工商银行', '农业银行', '交通银行', '建设银行'].sample
     birth         = random_date
+    age           = (Date.today - birth).to_i/365,
     grade         = ['本科', '大专', '研究生'].sample
     address       = "四平市#{id}街#{nest_id}号"
 
@@ -104,7 +107,7 @@ puts "--> Creating NormalStaff and EngineeringStaff"
       account_bank: bank,
       identity_card: rand_by(10),
       birth: birth,
-      age: (Date.today - birth).to_i/365,
+      age: age,
       gender: rand(2),
       nation: '汉族',
       grade: grade,
@@ -130,6 +133,22 @@ puts "--> Creating NormalStaff and EngineeringStaff"
       backup_place: '四平市',
       work_place: '四平市',
       work_type: ['人力', '物业', '财务', '保安'].sample,
+      remark: '备注'
+    )
+
+    staff = Jia::User.new
+
+    EngineeringStaff.create!(
+      engineering_corporation: ec,
+      nest_index: nest_id,
+      name: staff.full_name,
+      company_name: ec.name,
+      identity_card: rand_by(10),
+      birth: birth,
+      age: age,
+      gender: rand(2),
+      nation:  '汉族',
+      address: address,
       remark: '备注'
     )
   end

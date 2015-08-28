@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nest_id: 1
+  name: MyText
+  company_name: MyText
+  identity_card: MyText
+  birth: 2015-08-28
+  age: 1
+  gender: 1
+  nation: MyText
+  address: MyText
+  remark: MyText
+
+two:
+  nest_id: 1
+  name: MyText
+  company_name: MyText
+  identity_card: MyText
+  birth: 2015-08-28
+  age: 1
+  gender: 1
+  nation: MyText
+  address: MyText
+  remark: MyText

@@ -40,7 +40,7 @@ ActiveAdmin.register NormalStaff do
 
     f.inputs do
       f.input :normal_corporation, as: :select
-      f.input :nest_id, as: :number
+      f.input :nest_index, as: :number
       f.input :name, as: :string
       f.input :company_name, as: :string
       f.input :account, as: :string

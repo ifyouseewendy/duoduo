@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828102740) do
+ActiveRecord::Schema.define(version: 20150828151416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,34 @@ ActiveRecord::Schema.define(version: 20150828102740) do
 
   add_index "engineering_corporations_sub_companies", ["engineering_corporation_id", "sub_company_id"], name: "idx_on_engineering_corporation_id_and_sub_company_id", using: :btree
   add_index "engineering_corporations_sub_companies", ["sub_company_id", "engineering_corporation_id"], name: "idx_sub_company_id_and_engineering_corporation_id", using: :btree
+
+  create_table "engineering_staffs", force: :cascade do |t|
+    t.integer  "nest_index"
+    t.text     "name"
+    t.text     "company_name"
+    t.text     "identity_card"
+    t.date     "birth"
+    t.integer  "age"
+    t.integer  "gender",                     default: 0
+    t.text     "nation"
+    t.text     "address"
+    t.text     "remark"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.integer  "engineering_corporation_id"
+  end
+
+  add_index "engineering_staffs", ["address"], name: "index_engineering_staffs_on_address", using: :btree
+  add_index "engineering_staffs", ["age"], name: "index_engineering_staffs_on_age", using: :btree
+  add_index "engineering_staffs", ["birth"], name: "index_engineering_staffs_on_birth", using: :btree
+  add_index "engineering_staffs", ["company_name"], name: "index_engineering_staffs_on_company_name", using: :btree
+  add_index "engineering_staffs", ["engineering_corporation_id"], name: "index_engineering_staffs_on_engineering_corporation_id", using: :btree
+  add_index "engineering_staffs", ["gender"], name: "index_engineering_staffs_on_gender", using: :btree
+  add_index "engineering_staffs", ["identity_card"], name: "index_engineering_staffs_on_identity_card", using: :btree
+  add_index "engineering_staffs", ["name"], name: "index_engineering_staffs_on_name", using: :btree
+  add_index "engineering_staffs", ["nation"], name: "index_engineering_staffs_on_nation", using: :btree
+  add_index "engineering_staffs", ["nest_index"], name: "index_engineering_staffs_on_nest_index", using: :btree
+  add_index "engineering_staffs", ["remark"], name: "index_engineering_staffs_on_remark", using: :btree
 
   create_table "milestones", force: :cascade do |t|
     t.string   "name"
@@ -271,5 +299,6 @@ ActiveRecord::Schema.define(version: 20150828102740) do
   end
 
   add_foreign_key "contract_files", "sub_companies"
+  add_foreign_key "engineering_staffs", "engineering_corporations"
   add_foreign_key "normal_staffs", "normal_corporations"
 end
