@@ -18,7 +18,7 @@ class NormalStaff < ActiveRecord::Base
     end
 
     def columns_of(type)
-      NormalStaff.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
+      self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
     end
   end
 

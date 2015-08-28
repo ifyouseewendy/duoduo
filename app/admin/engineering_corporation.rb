@@ -60,7 +60,15 @@ ActiveAdmin.register EngineeringCorporation do
 
   show do
     attributes_table do
-      EngineeringCorporation.ordered_columns(without_foreign_keys: true).map{|field| row field}
+      boolean_columns = EngineeringCorporation.columns_of(:boolean)
+      EngineeringCorporation.ordered_columns(without_foreign_keys: true).map do |field|
+        if boolean_columns.include? field
+          row(field) { status_tag resource.send(field).to_s }
+        else
+          row field
+        end
+      end
+
       row :sub_companies do |corp|
         corp.sub_company_names.join(', ')
       end
