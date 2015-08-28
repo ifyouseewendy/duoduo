@@ -7,6 +7,8 @@ sub_companies = Rails.application.secrets.sub_company_names.each_with_object([])
     contract = File.open("tmp/#{name}.合同#{idx}.txt") if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
     sc.contract_files.create(contract: contract)
   end
+
+  companies << sc
 end
 
 def rand_by(len)
@@ -86,10 +88,10 @@ end
 
 puts "--> Creating NormalStaff and EngineeringStaff"
 (1..7).each do |id|
-  nc = NormalCorporation.offset(id).take
-  ec = EngineeringCorporation.offset(id).take
-
   (1..5).each do |nest_id|
+    nc = NormalCorporation.all.sample
+    ec = EngineeringCorporation.all.sample
+
     bank          = ['工商银行', '农业银行', '交通银行', '建设银行'].sample
     birth         = random_date
     age           = (Date.today - birth).to_i/365,
