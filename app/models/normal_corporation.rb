@@ -26,4 +26,8 @@ class NormalCorporation < ActiveRecord::Base
   def sub_company_names
     sub_companies.map(&:name)
   end
+
+  def admin_charge_type_i18n
+    I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{admin_charge_type}")
+  end
 end

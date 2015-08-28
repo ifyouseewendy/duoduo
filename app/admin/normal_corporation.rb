@@ -24,7 +24,15 @@ ActiveAdmin.register NormalCorporation do
 
   index do
     selectable_column
-    NormalCorporation.ordered_columns(without_foreign_keys: true).map{|field| column field}
+    NormalCorporation.ordered_columns(without_foreign_keys: true).map do |field|
+      if field == :admin_charge_type
+        column :admin_charge_type do |obj|
+          obj.admin_charge_type_i18n
+        end
+      else
+        column field
+      end
+    end
     actions
   end
 
