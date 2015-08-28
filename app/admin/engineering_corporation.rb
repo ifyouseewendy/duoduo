@@ -73,19 +73,24 @@ ActiveAdmin.register EngineeringCorporation do
         corp.sub_company_names.join(', ')
       end
     end
+
+    panel "业务代理合同" do
+      tabs do
+        resource.sub_companies.each do |comp|
+          tab comp.name do
+            render partial: "shared/contract", locals: {sub_company: comp, corporation: resource}
+          end
+        end
+      end
+    end
+
     active_admin_comments
   end
 
-  sidebar "业务代理合同", only: :show do
-    resource.sub_companies.each do |comp|
-      b comp.name
-      ul do
-        li { link_to "hello", "#"  }
-        li { link_to "hello", "#"  }
-      end
+  sidebar '链接', only: [:show] do
+    ul do
+      li link_to EngineeringStaff.model_name.human, "/engineering_staffs?utf8=✓&q%5Bengineering_corporation_id_eq%5D=#{resource.id}&commit=过滤&order=id_desc"
     end
   end
 
-  # preserve_default_filters!
-  # filter :jiyi_company_name, as: :select, collection: proc { Rails.application.secrets.jiyi_company_names }
 end
