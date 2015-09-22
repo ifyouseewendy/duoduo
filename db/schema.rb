@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922110001) do
+ActiveRecord::Schema.define(version: 20150922111703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -325,7 +325,14 @@ ActiveRecord::Schema.define(version: 20150922110001) do
     t.text     "remark"
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
+    t.integer  "salary_table_id"
+    t.integer  "normal_staff_id"
+    t.integer  "engineering_staff_id"
   end
+
+  add_index "salary_items", ["engineering_staff_id"], name: "index_salary_items_on_engineering_staff_id", using: :btree
+  add_index "salary_items", ["normal_staff_id"], name: "index_salary_items_on_normal_staff_id", using: :btree
+  add_index "salary_items", ["salary_table_id"], name: "index_salary_items_on_salary_table_id", using: :btree
 
   create_table "salary_tables", force: :cascade do |t|
     t.text     "name"
@@ -363,6 +370,9 @@ ActiveRecord::Schema.define(version: 20150922110001) do
   add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "engineering_staffs", "engineering_corporations"
   add_foreign_key "normal_staffs", "normal_corporations"
+  add_foreign_key "salary_items", "engineering_staffs"
+  add_foreign_key "salary_items", "normal_staffs"
+  add_foreign_key "salary_items", "salary_tables"
   add_foreign_key "salary_tables", "engineering_corporations"
   add_foreign_key "salary_tables", "normal_corporations"
 end
