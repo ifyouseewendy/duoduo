@@ -20,6 +20,8 @@ zh-CN:
       staff: "员工信息"
       normal_staff: "普通员工信息"
       engineering_staff: "工程员工信息"
+      salary_table: "工资表"
+      salary_item: '工资条'
     attributes:
       normal_corporation:
         id: '编号'
@@ -133,5 +135,63 @@ zh-CN:
         address: '家庭住址'
         remark: '备注'
         engineering_corporation: '所属单位'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      salary_table:
+        id: '编号'
+        name: '名称'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      salary_item:
+        id: '序号'
+        identity_card: '身份证号'
+        account: '工资卡号'
+        company_name: '公司名称'
+        staff_category: '用工类别'
+        staff_name: '姓名'
+        salary_table_name: '名称（月份）'
+        working_hour: '工作时间/小时'
+        working_wage: '工资额/小时'
+        working_overtime: '加班费'
+        working_reward: '奖励'
+        salary_deserve: '应发工资'
+        annual_reward: '年终一次性奖励'
+        pension_personal: '养老保险（个人）'
+        pension_margin_personal: '补养老保险差额'
+        unemployment_personal: '失业保险（个人）'
+        unemployment_margin_personal: '补失业保险差额'
+        medical_personal: '医疗保险（个人）'
+        medical_margin_personal: '补医疗保险差额'
+        house_accumulation_personal: '公积金（个人）'
+        big_amount_personal: '大额'
+        income_tax: '个税'
+        salary_card_addition: '工资卡'
+        medical_scan_addition: '医保扫描'
+        salary_pre_deduct_addition: '预扣工资款'
+        insurance_pre_deduct_addition: '预扣保险款'
+        physical_exam_addition: '体检费'
+        total_personal: '合计'
+        salary_in_fact: '实发工资'
+        pension_company: '养老保险（公司）'
+        pension_margin_company: '补养老保险差额'
+        unemployment_company: '失业保险（公司）'
+        unemployment_margin_company: '补失业保险差额'
+        medical_company: '医疗保险（公司）'
+        medical_margin_company: '补医疗保险差额'
+        injury_company: '工伤保险（公司）'
+        injury_margin_company: '补工伤保险差额'
+        birth_company: '生育保险（公司）'
+        birth_margin_company: '补生育保险差额'
+        accident_company: '意外'
+        house_accumulation_company: '公积金（公司）'
+        total_company: '合计'
+        social_insurance_to_salary_deserve: '社保金额转到应发工资'
+        social_insurance_to_pre_deduct: '社保金额转到预扣保险款'
+        medical_insurance_to_salary_deserve: '医保金额转到应发工资'
+        medical_insurance_to_pre_deduct: '医保金额转到预扣保险款'
+        house_accumulation_to_salary_deserve: '公积金转到应发工资'
+        house_accumulation_to_pre_deduct: '公积金转到预扣保险款'
+        admin_amount: '管理费'
+        total_sum: '劳务费用合计'
         created_at: "创建时间"
         updated_at: "更新时间"
