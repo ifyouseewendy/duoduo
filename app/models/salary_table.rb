@@ -2,7 +2,7 @@ class SalaryTable < ActiveRecord::Base
   belongs_to :normal_corporation
   belongs_to :engineering_corporation
 
-  has_many :salary_items
+  has_many :salary_items, dependent: :destroy
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
