@@ -12,7 +12,10 @@ ActiveAdmin.register SalaryTable do
       column field
     end
     column :corporation, sortable: ->(obj){ obj.corporation.name }
-    actions
+
+    actions do |st|
+      item "详情", '#', class: "member_link"
+    end
   end
 
   form do |f|
