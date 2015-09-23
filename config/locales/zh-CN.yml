@@ -198,5 +198,9 @@ zh-CN:
         house_accumulation_to_pre_deduct: '公积金转到预扣保险款'
         admin_amount: '管理费'
         total_sum: '劳务费用合计'
+        salary_table: '工资表'
+        normal_staff: '普通员工'
+        engineering_staff: '工程员工'
+        remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"

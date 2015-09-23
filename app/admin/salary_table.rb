@@ -14,7 +14,7 @@ ActiveAdmin.register SalaryTable do
     column :corporation, sortable: ->(obj){ obj.corporation.name }
 
     actions do |st|
-      item "详情", '#', class: "member_link"
+      item "详情", salary_table_salary_items_path(st), class: "member_link"
     end
   end
 
