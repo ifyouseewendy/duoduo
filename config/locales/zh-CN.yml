@@ -140,6 +140,11 @@ zh-CN:
       salary_table:
         id: '编号'
         name: '名称'
+        remark: '备注'
+        corporation: '所属单位'
+        normal_corporation: '普通合作单位'
+        engineering_corporation: '工程合作单位'
+        salary_items: '工资条'
         created_at: "创建时间"
         updated_at: "更新时间"
       salary_item:
