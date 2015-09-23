@@ -1,5 +1,5 @@
 puts "--> Cleaning DB data"
-[EngineeringStaff, NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
+[SalaryItem, SalaryTable, EngineeringStaff, NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
 
 sub_companies = Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
   sc = SubCompany.create(name: name)
@@ -15,6 +15,10 @@ end
 
 def rand_by(len)
   rand.to_s[2..(2+len-1)]
+end
+
+def random_date(base = '1980-01-01')
+  Date.parse(base) + rand(10).years + rand(300).days
 end
 
 puts "--> Creating NormalCorporation and EngineeringCorporation"
@@ -82,10 +86,6 @@ puts "--> Creating NormalCorporation and EngineeringCorporation"
     )
 
   end
-end
-
-def random_date(base = '1980-01-01')
-  Date.parse(base) + rand(10).years + rand(300).days
 end
 
 puts "--> Creating NormalStaff and EngineeringStaff"
@@ -156,4 +156,22 @@ puts "--> Creating NormalStaff and EngineeringStaff"
       remark: '备注'
     )
   end
+end
+
+puts "--> Creating SalaryTable and SalaryItem"
+(1..10).each do |id|
+  nc = NormalCorporation.all.sample
+  ec = EngineeringCorporation.all.sample
+
+  month = (1..12).to_a.sample
+
+  SalaryTable.create!(
+    name: "2015年#{month}月",
+    normal_corporation: nc
+  )
+
+  SalaryTable.create!(
+    name: "2015年#{month}月",
+    engineering_corporation: ec
+  )
 end
