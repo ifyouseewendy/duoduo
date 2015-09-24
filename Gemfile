@@ -63,6 +63,7 @@ group :development do
 
   # UML Diagram
   gem 'railroady'
+  gem "rails-erd"
 end
 
 group :development, :test do
