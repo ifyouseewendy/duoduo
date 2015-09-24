@@ -1,4 +1,6 @@
 ActiveAdmin.register NormalStaff do
+  belongs_to :normal_corporation, optional: true
+
   include ImportDemo
 
   active_admin_import \

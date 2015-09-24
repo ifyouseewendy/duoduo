@@ -1,4 +1,6 @@
 ActiveAdmin.register EngineeringStaff do
+  belongs_to :engineering_corporation, optional: true
+
   include ImportDemo
 
   active_admin_import \

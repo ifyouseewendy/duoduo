@@ -89,7 +89,7 @@ ActiveAdmin.register EngineeringCorporation do
 
   sidebar '链接', only: [:show] do
     ul do
-      li link_to EngineeringStaff.model_name.human, "/engineering_staffs?utf8=✓&q%5Bengineering_corporation_id_eq%5D=#{resource.id}&commit=过滤&order=id_desc"
+      li link_to EngineeringStaff.model_name.human, engineering_corporation_engineering_staffs_path(engineering_corporation)
       li link_to SalaryTable.model_name.human, engineering_corporation_salary_tables_path(engineering_corporation)
     end
   end
