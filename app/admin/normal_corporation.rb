@@ -97,6 +97,7 @@ ActiveAdmin.register NormalCorporation do
   sidebar '链接', only: [:show] do
     ul do
       li link_to NormalStaff.model_name.human, "/normal_staffs?utf8=✓&q%5Bnormal_corporation_id_eq%5D=#{resource.id}&commit=过滤&order=id_desc"
+      li link_to SalaryTable.model_name.human, normal_corporation_salary_tables_path(normal_corporation)
     end
   end
 
