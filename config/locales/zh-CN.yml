@@ -22,6 +22,7 @@ zh-CN:
       engineering_staff: "工程员工信息"
       salary_table: "基础工资表"
       salary_item: '基础工资条'
+      individual_income_tax: '个人所得税'
     attributes:
       normal_corporation:
         id: '编号'
@@ -205,3 +206,12 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
+      individual_income_tax:
+        id: '序号'
+        grade: '级数'
+        tax_range_start: '应纳税所得额大于'
+        tax_range_end: '应纳税所得额小于等于'
+        rate: '税率'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+

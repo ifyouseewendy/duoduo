@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  grade: 1
+  tax_range_start: 1
+  tax_range_end: 1
+  rate: 9.99
+
+two:
+  grade: 1
+  tax_range_start: 1
+  tax_range_end: 1
+  rate: 9.99
