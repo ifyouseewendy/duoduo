@@ -23,6 +23,7 @@ zh-CN:
       salary_table: "基础工资表"
       salary_item: '基础工资条'
       individual_income_tax: '个人所得税'
+      settings: '设置'
     attributes:
       normal_corporation:
         id: '编号'
