@@ -161,18 +161,12 @@ end
 puts "--> Creating SalaryTable and SalaryItem"
 (1..10).each do |id|
   nc = NormalCorporation.all.sample
-  ec = EngineeringCorporation.all.sample
 
   month = (1..12).to_a.sample
 
   SalaryTable.create!(
     name: "2015年#{month}月",
     normal_corporation: nc
-  )
-
-  SalaryTable.create!(
-    name: "2015年#{month}月",
-    engineering_corporation: ec
   )
 end
 
