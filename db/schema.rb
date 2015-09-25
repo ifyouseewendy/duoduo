@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150925133246) do
+ActiveRecord::Schema.define(version: 20150925154541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,12 @@ ActiveRecord::Schema.define(version: 20150925133246) do
   add_index "engineering_staffs", ["nation"], name: "index_engineering_staffs_on_nation", using: :btree
   add_index "engineering_staffs", ["nest_index"], name: "index_engineering_staffs_on_nest_index", using: :btree
   add_index "engineering_staffs", ["remark"], name: "index_engineering_staffs_on_remark", using: :btree
+
+  create_table "individual_income_tax_bases", force: :cascade do |t|
+    t.integer  "base"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "individual_income_taxes", force: :cascade do |t|
     t.integer  "grade"
