@@ -17,10 +17,14 @@ ActiveAdmin.register IndividualIncomeTax do
     end
   end
 
-  action_item :new do
+  action_item :add_grade do
     link_to '添加级数', new_individual_income_tax_path
   end
 
+  sidebar "个税基数" do
+    span IndividualIncomeTaxBase.first.base
+    link_to "更新", edit_individual_income_tax_basis_path(IndividualIncomeTaxBase.first), class: 'update_iit_base'
+  end
   sidebar "个税计算器", partial: 'calculator'
 
   collection_action :calculate, method: :post do
