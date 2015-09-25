@@ -20,8 +20,8 @@ zh-CN:
       staff: "员工信息"
       normal_staff: "普通员工信息"
       engineering_staff: "工程员工信息"
-      salary_table: "工资表"
-      salary_item: '工资条'
+      salary_table: "基础工资表"
+      salary_item: '基础工资条'
     attributes:
       normal_corporation:
         id: '编号'
@@ -199,7 +199,7 @@ zh-CN:
         admin_amount: '管理费'
         total_sum: '劳务费用合计'
         total_sum_with_admin_amount: '劳务费用合计（含管理）'
-        salary_table: '工资表'
+        salary_table: '基础工资表'
         normal_staff: '普通员工'
         engineering_staff: '工程员工'
         remark: '备注'

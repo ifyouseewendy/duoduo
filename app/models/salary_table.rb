@@ -1,7 +1,5 @@
 class SalaryTable < ActiveRecord::Base
   belongs_to :normal_corporation
-  belongs_to :engineering_corporation
-
   has_many :salary_items, dependent: :destroy
 
   class << self
@@ -9,13 +7,13 @@ class SalaryTable < ActiveRecord::Base
       names = column_names.map(&:to_sym)
 
       names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(normal_corporation_id engineering_corporation_id) if without_foreign_keys
+      names -= %i(normal_corporation_id) if without_foreign_keys
 
       names
     end
   end
 
   def corporation
-    normal_corporation or engineering_corporation
+    normal_corporation
   end
 end

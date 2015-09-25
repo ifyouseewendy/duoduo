@@ -1,6 +1,5 @@
 ActiveAdmin.register SalaryTable do
   belongs_to :normal_corporation, optional: true
-  belongs_to :engineering_corporation, optional: true
 
   menu \
     label: I18n.t("activerecord.models.salary_table"),
