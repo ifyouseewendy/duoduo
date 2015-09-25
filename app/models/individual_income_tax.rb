@@ -9,6 +9,16 @@ class IndividualIncomeTax < ActiveRecord::Base
       names
     end
 
+    def calculate(salary: 0, bonus: 0)
+      base = IndividualIncomeTaxBase.instance.base
+      number = salary - base
+
+      return 0 if number <= 0
+
+      iit = self.order(grade: :asc).detect{|e| Range.new(e.tax_range_start, e.tax_range_end).include? number }
+      (number * iit.rate - iit.quick_subtractor).round(2)
+    end
+
   end
 
   def quick_subtractor
