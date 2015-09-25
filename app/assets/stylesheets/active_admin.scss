@@ -19,3 +19,22 @@
 .form_tag {
   display: inline
 }
+
+.iit_form {
+  fieldset {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  label {
+    display: inline;
+  }
+  .submit {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .result {
+    margin: 0;
+    color: #F35F5F;
+    display: none;
+  }
+}

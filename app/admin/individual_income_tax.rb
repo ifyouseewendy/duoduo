@@ -21,4 +21,11 @@ ActiveAdmin.register IndividualIncomeTax do
     link_to '添加级数', new_individual_income_tax_path
   end
 
+  sidebar "个税计算器", partial: 'calculator'
+
+  collection_action :calculate, method: :post do
+    salary, bonus = params.values_at(:salary, :bonus).map(&:to_i)
+
+    render json: {result: 100}
+  end
 end

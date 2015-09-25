@@ -1,0 +1,15 @@
+<div class='iit_form'>
+  <%= field_set_tag do %>
+    <%= number_field_tag 'salary', nil, maxlength: 10 %>
+    <%= label_tag '应纳税所得额' %>
+  <% end %>
+
+  <%= field_set_tag do %>
+    <%= number_field_tag 'bonus', nil, maxlength: 10 %>
+    <%= label_tag '年终奖' %>
+  <% end %>
+  <div>
+    <%= button_tag "计算", class: 'submit' %>
+    <p class='result'>结果</p>
+  </div>
+</div>
