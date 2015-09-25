@@ -28,8 +28,8 @@ ActiveAdmin.register IndividualIncomeTax do
   sidebar "个税计算器", partial: 'calculator'
 
   collection_action :calculate, method: :post do
-    salary, bonus = params.values_at(:salary, :bonus).map(&:to_i)
+    salary, bonus = params.values_at(:salary, :bonus).map(&:to_f)
 
-    render json: {result: 100}
+    render json: {result: IndividualIncomeTax.calculate(salary: salary, bonus: bonus)}
   end
 end

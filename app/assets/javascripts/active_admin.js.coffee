@@ -10,5 +10,5 @@ $(document).on 'ready', ->
         salary: $('.iit_form #salary').val();
         bonus: $('.iit_form #bonus').val();
       success: (data, textStatus, jqXHR) ->
-        $('.iit_form .result').text("应缴税金：" + data['result']).toggle();
+        $('.iit_form .result').text("应缴税金：" + data['result']).show();
 
