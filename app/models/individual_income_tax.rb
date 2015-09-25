@@ -8,5 +8,19 @@ class IndividualIncomeTax < ActiveRecord::Base
 
       names
     end
+
+  end
+
+  def quick_subtractor
+    return 0 if grade == 1
+
+    iits = IndividualIncomeTax.where(grade: (1..grade))
+
+    prev = iits[0]
+    iits[1..-1].reduce(0) do |sum, iit|
+      sum += iit.tax_range_start * ( iit.rate - prev.rate )
+      prev = iit
+      sum
+    end
   end
 end

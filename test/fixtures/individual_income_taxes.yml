@@ -2,12 +2,42 @@
 
 one:
   grade: 1
-  tax_range_start: 1
-  tax_range_end: 1
-  rate: 9.99
+  tax_range_start: 0
+  tax_range_end: 1500
+  rate: 0.03
 
 two:
-  grade: 1
-  tax_range_start: 1
-  tax_range_end: 1
-  rate: 9.99
+  grade: 2
+  tax_range_start: 1500
+  tax_range_end: 4500
+  rate: 0.1
+
+three:
+  grade: 3
+  tax_range_start: 4500
+  tax_range_end: 9000
+  rate: 0.2
+
+four:
+  grade: 4
+  tax_range_start: 9000
+  tax_range_end: 35000
+  rate: 0.25
+
+five:
+  grade: 5
+  tax_range_start: 35000
+  tax_range_end: 55000
+  rate: 0.3
+
+six:
+  grade: 6
+  tax_range_start: 55000
+  tax_range_end: 80000
+  rate: 0.35
+
+seven:
+  grade: 7
+  tax_range_start: 80000
+  tax_range_end: 999999999
+  rate: 0.45
