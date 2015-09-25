@@ -23,9 +23,21 @@ ActiveAdmin.register IndividualIncomeTax do
 
   sidebar "个税基数" do
     span IndividualIncomeTaxBase.instance.base
-    link_to "更新", edit_individual_income_tax_basis_path(IndividualIncomeTaxBase.instance), class: 'update_iit_base'
+    link_to "编辑", edit_individual_income_tax_basis_path(IndividualIncomeTaxBase.instance), class: 'update_iit_base'
   end
   sidebar "个税计算器", partial: 'calculator'
+  sidebar "说明" do
+    ol do
+      li span "本页个税计算器会用于计算工资表中的个税，如有问题请及时反馈。"
+      li span "个税基数以及各级别税率均可通过'编辑' 按钮进行更新。"
+      li '参考' do
+        ul do
+          li link_to("个人所得税率", "http://baike.baidu.com/link?url=NwQI9QItofm_p2bpNRXk8fH6xEZX0wR2KpH-qEVMRXehaYmngaU7Rt5opJc7lmR4yIyHCRRpP87Ui77wRl5HRq")
+          li link_to("年终奖个税计算", "http://laodongfa.yjbys.com/zixun/196218.html")
+        end
+      end
+    end
+  end
 
   collection_action :calculate, method: :post do
     salary, bonus = params.values_at(:salary, :bonus).map(&:to_f)
