@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922111703) do
+ActiveRecord::Schema.define(version: 20150925032542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -328,6 +328,7 @@ ActiveRecord::Schema.define(version: 20150922111703) do
     t.integer  "salary_table_id"
     t.integer  "normal_staff_id"
     t.integer  "engineering_staff_id"
+    t.decimal  "total_sum_with_admin_amount",          precision: 8, scale: 2
   end
 
   add_index "salary_items", ["engineering_staff_id"], name: "index_salary_items_on_engineering_staff_id", using: :btree
