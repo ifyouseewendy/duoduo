@@ -10,13 +10,29 @@ class IndividualIncomeTax < ActiveRecord::Base
     end
 
     def calculate(salary: 0, bonus: 0)
+      salary_tax(salary: salary) + bonus_tax(salary: salary, bonus: bonus)
+    end
+
+    def salary_tax(salary: 0)
       base = IndividualIncomeTaxBase.instance.base
       number = salary - base
 
       return 0 if number <= 0
 
-      iit = self.order(grade: :asc).detect{|e| Range.new(e.tax_range_start, e.tax_range_end).include? number }
+      iit = detect_rule_for(number)
       (number * iit.rate - iit.quick_subtractor).round(2)
+    end
+
+    def bonus_tax(salary: 0, bonus: 0)
+      base = IndividualIncomeTaxBase.instance.base
+      number = salary > 3500 ? bonus : (bonus + salary - base)
+
+      iit = detect_rule_for(number / 12.0)
+      (number * iit.rate - iit.quick_subtractor).round(2)
+    end
+
+    def detect_rule_for(number)
+      self.order(grade: :asc).detect{|e| Range.new(e.tax_range_start, e.tax_range_end).include? number }
     end
 
   end
