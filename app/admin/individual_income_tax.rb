@@ -22,8 +22,8 @@ ActiveAdmin.register IndividualIncomeTax do
   end
 
   sidebar "个税基数" do
-    span IndividualIncomeTaxBase.first.base
-    link_to "更新", edit_individual_income_tax_basis_path(IndividualIncomeTaxBase.first), class: 'update_iit_base'
+    span IndividualIncomeTaxBase.instance.base
+    link_to "更新", edit_individual_income_tax_basis_path(IndividualIncomeTaxBase.instance), class: 'update_iit_base'
   end
   sidebar "个税计算器", partial: 'calculator'
 
