@@ -1,17 +1,16 @@
 ActiveAdmin.register IndividualIncomeTaxBase do
+  menu false
+  breadcrumb do
+    []
+  end
 
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if resource.something?
-#   permitted
-# end
+  member_action :update, method: :post do
+    iitb_params = params.require(:individual_income_tax_base).permit(:base)
+    IndividualIncomeTaxBase.find(params[:id]).tap do |iitb|
+      iitb.update!(iitb_params)
+    end
 
+    redirect_to individual_income_taxes_path, notice: "成功更新个税基数"
+  end
 
 end
