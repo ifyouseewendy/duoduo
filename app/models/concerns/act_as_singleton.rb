@@ -2,7 +2,7 @@ module ActAsSingleton
   extend ActiveSupport::Concern
 
   included do
-    private_class_method :new
+    # private_class_method :new
 
     before_create :confirm_singularity
 
