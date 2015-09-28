@@ -1,7 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  pension_personal: 9.99
+  id: 1
+  pension: 0.1
+  unemployment: 0.2
+  injury: 0.3
+  birth: 0.4
+  medical: 0.5
+  house_accumulation: 100
 
 two:
-  pension_personal: 9.99
+  id: 2
+  pension: 0.5
+  unemployment: 0.4
+  injury: 0.3
+  birth: 0.2
+  medical: 0.1
+  house_accumulation: 200

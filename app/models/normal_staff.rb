@@ -26,4 +26,40 @@ class NormalStaff < ActiveRecord::Base
   def gender_i18n
     I18n.t("activerecord.attributes.normal_staff.genders.#{gender}")
   end
+
+  def insurance_fund
+    personal_rate = InsuranceFundRate.personal
+    company_rate = InsuranceFundRate.company
+
+    stats = {
+      pension_personal: 0,
+      unemployment_personal: 0,
+      medical_personal: 0,
+      pension_company: 0,
+      unemployment_company: 0,
+      injury_company: 0,
+      birth_company: 0,
+      medical_company: 0
+    }
+
+    if has_social_insurance
+      stats[:pension_personal]      = social_insurance_base * personal_rate.pension
+      stats[:unemployment_personal] = social_insurance_base * personal_rate.unemployment
+
+      stats[:pension_company]       = social_insurance_base * company_rate.pension
+      stats[:unemployment_company]  = social_insurance_base * company_rate.unemployment
+      stats[:injury_company]        = social_insurance_base * company_rate.injury
+      stats[:birth_company]         = social_insurance_base * company_rate.birth
+    end
+
+    if has_medical_insurance
+      stats[:medical_personal]      = medical_insurance_base * personal_rate.medical
+      stats[:medical_company]       = medical_insurance_base * company_rate.medical
+    end
+
+    stats[:house_accumulation_personal] = personal_rate.house_accumulation
+    stats[:house_accumulation_company] = company_rate.house_accumulation
+
+    stats
+  end
 end
