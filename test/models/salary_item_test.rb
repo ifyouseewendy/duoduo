@@ -15,6 +15,7 @@ class SalaryItemTest < ActiveSupport::TestCase
     assert_equal 900,   item.salary_in_fact
     assert_equal 200,   item.total_company
     assert_equal 1200,  item.total_sum
-    assert_equal 1200,  item.total_sum_with_admin_amount
+    assert_equal 120,   item.admin_amount
+    assert_equal 1320,  item.total_sum_with_admin_amount
   end
 end

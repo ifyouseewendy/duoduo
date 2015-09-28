@@ -49,7 +49,15 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def admin_amount
-    0
+    if corporation.by_rate?
+      total_sum * corporation.admin_charge_amount
+    else
+      corporation.admin_charge_amount
+    end
+  end
+
+  def corporation
+    normal_staff.normal_corporation
   end
 
   def total_sum

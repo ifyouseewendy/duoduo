@@ -6,3 +6,5 @@
 #
 one:
   id: 1
+  admin_charge_type: 0
+  admin_charge_amount: 0.1
