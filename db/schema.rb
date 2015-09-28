@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150925154541) do
+ActiveRecord::Schema.define(version: 20150928055326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -152,6 +152,18 @@ ActiveRecord::Schema.define(version: 20150925154541) do
     t.decimal  "rate",            precision: 8, scale: 2
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
+  end
+
+  create_table "insurance_fund_rates", force: :cascade do |t|
+    t.text     "name"
+    t.decimal  "pension",            precision: 8, scale: 2
+    t.decimal  "unemployment",       precision: 8, scale: 2
+    t.decimal  "medical",            precision: 8, scale: 2
+    t.decimal  "injury",             precision: 8, scale: 2
+    t.decimal  "birth",              precision: 8, scale: 2
+    t.decimal  "house_accumulation", precision: 8, scale: 2
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
   create_table "milestones", force: :cascade do |t|

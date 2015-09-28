@@ -1,5 +1,5 @@
 puts "--> Cleaning DB data"
-[IndividualIncomeTaxBase, IndividualIncomeTax, SalaryItem, SalaryTable, EngineeringStaff, NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
+[InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax, SalaryItem, SalaryTable, EngineeringStaff, NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
 
 sub_companies = Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
   sc = SubCompany.create(name: name)
@@ -180,4 +180,6 @@ IndividualIncomeTax.create(grade: 5, tax_range_start: 35000, tax_range_end: 5500
 IndividualIncomeTax.create(grade: 6, tax_range_start: 55000, tax_range_end: 80000,      rate: 0.35)
 IndividualIncomeTax.create(grade: 7, tax_range_start: 80000, tax_range_end: 999999999,  rate: 0.45)
 
-
+puts "--> Creating Insurance Fund Rate Table"
+InsuranceFundRate.create(name: '个人', pension: 0.08, unemployment: 0.005, medical: 0.02, injury: 0, birth: 0, house_accumulation: 96)
+InsuranceFundRate.create(name: '公司', pension: 0.2,  unemployment: 0.015, medical: 0.06, injury: 0.015, birth: 0.004, house_accumulation: 96)
