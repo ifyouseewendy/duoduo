@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150928055326) do
+ActiveRecord::Schema.define(version: 20150928083628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -306,10 +306,6 @@ ActiveRecord::Schema.define(version: 20150928055326) do
   end
 
   create_table "salary_items", force: :cascade do |t|
-    t.decimal  "working_hour",                         precision: 8, scale: 2
-    t.decimal  "working_wage",                         precision: 8, scale: 2
-    t.decimal  "working_overtime",                     precision: 8, scale: 2
-    t.decimal  "working_reward",                       precision: 8, scale: 2
     t.decimal  "salary_deserve",                       precision: 8, scale: 2
     t.decimal  "annual_reward",                        precision: 8, scale: 2
     t.decimal  "pension_personal",                     precision: 8, scale: 2
