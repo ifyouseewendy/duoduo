@@ -15,5 +15,14 @@ class InsuranceFundRate < ActiveRecord::Base
 
       names
     end
+
+    # Create by seed, and id is solid
+    def personal
+      find(1)
+    end
+
+    def company
+      find(2)
+    end
   end
 end
