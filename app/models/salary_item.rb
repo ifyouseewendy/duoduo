@@ -11,9 +11,52 @@ class SalaryItem < ActiveRecord::Base
 
       names
     end
+
+    def create_by(name:, salary:, salary_table:)
+      staff = salary_table.normal_corporation.normal_staffs.where(name: name).first
+      raise "No staff found for name: #{name}" if staff.nil?
+
+      self.create!( {normal_staff: staff, salary_deserve: salary}.merge( staff.insurance_fund ) )
+    end
   end
 
-  def staff
-    normal_staff
+  def total_personal
+    @_total_personal ||= [
+      pension_personal, pension_margin_personal,
+      unemployment_personal, unemployment_margin_personal,
+      medical_personal, medical_margin_personal,
+      house_accumulation_personal,
+      big_amount_personal,
+      income_tax,
+      salary_card_addition, medical_scan_addition, salary_pre_deduct_addition, insurance_pre_deduct_addition, physical_exam_addition
+    ].map(&:to_f).sum
+  end
+
+  def salary_in_fact
+    salary_deserve - total_personal
+  end
+
+  def total_company
+    @_total_company ||= [
+      pension_company, pension_margin_company,
+      unemployment_company, unemployment_margin_company,
+      medical_company, medical_margin_company,
+      injury_company, injury_margin_company,
+      birth_company, birth_margin_company,
+      accident_company,
+      house_accumulation_company
+    ].map(&:to_f).sum
+  end
+
+  def admin_amount
+    0
+  end
+
+  def total_sum
+    salary_deserve + total_company
+  end
+
+  def total_sum_with_admin_amount
+    total_sum + admin_amount
   end
 end

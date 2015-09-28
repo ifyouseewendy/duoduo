@@ -5,22 +5,28 @@
 # below each fixture, per the syntax in the comments below
 #
 one:
+  name: 'one'
   has_social_insurance: false
   has_medical_insurance: false
   social_insurance_base: 100
   medical_insurance_base: 100
   house_accumulation_base: 50
+  normal_corporation_id: 1
 
 two:
+  name: 'two'
   has_social_insurance: true
   has_medical_insurance: false
   social_insurance_base: 100
   medical_insurance_base: 100
   house_accumulation_base: 50
+  normal_corporation_id: 1
 
 three:
+  name: 'three'
   has_social_insurance: true
   has_medical_insurance: true
   social_insurance_base: 100
   medical_insurance_base: 100
   house_accumulation_base: 50
+  normal_corporation_id: 1
