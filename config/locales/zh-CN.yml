@@ -25,6 +25,7 @@ zh-CN:
       individual_income_tax: '个人所得税'
       individual_income_tax_base: '个税基数'
       settings: '设置'
+      insurance_fund_rate: '五险一金缴费比例'
     attributes:
       normal_corporation:
         id: '编号'
@@ -221,4 +222,17 @@ zh-CN:
         base: '基数'
         created_at: "创建时间"
         updated_at: "更新时间"
+      insurance_fund_rate:
+        id: '序号'
+        base: '基数'
+        name: '类别'
+        pension: '养老保险'
+        unemployment: '失业保险'
+        medical: '医疗保险'
+        injury: '工伤保险'
+        birth: '生育保险'
+        house_accumulation: '公积金'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+
 
