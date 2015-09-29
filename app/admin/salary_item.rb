@@ -23,7 +23,6 @@ ActiveAdmin.register SalaryItem do
     redirect_to :back, alert: '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
       unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
 
-    require'pry';binding.pry
     xls = Roo::Spreadsheet.open(file.path)
     sheet = xls.sheet(0)
 
@@ -44,6 +43,18 @@ ActiveAdmin.register SalaryItem do
         ha[name] = salary
         ha
       end
+
+    begin
+      SalaryItem.transaction do
+        stats.each do |name, salary|
+          SalaryItem.create_by(salary_table: salary_table, name: name, salary: salary)
+        end
+      end
+
+      redirect_to salary_table_salary_items_path(salary_table), notice: "成功导入 #{stats.keys.count} 条记录"
+    rescue => e
+      redirect_to new_salary_table_salary_item_path(salary_table), alert: "导入失败（#{e.message}），请修改后重新上传"
+    end
 
   end
 
