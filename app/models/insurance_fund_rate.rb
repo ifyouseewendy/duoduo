@@ -18,11 +18,11 @@ class InsuranceFundRate < ActiveRecord::Base
 
     # Create by seed, and id is solid
     def personal
-      find(1)
+      find_by_name('个人')
     end
 
     def company
-      find(2)
+      find_by_name('公司')
     end
   end
 end

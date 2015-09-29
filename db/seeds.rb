@@ -89,7 +89,7 @@ puts "--> Creating NormalCorporation and EngineeringCorporation"
 end
 
 puts "--> Creating NormalStaff and EngineeringStaff"
-(1..7).each do |id|
+(1..20).each do |id|
   (1..5).each do |nest_id|
     nc = NormalCorporation.all.sample
     ec = EngineeringCorporation.all.sample
@@ -158,18 +158,6 @@ puts "--> Creating NormalStaff and EngineeringStaff"
   end
 end
 
-puts "--> Creating SalaryTable and SalaryItem"
-(1..10).each do |id|
-  nc = NormalCorporation.all.sample
-
-  month = (1..12).to_a.sample
-
-  SalaryTable.create!(
-    name: "2015年#{month}月",
-    normal_corporation: nc
-  )
-end
-
 puts "--> Creating Individual Income Tax Table"
 IndividualIncomeTaxBase.create(base: 3500)
 IndividualIncomeTax.create(grade: 1, tax_range_start: 0,     tax_range_end: 1500,       rate: 0.03)
@@ -183,3 +171,19 @@ IndividualIncomeTax.create(grade: 7, tax_range_start: 80000, tax_range_end: 9999
 puts "--> Creating Insurance Fund Rate Table"
 InsuranceFundRate.create(name: '个人', pension: 0.08, unemployment: 0.005, medical: 0.02, injury: 0, birth: 0, house_accumulation: 96)
 InsuranceFundRate.create(name: '公司', pension: 0.2,  unemployment: 0.015, medical: 0.06, injury: 0.015, birth: 0.004, house_accumulation: 96)
+
+puts "--> Creating SalaryTable and SalaryItem"
+(1..10).each do |id|
+  nc = NormalCorporation.all.sample
+
+  month = (1..12).to_a.sample
+
+  st = SalaryTable.create!(
+    name: "2015年#{month}月",
+    normal_corporation: nc
+  )
+
+  st.normal_corporation.normal_staffs.each do |staff|
+    SalaryItem.create_by(salary_table: st, name: staff.name, salary: (1..8).to_a.sample*1000 )
+  end
+end
