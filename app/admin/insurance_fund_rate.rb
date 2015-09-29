@@ -9,6 +9,7 @@ ActiveAdmin.register InsuranceFundRate do
   config.clear_action_items!
   config.filters = false
 
+  permit_params *InsuranceFundRate.ordered_columns
 
   index download_links: false do
     InsuranceFundRate.ordered_columns(without_base_keys: true, without_foreign_keys: true).map do |field|
