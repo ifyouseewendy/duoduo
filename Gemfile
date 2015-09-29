@@ -58,6 +58,10 @@ gem 'chinese_pinyin'
 # Fake Chinese name
 gem 'jia'
 
+# Parse XLSx
+gem 'roo', '2.0.0beta1'
+gem 'roo-xls'
+
 group :development do
   gem 'quiet_assets'
 
