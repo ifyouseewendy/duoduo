@@ -14,3 +14,4 @@ zh-CN:
     batch_actions:
       labels:
         flag: "标记"
+    import_new: '导入'

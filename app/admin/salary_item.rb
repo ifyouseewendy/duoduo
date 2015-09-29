@@ -8,6 +8,18 @@ ActiveAdmin.register SalaryItem do
     ]
   end
 
+  # Import
+  action_item :import_new do
+    link_to '导入基础工资表', import_new_salary_table_salary_items_path(salary_table)
+  end
+
+  collection_action :import_new do
+    render 'import'
+  end
+
+  collection_action :import_do, method: :post do
+  end
+
   # Index
   index do
     selectable_column
