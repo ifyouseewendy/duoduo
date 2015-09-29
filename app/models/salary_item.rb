@@ -16,7 +16,7 @@ class SalaryItem < ActiveRecord::Base
       staff = salary_table.normal_corporation.normal_staffs.where(name: name).first
       raise "没有找到关联员工，姓名：#{name}" if staff.nil?
 
-      item = self.new(normal_staff: staff, salary_deserve: salary)
+      item = self.new(normal_staff: staff, salary_deserve: salary, salary_table: salary_table)
       item.auto_revise!
       item
     end
