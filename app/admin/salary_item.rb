@@ -14,10 +14,46 @@ ActiveAdmin.register SalaryItem do
   end
 
   collection_action :import_new do
-    render 'import'
+    render 'import_new'
   end
 
   collection_action :import_do, method: :post do
+    file = params[:salary_item][:file]
+
+    redirect_to :back, alert: '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
+      unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
+
+    require'pry';binding.pry
+    xls = Roo::Spreadsheet.open(file.path)
+    sheet = xls.sheet(0)
+
+    salary_table       = SalaryTable.find(params[:salary_table_id])
+    normal_corporation = salary_table.normal_corporation
+    valid_names        = normal_corporation.normal_staffs.map(&:name)
+
+    stats = \
+      (1..sheet.last_row).reduce({}) do |ha, i|
+        name, salary = sheet.row(i)
+        next if name.nil? && salary.nil?
+
+        name.gsub!(/\s/, '')
+
+        redirect_to :back, alert: "导入失败（重复的员工姓名：#{name}），请修改后重新上传" and return if ha[name].present?
+        redirect_to :back, alert: "导入失败（未找到员工姓名：#{name}），请到右侧员工信息列表中确认" and return if !valid_names.include?(name)
+
+        ha[name] = salary
+        ha
+      end
+
+  end
+
+  sidebar '参考', only: :import_new do
+    para "#{normal_corporation.name} 中包含 #{normal_corporation.normal_staffs.count} 名员工，分别为"
+    ul do
+      normal_corporation.normal_staffs.each do |staff|
+        li link_to(staff.name, normal_staff_path(staff))
+      end
+    end
   end
 
   # Index
