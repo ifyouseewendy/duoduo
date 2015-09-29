@@ -18,7 +18,9 @@ ActiveAdmin.register SalaryItem do
   end
 
   collection_action :import_do, method: :post do
-    file = params[:salary_item][:file]
+    file = params[:salary_item].try(:[], :file)
+    redirect_to :back, alert: '导入失败（未找到文件），请选择上传文件' and return \
+      if file.nil?
 
     redirect_to :back, alert: '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
       unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
