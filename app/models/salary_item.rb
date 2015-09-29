@@ -26,13 +26,16 @@ class SalaryItem < ActiveRecord::Base
     # Insurance Fund
     set_insurance_fund
 
+    # Income Tax
+    set_income_tax
+
     # Total
     set_total_personal
     set_salary_in_fact
     set_total_company
     set_total_sum
 
-    # Admin amount
+    # Admin Amount
     set_admin_amount
     set_total_sum_with_admin_amount
 
@@ -41,6 +44,10 @@ class SalaryItem < ActiveRecord::Base
 
   def set_insurance_fund
     normal_staff.insurance_fund.each{|k,v| self.send("#{k}=", v)}
+  end
+
+  def set_income_tax
+    self.income_tax = IndividualIncomeTax.calculate(salary: salary_deserve, bonus: annual_reward)
   end
 
   def set_total_personal

@@ -24,7 +24,7 @@ class IndividualIncomeTax < ActiveRecord::Base
     end
 
     def bonus_tax(salary: 0, bonus: 0)
-      return 0 if bonus == 0
+      return 0 if bonus.to_f == 0
 
       base = IndividualIncomeTaxBase.instance.base
       number = salary > base ? bonus : (bonus + salary - base)
