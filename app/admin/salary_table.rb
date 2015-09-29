@@ -24,7 +24,6 @@ ActiveAdmin.register SalaryTable do
 
     f.inputs do
       f.input :normal_corporation, as: :select
-      f.input :engineering_corporation, as: :select
       f.input :name, as: :string
       f.input :remark, as: :text
     end
