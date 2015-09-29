@@ -2,7 +2,10 @@ ActiveAdmin.register SalaryItem do
   belongs_to :salary_table
 
   breadcrumb do
-    [salary_table.corporation.name, salary_table.name]
+    [
+      link_to(salary_table.corporation.name, normal_corporation_path(salary_table.corporation) ),
+      link_to(salary_table.name, salary_table_path(salary_table) )
+    ]
   end
 
   # Index
