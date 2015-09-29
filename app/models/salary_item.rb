@@ -14,12 +14,15 @@ class SalaryItem < ActiveRecord::Base
 
     def create_by(name:, salary:, salary_table:)
       staff = salary_table.normal_corporation.normal_staffs.where(name: name).first
-      raise "No staff found for name: #{name}" if staff.nil?
+      raise "没有找到关联员工，姓名：#{name}" if staff.nil?
 
       item = self.new(normal_staff: staff, salary_deserve: salary)
       item.auto_revise!
       item
     end
+  end
+
+  def staff_name
   end
 
   def auto_revise!

@@ -1,0 +1,7 @@
+<%= semantic_form_for SalaryItem.new, url: { action: :create } do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :staff_name, as: :string %>
+    <%= f.input :salary_deserve, as: :number %>
+  <%- end %>
+  <%= f.actions %>
+<%- end %>
