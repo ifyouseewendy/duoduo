@@ -22,7 +22,24 @@ class SalaryItem < ActiveRecord::Base
     end
   end
 
+  def staff_identity_card
+    normal_staff.identity_card
+  end
+
+  def staff_account
+    normal_staff.account
+  end
+
+  def staff_company
+    normal_staff.normal_corporation
+  end
+
+  def staff_category
+    ''
+  end
+
   def staff_name
+    normal_staff.name
   end
 
   def auto_revise!

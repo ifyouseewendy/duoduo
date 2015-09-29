@@ -205,6 +205,12 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
+        salary_table: '工资表名称'
+        normal_staff: '员工姓名'
+        staff_identity_card: '身份证号'
+        staff_account: '工资卡号'
+        staff_company: '所属单位'
+        staff_category: '用工类别'
       individual_income_tax:
         id: '序号'
         grade: '级数'
