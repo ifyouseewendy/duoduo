@@ -16,20 +16,31 @@ class SalaryItem < ActiveRecord::Base
       staff = salary_table.normal_corporation.normal_staffs.where(name: name).first
       raise "No staff found for name: #{name}" if staff.nil?
 
-      item = self.new( {normal_staff: staff, salary_deserve: salary}.merge( staff.insurance_fund ) )
-      item.revise_total!
+      item = self.new(normal_staff: staff, salary_deserve: salary)
+      item.auto_revise!
       item
     end
   end
 
-  def revise_total!
+  def auto_revise!
+    # Insurance Fund
+    set_insurance_fund
+
+    # Total
     set_total_personal
     set_salary_in_fact
     set_total_company
-    set_admin_amount
     set_total_sum
+
+    # Admin amount
+    set_admin_amount
     set_total_sum_with_admin_amount
+
     self.save!
+  end
+
+  def set_insurance_fund
+    normal_staff.insurance_fund.each{|k,v| self.send("#{k}=", v)}
   end
 
   def set_total_personal
