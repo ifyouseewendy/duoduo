@@ -4,7 +4,7 @@ ActiveAdmin.register SalaryItem do
   breadcrumb do
     [
       link_to(salary_table.corporation.name, normal_corporation_path(salary_table.corporation) ),
-      link_to(salary_table.name, salary_table_path(salary_table) )
+      link_to(salary_table.name, salary_table_salary_items_path(salary_table) )
     ]
   end
 
