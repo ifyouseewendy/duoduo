@@ -29,11 +29,13 @@ class SalaryItem < ActiveRecord::Base
 
       if identity_card.present?
         staff = staffs.where(identity_card: identity_card).first
-        raise "没有找到关联员工，身份证号：#{identity_card}" if staff.nil?
-        raise "员工姓名与身份证号不同意，姓名：#{name}，身份证号：#{identity_card}" if name != staff.name
+        raise "没有找到员工，身份证号：#{identity_card}" if staff.nil?
+        raise "员工姓名与身份证号不相符，姓名：#{name}，身份证号：#{identity_card}" if name != staff.name
       else
+        raise "找到多个员工，重复姓名：#{name}，请附加一列身份证号" if staffs.where(name: name).count > 1
+
         staff = staffs.where(name: name).first
-        raise "没有找到关联员工，姓名：#{name}" if staff.nil?
+        raise "没有找到员工，姓名：#{name}" if staff.nil?
       end
 
       staff
