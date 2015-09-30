@@ -12,6 +12,7 @@ one:
   medical_insurance_base: 100
   house_accumulation_base: 50
   normal_corporation_id: 1
+  identity_card: '111'
 
 two:
   name: 'two'

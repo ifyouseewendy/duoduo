@@ -12,13 +12,31 @@ class SalaryItem < ActiveRecord::Base
       names
     end
 
-    def create_by(name:, salary:, salary_table:)
-      staff = salary_table.normal_corporation.normal_staffs.where(name: name).first
-      raise "没有找到关联员工，姓名：#{name}" if staff.nil?
+    def create_by(salary_table:, salary:, name:, identity_card: nil)
+      staff = find_staff(salary_table: salary_table, name: name, identity_card: identity_card)
 
       item = self.new(normal_staff: staff, salary_deserve: salary, salary_table: salary_table)
       item.auto_revise!
       item
+    end
+
+    # Find by identity_card, if identity_card presents. And staff name should match.
+    #
+    #   find_staff(salary_table: salary_table, name: name)
+    #   find_staff(salary_table: salary_table, name: name, identity_card: identity_card)
+    def find_staff(salary_table:, name:, identity_card: nil)
+      staffs = salary_table.normal_corporation.normal_staffs
+
+      if identity_card.present?
+        staff = staffs.where(identity_card: identity_card).first
+        raise "没有找到关联员工，身份证号：#{identity_card}" if staff.nil?
+        raise "员工姓名与身份证号不同意，姓名：#{name}，身份证号：#{identity_card}" if name != staff.name
+      else
+        staff = staffs.where(name: name).first
+        raise "没有找到关联员工，姓名：#{name}" if staff.nil?
+      end
+
+      staff
     end
   end
 
