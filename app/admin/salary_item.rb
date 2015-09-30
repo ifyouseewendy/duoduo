@@ -29,33 +29,31 @@ ActiveAdmin.register SalaryItem do
     sheet = xls.sheet(0)
 
     salary_table       = SalaryTable.find(params[:salary_table_id])
-    normal_corporation = salary_table.normal_corporation
-    valid_names        = normal_corporation.normal_staffs.map(&:name)
 
     stats = \
-      (1..sheet.last_row).reduce({}) do |ha, i|
-        name, salary = sheet.row(i)
+      (1..sheet.last_row).reduce([]) do |ar, i|
+        name, salary, identity_card = sheet.row(i)
         next if name.nil? && salary.nil?
 
         name.gsub!(/\s/, '')
 
-        redirect_to :back, alert: "导入失败（重复的员工姓名：#{name}），请修改后重新上传" and return if ha[name].present?
-        redirect_to :back, alert: "导入失败（未找到员工姓名：#{name}），请到右侧员工信息列表中确认" and return if !valid_names.include?(name)
-
-        ha[name] = salary
-        ha
+        ar << { name: name, salary: salary, identity_card: identity_card }
       end
 
-    begin
-      SalaryItem.transaction do
-        stats.each do |name, salary|
-          SalaryItem.create_by(salary_table: salary_table, name: name, salary: salary)
-        end
+    failed = []
+    stats.each do |ha|
+      begin
+        query = ha.merge({salary_table: salary_table})
+        SalaryItem.create_by(query)
+      rescue => e
+        failed << (ha.values << e.message)
       end
+    end
 
+    if failed.count > 0
+      # generate new xls file
+    else
       redirect_to salary_table_salary_items_path(salary_table), notice: "成功导入 #{stats.keys.count} 条记录"
-    rescue => e
-      redirect_to new_salary_table_salary_item_path(salary_table), alert: "导入失败（#{e.message}），请修改后重新上传"
     end
 
   end
