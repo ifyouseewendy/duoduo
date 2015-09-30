@@ -1,4 +1,5 @@
-source 'https://rubygems.org'
+# source 'https://rubygems.org'
+source 'https://ruby.taobao.org'
 
 gem 'rails', '4.2.2'
 
@@ -61,6 +62,8 @@ gem 'jia'
 # Parse XLSx
 gem 'roo', '2.0.0beta1'
 gem 'roo-xls'
+gem 'axlsx_rails'
+gem 'zip-zip' # Fix axlsx dependency
 
 group :development do
   gem 'quiet_assets'
