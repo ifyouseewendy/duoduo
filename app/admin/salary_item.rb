@@ -37,6 +37,7 @@ ActiveAdmin.register SalaryItem do
 
         name.gsub!(/\s/, '')
 
+        identity_card = identity_card.to_i.to_s if identity_card.is_a? Numeric
         ar << { name: name, salary: salary, identity_card: identity_card }
       end
 
@@ -52,8 +53,20 @@ ActiveAdmin.register SalaryItem do
 
     if failed.count > 0
       # generate new xls file
+
+      filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
+      filepath = Pathname("tmp/#{filename}_#{Time.stamp}.xlsx")
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet do |sheet|
+          failed.each{|stat| sheet.add_row stat}
+        end
+        p.serialize(filepath.to_s)
+      end
+      send_file filepath
+
+      # redirect_to import_new_salary_table_salary_items_path(salary_table), alert: "导入失败， #{failed.count} 条记录存在问题"
     else
-      redirect_to salary_table_salary_items_path(salary_table), notice: "成功导入 #{stats.keys.count} 条记录"
+      redirect_to salary_table_salary_items_path(salary_table), notice: "成功导入 #{stats.count} 条记录"
     end
 
   end

@@ -14,6 +14,7 @@ class SalaryItem < ActiveRecord::Base
 
     def create_by(salary_table:, salary:, name:, identity_card: nil)
       staff = find_staff(salary_table: salary_table, name: name, identity_card: identity_card)
+      raise "员工已录入工资条，姓名：#{staff.name}。为避免重复录入，请删除这条记录" if salary_table.salary_items.where(normal_staff_id: staff.id).count > 0
 
       item = self.new(normal_staff: staff, salary_deserve: salary, salary_table: salary_table)
       item.auto_revise!
