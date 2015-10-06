@@ -67,6 +67,9 @@ class SalaryItem < ActiveRecord::Base
     # Insurance Fund
     set_insurance_fund
 
+    # Additional Fee
+    set_additional_fee
+
     # Income Tax
     set_income_tax
 
@@ -85,6 +88,10 @@ class SalaryItem < ActiveRecord::Base
 
   def set_insurance_fund
     normal_staff.insurance_fund.each{|k,v| self.send("#{k}=", v)}
+  end
+
+  def set_additional_fee
+    normal_staff.init_addition_fee.each{|k,v| self.send("#{k}=", v)} if normal_staff.has_no_salary_item?
   end
 
   def set_income_tax

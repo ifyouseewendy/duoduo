@@ -62,4 +62,16 @@ class NormalStaff < ActiveRecord::Base
 
     stats
   end
+
+  def has_no_salary_item?
+    salary_items.count == 0
+  end
+
+  def init_addition_fee
+    {
+      big_amount_personal: 96,
+      medical_scan_addition: 10,
+      salary_card_addition: 10
+    }
+  end
 end
