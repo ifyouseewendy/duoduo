@@ -146,7 +146,7 @@ ActiveAdmin.register SalaryItem do
   end
 
   # Edit
-  permit_params :staff_name, :salary_deserve, :salary_table_id
+  permit_params :staff_name, :salary_deserve, :salary_table_id, :staff_identity_card
 
   form partial: 'form'
 
@@ -155,9 +155,15 @@ ActiveAdmin.register SalaryItem do
       st = SalaryTable.find(params[:salary_table_id])
       name = permitted_params[:salary_item][:staff_name]
       salary = permitted_params[:salary_item][:salary_deserve].to_f
+      identity_card = permitted_params[:salary_item][:staff_identity_card]
 
       begin
-        SalaryItem.create_by(salary_table: st, name: name, salary: salary)
+        SalaryItem.create_by(
+          salary_table: st,
+          salary: salary,
+          name: name,
+          identity_card: identity_card
+        )
 
         redirect_to salary_table_salary_items_path(st), notice: "成功创建基础工资条"
       rescue => e

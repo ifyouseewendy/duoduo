@@ -14,7 +14,7 @@ class SalaryItem < ActiveRecord::Base
 
     def create_by(salary_table:, salary:, name:, identity_card: nil)
       staff = find_staff(salary_table: salary_table, name: name, identity_card: identity_card)
-      raise "员工已录入工资条，姓名：#{staff.name}。为避免重复录入，请删除这条记录" if salary_table.salary_items.where(normal_staff_id: staff.id).count > 0
+      raise "员工已录入工资条，姓名：#{staff.name}。为避免重复录入，请直接修改现有条目" if salary_table.salary_items.where(normal_staff_id: staff.id).count > 0
 
       item = self.new(normal_staff: staff, salary_deserve: salary, salary_table: salary_table)
       item.auto_revise!
@@ -31,7 +31,7 @@ class SalaryItem < ActiveRecord::Base
       if identity_card.present?
         staff = staffs.where(identity_card: identity_card).first
         raise "没有找到员工，身份证号：#{identity_card}" if staff.nil?
-        raise "员工姓名与身份证号不相符，姓名：#{name}，身份证号：#{identity_card}" if name != staff.name
+        raise "员工姓名与身份证号不相符，姓名：#{name}，身份证号：#{identity_card}" if name != staff.name && name.present?
       else
         raise "找到多个员工，重复姓名：#{name}，请附加一列身份证号" if staffs.where(name: name).count > 1
 
@@ -44,7 +44,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def staff_identity_card
-    normal_staff.identity_card
+    normal_staff.identity_card rescue ''
   end
 
   def staff_account
@@ -60,7 +60,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def staff_name
-    normal_staff.name
+    normal_staff.name rescue ''
   end
 
   def auto_revise!
