@@ -43,7 +43,8 @@ zh-CN:
         contract_amount: '合同金额'
         admin_charge_type: '管理费收取方式'
         admin_charge_types:
-          by_rate: "每人固定比例"
+          by_rate_on_salary: "每人固定比例（应发工资）"
+          by_rate_on_salary_and_company: "每人固定比例（应发工资+单位缴费）"
           by_count: "每人固定金额"
         admin_charge_amount: '管理费收取比例/金额'
         expense_date: '单位开支日期'

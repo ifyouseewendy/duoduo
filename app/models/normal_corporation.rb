@@ -8,7 +8,7 @@ class NormalCorporation < ActiveRecord::Base
   scope :updated_in_7_days, ->{ where('updated_at > ?', Date.today - 7.days) }
   scope :updated_latest_10, ->{ order(updated_at: :desc).limit(10) }
 
-  enum admin_charge_type: [:by_rate, :by_count]
+  enum admin_charge_type: [:by_rate_on_salary, :by_rate_on_salary_and_company, :by_count]
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
@@ -21,7 +21,7 @@ class NormalCorporation < ActiveRecord::Base
     end
 
     def admin_charge_types_option
-      admin_charge_types.keys.map.with_index{|k,i| [I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{k}"), i]}
+      admin_charge_types.keys.map{|k| [I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{k}"), k]}
     end
   end
 
@@ -31,5 +31,9 @@ class NormalCorporation < ActiveRecord::Base
 
   def admin_charge_type_i18n
     I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{admin_charge_type}")
+  end
+
+  def by_rate?
+    by_rate_on_salary? || by_rate_on_salary_and_company?
   end
 end

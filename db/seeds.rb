@@ -29,10 +29,11 @@ puts "--> Creating NormalCorporation and EngineeringCorporation"
     days          = number.days
     amount        = number*10
     random_number = rand_by(10)
-    charge_type   = rand(2)
+    charge_type   = rand(3)
     charge_amount = case charge_type
                     when 0 then rand.to_s[0..3]
-                    when 1 then [100,200][rand(2)]
+                    when 1 then rand.to_s[0..3]
+                    when 2 then [100,200][rand(2)]
                     end
 
     NormalCorporation.create!(
