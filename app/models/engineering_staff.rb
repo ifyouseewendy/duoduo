@@ -15,7 +15,7 @@ class EngineeringStaff < ActiveRecord::Base
     end
 
     def genders_option
-      genders.keys.map.with_index{|k,i| [I18n.t("activerecord.attributes.engineering_staff.genders.#{k}"), i]}
+      genders.keys.map{|k| [I18n.t("activerecord.attributes.engineering_staff.genders.#{k}"), k]}
     end
 
     def columns_of(type)
