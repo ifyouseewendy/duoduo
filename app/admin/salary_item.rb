@@ -30,6 +30,13 @@ ActiveAdmin.register SalaryItem do
 
     salary_table       = SalaryTable.find(params[:salary_table_id])
 
+    if salary_table.salary_items.count == 0
+      records_count = (1..sheet.last_row).count
+      staffs_count = salary_table.normal_corporation.normal_staffs.count
+      redirect_to :back, alert: "导入失败，上传文件中条目数（#{records_count}）少于员工数（#{staffs_count}），请修改后重新上传" and return \
+        if records_count < staffs_count
+    end
+
     stats = \
       (1..sheet.last_row).reduce([]) do |ar, i|
         name, salary, identity_card = sheet.row(i)
