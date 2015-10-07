@@ -21,6 +21,13 @@ class EngineeringStaff < ActiveRecord::Base
     def columns_of(type)
       self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
     end
+
+    def batch_form_fields
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      hash = fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash['gender_性别'] = genders_option
+      hash
+    end
   end
 
   def gender_i18n
