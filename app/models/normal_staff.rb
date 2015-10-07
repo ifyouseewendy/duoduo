@@ -89,4 +89,8 @@ class NormalStaff < ActiveRecord::Base
       salary_card_addition: 10
     }
   end
+
+  def company_name
+    normal_corporation.name rescue ''
+  end
 end

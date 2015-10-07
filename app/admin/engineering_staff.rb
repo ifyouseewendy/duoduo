@@ -44,7 +44,6 @@ ActiveAdmin.register EngineeringStaff do
       f.input :engineering_staffs_corporation, as: :select
       f.input :nest_index, as: :number
       f.input :name, as: :string
-      f.input :company_name, as: :string
       f.input :identity_card, as: :string
       f.input :birth, as: :datepicker
       f.input :age, as: :number

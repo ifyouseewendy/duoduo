@@ -44,7 +44,6 @@ ActiveAdmin.register NormalStaff do
       f.input :normal_corporation, as: :select
       f.input :nest_index, as: :number
       f.input :name, as: :string
-      f.input :company_name, as: :string
       f.input :account, as: :string
       f.input :account_bank, as: :string
       f.input :identity_card, as: :string

@@ -33,4 +33,8 @@ class EngineeringStaff < ActiveRecord::Base
   def gender_i18n
     I18n.t("activerecord.attributes.engineering_staff.genders.#{gender}")
   end
+
+  def company_name
+    engineering_corporation.name rescue ''
+  end
 end
