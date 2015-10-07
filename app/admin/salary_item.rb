@@ -173,7 +173,7 @@ ActiveAdmin.register SalaryItem do
   end
 
   # Batch actions
-  batch_action :edit, form: SalaryItem.batch_form_fields do |ids|
+  batch_action :batch_edit, form: SalaryItem.batch_form_fields do |ids|
     inputs = JSON.parse(params['batch_action_inputs'])
 
     batch_action_collection.find(ids).each do |obj|

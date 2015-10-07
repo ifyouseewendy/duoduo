@@ -14,5 +14,5 @@ zh-CN:
     batch_actions:
       labels:
         flag: "标记"
-        edit: '修改'
+        batch_edit: '修改'
     import_new: '导入'

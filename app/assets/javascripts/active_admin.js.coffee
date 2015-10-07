@@ -12,7 +12,7 @@ $(document).on 'ready', ->
       success: (data, textStatus, jqXHR) ->
         $('.iit_form .result').text("应缴税金：" + data['result']).show();
 
-  $('a[data-action=edit]').on 'click', ->
+  $('a[data-action=batch_edit]').on 'click', ->
     $('.ui-dialog-title').text('批量修改字段');
 
     list = $('#dialog_confirm ul')
