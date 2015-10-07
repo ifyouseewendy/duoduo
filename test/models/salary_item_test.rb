@@ -27,8 +27,8 @@ class SalaryItemTest < ActiveSupport::TestCase
     st = salary_tables(:one)
     item = SalaryItem.create_by(salary_table: st, salary: 1000, name: 'one')
 
-    assert_equal 100,   item.total_personal
-    assert_equal 900,   item.salary_in_fact
+    assert_equal 100 + 96 + 10 + 10,   item.total_personal
+    assert_equal 1000 - 216,   item.salary_in_fact
     assert_equal 200,   item.total_company
 
     assert_equal 1200,  item.total_sum
