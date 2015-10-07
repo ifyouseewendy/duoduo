@@ -30,6 +30,10 @@ class NormalCorporation < ActiveRecord::Base
       hash['admin_charge_type_管理费收取方式'] = NormalCorporation.admin_charge_types_option
       hash
     end
+
+    def reference_option
+      order(id: :asc).pluck(:name, :id)
+    end
   end
 
   def sub_company_names

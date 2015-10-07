@@ -54,6 +54,10 @@ class EngineeringCorporation < ActiveRecord::Base
       hash['already_sign_dispatch_代发是否签署'] = [ ['是', true], ['否', false] ]
       hash
     end
+
+    def reference_option
+      order(id: :asc).pluck(:name, :id)
+    end
   end
 
   def sub_company_names

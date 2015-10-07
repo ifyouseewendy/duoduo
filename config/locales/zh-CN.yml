@@ -122,6 +122,7 @@ zh-CN:
         work_type: '工种'
         remark: '备注'
         normal_corporation: '所属单位'
+        normal_corporation_id: '所属单位'
         created_at: "创建时间"
         updated_at: "更新时间"
       engineering_staff:
@@ -140,6 +141,7 @@ zh-CN:
         address: '家庭住址'
         remark: '备注'
         engineering_corporation: '所属单位'
+        engineering_corporation_id: '所属单位'
         created_at: "创建时间"
         updated_at: "更新时间"
       salary_table:
@@ -200,14 +202,13 @@ zh-CN:
         admin_amount: '管理费'
         total_sum: '劳务费用合计'
         total_sum_with_admin_amount: '劳务费用合计（含管理）'
-        salary_table: '基础工资表'
-        normal_staff: '普通员工'
-        engineering_staff: '工程员工'
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        salary_table: '工资表名称'
+        salary_table: '基础工资表'
+        salary_table_id: '基础工资表'
         normal_staff: '员工姓名'
+        normal_staff_id: '员工姓名'
         staff_identity_card: '身份证号'
         staff_account: '工资卡号'
         staff_company: '所属单位'

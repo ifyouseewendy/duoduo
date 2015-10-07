@@ -27,13 +27,14 @@ class NormalStaff < ActiveRecord::Base
     end
 
     def batch_form_fields
-      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: false)
       hash = fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
       hash['gender_性别'] = genders_option
       hash['has_social_insurance_是否参社保'] = boolean_option
       hash['has_medical_insurance_是否参医保'] = boolean_option
       hash['in_service_在职'] = boolean_option
       hash['in_release_解除'] = boolean_option
+      hash['normal_corporation_id_所属单位'] = NormalCorporation.reference_option
       hash
     end
   end
