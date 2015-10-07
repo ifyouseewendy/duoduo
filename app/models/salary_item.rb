@@ -98,10 +98,10 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def update_by(attributes)
-    if attributes.has_key?(:salary_deserve) or attributes.has_key?(:annual_reward)
-      self.salary_deserve = attributes[:salary_deserve] if attributes.has_key?(:salary_deserve)
-      self.annual_reward = attributes[:annual_reward] if attributes.has_key?(:annual_reward)
+    self.salary_deserve = attributes[:salary_deserve] if attributes.has_key?(:salary_deserve)
+    self.annual_reward = attributes[:annual_reward] if attributes.has_key?(:annual_reward)
 
+    if self.changed?
       set_insurance_fund
       set_additional_fee
       set_income_tax
@@ -114,13 +114,11 @@ class SalaryItem < ActiveRecord::Base
     set_total_company
     set_total_sum
 
-    if attributes.has_key?(:admin_amount)
-      self.admin_amount = attributes[:admin_amount]
-    else
-      set_admin_amount
-    end
+    self.admin_amount = attributes[:admin_amount] if attributes.has_key?(:admin_amount)
 
-    set_total_sum_with_admin_amount
+    if self.changed.include?(:admin_amount)
+      set_total_sum_with_admin_amount
+    end
 
     self.save!
   end

@@ -174,7 +174,7 @@ ActiveAdmin.register SalaryItem do
 
   # Batch actions
   batch_action :batch_edit, form: SalaryItem.batch_form_fields do |ids|
-    inputs = JSON.parse(params['batch_action_inputs'])
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|
       obj.update_by(inputs)
