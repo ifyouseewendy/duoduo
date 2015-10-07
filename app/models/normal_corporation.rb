@@ -23,6 +23,13 @@ class NormalCorporation < ActiveRecord::Base
     def admin_charge_types_option
       admin_charge_types.keys.map{|k| [I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{k}"), k]}
     end
+
+    def batch_form_fields
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      hash = fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash['admin_charge_type_管理费收取方式'] = NormalCorporation.admin_charge_types_option
+      hash
+    end
   end
 
   def sub_company_names
