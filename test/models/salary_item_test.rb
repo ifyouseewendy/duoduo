@@ -27,12 +27,69 @@ class SalaryItemTest < ActiveSupport::TestCase
     st = salary_tables(:one)
     item = SalaryItem.create_by(salary_table: st, salary: 1000, name: 'one')
 
-    assert_equal 100 + 96 + 10 + 10,   item.total_personal
-    assert_equal 1000 - 216,   item.salary_in_fact
+    assert_equal 216,   item.total_personal
+    assert_equal 784,   item.salary_in_fact
     assert_equal 200,   item.total_company
 
     assert_equal 1200,  item.total_sum
     assert_equal 120,   item.admin_amount
     assert_equal 1320,  item.total_sum_with_admin_amount
+  end
+
+  test "update_by without salary_deserve change" do
+    st = salary_tables(:one)
+    item = SalaryItem.create_by(salary_table: st, salary: 1000, name: 'one')
+
+    stats = {
+      pension_margin_personal: 100,
+      insurance_pre_deduct_addition: 200
+    }
+
+    item.update_by(stats)
+    assert_equal 216 + 300,   item.total_personal
+    assert_equal 784 - 300,   item.salary_in_fact
+    assert_equal 200,   item.total_company
+
+    assert_equal 1200,  item.total_sum
+    assert_equal 120,   item.admin_amount
+    assert_equal 1320,  item.total_sum_with_admin_amount
+
+    stats = {
+      pension_margin_personal: 100,
+      insurance_pre_deduct_addition: 200,
+      birth_company: 100,
+      admin_amount: 200
+    }
+
+    item.update_by(stats)
+    assert_equal 216 + 300,   item.total_personal
+    assert_equal 784 - 300,   item.salary_in_fact
+    assert_equal 200 + 100,   item.total_company
+
+    assert_equal 1200 + 100,  item.total_sum
+    assert_equal 200,   item.admin_amount
+    assert_equal 1500,  item.total_sum_with_admin_amount
+  end
+
+  test "update_by with salary_deserve change" do
+    st = salary_tables(:one)
+    item = SalaryItem.create_by(salary_table: st, salary: 1000, name: 'one')
+
+    stats = {
+      salary_deserve: 5000,
+      pension_margin_personal: 100,
+      insurance_pre_deduct_addition: 200,
+      birth_company: 100,
+      admin_amount: 200
+    }
+
+    item.update_by(stats)
+    assert_equal 216 + 300 + 45,    item.total_personal # add income tax
+    assert_equal 5000 - 561,        item.salary_in_fact
+    assert_equal 200 + 100,         item.total_company
+
+    assert_equal 5000 + 300,  item.total_sum
+    assert_equal 200,         item.admin_amount
+    assert_equal 5500,        item.total_sum_with_admin_amount
   end
 end

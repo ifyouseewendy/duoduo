@@ -2,6 +2,11 @@ class SalaryItem < ActiveRecord::Base
   belongs_to :salary_table
   belongs_to :normal_staff
 
+  # Two entrances with callbacks implemented
+  #
+  #   + SalaryItem.create_by
+  #   + SalaryItem#update_by
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -87,6 +92,34 @@ class SalaryItem < ActiveRecord::Base
 
     # Admin Amount
     set_admin_amount
+    set_total_sum_with_admin_amount
+
+    self.save!
+  end
+
+  def update_by(attributes)
+    if attributes.has_key?(:salary_deserve) or attributes.has_key?(:annual_reward)
+      self.salary_deserve = attributes[:salary_deserve] if attributes.has_key?(:salary_deserve)
+      self.annual_reward = attributes[:annual_reward] if attributes.has_key?(:annual_reward)
+
+      set_insurance_fund
+      set_additional_fee
+      set_income_tax
+    end
+
+    attributes.each{|k,v| self.send("#{k}=", v)}
+
+    set_total_personal
+    set_salary_in_fact
+    set_total_company
+    set_total_sum
+
+    if attributes.has_key?(:admin_amount)
+      self.admin_amount = attributes[:admin_amount]
+    else
+      set_admin_amount
+    end
+
     set_total_sum_with_admin_amount
 
     self.save!

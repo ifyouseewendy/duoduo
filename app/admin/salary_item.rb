@@ -177,7 +177,7 @@ ActiveAdmin.register SalaryItem do
     inputs = JSON.parse(params['batch_action_inputs'])
 
     batch_action_collection.find(ids).each do |obj|
-      obj.update(inputs)
+      obj.update_by(inputs)
     end
 
     redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
