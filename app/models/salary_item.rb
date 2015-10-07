@@ -43,7 +43,9 @@ class SalaryItem < ActiveRecord::Base
     end
 
     def batch_form_fields
-      column_types.map.each_with_object({}){|(k,v), ha| ha[ "#{k}_#{SalaryItem.human_attribute_name(k)}" ] = :text }
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)\
+        - [:total_personal, :salary_in_fact, :total_company, :total_sum, :total_sum_with_admin_amount]
+      fields.each_with_object({}){|k, ha| ha[ "#{k}_#{SalaryItem.human_attribute_name(k)}" ] = :text }
     end
   end
 
