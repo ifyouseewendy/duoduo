@@ -18,8 +18,23 @@ class NormalStaff < ActiveRecord::Base
       genders.keys.map{|k| [I18n.t("activerecord.attributes.normal_staff.genders.#{k}"), k]}
     end
 
+    def boolean_option
+      [ ['是', true], ['否', false] ]
+    end
+
     def columns_of(type)
       self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
+    end
+
+    def batch_form_fields
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      hash = fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash['gender_性别'] = genders_option
+      hash['has_social_insurance_是否参社保'] = boolean_option
+      hash['has_medical_insurance_是否参医保'] = boolean_option
+      hash['in_service_在职'] = boolean_option
+      hash['in_release_解除'] = boolean_option
+      hash
     end
   end
 
