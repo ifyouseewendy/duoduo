@@ -94,4 +94,14 @@ ActiveAdmin.register EngineeringCorporation do
     end
   end
 
+  # Batch actions
+  batch_action :batch_edit, form: EngineeringCorporation.batch_form_fields do |ids|
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+
+    batch_action_collection.find(ids).each do |obj|
+      obj.update(inputs)
+    end
+
+    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+  end
 end

@@ -46,6 +46,14 @@ class EngineeringCorporation < ActiveRecord::Base
     def columns_of(type)
       self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
     end
+
+    def batch_form_fields
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      hash = fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash['already_get_contract_合同是否拿回'] = [ ['是', true], ['否', false] ]
+      hash['already_sign_dispatch_代发是否签署'] = [ ['是', true], ['否', false] ]
+      hash
+    end
   end
 
   def sub_company_names
