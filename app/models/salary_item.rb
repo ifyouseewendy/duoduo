@@ -41,6 +41,10 @@ class SalaryItem < ActiveRecord::Base
 
       staff
     end
+
+    def batch_form_fields
+      column_types.map.each_with_object({}){|(k,v), ha| ha[ "#{k}_#{SalaryItem.human_attribute_name(k)}" ] = :text }
+    end
   end
 
   def staff_identity_card

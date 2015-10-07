@@ -44,3 +44,9 @@
     float: right;
   }
 }
+
+.ui-dialog {
+  max-height: 420px;
+  overflow-y: auto;
+  top: 40px;
+}
