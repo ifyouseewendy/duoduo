@@ -240,7 +240,11 @@ ActiveAdmin.register SalaryItem do
   # controller do
   collection_action :export_xlsx do
     st = SalaryTable.find(params[:salary_table_id])
-    file = st.export_xlsx(view: params[:view], columns: params[:columns])
+
+    options = {}
+    options[:selected] = params[:selected].split('-') if params[:selected].present?
+
+    file = st.export_xlsx(view: params[:view], options: options)
     send_file file, filename: file.basename
   end
 end

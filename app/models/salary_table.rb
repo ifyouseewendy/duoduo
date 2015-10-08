@@ -17,17 +17,20 @@ class SalaryTable < ActiveRecord::Base
     normal_corporation
   end
 
-  def export_xlsx(view: nil, columns: [])
+  def export_xlsx(view: nil, options: {})
     filename = filename_by(view: view)
     filepath = SALARY_TABLE_PATH.join filename
 
     columns = SalaryItem.columns_based_on(view: view)
 
+    collectoin = salary_items
+    collectoin = collectoin.where(id: options[:selected]) if options[:selected].present?
+
     Axlsx::Package.new do |p|
       p.workbook.add_worksheet(name: name) do |sheet|
         sheet.add_row columns.map{|col| SalaryItem.human_attribute_name(col)}
 
-        salary_items.each do |item|
+        collectoin.each do |item|
           sheet.add_row columns.map{|col| item.send(col)}
         end
       end

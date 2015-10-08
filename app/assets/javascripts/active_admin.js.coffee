@@ -80,8 +80,23 @@ $(document).on 'ready', ->
     else
       list.hide();
 
+  export_path = "#{current_path}/export_xlsx?#{query_string}"
   html =  """
           <span>下载:</span>
-          <a href="#{current_path}/export_xlsx?#{query_string}">XLSX</a>
+          <a href="#{export_path}">XLSX</a>
           """
   $('body.salary_items .download_links').empty().append(html)
+
+  $('body.salary_items .download_links a').on 'click', (e) ->
+    if $('#index_table_salary_items .selected').length > 0
+      e.stopPropagation()
+      e.preventDefault()
+      if window.confirm("下载已选中条目？")
+        selected = []
+        $('#index_table_salary_items .selected').each ->
+          selected.push($(this).attr('id').split('_')[-1..][0])
+        console.log(selected.join('-'))
+        window.location = "#{export_path}&selected=#{selected.join('-')}"
+    else
+      window.location = $(@).val('href')
+
