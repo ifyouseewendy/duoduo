@@ -50,3 +50,29 @@ $(document).on 'ready', ->
       else
         select.attr('disabled', 'disabled')
 
+  current_path = window.location.href.toString().split(window.location.host)[1].split('?')[0]
+  html =  """
+          <div class='views_selector dropdown_menu'>
+            <a class='dropdown_menu_button' href='#'>视图</a>
+            <div class='dropdown_menu_list_wrapper' style='display: none;'><div class='dropdown_menu_nipple'></div>
+              <ul class='dropdown_menu_list'>
+                <li><a href='#{current_path}'>原始工资表</a></li>
+                <li><a href='#{current_path}?view=archive'>存档工资表</a></li>
+                <li><a href='#{current_path}?view=proof'>凭证工资表</a></li>
+                <li><a href='#{current_path}?view=card'>打卡表</a></li>
+                <li><a href='#{current_path}?view=custom'>自定义</a></li>
+              </ul>
+            </div>
+          </div>
+          """
+
+  $('body.salary_items .table_tools').append(html)
+
+  $('.views_selector .dropdown_menu_button').on 'click', ->
+    list = $(@).next('.dropdown_menu_list_wrapper')
+    if list.css('display') == 'none'
+      list.css('top', '174px')
+      list.find('.dropdown_menu_nipple').css('left', '20px')
+      list.show();
+    else
+      list.hide();
