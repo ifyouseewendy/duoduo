@@ -126,6 +126,9 @@ $(document).on 'ready', ->
     else
       window.location = $(@).val('href')
 
+$(document).on 'click', ->
+  $('.views_selector .dropdown_menu_list_wrapper').hide()
+
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
