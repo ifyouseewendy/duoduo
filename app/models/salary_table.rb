@@ -16,4 +16,35 @@ class SalaryTable < ActiveRecord::Base
   def corporation
     normal_corporation
   end
+
+  def export_xlsx(view: nil, columns: [])
+    filename = filename_by(view: view)
+    filepath = SALARY_TABLE_PATH.join filename
+
+    columns = SalaryItem.columns_based_on(view: view)
+
+    Axlsx::Package.new do |p|
+      p.workbook.add_worksheet(name: name) do |sheet|
+        sheet.add_row columns.map{|col| SalaryItem.human_attribute_name(col)}
+
+        salary_items.each do |item|
+          sheet.add_row columns.map{|col| item.send(col)}
+        end
+      end
+      p.serialize(filepath.to_s)
+    end
+
+    filepath
+  end
+
+  def filename_by(view: nil)
+    filename = \
+      case view.to_s
+      when "archive"  then "存档工资表"
+      when "proof"    then "凭证工资表"
+      when "card"     then "打卡表"
+      else "原始工资表"
+      end
+    "#{corporation.name}_#{name}_#{filename}.xlsx"
+  end
 end

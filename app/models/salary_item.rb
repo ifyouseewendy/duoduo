@@ -52,6 +52,30 @@ class SalaryItem < ActiveRecord::Base
         - [:total_personal, :salary_in_fact, :total_company, :total_sum, :total_sum_with_admin_amount]
       fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
+
+    def columns_based_on(view: nil)
+      all_fields = \
+        [
+          :id,
+          :staff_identity_card,
+          :staff_account,
+          :staff_category,
+          :staff_company_name,
+          :normal_staff_name,
+          :salary_table_name
+        ] + ordered_columns(without_base_keys: true, without_foreign_keys: true) - [:remark]
+
+      case view.to_s
+      when 'archive'
+        all_fields
+      when 'proof'
+        all_fields - [:admin_amount, :total_sum_with_admin_amount]
+      when 'card'
+        [:staff_account, :normal_staff_name, :salary_in_fact]
+      else
+        all_fields
+      end
+    end
   end
 
   def staff_identity_card
@@ -64,6 +88,10 @@ class SalaryItem < ActiveRecord::Base
 
   def staff_company
     normal_staff.normal_corporation
+  end
+
+  def staff_company_name
+    staff_company.name
   end
 
   def staff_category
@@ -182,6 +210,14 @@ class SalaryItem < ActiveRecord::Base
 
   def corporation
     normal_staff.normal_corporation
+  end
+
+  def normal_staff_name
+    normal_staff.name
+  end
+
+  def salary_table_name
+    salary_table.name
   end
 
 end

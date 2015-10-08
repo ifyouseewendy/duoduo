@@ -50,7 +50,10 @@ $(document).on 'ready', ->
       else
         select.attr('disabled', 'disabled')
 
-  current_path = window.location.href.toString().split(window.location.host)[1].split('?')[0]
+  url = window.location.href.toString().split(window.location.host)[1]
+  current_path = url.split('?')[0]
+  query_string = url.split('?')[1]
+
   html =  """
           <div class='views_selector dropdown_menu'>
             <a class='dropdown_menu_button' href='#'>视图</a>
@@ -76,3 +79,9 @@ $(document).on 'ready', ->
       list.show();
     else
       list.hide();
+
+  html =  """
+          <span>下载:</span>
+          <a href="#{current_path}/export_xlsx?#{query_string}">XLSX</a>
+          """
+  $('body.salary_items .download_links').empty().append(html)
