@@ -86,6 +86,11 @@ $(document).on 'ready', ->
     else
       list.hide();
 
+  $('.views_selector .custom a').on 'click', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+    $('.views_selector .dropdown_menu_list_wrapper').hide();
+
     columns = {}
     names = []
     $('#index_table_salary_items th')[1..-2].each ->
@@ -94,17 +99,13 @@ $(document).on 'ready', ->
       columns[col] = 'checkbox'
       names.push(name)
 
-    $('.views_selector .custom a').on 'click', (e) ->
-      e.stopPropagation()
-      e.preventDefault()
+    ActiveAdmin.modal_dialog_modified '请选择展示字段', columns, names,
+      (inputs)=>
+        columns = []
+        for key,val of inputs
+          columns.push key
 
-      ActiveAdmin.modal_dialog_modified '请选择展示字段', columns, names,
-        (inputs)=>
-          columns = []
-          for key,val of inputs
-            columns.push key
-
-          window.location = "#{current_path}?view=custom&columns=#{columns.join('-')}"
+        window.location = "#{current_path}?view=custom&columns=#{columns.join('-')}"
 
   # Export XLSX
   export_path = "#{current_path}/export_xlsx?#{query_string}"
@@ -125,9 +126,6 @@ $(document).on 'ready', ->
         window.location = "#{export_path}&selected=#{selected.join('-')}"
     else
       window.location = $(@).val('href')
-
-$(document).on 'click', ->
-  $('.views_selector .dropdown_menu_list_wrapper').hide()
 
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
