@@ -51,7 +51,7 @@ $(document).on 'ready', ->
         select.attr('disabled', 'disabled')
 
   url = window.location.href.toString().split(window.location.host)[1]
-  current_path = url.split('?')[0]
+  current_path = url.split('?')[0].replace('#', '')
   query_string = url.split('?')[1]
 
   html =  """
@@ -71,7 +71,9 @@ $(document).on 'ready', ->
 
   $('body.salary_items .table_tools').append(html)
 
-  $('.views_selector .dropdown_menu_button').on 'click', ->
+  $('.views_selector .dropdown_menu_button').on 'click', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
     list = $(@).next('.dropdown_menu_list_wrapper')
     if list.css('display') == 'none'
       list.css('top', '174px')
@@ -96,7 +98,11 @@ $(document).on 'ready', ->
 
       ActiveAdmin.modal_dialog_modified '请选择展示字段', columns, names,
         (inputs)=>
-          alert('hello')
+          columns = []
+          for key,val of inputs
+            columns.push key
+
+          window.location = "#{current_path}?view=custom&columns=#{columns.join('-')}"
 
   export_path = "#{current_path}/export_xlsx?#{query_string}"
   html =  """

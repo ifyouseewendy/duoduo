@@ -143,6 +143,18 @@ ActiveAdmin.register SalaryItem do
       column :normal_staff, sortable: :normal_staff_id
       column :salary_in_fact
     elsif params[:view] == 'custom'
+      columns = params[:columns].split('-')
+
+      column :id if columns.include? 'id'
+      column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card } if columns.include? 'staff_identity_card'
+      column :staff_account, sortable: ->(obj){ obj.staff_account } if columns.include? 'staff_account'
+      column :staff_category, sortable: ->(obj){ obj.staff_category } if columns.include? 'staff_category'
+      column :staff_company, sortable: -> (obj){ obj.staff_company.id } if columns.include? 'staff_company'
+      column :normal_staff, sortable: :normal_staff_id if columns.include? 'normal_staff'
+      column :salary_table, sortable: :salary_table_id if columns.include? 'salary_table'
+
+      sortable_columns = %w(id staff_identity_card staff_account staff_category staff_company normal_staff salary_table)
+      (columns - sortable_columns).each{|col| column col.to_sym}
     else
       column :id
       column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card }
