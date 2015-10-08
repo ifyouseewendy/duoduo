@@ -63,7 +63,7 @@ $(document).on 'ready', ->
                 <li><a href='#{current_path}?view=archive'>存档工资表</a></li>
                 <li><a href='#{current_path}?view=proof'>凭证工资表</a></li>
                 <li><a href='#{current_path}?view=card'>打卡表</a></li>
-                <li><a href='#{current_path}?view=custom'>自定义</a></li>
+                <li class='custom'><a href='#{current_path}?view=custom'>自定义</a></li>
               </ul>
             </div>
           </div>
@@ -79,6 +79,24 @@ $(document).on 'ready', ->
       list.show();
     else
       list.hide();
+
+    columns = {}
+    names = []
+    $('#index_table_salary_items th')[1..-2].each ->
+      col = $(this).attr('class').split(' ')[-1..][0].split('-')[1..-1]
+      name = $(this).find('a').text()
+      console.log(name)
+      columns[col] = 'checkbox'
+      names.push(name)
+    console.log columns
+
+    $('.views_selector .custom a').on 'click', (e) ->
+      e.stopPropagation()
+      e.preventDefault()
+
+      ActiveAdmin.modal_dialog_modified '请选择展示字段', columns, names,
+        (inputs)=>
+          alert('hello')
 
   export_path = "#{current_path}/export_xlsx?#{query_string}"
   html =  """
@@ -99,4 +117,53 @@ $(document).on 'ready', ->
         window.location = "#{export_path}&selected=#{selected.join('-')}"
     else
       window.location = $(@).val('href')
+
+ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
+  html = """<form id="dialog_confirm" title="#{message}"><ul>"""
+  idx = 0
+  for name, type of inputs
+    if /^(datepicker|checkbox|text)$/.test type
+      wrapper = 'input'
+    else if type is 'textarea'
+      wrapper = 'textarea'
+    else if $.isArray type
+      [wrapper, elem, opts, type] = ['select', 'option', type, '']
+    else
+      throw new Error "Unsupported input type: {#{name}: #{type}}"
+
+    klass = if type is 'datepicker' then type else ''
+    html += """<li>
+      <#{wrapper} name="#{name}" class="#{klass}" type="#{type}" checked='checked'>""" +
+        (if opts then (
+          for v in opts
+            $elem = $("<#{elem}/>")
+            if $.isArray v
+              $elem.text(v[0]).val(v[1])
+            else
+              $elem.text(v)
+            $elem.wrap('<div>').parent().html()
+        ).join '' else '') +
+      "</#{wrapper}>" +
+      "<label> #{display_names[idx]}</label>"
+    "</li>"
+    [wrapper, elem, opts, type, klass] = [] # unset any temporary variables
+
+    idx += 1
+
+  html += "</ul></form>"
+
+  form = $(html).appendTo('body')
+  $('body').trigger 'modal_dialog:before_open', [form]
+
+  form.dialog
+    modal: true
+    open: (event, ui) ->
+      $('body').trigger 'modal_dialog:after_open', [form]
+    dialogClass: 'active_admin_dialog'
+    buttons:
+      OK: ->
+        callback $(@).serializeObject()
+        $(@).dialog('close')
+      Cancel: ->
+        $(@).dialog('close').remove()
 
