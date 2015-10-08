@@ -21,10 +21,10 @@ class SalaryTable < ActiveRecord::Base
     filename = filename_by(view: view)
     filepath = SALARY_TABLE_PATH.join filename
 
-    columns = SalaryItem.columns_based_on(view: view)
-
     collectoin = salary_items
     collectoin = collectoin.where(id: options[:selected]) if options[:selected].present?
+
+    columns = SalaryItem.columns_based_on(view: view, options: options)
 
     Axlsx::Package.new do |p|
       p.workbook.add_worksheet(name: name) do |sheet|
@@ -46,6 +46,7 @@ class SalaryTable < ActiveRecord::Base
       when "archive"  then "存档工资表"
       when "proof"    then "凭证工资表"
       when "card"     then "打卡表"
+      when "custom"   then "自定义工资表"
       else "原始工资表"
       end
     "#{corporation.name}_#{name}_#{filename}.xlsx"

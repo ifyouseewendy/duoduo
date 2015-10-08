@@ -53,7 +53,7 @@ class SalaryItem < ActiveRecord::Base
       fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
 
-    def columns_based_on(view: nil)
+    def columns_based_on(view: nil, options: {})
       all_fields = \
         [
           :id,
@@ -72,6 +72,12 @@ class SalaryItem < ActiveRecord::Base
         all_fields - [:admin_amount, :total_sum_with_admin_amount]
       when 'card'
         [:staff_account, :normal_staff_name, :salary_in_fact]
+      when 'view'
+        columns = options[:columns].map(&:to_sym)
+        columns -= :staff_company and columns += :staff_company_name if columns.include?(:staff_company)
+        columns -= :normal_staff and columns += :normal_staff_name if columns.include?(:normal_staff)
+        columns -= :salary_table and columns += :salary_table_name if columns.include?(:salary_table)
+        columns
       else
         all_fields
       end
