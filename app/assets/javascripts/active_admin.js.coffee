@@ -1,6 +1,7 @@
 #= require active_admin/base
 
 $(document).on 'ready', ->
+  # Individual Income Tax calculate
   $('.iit_form .submit').on 'click', ->
     $.ajax
       url: "/individual_income_taxes/calculate"
@@ -12,6 +13,7 @@ $(document).on 'ready', ->
       success: (data, textStatus, jqXHR) ->
         $('.iit_form .result').text("应缴税金：" + data['result']).show();
 
+  # Batch Edit Fields
   $('a[data-action=batch_edit]').on 'click', ->
     $('.ui-dialog-title').text('批量修改字段');
 
@@ -50,10 +52,12 @@ $(document).on 'ready', ->
       else
         select.attr('disabled', 'disabled')
 
+  # URLs
   url = window.location.href.toString().split(window.location.host)[1]
   current_path = url.split('?')[0].replace('#', '')
   query_string = url.split('?')[1]
 
+  # Add View
   html =  """
           <div class='views_selector dropdown_menu'>
             <a class='dropdown_menu_button' href='#'>视图</a>
@@ -87,10 +91,8 @@ $(document).on 'ready', ->
     $('#index_table_salary_items th')[1..-2].each ->
       col = $(this).attr('class').split(' ')[-1..][0].split('-')[1..-1]
       name = $(this).find('a').text()
-      console.log(name)
       columns[col] = 'checkbox'
       names.push(name)
-    console.log columns
 
     $('.views_selector .custom a').on 'click', (e) ->
       e.stopPropagation()
@@ -104,6 +106,7 @@ $(document).on 'ready', ->
 
           window.location = "#{current_path}?view=custom&columns=#{columns.join('-')}"
 
+  # Export XLSX
   export_path = "#{current_path}/export_xlsx?#{query_string}"
   html =  """
           <span>下载:</span>
@@ -119,11 +122,11 @@ $(document).on 'ready', ->
         selected = []
         $('#index_table_salary_items .selected').each ->
           selected.push($(this).attr('id').split('_')[-1..][0])
-        console.log(selected.join('-'))
         window.location = "#{export_path}&selected=#{selected.join('-')}"
     else
       window.location = $(@).val('href')
 
+# Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
   idx = 0
