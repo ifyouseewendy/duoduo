@@ -107,6 +107,9 @@ $(document).on 'ready', ->
 
         window.location = "#{current_path}?view=custom&columns=#{columns.join('-')}"
 
+  $(document).on 'click', ->
+    $('.views_selector .dropdown_menu_list_wrapper').hide()
+
   # Export XLSX
   export_path = "#{current_path}/export_xlsx?#{query_string}"
   html =  """
