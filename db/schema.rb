@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150929141743) do
+ActiveRecord::Schema.define(version: 20151009124023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -343,6 +343,8 @@ ActiveRecord::Schema.define(version: 20150929141743) do
     t.decimal  "social_insurance_to_pre_deduct",       precision: 8, scale: 2
     t.decimal  "medical_insurance_to_pre_deduct",      precision: 8, scale: 2
     t.decimal  "house_accumulation_to_pre_deduct",     precision: 8, scale: 2
+    t.text     "transfer_fund_to_person"
+    t.text     "transfer_fund_to_account"
     t.decimal  "admin_amount",                         precision: 8, scale: 2
     t.decimal  "total_sum",                            precision: 8, scale: 2
     t.decimal  "total_sum_with_admin_amount",          precision: 8, scale: 2
