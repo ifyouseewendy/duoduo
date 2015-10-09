@@ -131,7 +131,7 @@ puts "--> Creating NormalStaff and EngineeringStaff"
       has_social_insurance: [true, false].sample,
       has_medical_insurance: [true, false].sample,
       in_service: [true, false].sample,
-      in_release: [true, false].sample,
+      in_contract: [true, false].sample,
       house_accumulation_base: 800,
       arrive_current_company_at: random_date('2000-01-01'),
       contract_start_date: random_date('2005-01-01'),

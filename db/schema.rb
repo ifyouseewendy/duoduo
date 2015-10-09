@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151009124023) do
+ActiveRecord::Schema.define(version: 20151009124933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -244,7 +244,7 @@ ActiveRecord::Schema.define(version: 20151009124023) do
     t.boolean  "has_social_insurance"
     t.boolean  "has_medical_insurance"
     t.boolean  "in_service"
-    t.boolean  "in_release"
+    t.boolean  "in_contract"
     t.decimal  "house_accumulation_base",              precision: 8, scale: 2
     t.date     "arrive_current_company_at"
     t.date     "contract_start_date"
@@ -281,7 +281,7 @@ ActiveRecord::Schema.define(version: 20151009124023) do
   add_index "normal_staffs", ["has_social_insurance"], name: "index_normal_staffs_on_has_social_insurance", using: :btree
   add_index "normal_staffs", ["house_accumulation_base"], name: "index_normal_staffs_on_house_accumulation_base", using: :btree
   add_index "normal_staffs", ["identity_card"], name: "index_normal_staffs_on_identity_card", using: :btree
-  add_index "normal_staffs", ["in_release"], name: "index_normal_staffs_on_in_release", using: :btree
+  add_index "normal_staffs", ["in_contract"], name: "index_normal_staffs_on_in_contract", using: :btree
   add_index "normal_staffs", ["in_service"], name: "index_normal_staffs_on_in_service", using: :btree
   add_index "normal_staffs", ["medical_insurance_base"], name: "index_normal_staffs_on_medical_insurance_base", using: :btree
   add_index "normal_staffs", ["medical_insurance_card"], name: "index_normal_staffs_on_medical_insurance_card", using: :btree

@@ -108,7 +108,7 @@ zh-CN:
         has_social_insurance: '是否参社保'
         has_medical_insurance: '是否参医保'
         in_service: '在职'
-        in_release: '解除'
+        in_contract: '有劳务关系'
         house_accumulation_base: '住房公积金基数'
         arrive_current_company_at: '到本单位时间'
         contract_start_date: '合同起始时间'

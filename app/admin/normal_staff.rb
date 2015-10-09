@@ -62,7 +62,7 @@ ActiveAdmin.register NormalStaff do
       f.input :has_social_insurance, as: :boolean
       f.input :has_medical_insurance, as: :boolean
       f.input :in_service, as: :boolean
-      f.input :in_release, as: :boolean
+      f.input :in_contract, as: :boolean
       f.input :house_accumulation_base, as: :number
       f.input :arrive_current_company_at, as: :datepicker
       f.input :contract_start_date, as: :datepicker
