@@ -254,18 +254,20 @@ class SalaryItem < ActiveRecord::Base
       self.save!
     else
       if options[:social_insurance_to_salary_deserve].present?
-        self.social_insurance_to_salary_deserve = \
+        fields = \
           [
-            self.pension_personal,
-            self.pension_margin_personal,
-            self.unemployment_personal,
-            self.unemployment_margin_personal
-          ].map(&:to_f).sum
+            :pension_company,
+            :pension_margin_company,
+            :unemployment_company,
+            :unemployment_margin_company,
+            :injury_company,
+            :injury_margin_company,
+            :birth_company,
+            :birth_margin_company
+          ]
 
-        self.pension_personal = nil
-        self.pension_margin_personal = nil
-        self.unemployment_personal = nil
-        self.unemployment_margin_personal = nil
+        self.social_insurance_to_salary_deserve = fields.map{|f| self.send("#{f}").to_f }.sum
+        fields.each{|f| self.send("#{f}=", nil)}
 
         self.save!
       end
@@ -273,20 +275,20 @@ class SalaryItem < ActiveRecord::Base
       if options[:medical_insurance_to_salary_deserve].present?
         self.medical_insurance_to_salary_deserve = \
           [
-            self.medical_personal,
-            self.medical_margin_personal
+            self.medical_company,
+            self.medical_margin_company
           ].map(&:to_f).sum
 
-        self.medical_personal = nil
-        self.medical_margin_personal = nil
+        self.medical_company = nil
+        self.medical_margin_company = nil
 
         self.save!
       end
 
       if options[:house_accumulation_to_salary_deserve].present?
         self.house_accumulation_to_salary_deserve = \
-          self.house_accumulation_personal
-        self.house_accumulation_personal = nil
+          self.house_accumulation_company
+        self.house_accumulation_company = nil
 
         self.save!
       end
