@@ -15,4 +15,5 @@ zh-CN:
       labels:
         flag: "标记"
         batch_edit: '修改'
+        manipulate_insurance_fund: '操作五险一金'
     import_new: '导入'

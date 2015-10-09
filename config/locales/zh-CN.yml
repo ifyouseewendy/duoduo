@@ -199,6 +199,7 @@ zh-CN:
         medical_insurance_to_pre_deduct: '医保金额转到预扣保险款'
         house_accumulation_to_salary_deserve: '公积金转到应发工资'
         house_accumulation_to_pre_deduct: '公积金转到预扣保险款'
+        salary_deserve_to_insurance_fund: '重置（应发转回五险一金）'
         admin_amount: '管理费'
         total_sum: '劳务费用合计'
         total_sum_with_admin_amount: '劳务费用合计（含管理）'

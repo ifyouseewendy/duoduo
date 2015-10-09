@@ -53,6 +53,16 @@ class SalaryItem < ActiveRecord::Base
       fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
 
+    def manipulate_insurance_fund_fields
+      fields = [
+        :social_insurance_to_salary_deserve,
+        :medical_insurance_to_salary_deserve,
+        :house_accumulation_to_salary_deserve,
+        :salary_deserve_to_insurance_fund
+      ]
+      fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+    end
+
     def columns_based_on(view: nil, options: {})
       all_fields = \
         [
@@ -214,6 +224,18 @@ class SalaryItem < ActiveRecord::Base
     self.total_sum_with_admin_amount = total_sum + admin_amount
   end
 
+  def manipulated_fields
+    @_manipulated_fields ||= %i(
+      social_insurance_to_salary_deserve
+      medical_insurance_to_salary_deserve
+      house_accumulation_to_salary_deserve
+    )
+  end
+
+  def clear_manipulated_fields
+    manipulated_fields.each{|f| self.send("#{f}=", nil)}
+  end
+
   def corporation
     normal_staff.normal_corporation
   end
@@ -226,4 +248,40 @@ class SalaryItem < ActiveRecord::Base
     salary_table.name
   end
 
+  def manipulate_insurance_fund(options = {})
+    if options[:salary_deserve_to_insurance_fund].present?
+      set_insurance_fund
+      clear_manipulated_fields
+
+      self.save!
+    else
+      if options[:social_insurance_to_salary_deserve].present?
+        self.social_insurance_to_salary_deserve = self.pension_personal + self.pension_margin_personal \
+          + self.unemployment_personal + self.unemployment_margin_personal
+        self.pension_personal = nil
+        self.pension_margin_personal = nil
+        self.unemployment_personal = nil
+        self.unemployment_margin_personal = nil
+
+        self.save!
+      end
+
+      if options[:medical_insurance_to_salary_deserve].present?
+        self.medical_insurance_to_salary_deserve = \
+          self.medical_personal + self.medical_margin_personal
+        self.medical_personal = nil
+        self.medical_margin_personal = nil
+
+        self.save!
+      end
+
+      if options[:house_accumulation_to_salary_deserve].present?
+        self.house_accumulation_to_salary_deserve = \
+          self.house_accumulation_personal
+        self.house_accumulation_personal = nil
+
+        self.save!
+      end
+    end
+  end
 end
