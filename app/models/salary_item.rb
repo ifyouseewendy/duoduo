@@ -256,8 +256,14 @@ class SalaryItem < ActiveRecord::Base
       self.save!
     else
       if options[:social_insurance_to_salary_deserve].present?
-        self.social_insurance_to_salary_deserve = self.pension_personal + self.pension_margin_personal \
-          + self.unemployment_personal + self.unemployment_margin_personal
+        self.social_insurance_to_salary_deserve = \
+          [
+            self.pension_personal,
+            self.pension_margin_personal,
+            self.unemployment_personal,
+            self.unemployment_margin_personal
+          ].map(&:to_f).sum
+
         self.pension_personal = nil
         self.pension_margin_personal = nil
         self.unemployment_personal = nil
@@ -268,7 +274,11 @@ class SalaryItem < ActiveRecord::Base
 
       if options[:medical_insurance_to_salary_deserve].present?
         self.medical_insurance_to_salary_deserve = \
-          self.medical_personal + self.medical_margin_personal
+          [
+            self.medical_personal,
+            self.medical_margin_personal
+          ].map(&:to_f).sum
+
         self.medical_personal = nil
         self.medical_margin_personal = nil
 
