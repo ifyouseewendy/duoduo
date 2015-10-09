@@ -52,6 +52,40 @@ $(document).on 'ready', ->
       else
         select.attr('disabled', 'disabled')
 
+  $('a[data-action=manipulate_insurance_fund]').on 'click', ->
+    $('.ui-dialog-title').text('请选择');
+
+    list = $('#dialog_confirm ul')
+    list.empty();
+
+    for key,val of $(this).data('inputs')
+      id = key.split('_')[0..-2].join('_')
+      name = key.split('_')[-1..-1].join()
+
+      if id == 'salary_deserve_to_insurance_fund'
+        list.append("<li><hr></li>")
+        list.append("<li class='reverse'><input type='checkbox' class='batch_update_protect_fild_flag' value='Y' id='batch_update_dialog_"+id+"'><label for='batch_update_dialog_"+id+"'> "+name+"</label></br><input name='"+id+"' class='' type='text' style='display:none;'></li>")
+      else
+        list.append("<li class='normal'><input type='checkbox' class='batch_update_protect_fild_flag' value='Y' id='batch_update_dialog_"+id+"'><label for='batch_update_dialog_"+id+"'> "+name+"</label></br><input name='"+id+"' class='' type='text' style='display:none;'></li>")
+
+    list.find('.normal .batch_update_protect_fild_flag').on 'click', ->
+      if $(@).is(':checked')
+        $(@).siblings('input').val('selected')
+        $(@).closest('li').siblings('.reverse').each ->
+          $(@).find('.batch_update_protect_fild_flag').prop('checked', false)
+          $(@).find('input[type=text]').val('')
+      else
+        $(@).siblings('input').val('')
+
+    list.find('.reverse .batch_update_protect_fild_flag').on 'click', ->
+      if $(@).is(':checked')
+        $(@).siblings('input').val('selected')
+        $(@).closest('li').siblings('.normal').each ->
+          $(@).find('.batch_update_protect_fild_flag').prop('checked', false)
+          $(@).find('input[type=text]').val('')
+      else
+        $(@).siblings('input').val('')
+
   # URLs
   url = window.location.href.toString().split(window.location.host)[1]
   current_path = url.split('?')[0].replace('#', '')
