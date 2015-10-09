@@ -338,19 +338,19 @@ ActiveRecord::Schema.define(version: 20150929141743) do
     t.decimal  "house_accumulation_company",           precision: 8, scale: 2
     t.decimal  "total_company",                        precision: 8, scale: 2
     t.decimal  "social_insurance_to_salary_deserve",   precision: 8, scale: 2
-    t.decimal  "social_insurance_to_pre_deduct",       precision: 8, scale: 2
     t.decimal  "medical_insurance_to_salary_deserve",  precision: 8, scale: 2
-    t.decimal  "medical_insurance_to_pre_deduct",      precision: 8, scale: 2
     t.decimal  "house_accumulation_to_salary_deserve", precision: 8, scale: 2
+    t.decimal  "social_insurance_to_pre_deduct",       precision: 8, scale: 2
+    t.decimal  "medical_insurance_to_pre_deduct",      precision: 8, scale: 2
     t.decimal  "house_accumulation_to_pre_deduct",     precision: 8, scale: 2
     t.decimal  "admin_amount",                         precision: 8, scale: 2
     t.decimal  "total_sum",                            precision: 8, scale: 2
+    t.decimal  "total_sum_with_admin_amount",          precision: 8, scale: 2
     t.text     "remark"
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
     t.integer  "salary_table_id"
     t.integer  "normal_staff_id"
-    t.decimal  "total_sum_with_admin_amount",          precision: 8, scale: 2
   end
 
   add_index "salary_items", ["normal_staff_id"], name: "index_salary_items_on_normal_staff_id", using: :btree

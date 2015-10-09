@@ -1,6 +1,11 @@
 puts "--> Cleaning DB data"
 [InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax, SalaryItem, SalaryTable, EngineeringStaff, NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
 
+if AdminUser.where(email: 'admin').first.nil?
+  au = AdminUser.new(email: 'admin', password: '123123', password_confirmation: '123123')
+  au.save(validate: false)
+end
+
 sub_companies = Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
   sc = SubCompany.create(name: name)
   (1..2).each_with_object([]) do |idx, ar|
