@@ -73,7 +73,7 @@ class SalaryItem < ActiveRecord::Base
           :staff_company_name,
           :normal_staff_name,
           :salary_table_name
-        ] + ordered_columns(without_base_keys: true, without_foreign_keys: true) - [:remark]
+        ] + ordered_columns(without_base_keys: true, without_foreign_keys: true) - [:remark] + [:remark]
 
       case view.to_s
       when 'archive'
