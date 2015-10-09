@@ -130,6 +130,12 @@ ActiveAdmin.register SalaryItem do
       column :accident_company
       column :house_accumulation_company
       column :total_company
+      column :social_insurance_to_pre_deduct
+      column :medical_insurance_to_pre_deduct
+      column :house_accumulation_to_pre_deduct
+      column :social_insurance_to_salary_deserve
+      column :medical_insurance_to_salary_deserve
+      column :house_accumulation_to_salary_deserve
       column :total_sum
     elsif params[:view] == 'card'
       column :staff_account, sortable: ->(obj){ obj.staff_account }
@@ -187,12 +193,12 @@ ActiveAdmin.register SalaryItem do
       column :accident_company
       column :house_accumulation_company
       column :total_company
-      column :social_insurance_to_salary_deserve
       column :social_insurance_to_pre_deduct
-      column :medical_insurance_to_salary_deserve
       column :medical_insurance_to_pre_deduct
-      column :house_accumulation_to_salary_deserve
       column :house_accumulation_to_pre_deduct
+      column :social_insurance_to_salary_deserve
+      column :medical_insurance_to_salary_deserve
+      column :house_accumulation_to_salary_deserve
       column :admin_amount
       column :total_sum
       column :total_sum_with_admin_amount
