@@ -91,14 +91,7 @@ ActiveAdmin.register SalaryItem do
   index do
     selectable_column
 
-    if params[:view] == 'archive'
-      # Need to modify columns
-      column :id
-      column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card }
-      column :staff_account, sortable: ->(obj){ obj.staff_account }
-      column :staff_category, sortable: ->(obj){ obj.staff_category }
-      column :staff_company, sortable: -> (obj){ obj.staff_company.id }
-    elsif params[:view] == 'proof'
+    if params[:view] == 'proof'
       column :id
       column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card }
       column :staff_account, sortable: ->(obj){ obj.staff_account }

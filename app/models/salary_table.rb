@@ -43,8 +43,7 @@ class SalaryTable < ActiveRecord::Base
   def filename_by(view: nil)
     filename = \
       case view.to_s
-      when "archive"  then "存档工资表"
-      when "proof"    then "凭证工资表"
+      when "proof"    then "凭证工资表（帐用）"
       when "card"     then "打卡表"
       when "custom"   then "自定义工资表"
       else "原始工资表"

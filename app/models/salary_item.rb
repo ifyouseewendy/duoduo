@@ -76,8 +76,6 @@ class SalaryItem < ActiveRecord::Base
         ] + ordered_columns(without_base_keys: true, without_foreign_keys: true) - [:remark] + [:remark]
 
       case view.to_s
-      when 'archive'
-        all_fields
       when 'proof'
         all_fields - [:admin_amount, :total_sum_with_admin_amount]
       when 'card'
