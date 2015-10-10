@@ -26,6 +26,7 @@ zh-CN:
       individual_income_tax_base: '个税基数'
       settings: '设置'
       insurance_fund_rate: '五险一金缴费比例'
+      labor_contract: '劳务合同'
     attributes:
       normal_corporation:
         id: '编号'
@@ -243,5 +244,34 @@ zh-CN:
         house_accumulation: '公积金'
         created_at: "创建时间"
         updated_at: "更新时间"
-
+      labor_contract:
+        id: '序号'
+        contract_type: '合同类型'
+        in_contract: '有劳务关系'
+        contract_start_date: '合同起始时间'
+        contract_end_date: '合同终止时间'
+        arrive_current_company_at: '到本单位时间'
+        has_social_insurance: '是否参社保'
+        has_medical_insurance: '是否参医保'
+        current_social_insurance_start_date: '本单位社保参保时间'
+        current_medical_insurance_start_date: '本单位医保参保时间'
+        social_insurance_base: '社保基数'
+        medical_insurance_base: '医保基数'
+        house_accumulation_base: '住房公积金基数'
+        social_insurance_serial: '社保个人编号'
+        medical_insurance_serial: '医保个人编号'
+        medical_insurance_card: '医保卡号'
+        backup_date: '备案时间'
+        backup_place: '备案地'
+        work_place: '工作地点'
+        work_type: '工种'
+        release_date: '办理解除时间'
+        social_insurance_release_date: '社保解除时间'
+        medical_insurance_release_date: '医保解除时间'
+        remark: '备注'
+        sub_company_id: '吉易子公司'
+        normal_corporation_id: '合作单位'
+        normal_staff_id: '所属员工'
+        created_at: "创建时间"
+        updated_at: "更新时间"
 

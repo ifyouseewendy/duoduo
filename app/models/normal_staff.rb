@@ -1,6 +1,7 @@
 class NormalStaff < ActiveRecord::Base
   belongs_to :normal_corporation
   has_many :salary_items
+  has_many :labor_contracts
 
   enum gender: [:male, :female]
 

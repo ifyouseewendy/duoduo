@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151009124933) do
+ActiveRecord::Schema.define(version: 20151010063745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -165,6 +165,41 @@ ActiveRecord::Schema.define(version: 20151009124933) do
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
   end
+
+  create_table "labor_contracts", force: :cascade do |t|
+    t.integer  "contract_type"
+    t.boolean  "in_contract"
+    t.date     "contract_start_date"
+    t.date     "contract_end_date"
+    t.date     "arrive_current_company_at"
+    t.boolean  "has_social_insurance"
+    t.boolean  "has_medical_insurance"
+    t.date     "current_social_insurance_start_date"
+    t.date     "current_medical_insurance_start_date"
+    t.decimal  "social_insurance_base",                precision: 8, scale: 2
+    t.decimal  "medical_insurance_base",               precision: 8, scale: 2
+    t.decimal  "house_accumulation_base",              precision: 8, scale: 2
+    t.text     "social_insurance_serial"
+    t.text     "medical_insurance_serial"
+    t.text     "medical_insurance_card"
+    t.date     "backup_date"
+    t.text     "backup_place"
+    t.text     "work_place"
+    t.text     "work_type"
+    t.date     "release_date"
+    t.date     "social_insurance_release_date"
+    t.date     "medical_insurance_release_date"
+    t.text     "remark"
+    t.integer  "sub_company_id"
+    t.integer  "normal_corporation_id"
+    t.integer  "normal_staff_id"
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
+  end
+
+  add_index "labor_contracts", ["normal_corporation_id"], name: "index_labor_contracts_on_normal_corporation_id", using: :btree
+  add_index "labor_contracts", ["normal_staff_id"], name: "index_labor_contracts_on_normal_staff_id", using: :btree
+  add_index "labor_contracts", ["sub_company_id"], name: "index_labor_contracts_on_sub_company_id", using: :btree
 
   create_table "milestones", force: :cascade do |t|
     t.string   "name"
@@ -391,6 +426,9 @@ ActiveRecord::Schema.define(version: 20151009124933) do
 
   add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "engineering_staffs", "engineering_corporations"
+  add_foreign_key "labor_contracts", "normal_corporations"
+  add_foreign_key "labor_contracts", "normal_staffs"
+  add_foreign_key "labor_contracts", "sub_companies"
   add_foreign_key "normal_staffs", "normal_corporations"
   add_foreign_key "salary_items", "normal_staffs"
   add_foreign_key "salary_items", "salary_tables"
