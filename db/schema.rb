@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151010063745) do
+ActiveRecord::Schema.define(version: 20151010071726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -260,40 +260,21 @@ ActiveRecord::Schema.define(version: 20151010063745) do
   create_table "normal_staffs", force: :cascade do |t|
     t.text     "nest_index"
     t.text     "name"
-    t.text     "company_name"
     t.text     "account"
     t.text     "account_bank"
     t.text     "identity_card"
     t.date     "birth"
     t.integer  "age"
-    t.integer  "gender",                                                       default: 0
+    t.integer  "gender",                      default: 0
     t.text     "nation"
     t.text     "grade"
     t.text     "address"
     t.text     "telephone"
     t.date     "social_insurance_start_date"
-    t.date     "current_social_insurance_start_date"
-    t.date     "current_medical_insurance_start_date"
-    t.decimal  "social_insurance_base",                precision: 8, scale: 2
-    t.decimal  "medical_insurance_base",               precision: 8, scale: 2
-    t.boolean  "has_social_insurance"
-    t.boolean  "has_medical_insurance"
     t.boolean  "in_service"
-    t.boolean  "in_contract"
-    t.decimal  "house_accumulation_base",              precision: 8, scale: 2
-    t.date     "arrive_current_company_at"
-    t.date     "contract_start_date"
-    t.date     "contract_end_date"
-    t.text     "social_insurance_serial"
-    t.text     "medical_insurance_serial"
-    t.text     "medical_insurance_card"
-    t.date     "backup_date"
-    t.text     "backup_place"
-    t.text     "work_place"
-    t.text     "work_type"
     t.text     "remark"
-    t.datetime "created_at",                                                               null: false
-    t.datetime "updated_at",                                                               null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.integer  "normal_corporation_id"
   end
 
@@ -301,37 +282,18 @@ ActiveRecord::Schema.define(version: 20151010063745) do
   add_index "normal_staffs", ["account_bank"], name: "index_normal_staffs_on_account_bank", using: :btree
   add_index "normal_staffs", ["address"], name: "index_normal_staffs_on_address", using: :btree
   add_index "normal_staffs", ["age"], name: "index_normal_staffs_on_age", using: :btree
-  add_index "normal_staffs", ["arrive_current_company_at"], name: "index_normal_staffs_on_arrive_current_company_at", using: :btree
-  add_index "normal_staffs", ["backup_date"], name: "index_normal_staffs_on_backup_date", using: :btree
-  add_index "normal_staffs", ["backup_place"], name: "index_normal_staffs_on_backup_place", using: :btree
   add_index "normal_staffs", ["birth"], name: "index_normal_staffs_on_birth", using: :btree
-  add_index "normal_staffs", ["company_name"], name: "index_normal_staffs_on_company_name", using: :btree
-  add_index "normal_staffs", ["contract_end_date"], name: "index_normal_staffs_on_contract_end_date", using: :btree
-  add_index "normal_staffs", ["contract_start_date"], name: "index_normal_staffs_on_contract_start_date", using: :btree
-  add_index "normal_staffs", ["current_medical_insurance_start_date"], name: "index_normal_staffs_on_current_medical_insurance_start_date", using: :btree
-  add_index "normal_staffs", ["current_social_insurance_start_date"], name: "index_normal_staffs_on_current_social_insurance_start_date", using: :btree
   add_index "normal_staffs", ["gender"], name: "index_normal_staffs_on_gender", using: :btree
   add_index "normal_staffs", ["grade"], name: "index_normal_staffs_on_grade", using: :btree
-  add_index "normal_staffs", ["has_medical_insurance"], name: "index_normal_staffs_on_has_medical_insurance", using: :btree
-  add_index "normal_staffs", ["has_social_insurance"], name: "index_normal_staffs_on_has_social_insurance", using: :btree
-  add_index "normal_staffs", ["house_accumulation_base"], name: "index_normal_staffs_on_house_accumulation_base", using: :btree
   add_index "normal_staffs", ["identity_card"], name: "index_normal_staffs_on_identity_card", using: :btree
-  add_index "normal_staffs", ["in_contract"], name: "index_normal_staffs_on_in_contract", using: :btree
   add_index "normal_staffs", ["in_service"], name: "index_normal_staffs_on_in_service", using: :btree
-  add_index "normal_staffs", ["medical_insurance_base"], name: "index_normal_staffs_on_medical_insurance_base", using: :btree
-  add_index "normal_staffs", ["medical_insurance_card"], name: "index_normal_staffs_on_medical_insurance_card", using: :btree
-  add_index "normal_staffs", ["medical_insurance_serial"], name: "index_normal_staffs_on_medical_insurance_serial", using: :btree
   add_index "normal_staffs", ["name"], name: "index_normal_staffs_on_name", using: :btree
   add_index "normal_staffs", ["nation"], name: "index_normal_staffs_on_nation", using: :btree
   add_index "normal_staffs", ["nest_index"], name: "index_normal_staffs_on_nest_index", using: :btree
   add_index "normal_staffs", ["normal_corporation_id"], name: "index_normal_staffs_on_normal_corporation_id", using: :btree
   add_index "normal_staffs", ["remark"], name: "index_normal_staffs_on_remark", using: :btree
-  add_index "normal_staffs", ["social_insurance_base"], name: "index_normal_staffs_on_social_insurance_base", using: :btree
-  add_index "normal_staffs", ["social_insurance_serial"], name: "index_normal_staffs_on_social_insurance_serial", using: :btree
   add_index "normal_staffs", ["social_insurance_start_date"], name: "index_normal_staffs_on_social_insurance_start_date", using: :btree
   add_index "normal_staffs", ["telephone"], name: "index_normal_staffs_on_telephone", using: :btree
-  add_index "normal_staffs", ["work_place"], name: "index_normal_staffs_on_work_place", using: :btree
-  add_index "normal_staffs", ["work_type"], name: "index_normal_staffs_on_work_type", using: :btree
 
   create_table "projects", force: :cascade do |t|
     t.string   "name"
