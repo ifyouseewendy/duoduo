@@ -30,6 +30,8 @@ ActiveAdmin.register NormalStaff do
         end
       elsif field == :normal_corporation_id
         column :normal_corporation, sortable: :normal_corporation_id
+      elsif field == :sub_company_id
+        column :sub_company, sortable: :sub_company_id
       else
         column field
       end
@@ -41,7 +43,6 @@ ActiveAdmin.register NormalStaff do
     f.semantic_errors *f.object.errors.keys
 
     f.inputs do
-      f.input :normal_corporation, as: :select
       f.input :nest_index, as: :number
       f.input :name, as: :string
       f.input :account, as: :string
@@ -93,10 +94,17 @@ ActiveAdmin.register NormalStaff do
             end
           elsif field == :normal_corporation_id
             row :normal_corporation
+          elsif field == :sub_company_id
+            row :sub_company
           else
             row field
           end
         end
+      end
+    end
+
+    panel "劳务合同" do
+      tabs do
       end
     end
   end
