@@ -1,5 +1,5 @@
 puts "--> Cleaning DB data"
-[InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax, SalaryItem, SalaryTable, EngineeringStaff, NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
+[LaborContract, InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax, SalaryItem, SalaryTable, EngineeringStaff, NormalStaff, ContractFile, EngineeringCorporation, NormalCorporation, SubCompany].each(&:delete_all)
 
 if AdminUser.where(email: 'admin').first.nil?
   au = AdminUser.new(email: 'admin', password: '123123', password_confirmation: '123123')
@@ -99,6 +99,7 @@ puts "--> Creating NormalStaff and EngineeringStaff"
   (1..5).each do |nest_id|
     nc = NormalCorporation.all.sample
     ec = EngineeringCorporation.all.sample
+    sc = nc.sub_companies.sample
 
     bank          = ['工商银行', '农业银行', '交通银行', '建设银行'].sample
     birth         = random_date
@@ -108,11 +109,10 @@ puts "--> Creating NormalStaff and EngineeringStaff"
 
     staff = Jia::User.new
 
-    NormalStaff.create!(
+    ns = NormalStaff.create!(
       normal_corporation: nc,
       nest_index: nest_id,
       name: staff.full_name,
-      company_name: nc.name,
       account: rand_by(10),
       account_bank: bank,
       identity_card: rand_by(10),
@@ -124,27 +124,40 @@ puts "--> Creating NormalStaff and EngineeringStaff"
       address:  address,
       telephone: staff.phone,
       social_insurance_start_date: random_date('1990-01-01'),
-      current_social_insurance_start_date: random_date('2000-01-01'),
-      current_medical_insurance_start_date: random_date('2000-01-01'),
-      social_insurance_base: 1000,
-      medical_insurance_base: 800,
-      has_social_insurance: [true, false].sample,
-      has_medical_insurance: [true, false].sample,
       in_service: [true, false].sample,
-      in_contract: [true, false].sample,
-      house_accumulation_base: 800,
-      arrive_current_company_at: random_date('2000-01-01'),
-      contract_start_date: random_date('2005-01-01'),
-      contract_end_date: random_date('2010-01-01'),
-      social_insurance_serial: rand_by(10),
-      medical_insurance_serial: rand_by(10),
-      medical_insurance_card: rand_by(10),
-      backup_date: random_date('2005-01-01'),
-      backup_place: '四平市',
-      work_place: '四平市',
-      work_type: ['人力', '物业', '财务', '保安'].sample,
       remark: '备注'
     )
+
+    3.times do
+      LaborContract.create!(
+        normal_staff: ns,
+        normal_corporation: nc,
+        sub_company: sc,
+        in_contract: true,
+        contract_type: rand(5),
+        contract_start_date: random_date('2005-01-01'),
+        contract_end_date: random_date('2010-01-01'),
+        arrive_current_company_at: random_date('2000-01-01'),
+        has_social_insurance: [true, false].sample,
+        has_medical_insurance: [true, false].sample,
+        current_social_insurance_start_date: random_date('2000-01-01'),
+        current_medical_insurance_start_date: random_date('2000-01-01'),
+        social_insurance_base: 1000,
+        medical_insurance_base: 800,
+        house_accumulation_base: 800,
+        social_insurance_serial: rand_by(10),
+        medical_insurance_serial: rand_by(10),
+        medical_insurance_card: rand_by(10),
+        backup_date: random_date('2005-01-01'),
+        backup_place: '四平市',
+        work_place: '四平市',
+        work_type: ['人力', '物业', '财务', '保安'].sample,
+        release_date: nil,
+        social_insurance_release_date: nil,
+        medical_insurance_release_date: nil,
+        remark: '备注'
+      )
+    end
 
     staff = Jia::User.new
 
