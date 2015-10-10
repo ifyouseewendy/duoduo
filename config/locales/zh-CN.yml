@@ -27,6 +27,7 @@ zh-CN:
       settings: '设置'
       insurance_fund_rate: '五险一金缴费比例'
       labor_contract: '劳务合同'
+      sub_company: '吉易子公司'
     attributes:
       normal_corporation:
         id: '编号'
@@ -282,4 +283,11 @@ zh-CN:
         normal_staff_id: '所属员工'
         created_at: "创建时间"
         updated_at: "更新时间"
+      sub_company:
+        id: '序号'
+        name: '名称'
+        contract_templates: '合同模板'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+
 
