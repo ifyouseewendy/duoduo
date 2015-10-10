@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151010071726) do
+ActiveRecord::Schema.define(version: 20151010124248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -276,6 +276,7 @@ ActiveRecord::Schema.define(version: 20151010071726) do
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
     t.integer  "normal_corporation_id"
+    t.integer  "sub_company_id"
   end
 
   add_index "normal_staffs", ["account"], name: "index_normal_staffs_on_account", using: :btree
@@ -293,6 +294,7 @@ ActiveRecord::Schema.define(version: 20151010071726) do
   add_index "normal_staffs", ["normal_corporation_id"], name: "index_normal_staffs_on_normal_corporation_id", using: :btree
   add_index "normal_staffs", ["remark"], name: "index_normal_staffs_on_remark", using: :btree
   add_index "normal_staffs", ["social_insurance_start_date"], name: "index_normal_staffs_on_social_insurance_start_date", using: :btree
+  add_index "normal_staffs", ["sub_company_id"], name: "index_normal_staffs_on_sub_company_id", using: :btree
   add_index "normal_staffs", ["telephone"], name: "index_normal_staffs_on_telephone", using: :btree
 
   create_table "projects", force: :cascade do |t|
@@ -392,6 +394,7 @@ ActiveRecord::Schema.define(version: 20151010071726) do
   add_foreign_key "labor_contracts", "normal_staffs"
   add_foreign_key "labor_contracts", "sub_companies"
   add_foreign_key "normal_staffs", "normal_corporations"
+  add_foreign_key "normal_staffs", "sub_companies"
   add_foreign_key "salary_items", "normal_staffs"
   add_foreign_key "salary_items", "salary_tables"
   add_foreign_key "salary_tables", "normal_corporations"

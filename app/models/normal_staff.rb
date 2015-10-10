@@ -1,5 +1,6 @@
 class NormalStaff < ActiveRecord::Base
   belongs_to :normal_corporation
+  belongs_to :sub_company
   has_many :salary_items
   has_many :labor_contracts
 
@@ -10,7 +11,7 @@ class NormalStaff < ActiveRecord::Base
       names = column_names.map(&:to_sym)
 
       names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(normal_corporation_id) if without_foreign_keys
+      names -= %i(normal_corporation_id sub_company_id) if without_foreign_keys
 
       names
     end

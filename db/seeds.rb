@@ -60,7 +60,7 @@ puts "--> Creating NormalCorporation and EngineeringCorporation"
       stuff_count:          rand(300),
       insurance_count:      rand(300),
       remark:               "备注",
-      sub_companies:        sub_companies.sample(rand(6)),
+      sub_companies:        sub_companies.sample(rand(6)+1),
       created_at:           "2015-07-01".to_date + days,
       updated_at:           "2015-07-01".to_date + days
     )
@@ -111,6 +111,7 @@ puts "--> Creating NormalStaff and EngineeringStaff"
 
     ns = NormalStaff.create!(
       normal_corporation: nc,
+      sub_company: sc,
       nest_index: nest_id,
       name: staff.full_name,
       account: rand_by(10),

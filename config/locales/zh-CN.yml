@@ -124,6 +124,8 @@ zh-CN:
         remark: '备注'
         normal_corporation: '所属单位'
         normal_corporation_id: '所属单位'
+        sub_company: '所属子公司'
+        sub_company_id: '所属子公司'
         created_at: "创建时间"
         updated_at: "更新时间"
       engineering_staff:

@@ -6,6 +6,7 @@ class SubCompany < ActiveRecord::Base
   mount_uploaders :contract_templates, ContractTemplateUploader
 
   has_many :labor_contracts
+  has_many :normal_staffs
 
   def add_file(filename, override: false, template: false)
     field = template ? :contract_templates : :contracts
