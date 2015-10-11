@@ -56,25 +56,7 @@ ActiveAdmin.register NormalStaff do
       f.input :address, as: :string
       f.input :telephone, as: :string
       f.input :social_insurance_start_date, as: :datepicker
-      f.input :current_social_insurance_start_date, as: :datepicker
-      f.input :current_medical_insurance_start_date, as: :datepicker
-      f.input :social_insurance_base, as: :number
-      f.input :medical_insurance_base, as: :number
-      f.input :has_social_insurance, as: :boolean
-      f.input :has_medical_insurance, as: :boolean
       f.input :in_service, as: :boolean
-      f.input :in_contract, as: :boolean
-      f.input :house_accumulation_base, as: :number
-      f.input :arrive_current_company_at, as: :datepicker
-      f.input :contract_start_date, as: :datepicker
-      f.input :contract_end_date, as: :datepicker
-      f.input :social_insurance_serial, as: :string
-      f.input :medical_insurance_serial, as: :string
-      f.input :medical_insurance_card, as: :string
-      f.input :backup_date, as: :datepicker
-      f.input :backup_place, as: :string
-      f.input :work_place, as: :string
-      f.input :work_type, as: :string
       f.input :remark, as: :text
     end
 
