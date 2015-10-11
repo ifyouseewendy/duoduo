@@ -19,8 +19,13 @@ class LaborContract < ActiveRecord::Base
     end
 
     def contract_types_option
-      contract_types.keys.map{|k| [I18n.t("activerecord.attributes.labor_contracts.contract_types.#{k}"), k]}
+      contract_types.keys.map{|k| [I18n.t("activerecord.attributes.labor_contract.contract_types.#{k}"), k]}
     end
+
+  end
+
+  def contract_type_i18n
+    I18n.t("activerecord.attributes.labor_contract.contract_types.#{contract_type}")
   end
 
   def insurance_fund
