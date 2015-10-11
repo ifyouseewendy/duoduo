@@ -22,6 +22,14 @@ class LaborContract < ActiveRecord::Base
       contract_types.keys.map{|k| [I18n.t("activerecord.attributes.labor_contract.contract_types.#{k}"), k]}
     end
 
+    def columns_of(type)
+      self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
+    end
+
+  end
+
+  def name
+    "#{normal_corporation.name} - #{normal_staff.name}"
   end
 
   def contract_type_i18n
