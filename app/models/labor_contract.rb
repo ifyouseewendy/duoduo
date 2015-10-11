@@ -9,6 +9,8 @@ class LaborContract < ActiveRecord::Base
   scope :active, -> { where(in_contract: true) }
   scope :active_order, -> { order(in_contract: :desc) }
 
+  after_update :check_active_status
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -72,4 +74,16 @@ class LaborContract < ActiveRecord::Base
 
     stats
   end
+
+  private
+
+    def check_active_status
+      if in_contract_change == [false, true]
+        other_active_contracts = normal_staff.labor_contracts.where.not(id: self.id).active
+        if other_active_contracts.count > 0
+          other_active_contracts.each{|lc| lc.update_column(:in_contract, false)}
+        end
+      end
+    end
+
 end
