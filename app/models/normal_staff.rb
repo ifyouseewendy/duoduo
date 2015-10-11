@@ -6,6 +6,8 @@ class NormalStaff < ActiveRecord::Base
 
   enum gender: [:male, :female]
 
+  after_update :check_contracts_status
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -65,4 +67,12 @@ class NormalStaff < ActiveRecord::Base
     }
   end
 
+
+  private
+
+    def check_contracts_status
+      if in_service_change == [true, false]
+        labor_contracts.active.each{|lc| lc.update_attribute(:in_contract, false)}
+      end
+    end
 end
