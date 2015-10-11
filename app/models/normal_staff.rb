@@ -45,12 +45,12 @@ class NormalStaff < ActiveRecord::Base
     I18n.t("activerecord.attributes.normal_staff.genders.#{gender}")
   end
 
-  def contract
+  def labor_contract
     labor_contracts.active.first
   end
 
   def insurance_fund
-    contract.insurance_fund
+    labor_contract.insurance_fund
   end
 
   def has_no_salary_item?
