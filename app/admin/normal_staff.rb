@@ -84,10 +84,14 @@ ActiveAdmin.register NormalStaff do
         end
       end
     end
+  end
 
-    panel "劳务合同" do
-      tabs do
-      end
+  sidebar '链接', only: [:show] do
+    ul do
+      lc = normal_staff.labor_contracts.active.first
+      li link_to lc.name, normal_staff_labor_contract_path(normal_staff, lc), class: 'current_contract'
+
+      li link_to "全部合同", normal_staff_labor_contracts_path(normal_staff)
     end
   end
 

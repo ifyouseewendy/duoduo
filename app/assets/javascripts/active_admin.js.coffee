@@ -163,6 +163,10 @@ $(document).on 'ready', ->
     else
       window.location = $(@).val('href')
 
+  current_contract = $('body.normal_staffs .current_contract')
+  current_contract.css("padding-right", "10px")
+  current_contract.closest('li').append("<span class='status_tag active ok'>当前合同</span>")
+
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
