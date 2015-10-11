@@ -72,7 +72,7 @@ class NormalStaff < ActiveRecord::Base
 
     def check_contracts_status
       if in_service_change == [true, false]
-        labor_contracts.active.each{|lc| lc.update_attribute(:in_contract, false)}
+        labor_contracts.active.each(&:inactivate!)
       end
     end
 end

@@ -76,12 +76,21 @@ class LaborContract < ActiveRecord::Base
     stats
   end
 
+  def activate!
+    update_attribute(:in_contract, true)
+  end
+
+  def inactivate!
+    update_attribute(:in_contract, false)
+  end
+
   private
 
     def check_active_status
       if in_contract_change == [false, true]
         other_active_contracts = normal_staff.labor_contracts.where.not(id: self.id).active
         if other_active_contracts.count > 0
+          # callbacks skipped
           other_active_contracts.each{|lc| lc.update_column(:in_contract, false)}
         end
       end
