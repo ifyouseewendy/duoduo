@@ -10,6 +10,7 @@ class LaborContract < ActiveRecord::Base
   scope :active_order, -> { order(in_contract: :desc) }
 
   after_update :check_active_status
+  after_update :check_relationship
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
@@ -83,6 +84,16 @@ class LaborContract < ActiveRecord::Base
         if other_active_contracts.count > 0
           other_active_contracts.each{|lc| lc.update_column(:in_contract, false)}
         end
+      end
+    end
+
+    def check_relationship
+      if changed.include? 'normal_corporation_id'
+        normal_staff.update_attribute(:normal_corporation_id, self.normal_corporation_id)
+      end
+
+      if changed.include? 'sub_company_id'
+        normal_staff.update_attribute(:sub_company_id, self.sub_company_id)
       end
     end
 
