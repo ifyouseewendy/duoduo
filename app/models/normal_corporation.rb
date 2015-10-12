@@ -6,6 +6,8 @@ class NormalCorporation < ActiveRecord::Base
   has_many :salary_items, through: :salary_tables
   has_many :labor_contracts
 
+  validates_uniqueness_of :name
+
   scope :updated_in_7_days, ->{ where('updated_at > ?', Date.today - 7.days) }
   scope :updated_latest_10, ->{ order(updated_at: :desc).limit(10) }
 

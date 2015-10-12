@@ -8,6 +8,8 @@ class SubCompany < ActiveRecord::Base
   has_many :labor_contracts
   has_many :normal_staffs
 
+  validates_uniqueness_of :name
+
   def add_file(filename, override: false, template: false)
     field = template ? :contract_templates : :contracts
     if override
