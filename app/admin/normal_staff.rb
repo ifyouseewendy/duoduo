@@ -36,7 +36,9 @@ ActiveAdmin.register NormalStaff do
         column field
       end
     end
-    actions
+    actions do |obj|
+      a link_to "查看劳务合同", normal_staff_labor_contracts_path(obj)
+    end
   end
 
   form do |f|
@@ -86,7 +88,7 @@ ActiveAdmin.register NormalStaff do
     end
   end
 
-  sidebar '链接', only: [:show] do
+  sidebar '劳务合同', only: [:show] do
     ul do
       lc = normal_staff.labor_contracts.active.first
       li link_to lc.name, normal_staff_labor_contract_path(normal_staff, lc), class: 'current_contract'
