@@ -9,7 +9,7 @@ ActiveAdmin.register SalaryItem do
   end
 
   # Import
-  action_item :import_new do
+  action_item :import_new, only: [:index] do
     link_to '导入原始工资表', import_new_salary_table_salary_items_path(salary_table)
   end
 
