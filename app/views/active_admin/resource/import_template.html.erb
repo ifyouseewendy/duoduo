@@ -1,0 +1,22 @@
+<%= semantic_form_for collection.new, url: {action: :import_do}, html: {multipart: true} do |f| %>
+  <%= f.inputs "说明" do %>
+    <ol>
+      <li>1. 上传文件需为 xls(x) 格式</li>
+      <li>2. 请参考 <a href=<%= "/#{active_admin_config.resource_class.table_name}/import_demo" %>>示例文件</a> 中的字段顺序</li>
+    </ol>
+  <% end %>
+  <%= f.inputs do %>
+    <%= f.input :file, as: :file, label: t('active_admin_import.file') %>
+  <% end %>
+  <%# <%= f.inputs t("active_admin_import.csv_options"), for: [:csv_options, OpenStruct.new(@active_admin_import_model.csv_options)] do |csv| %>
+  <%#   <% csv.with_options input_html: {style: 'width:40px;'} do |opts| %>
+  <%#     <%= opts.input :col_sep, label: t("active_admin_import.col_sep") %>
+  <%#     <%= opts.input :row_sep, label: t("active_admin_import.row_sep") %>
+  <%#     <%= opts.input :quote_char, label: t("active_admin_import.quote_char") %>
+  <%#   <% end %>
+  <%# <% end %>
+
+  <%= f.actions do %>
+    <%= f.action :submit, label: t("active_admin_import.import_btn"), button_html: {disable_with: t("active_admin_import.import_btn_disabled")} %>
+  <% end %>
+<% end %>

@@ -1,16 +1,16 @@
 ActiveAdmin.register Project do
-  include ImportDemo
+  include ImportSupport
 
-  active_admin_import \
-    validate: true,
-    template: 'import' ,
-    batch_transaction: true,
-    template_object: ActiveAdminImport::Model.new(
-      csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
-      csv_headers: @resource.ordered_columns,
-      force_encoding: :auto,
-      allow_archive: false,
-  )
+  # active_admin_import \
+  #   validate: true,
+  #   template: 'import' ,
+  #   batch_transaction: true,
+  #   template_object: ActiveAdminImport::Model.new(
+  #     csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
+  #     csv_headers: @resource.ordered_columns,
+  #     force_encoding: :auto,
+  #     allow_archive: false,
+  # )
 
   menu priority: 8
 
