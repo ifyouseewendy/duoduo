@@ -7,7 +7,7 @@ module ImportSupport
         data = \
           CSV.generate encoding: 'GBK' do |csv|
             csv << [I18n.t("misc.import_demo.notice")]
-            csv << model.ordered_columns(without_base_keys: true, without_foreign_keys: true).map{|col| model.human_attribute_name(col) }
+            csv << model.ordered_columns(without_base_keys: true, without_foreign_keys: false).map{|col| model.human_attribute_name(col) }
           end
         send_data \
           data,
@@ -33,12 +33,21 @@ module ImportSupport
         xls = Roo::Spreadsheet.open(file.path)
         sheet = xls.sheet(0)
 
-        columns = collection.ordered_columns(without_base_keys: true, without_foreign_keys: true)
+        columns = collection.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+
+        foreign_keys = columns.select{|col| col.to_s =~ /_id$/ }
 
         stats = \
           (1..sheet.last_row).reduce([]) do |ar, i|
             stat = sheet.row(i).each_with_index.reduce({}) do |ha, (val,idx)|
-              ha[ columns[idx] ] = val
+              key = columns[idx]
+              if foreign_keys.include? key
+                klass = key.to_s.sub("_id", '').classify.constantize
+                # stat for foreign keys should be name, and foreign key class should validate on name field
+                ha[ key ] = klass.where(name: val).first.try(:id)
+              else
+                ha[ key ] = val
+              end
               ha
             end
 
