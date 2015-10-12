@@ -1,16 +1,5 @@
 ActiveAdmin.register EngineeringCorporation do
-  include ImportDemo
-
-  active_admin_import \
-    validate: true,
-    template: 'import' ,
-    batch_transaction: true,
-    template_object: ActiveAdminImport::Model.new(
-      csv_options: {col_sep: ",", row_sep: nil, quote_char: nil},
-      csv_headers: @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true),
-      force_encoding: :auto,
-      allow_archive: false,
-  )
+  include ImportSupport
 
   menu \
     parent: I18n.t("activerecord.models.corporation"),
