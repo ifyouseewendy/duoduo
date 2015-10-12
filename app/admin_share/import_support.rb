@@ -44,7 +44,13 @@ module ImportSupport
               if foreign_keys.include? key
                 klass = key.to_s.sub("_id", '').classify.constantize
                 # stat for foreign keys should be name, and foreign key class should validate on name field
-                ha[ key ] = klass.where(name: val).first.try(:id)
+
+                if [NormalStaff, EngineeringStaff].include? klass
+                  ha[ key ] = klass.where(identity_card: val).first.try(:id) \
+                                || klass.where(name: val).first.try(:id)
+                else
+                  ha[ key ] = klass.where(name: val).first.try(:id)
+                end
               else
                 ha[ key ] = val
               end
