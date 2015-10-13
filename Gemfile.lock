@@ -9,16 +9,6 @@ GIT
       mime-types (>= 1.16)
 
 GIT
-  remote: git://github.com/ifyouseewendy/active_admin_import.git
-  revision: d787669c0a091a6ea69956f6e7ce8ef53b8a1c00
-  specs:
-    active_admin_import (3.0.0.pre)
-      activerecord-import (~> 0.8.0)
-      rails (>= 4.0)
-      rchardet (~> 1.5)
-      rubyzip (~> 1.0, >= 1.0.0)
-
-GIT
   remote: git://github.com/ifyouseewendy/activeadmin.git
   revision: 40261d597607a25dc4428f7998b443f9e3aa84c8
   branch: master
@@ -78,8 +68,6 @@ GEM
       activemodel (= 4.2.2)
       activesupport (= 4.2.2)
       arel (~> 6.0)
-    activerecord-import (0.8.0)
-      activerecord (>= 3.0)
     activesupport (4.2.2)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -248,7 +236,6 @@ GEM
       activesupport (>= 3.0)
       i18n
       polyamorous (~> 1.2)
-    rchardet (1.6.1)
     rdoc (4.2.0)
     request_store (1.2.0)
     responders (2.1.0)
@@ -321,7 +308,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_admin_import!
   activeadmin!
   awesome_print
   axlsx_rails

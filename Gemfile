@@ -11,7 +11,7 @@ gem 'pg'
 
 # Active Admin
 gem 'activeadmin',          github: 'ifyouseewendy/activeadmin', branch: 'master'
-gem "active_admin_import" , github: 'ifyouseewendy/active_admin_import'
+# gem "active_admin_import" , github: 'ifyouseewendy/active_admin_import'
 
 # Plus integrations with:
 gem 'devise'
@@ -63,10 +63,10 @@ gem 'chinese_pinyin'
 gem 'jia'
 
 # Parse XLSx
-gem 'roo', '2.0.0beta1'
-gem 'roo-xls'
-gem 'axlsx_rails'
-gem 'zip-zip' # Fix axlsx dependency
+gem 'roo', '2.0.0beta1' # Read xlsx
+gem 'roo-xls'           # xls support
+gem 'axlsx_rails'       # Write xlsx
+gem 'zip-zip'           # Fix axlsx dependency
 
 group :development do
   gem 'quiet_assets'
