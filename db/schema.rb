@@ -258,6 +258,7 @@ ActiveRecord::Schema.define(version: 20151013025203) do
   add_index "normal_corporations_sub_companies", ["sub_company_id", "normal_corporation_id"], name: "idx_sub_company_id_and_normal_corporation_id", using: :btree
 
   create_table "normal_staffs", force: :cascade do |t|
+    t.integer  "nest_index"
     t.text     "name"
     t.text     "account"
     t.text     "account_bank"
@@ -276,7 +277,6 @@ ActiveRecord::Schema.define(version: 20151013025203) do
     t.datetime "updated_at",                              null: false
     t.integer  "normal_corporation_id"
     t.integer  "sub_company_id"
-    t.integer  "nest_index"
   end
 
   add_index "normal_staffs", ["account"], name: "index_normal_staffs_on_account", using: :btree
