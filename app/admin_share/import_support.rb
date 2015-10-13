@@ -6,7 +6,6 @@ module ImportSupport
         model = controller_name.classify.constantize
         data = \
           CSV.generate encoding: 'GBK' do |csv|
-            csv << [I18n.t("misc.import_demo.notice")]
             csv << model.ordered_columns(without_base_keys: true, without_foreign_keys: false).map{|col| model.human_attribute_name(col) }
           end
         send_data \
@@ -37,23 +36,40 @@ module ImportSupport
 
         foreign_keys = columns.select{|col| col.to_s =~ /_id$/ }
 
-        stats = \
-          (1..sheet.last_row).reduce([]) do |ar, i|
-            stat = sheet.row(i).each_with_index.reduce({}) do |ha, (val,idx)|
-              key = columns[idx]
-              if foreign_keys.include? key
-                klass = key.to_s.sub("_id", '').classify.constantize
-                # stat for foreign keys should be name, and foreign key class should validate on name field
+        boolean_and_enum_map = {
+          '是' => true,
+          '否' => false,
+          '男' => 'male',
+          '女' => 'female'
+        }
 
-                if [NormalStaff, EngineeringStaff].include? klass
-                  ha[ key ] = klass.where(identity_card: val).first.try(:id) \
-                                || klass.where(name: val).first.try(:id)
+        stats = \
+          (1..sheet.last_row).reduce([]) do |ar, row|
+            stat = sheet.row(row).each_with_index.reduce({}) do |ha, (val,col)|
+              if col < columns.count
+                key = columns[col]
+                val.strip! if String === val
+
+                if row == 1 # first row is header
+                  ha[ key ] = val
                 else
-                  ha[ key ] = klass.where(name: val).first.try(:id)
+                  if foreign_keys.include? key
+                    klass = key.to_s.sub("_id", '').classify.constantize
+                    # stat for foreign keys should be name, and foreign key class should validate on name field
+
+                    if [NormalStaff, EngineeringStaff].include? klass
+                      ha[ key ] = klass.where(identity_card: val).first.try(:id) \
+                                    || klass.where(name: val).first.try(:id) \
+                                    || klass.where(id: val).first.try(:id)
+                    else
+                      ha[ key ] = klass.where(name: val).first.try(:id)
+                    end
+                  else
+                    ha[ key ] = boolean_and_enum_map[val] || val
+                  end
                 end
-              else
-                ha[ key ] = val
               end
+
               ha
             end
 
@@ -61,19 +77,23 @@ module ImportSupport
           end
 
         failed = []
-        stats.each do |stat|
-          begin
-            collection.create!( stat )
-          rescue => e
-            failed << (ha.values << e.message)
+        stats.each_with_index do |stat, idx|
+          if idx == 0
+            failed << stat.values
+          else
+            begin
+              collection.create!( stat )
+            rescue => e
+              failed << (stat.values << e.message)
+            end
           end
         end
 
-        if failed.count > 0
+        if failed.count > 1
           # generate new xls file
 
           filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
-          filepath = Pathname("tmp/#{filename}_#{Time.stamp}.xlsx")
+          filepath = Pathname("tmp/#{filename}.#{Time.stamp}.xlsx")
           Axlsx::Package.new do |p|
             p.workbook.add_worksheet do |sheet|
               failed.each{|stat| sheet.add_row stat}
