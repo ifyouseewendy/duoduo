@@ -262,6 +262,7 @@ zh-CN:
         arrive_current_company_at: '到本单位时间'
         has_social_insurance: '是否参社保'
         has_medical_insurance: '是否参医保'
+        has_accident_insurance: '有意外险'
         current_social_insurance_start_date: '本单位社保参保时间'
         current_medical_insurance_start_date: '本单位医保参保时间'
         social_insurance_base: '社保基数'
