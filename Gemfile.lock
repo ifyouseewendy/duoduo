@@ -354,6 +354,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   spring
   thin
+  thor
   turbolinks
   uglifier (>= 1.3.0)
   unicorn (~> 4.8.0)
