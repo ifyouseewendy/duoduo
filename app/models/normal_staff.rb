@@ -1,8 +1,8 @@
 class NormalStaff < ActiveRecord::Base
   belongs_to :normal_corporation
   belongs_to :sub_company
-  has_many :salary_items
-  has_many :labor_contracts
+  has_many :salary_items, dependent: :destroy
+  has_many :labor_contracts, dependent: :destroy
 
   enum gender: [:male, :female]
 
