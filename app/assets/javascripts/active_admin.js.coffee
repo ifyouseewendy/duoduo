@@ -55,6 +55,7 @@ $(document).on 'ready', ->
       else
         select.attr('disabled', 'disabled')
 
+  # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->
     $('.ui-dialog-title').text('请选择');
 
