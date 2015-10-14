@@ -218,8 +218,8 @@ ActiveAdmin.setup do |config|
   #   end
   config.namespace false do |default|
     default.build_menu do |menu|
-      menu.add label: I18n.t("activerecord.models.corporation"), priority: 2
-      menu.add label: I18n.t("activerecord.models.staff"), priority: 3
+      menu.add label: I18n.t("activerecord.models.corporation"), priority: 3
+      menu.add label: I18n.t("activerecord.models.staff"), priority: 4
       menu.add label: I18n.t("activerecord.models.settings"), priority: 10
       menu.add label: '开发进度', priority: 22, url: 'https://quip.com/rljZAYw1rPLB', html_options: { target: :blank }
     end
