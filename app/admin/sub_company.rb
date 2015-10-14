@@ -29,6 +29,8 @@ ActiveAdmin.register SubCompany do
     end
   end
 
+  permit_params *SubCompany.ordered_columns(without_base_keys: true, without_foreign_keys: true)
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
 
