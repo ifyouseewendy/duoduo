@@ -74,7 +74,7 @@ class NormalCorporation < ActiveRecord::Base
         options[:columns].map(&:to_sym)
       else
         %i(id name) \
-          + %i(sub_companies_display) \
+          + %i(sub_companies_display stuff_count stuff_has_insurance_count) \
           + (NormalCorporation.ordered_columns(without_foreign_keys: true) - %i(id name) )
       end
     end
