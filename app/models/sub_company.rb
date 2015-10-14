@@ -19,6 +19,10 @@ class SubCompany < ActiveRecord::Base
 
       names
     end
+
+    def columns_of(type)
+      self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
+    end
   end
 
   def remove_contract_template_at(id)

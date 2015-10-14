@@ -8,21 +8,29 @@ ActiveAdmin.register SubCompany do
   index download_links: false do
     selectable_column
 
-    SubCompany.ordered_columns.map(&:to_sym).map do |field|
-      column field unless field == :contract_templates
-    end
+    column :id
+    column :name
+    column :created_at
+    column :updated_at
 
     column :link do |obj|
       link_to "普通合作单位", "/normal_corporations?utf8=✓&q%5Bsub_companies_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
-    end
-    column :link do |obj|
-      link_to "工程合作单位", "/normal_corporations?utf8=✓&q%5Bsub_companies_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
     column :link do |obj|
       link_to "普通员工信息", "/normal_staffs?utf8=✓&q%5Bsub_company_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
     column :link do |obj|
       link_to "劳务合同", "/labor_contracts?utf8=✓&q%5Bsub_company_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+    end
+    column :link do |obj|
+      if obj.has_engineering_relation
+        link_to "工程合作单位", "/normal_corporations?utf8=✓&q%5Bsub_companies_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      end
+    end
+    column :link do |obj|
+      if obj.has_engineering_relation
+        link_to "工程员工信息", "/engineering_staffs?utf8=✓&q%5Bsub_company_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      end
     end
 
     actions do |obj|
@@ -36,15 +44,22 @@ ActiveAdmin.register SubCompany do
 
     f.inputs do
       f.input :name, as: :string
+      f.input :has_engineering_relation, as: :boolean
     end
 
     f.actions
   end
 
   show do
+    boolean_columns = SubCompany.columns_of(:boolean)
     attributes_table do
       SubCompany.ordered_columns.map(&:to_sym).map do |field|
-        row field unless field == :contract_templates
+        next if field == :contract_templates
+        if boolean_columns.include? field
+          row(field) { status_tag resource.send(field).to_s }
+        else
+          row field
+        end
       end
     end
 

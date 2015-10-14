@@ -45,7 +45,8 @@ class Seed < Thor
     def seed_sub_companies
       puts "==> Preparing SubCompany"
       Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
-        sc = SubCompany.create(name: name)
+        has_engineering_relation = (name =~ /人力/ ? true : false)
+        sc = SubCompany.create(name: name, has_engineering_relation: has_engineering_relation)
         (1..2).each_with_object([]) do |idx, ar|
           if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
             contract = "tmp/#{name}.合同#{idx}.txt"
