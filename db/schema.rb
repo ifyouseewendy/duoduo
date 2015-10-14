@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151014114739) do
+ActiveRecord::Schema.define(version: 20151014150945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,8 +225,6 @@ ActiveRecord::Schema.define(version: 20151014114739) do
     t.integer  "admin_charge_type",                           default: 0
     t.decimal  "admin_charge_amount", precision: 8, scale: 2
     t.date     "expense_date"
-    t.integer  "stuff_count"
-    t.integer  "insurance_count"
     t.text     "remark"
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
@@ -242,11 +240,9 @@ ActiveRecord::Schema.define(version: 20151014114739) do
   add_index "normal_corporations", ["contract_due_time"], name: "index_normal_corporations_on_contract_due_time", using: :btree
   add_index "normal_corporations", ["corporate_name"], name: "index_normal_corporations_on_corporate_name", using: :btree
   add_index "normal_corporations", ["expense_date"], name: "index_normal_corporations_on_expense_date", using: :btree
-  add_index "normal_corporations", ["insurance_count"], name: "index_normal_corporations_on_insurance_count", using: :btree
   add_index "normal_corporations", ["license"], name: "index_normal_corporations_on_license", using: :btree
   add_index "normal_corporations", ["name"], name: "index_normal_corporations_on_name", using: :btree
   add_index "normal_corporations", ["organization_serial"], name: "index_normal_corporations_on_organization_serial", using: :btree
-  add_index "normal_corporations", ["stuff_count"], name: "index_normal_corporations_on_stuff_count", using: :btree
   add_index "normal_corporations", ["taxpayer_serial"], name: "index_normal_corporations_on_taxpayer_serial", using: :btree
   add_index "normal_corporations", ["telephone"], name: "index_normal_corporations_on_telephone", using: :btree
 
