@@ -80,7 +80,7 @@ class SalaryItem < ActiveRecord::Base
         all_fields - [:admin_amount, :total_sum_with_admin_amount]
       when 'card'
         [:staff_account, :normal_staff_name, :salary_in_fact]
-      when 'view'
+      when 'custom'
         columns = options[:columns].map(&:to_sym)
         columns -= :staff_company and columns += :staff_company_name if columns.include?(:staff_company)
         columns -= :normal_staff and columns += :normal_staff_name if columns.include?(:normal_staff)
