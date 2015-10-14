@@ -50,4 +50,8 @@ class NormalCorporation < ActiveRecord::Base
   def by_rate?
     by_rate_on_salary? || by_rate_on_salary_and_company?
   end
+
+  def stuff_count
+    normal_staffs.count
+  end
 end

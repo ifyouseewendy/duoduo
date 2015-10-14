@@ -13,7 +13,29 @@ ActiveAdmin.register NormalCorporation do
 
   index do
     selectable_column
-    NormalCorporation.ordered_columns(without_foreign_keys: true).map do |field|
+
+    column :id
+    column :name
+
+    columns = NormalCorporation.ordered_columns(without_foreign_keys: true) - %i(id name)
+
+    column :sub_companies, sortable: :id do |obj|
+      obj.sub_companies.map(&:name).join(' ')
+    end
+
+    column :normal_staffs, sortable: :id do |obj|
+      link_to "普通员工列表", normal_corporation_normal_staffs_path(obj)
+    end
+
+    column :labor_contracts, sortable: :id do |obj|
+      link_to "劳务合同列表", "/labor_contracts?utf8=✓&q%5Bnormal_corporation_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+    end
+
+    column :salary_tables, sortable: :id do |obj|
+      link_to "原始工资表", normal_corporation_salary_tables_path(obj)
+    end
+
+    columns.map do |field|
       if field == :admin_charge_type
         # enum
         column :admin_charge_type do |obj|
