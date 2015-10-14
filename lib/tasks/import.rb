@@ -24,7 +24,8 @@ class Import < Thor
 
     sub_company_name = options[:sub_company_name]\
                         || file.basename.to_s.split('.')[0]
-    sub_company_id = SubCompany.where(name: sub_company_name).first.try(:id)
+    sub_company = SubCompany.where(name: sub_company_name).first
+    sub_company_id = sub_company.try(:id)
     raise "未找到子公司(名称: #{sub_company_name})。请保证 from 文件名为子公司名，或提供 sub_company_name 参数" \
       if sub_company_id.nil?
 
@@ -49,7 +50,7 @@ class Import < Thor
       contract_type = :normal_contract
 
       begin
-        normal_corporation_id = NormalCorporation.find_or_create_by!(name: corporation_name).id
+        normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
         raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
 
         # Need to confirm
@@ -163,7 +164,7 @@ class Import < Thor
       contract_type = :normal_contract
 
       begin
-        normal_corporation_id = NormalCorporation.find_or_create_by!(name: corporation_name).id
+        normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
         raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
 
         # Need to confirm
@@ -276,7 +277,7 @@ class Import < Thor
       in_service = true
 
       begin
-        normal_corporation_id = NormalCorporation.find_or_create_by!(name: corporation_name).id
+        normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
         raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
 
         # Need to confirm
@@ -370,7 +371,7 @@ class Import < Thor
       in_service = true
 
       begin
-        normal_corporation_id = NormalCorporation.find_or_create_by!(name: corporation_name).id
+        normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
         raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
 
         # Need to confirm
