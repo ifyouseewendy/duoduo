@@ -48,6 +48,12 @@ ActiveAdmin.register NormalCorporation do
     actions
   end
 
+  preserve_default_filters!
+  remove_filter :normal_staffs
+  remove_filter :labor_contracts
+  remove_filter :salary_tables
+  remove_filter :salary_items
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
 
