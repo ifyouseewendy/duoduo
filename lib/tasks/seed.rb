@@ -48,8 +48,9 @@ class Seed < Thor
         sc = SubCompany.create(name: name)
         (1..2).each_with_object([]) do |idx, ar|
           if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
-            contract = File.open("tmp/#{name}.合同#{idx}.txt")
-            sc.contract_files.create(contract: contract)
+            contract = "tmp/#{name}.合同#{idx}.txt"
+            sc.contract_files.create(contract: File.open(contract) )
+            sc.add_file(contract, template: true)
           end
         end
 
