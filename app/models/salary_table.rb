@@ -21,8 +21,8 @@ class SalaryTable < ActiveRecord::Base
     filename = filename_by(view: view)
     filepath = EXPORT_PATH.join filename
 
-    collectoin = salary_items
-    collectoin = collectoin.where(id: options[:selected]) if options[:selected].present?
+    collection = salary_items
+    collection = collection.where(id: options[:selected]) if options[:selected].present?
 
     columns = SalaryItem.columns_based_on(view: view, options: options)
 
@@ -30,7 +30,7 @@ class SalaryTable < ActiveRecord::Base
       p.workbook.add_worksheet(name: name) do |sheet|
         sheet.add_row columns.map{|col| SalaryItem.human_attribute_name(col)}
 
-        collectoin.each do |item|
+        collection.each do |item|
           sheet.add_row columns.map{|col| item.send(col)}
         end
       end
