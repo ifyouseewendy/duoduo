@@ -152,20 +152,21 @@ $(document).on 'ready', ->
           <span>下载:</span>
           <a href="#{export_path}">XLSX</a>
           """
-  $('body.salary_items .download_links').empty().append(html)
+  $('body .download_links').empty().append(html)
 
-  $('body.salary_items .download_links a').on 'click', (e) ->
-    if $('#index_table_salary_items .selected').length > 0
+  $('body .download_links a').on 'click', (e) ->
+    if $('.index_table .selected').length > 0
       e.stopPropagation()
       e.preventDefault()
       if window.confirm("下载已选中条目？")
         selected = []
-        $('#index_table_salary_items .selected').each ->
+        $('.index_table .selected').each ->
           selected.push($(this).attr('id').split('_')[-1..][0])
         window.location = "#{export_path}&selected=#{selected.join('-')}"
     else
       window.location = $(@).val('href')
 
+  # Normal Staff sidebar
   current_contract = $('body.normal_staffs .current_contract')
   current_contract.css("padding-right", "10px")
   current_contract.closest('li').append("<span class='status_tag active ok'>当前合同</span>")
