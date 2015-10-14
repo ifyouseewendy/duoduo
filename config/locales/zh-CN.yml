@@ -290,6 +290,10 @@ zh-CN:
       sub_company:
         id: '序号'
         name: '名称'
+        link1: '链接'
+        link2: '链接'
+        normal_corporations: '普通合作单位'
+        engineering_corporations: '工程合作单位'
         contract_templates: '合同模板'
         created_at: "创建时间"
         updated_at: "更新时间"
