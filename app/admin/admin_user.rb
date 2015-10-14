@@ -1,8 +1,8 @@
 ActiveAdmin.register AdminUser do
-  menu\
-    priority: 9,
-    label: proc{ I18n.t("active_admin.admin_user.title") }
-    # if: proc{ current_user.can_edit_posts? }
+  menu \
+    parent: I18n.t("activerecord.models.settings"),
+    label: proc{ I18n.t("active_admin.admin_user.title") },
+    priority: 1
 
   permit_params :email, :password, :password_confirmation
 

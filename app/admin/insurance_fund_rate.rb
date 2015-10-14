@@ -3,7 +3,7 @@ ActiveAdmin.register InsuranceFundRate do
 
   menu \
     parent: I18n.t("activerecord.models.settings"),
-    priority: 2
+    priority: 3
 
   config.batch_actions = false
   config.clear_action_items!
