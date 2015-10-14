@@ -1,2 +1,2 @@
-SALARY_TABLE_PATH = Pathname.new 'public/resources/duoduo/salary_tables'
-FileUtils.mkdir_p SALARY_TABLE_PATH
+EXPORT_PATH = Pathname.new 'public/resources/duoduo/export'
+FileUtils.mkdir_p EXPORT_PATH

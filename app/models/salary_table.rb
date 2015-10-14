@@ -19,7 +19,7 @@ class SalaryTable < ActiveRecord::Base
 
   def export_xlsx(view: nil, options: {})
     filename = filename_by(view: view)
-    filepath = SALARY_TABLE_PATH.join filename
+    filepath = EXPORT_PATH.join filename
 
     collectoin = salary_items
     collectoin = collectoin.where(id: options[:selected]) if options[:selected].present?
@@ -48,6 +48,6 @@ class SalaryTable < ActiveRecord::Base
       when "custom"   then "自定义工资表"
       else "原始工资表"
       end
-    "#{corporation.name}_#{name}_#{filename}.xlsx"
+    "#{corporation.name}_#{name}_#{filename}_#{Time.stamp}.xlsx"
   end
 end
