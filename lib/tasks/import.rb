@@ -11,6 +11,9 @@ class Import < Thor
   end
 
   desc "import staff_and_contract", "导入信息到员工档案和劳务合同"
+  long_desc <<-LONG_DESC
+    ruby lib/tasks/import.rb staff_and_contract --from=tmp/import/staff_and_contract/吉易通讯公司.xls
+  LONG_DESC
   option :from, required: true # 文件名为子公司名称
   option :sub_company_name     # 如果 from 文件名称不是子公司名称时，需要提供此参数
   def staff_and_contract
