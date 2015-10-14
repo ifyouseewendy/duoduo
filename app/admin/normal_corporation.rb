@@ -19,9 +19,7 @@ ActiveAdmin.register NormalCorporation do
 
     columns = NormalCorporation.ordered_columns(without_foreign_keys: true) - %i(id name)
 
-    column :sub_companies, sortable: :id do |obj|
-      obj.sub_companies.map(&:name).join(' ')
-    end
+    column :sub_companies_display, sortable: :id
 
     column :normal_staffs, sortable: :id do |obj|
       link_to "普通员工列表", normal_corporation_normal_staffs_path(obj)
@@ -129,4 +127,13 @@ ActiveAdmin.register NormalCorporation do
     redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
   end
 
+  # Collection actions
+  collection_action :export_xlsx do
+    options = {}
+    options[:selected] = params[:selected].split('-') if params[:selected].present?
+    options[:columns] = params[:columns].split('-') if params[:columns].present?
+
+    file = NormalCorporation.export_xlsx(options: options)
+    send_file file, filename: file.basename
+  end
 end

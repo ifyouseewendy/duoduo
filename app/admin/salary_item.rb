@@ -262,7 +262,7 @@ ActiveAdmin.register SalaryItem do
     redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
   end
 
-  # controller do
+  # Collection actions
   collection_action :export_xlsx do
     st = SalaryTable.find(params[:salary_table_id])
 

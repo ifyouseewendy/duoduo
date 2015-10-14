@@ -37,6 +37,51 @@ class NormalCorporation < ActiveRecord::Base
     def reference_option
       order(id: :asc).pluck(:name, :id)
     end
+
+    def export_xlsx(options: {})
+      filename = "#{I18n.t("activerecord.models.normal_corporation")}_#{Time.stamp}.xlsx"
+      filepath = EXPORT_PATH.join filename
+
+      collection = self.all
+      collection = collection.where(id: options[:selected]) if options[:selected].present?
+
+      columns = columns_based_on(options: options)
+
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet(name: name) do |sheet|
+          sheet.add_row columns.map{|col| self.human_attribute_name(col)}
+
+          collection.each do |item|
+             stats = \
+              columns.map do |col|
+                if col == :admin_charge_type
+                  item.send(:admin_charge_type_i18n)
+                else
+                  item.send(col)
+                end
+              end
+              sheet.add_row stats
+          end
+        end
+        p.serialize(filepath.to_s)
+      end
+
+      filepath
+    end
+
+    def columns_based_on(options: {})
+      if options[:columns].present?
+        options[:columns].map(&:to_sym)
+      else
+        %i(id name) \
+          + %i(sub_companies_display) \
+          + (NormalCorporation.ordered_columns(without_foreign_keys: true) - %i(id name) )
+      end
+    end
+  end
+
+  def sub_companies_display
+    sub_company_names.join(' ')
   end
 
   def sub_company_names

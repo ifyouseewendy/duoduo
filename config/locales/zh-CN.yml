@@ -54,6 +54,7 @@ zh-CN:
         insurance_count: '参保人数'
         remark: '备注'
         sub_companies: '吉易子公司'
+        sub_companies_display: '吉易子公司'
         normal_staffs: '普通员工列表'
         salary_tables: '原始工资表'
         labor_contracts: '劳务合同列表'
