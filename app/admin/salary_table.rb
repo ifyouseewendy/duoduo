@@ -3,7 +3,7 @@ ActiveAdmin.register SalaryTable do
 
   menu \
     label: I18n.t("activerecord.models.salary_table"),
-    priority: 4
+    priority: 6
 
   permit_params *SalaryTable.ordered_columns(without_base_keys: true, without_foreign_keys: false)
 
