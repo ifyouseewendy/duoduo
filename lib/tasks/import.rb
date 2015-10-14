@@ -350,6 +350,100 @@ class Import < Thor
       end
     end
 
+    sheet_id = 3
+    sheet = xlsx.sheet(sheet_id)
+    puts "--> Start processing Sheet #{sheet_id}"
+
+    # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 性别, 年龄, 家庭住址, 联系电话, 到本单位时间, 签订合同时间, 工作地点, 工种, 协议类型
+
+    last_row = sheet.last_row
+    (2..last_row).each do |row_id|
+      puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
+
+      nest_index, name, corporation_id, corporation_name, identity_card, gender, age, address, telephone, arrive_current_company_at, current_contract_dates, work_place, work_type, contract_type = \
+        sheet.row(row_id).map{|col| String === col ? col.strip : col}
+
+      nation, grade, social_insurance_start_date, remark = [nil] * 4
+      in_service = true
+
+      begin
+        normal_corporation_id = NormalCorporation.find_or_create_by!(name: corporation_name).id
+        raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
+
+        # Need to confirm
+        #
+        #   :account
+        #   :account_bank
+        #   :birth
+        ns = NormalStaff.create!(
+          nest_index: nest_index.to_i,
+          name: name,
+          account: nil,
+          account_bank: nil,
+          identity_card: identity_card.to_s,
+          birth: nil,
+          age: age,
+          gender: {'男' => 'male', '女' => 'female'}[gender],
+          nation: nation,
+          grade: grade,
+          address: address,
+          telephone: telephone.to_s,
+          social_insurance_start_date: parse_date(social_insurance_start_date),
+          in_service: in_service,
+          remark: remark,
+          normal_corporation_id: normal_corporation_id,
+          sub_company_id: sub_company_id
+        )
+
+        contract_type = :none_contract
+
+        # Need to confirm
+        #
+        #   :has_accident_insurance
+        #   :social_insurance_base
+        #   :medical_insurance_base
+        #   :house_accumulation_base
+        #   :release_date
+        #   :social_insurance_release_date
+        #   :medical_insurance_release_date
+        contract_attrs = {
+          contract_type: contract_type,
+          in_contract: true,
+          contract_start_date: parse_date(current_contract_dates.try(:split, '-').try(:[], 0)),
+          contract_end_date: parse_date(current_contract_dates.try(:split, '-').try(:[], 1)),
+          arrive_current_company_at: parse_date(arrive_current_company_at),
+          has_social_insurance: false,
+          has_medical_insurance: false,
+          has_accident_insurance: nil,
+          current_social_insurance_start_date: nil,
+          current_medical_insurance_start_date: nil,
+          social_insurance_base: nil.to_i,
+          medical_insurance_base: nil.to_i,
+          house_accumulation_base: nil.to_i,
+          social_insurance_serial: nil,
+          medical_insurance_serial: nil,
+          medical_insurance_card: nil,
+          backup_date: nil,
+          backup_place: nil,
+          work_place: work_place,
+          work_type: work_type,
+          release_date: nil,
+          social_insurance_release_date: nil,
+          medical_insurance_release_date: nil,
+          remark: nil,
+          sub_company_id: sub_company_id,
+          normal_corporation_id: normal_corporation_id,
+          normal_staff_id: ns.id,
+        }
+
+        # Create current contract
+        LaborContract.create!(contract_attrs)
+
+      rescue => e
+        failed[sheet_id] << sheet.row(row_id) + [e.message, e.backtrace]
+      end
+    end
+
     if failed.any?(&:present?)
       filename = "#{file.basename.to_s.split('.')[0]}.#{Time.stamp}.xlsx"
       filepath = Pathname("tmp/#{filename}")
@@ -398,7 +492,7 @@ class Import < Thor
         :temp_contract
       when /^非全日/
         :none_full_day_contract
-      when /^无/
+      else
         :none_contract
       end
     end
