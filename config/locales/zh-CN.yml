@@ -51,7 +51,7 @@ zh-CN:
         admin_charge_amount: '管理费收取比例/金额'
         expense_date: '单位开支日期'
         stuff_count: '员工人数'
-        insurance_count: '参保人数'
+        stuff_has_insurance_count: '参保人数'
         remark: '备注'
         sub_companies: '吉易子公司'
         sub_companies_display: '吉易子公司'

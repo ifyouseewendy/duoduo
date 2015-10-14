@@ -57,6 +57,10 @@ class NormalStaff < ActiveRecord::Base
     labor_contract.try(:insurance_fund) || {}
   end
 
+  def has_insurance?
+    labor_contract.try(:has_insurance?)
+  end
+
   def has_no_salary_item?
     salary_items.count == 0
   end

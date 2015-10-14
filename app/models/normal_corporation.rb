@@ -99,4 +99,8 @@ class NormalCorporation < ActiveRecord::Base
   def stuff_count
     normal_staffs.count
   end
+
+  def stuff_has_insurance_count
+    normal_staffs.includes(:labor_contracts).select(&:has_insurance?).count
+  end
 end

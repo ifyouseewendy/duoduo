@@ -25,6 +25,9 @@ ActiveAdmin.register NormalCorporation do
       link_to "普通员工列表", normal_corporation_normal_staffs_path(obj)
     end
 
+    column :stuff_count, sortable: ->(obj){ obj.stuff_count }
+    column :stuff_has_insurance_count, sortable: ->(obj){ obj.stuff_has_insurance_count }
+
     column :labor_contracts, sortable: :id do |obj|
       link_to "劳务合同列表", "/labor_contracts?utf8=✓&q%5Bnormal_corporation_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
@@ -72,8 +75,6 @@ ActiveAdmin.register NormalCorporation do
       f.input :admin_charge_type, as: :radio, collection: NormalCorporation.admin_charge_types_option
       f.input :admin_charge_amount, as: :number
       f.input :expense_date, as: :datepicker
-      f.input :stuff_count, as: :number
-      f.input :insurance_count, as: :number
       f.input :remark, as: :text
     end
 

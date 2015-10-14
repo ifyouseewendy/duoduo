@@ -84,6 +84,10 @@ class LaborContract < ActiveRecord::Base
     update_attribute(:in_contract, false)
   end
 
+  def has_insurance?
+    has_social_insurance || has_medical_insurance
+  end
+
   private
 
     def check_active_status

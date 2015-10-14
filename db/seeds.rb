@@ -57,8 +57,6 @@ puts "--> Creating NormalCorporation and EngineeringCorporation"
       admin_charge_type:    charge_type,
       admin_charge_amount:  charge_amount,
       expense_date:         "2015-07-01".to_date + days,
-      stuff_count:          rand(300),
-      insurance_count:      rand(300),
       remark:               "备注",
       sub_companies:        sub_companies.sample(rand(6)+1),
       created_at:           "2015-07-01".to_date + days,
