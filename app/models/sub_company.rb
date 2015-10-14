@@ -2,7 +2,7 @@ class SubCompany < ActiveRecord::Base
   has_and_belongs_to_many :normal_corporations
   has_and_belongs_to_many :engineering_corporations
 
-  has_many :contract_files
+  has_many :contract_files, dependent: :destroy
   mount_uploaders :contract_templates, ContractTemplateUploader
 
   has_many :labor_contracts
