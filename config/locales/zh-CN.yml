@@ -291,6 +291,7 @@ zh-CN:
         id: '序号'
         name: '名称'
         link: '链接'
+        has_engineering_relation: '是否与工程单位合作'
         normal_corporations: '普通合作单位'
         engineering_corporations: '工程合作单位'
         contract_templates: '合同模板'
