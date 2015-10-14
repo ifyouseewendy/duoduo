@@ -41,14 +41,19 @@ module ImportSupport
           '否' => false,
           '男' => 'male',
           '女' => 'female'
-        }
+        }.merge(Hash[NormalCorporation.admin_charge_types_option])
 
         stats = \
           (1..sheet.last_row).reduce([]) do |ar, row|
             stat = sheet.row(row).each_with_index.reduce({}) do |ha, (val,col)|
               if col < columns.count
                 key = columns[col]
-                val.strip! if String === val
+
+                if String === val
+                  val.strip!
+                elsif Numeric === val
+                  val = val.to_i if val.to_i == val
+                end
 
                 if row == 1 # first row is header
                   ha[ key ] = val
@@ -102,7 +107,7 @@ module ImportSupport
           end
           send_file filepath
         else
-          redirect_to send("#{collection.name.underscore.pluralize}_path"), notice: "成功导入 #{stats.count} 条记录"
+          redirect_to send("#{collection.name.underscore.pluralize}_path"), notice: "成功导入 #{stats.count-1} 条记录"
         end
 
       end
