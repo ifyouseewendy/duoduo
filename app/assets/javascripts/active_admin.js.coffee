@@ -1,6 +1,9 @@
 #= require active_admin/base
 
 $(document).on 'ready', ->
+  # Clean footer
+  $('.footer').empty()
+
   # Individual Income Tax calculate
   $('.iit_form .submit').on 'click', ->
     $.ajax
