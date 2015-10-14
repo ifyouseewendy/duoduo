@@ -4,6 +4,8 @@ class NormalStaff < ActiveRecord::Base
   has_many :salary_items, dependent: :destroy
   has_many :labor_contracts, dependent: :destroy
 
+  validates_uniqueness_of :identity_card
+
   enum gender: [:male, :female]
 
   after_update :check_contracts_status
@@ -52,7 +54,7 @@ class NormalStaff < ActiveRecord::Base
   end
 
   def insurance_fund
-    labor_contract.insurance_fund
+    labor_contract.try(:insurance_fund) || {}
   end
 
   def has_no_salary_item?

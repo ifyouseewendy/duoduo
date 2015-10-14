@@ -208,9 +208,9 @@ class SalaryItem < ActiveRecord::Base
   def set_admin_amount
     self.admin_amount = \
       if corporation.by_rate?
-        set_total_sum * corporation.admin_charge_amount
+        set_total_sum * (corporation.admin_charge_amount || 0)
       else
-        corporation.admin_charge_amount
+        corporation.admin_charge_amount || 0
       end
   end
 
