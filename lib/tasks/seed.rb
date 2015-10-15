@@ -60,6 +60,42 @@ class Seed < Thor
     end
 
     def seed_corporations
+      puts "==> Preparing EngineeringCorporation"
+      (1..7).each do |id|
+        (1..5).each do |nest_id|
+          number        = (id-1)*5 + nest_id
+          name          = "#{id}-#{nest_id}"
+          days          = number.days
+          amount        = number*10
+
+          EngineeringCorporation.create!(
+            main_index:             id,
+            nest_index:             nest_id,
+            name:                   "工程合作单位#{name}",
+            start_date:             "2015-01-01".to_date + days,
+            project_date:           "2015-01-01".to_date + days,
+            project_name:           "工程#{name}",
+            project_amount:         100.0 + amount,
+            admin_amount:           50.0 + amount,
+            total_amount:           150.0 + amount,
+            income_date:            "2015-01-01".to_date + days,
+            income_amount:          150.0 + amount,
+            outcome_date:           "2015-05-01".to_date + days,
+            outcome_referee:        "用户#{number}",
+            outcome_amount:         150.0 + amount,
+            proof:                  "凭证#{number}",
+            actual_project_amount:  200.0 + amount,
+            actual_admin_amount:    100.0 + amount,
+            already_get_contract:   [true, false][rand(2)],
+            already_sign_dispatch:  [true, false][rand(2)],
+            remark:                 "备注",
+            sub_companies:          SubCompany.where(has_engineering_relation: true).sample(rand(2)+1),
+            created_at:             "2015-07-01".to_date + days,
+            updated_at:             "2015-07-01".to_date + days
+          )
+
+        end
+      end
     end
 
     def seed_normal_staffs
