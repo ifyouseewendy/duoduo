@@ -33,7 +33,7 @@ ActiveAdmin.register NormalCorporation do
     end
 
     column :salary_tables, sortable: :id do |obj|
-      link_to "原始工资表", normal_corporation_salary_tables_path(obj)
+      link_to "普通工资表", normal_corporation_salary_tables_path(obj)
     end
 
     columns.map do |field|

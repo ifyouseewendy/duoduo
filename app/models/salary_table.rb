@@ -46,7 +46,7 @@ class SalaryTable < ActiveRecord::Base
       when "proof"    then "凭证工资表（帐用）"
       when "card"     then "打卡表"
       when "custom"   then "自定义工资表"
-      else "原始工资表"
+      else "普通工资表"
       end
     "#{corporation.name}_#{name}_#{filename}_#{Time.stamp}.xlsx"
   end

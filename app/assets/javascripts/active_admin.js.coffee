@@ -101,7 +101,7 @@ $(document).on 'ready', ->
             <a class='dropdown_menu_button' href='#'>视图</a>
             <div class='dropdown_menu_list_wrapper' style='display: none;'><div class='dropdown_menu_nipple'></div>
               <ul class='dropdown_menu_list'>
-                <li><a href='#{current_path}'>原始工资表</a></li>
+                <li><a href='#{current_path}'>普通工资表</a></li>
                 <li><a href='#{current_path}?view=proof'>凭证工资表（帐用）</a></li>
                 <li><a href='#{current_path}?view=card'>打卡表</a></li>
                 <li class='custom'><a href='#{current_path}?view=custom'>自定义</a></li>

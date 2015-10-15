@@ -20,7 +20,8 @@ zh-CN:
       staff: "员工信息"
       normal_staff: "普通员工信息"
       engineering_staff: "工程员工信息"
-      salary_table: "原始工资表"
+      salary_table: "普通工资表"
+      salary_table_entrance: '工资表'
       salary_item: '工资条'
       individual_income_tax: '个人所得税'
       individual_income_tax_base: '个税基数'
@@ -56,7 +57,7 @@ zh-CN:
         sub_companies: '吉易子公司'
         sub_companies_display: '吉易子公司'
         normal_staffs: '普通员工列表'
-        salary_tables: '原始工资表'
+        salary_tables: '普通工资表'
         labor_contracts: '劳务合同列表'
         created_at: "创建时间"
         updated_at: "更新时间"
@@ -216,8 +217,8 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        salary_table: '原始工资表'
-        salary_table_id: '原始工资表'
+        salary_table: '普通工资表'
+        salary_table_id: '普通工资表'
         normal_staff: '员工姓名'
         normal_staff_id: '员工姓名'
         normal_staff_name: '员工姓名'
