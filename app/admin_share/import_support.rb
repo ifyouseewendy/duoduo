@@ -4,13 +4,19 @@ module ImportSupport
 
       collection_action :import_demo do
         model = controller_name.classify.constantize
-        data = \
-          CSV.generate encoding: 'GBK' do |csv|
-            csv << model.ordered_columns(without_base_keys: true, without_foreign_keys: false).map{|col| model.human_attribute_name(col) }
+
+        filename = I18n.t("activerecord.models.#{model.to_s.underscore}") + " - " + I18n.t("misc.import_demo.name") + '.xlsx'
+        filepath = Pathname("tmp/#{filename}")
+
+        Axlsx::Package.new do |p|
+          p.workbook.add_worksheet do |sheet|
+            stat = model.ordered_columns(without_base_keys: true, without_foreign_keys: false).map{|col| model.human_attribute_name(col) }
+            sheet.add_row stat
           end
-        send_data \
-          data,
-          :filename => I18n.t("activerecord.models.#{model.to_s.underscore}") + " - " + I18n.t("misc.import_demo.name") + '.csv'
+          p.serialize(filepath.to_s)
+        end
+
+        send_file filepath
       end
 
       action_item :import_new, only: [:index] do
