@@ -57,14 +57,13 @@ class Import < Thor
         #
         #   :account
         #   :account_bank
-        #   :birth
         ns = NormalStaff.create!(
           nest_index: nest_index.to_i,
           name: name,
           account: nil,
           account_bank: nil,
           identity_card: identity_card.to_s,
-          birth: nil,
+          birth: identity_card[6,8],
           age: age,
           gender: {'男' => 'male', '女' => 'female'}[gender],
           nation: nation,
@@ -78,12 +77,13 @@ class Import < Thor
           sub_company_id: sub_company_id
         )
 
+        social_insurance_base = 1861.15
+        medical_insurance_base = 3102
+        house_accumulation_base = 0
+
         # Need to confirm
         #
         #   :has_accident_insurance
-        #   :social_insurance_base
-        #   :medical_insurance_base
-        #   :house_accumulation_base
         #   :release_date
         #   :social_insurance_release_date
         #   :medical_insurance_release_date
@@ -98,9 +98,9 @@ class Import < Thor
           has_accident_insurance: nil,
           current_social_insurance_start_date: parse_date(current_social_insurance_start_date),
           current_medical_insurance_start_date: parse_date(current_medical_insurance_start_date),
-          social_insurance_base: nil.to_i,
-          medical_insurance_base: nil.to_i,
-          house_accumulation_base: nil.to_i,
+          social_insurance_base: social_insurance_base,
+          medical_insurance_base: medical_insurance_base,
+          house_accumulation_base: house_accumulation_base,
           social_insurance_serial: social_insurance_serial.to_s,
           medical_insurance_serial: medical_insurance_serial.to_s,
           medical_insurance_card: medical_insurance_card.to_s,
@@ -171,14 +171,13 @@ class Import < Thor
         #
         #   :account
         #   :account_bank
-        #   :birth
         ns = NormalStaff.create!(
           nest_index: nest_index.to_i,
           name: name,
           account: nil,
           account_bank: nil,
           identity_card: identity_card.to_s,
-          birth: nil,
+          birth: identity_card[6,8],
           age: age,
           gender: {'男' => 'male', '女' => 'female'}[gender],
           nation: nation,
@@ -192,12 +191,13 @@ class Import < Thor
           sub_company_id: sub_company_id
         )
 
+        social_insurance_base = 1861.15
+        medical_insurance_base = 3102
+        house_accumulation_base = 0
+
         # Need to confirm
         #
         #   :has_accident_insurance
-        #   :social_insurance_base
-        #   :medical_insurance_base
-        #   :house_accumulation_base
         #   :release_date
         contract_attrs = {
           contract_type: contract_type,
@@ -210,9 +210,9 @@ class Import < Thor
           has_accident_insurance: nil,
           current_social_insurance_start_date: parse_date(current_social_insurance_start_date),
           current_medical_insurance_start_date: parse_date(current_medical_insurance_start_date),
-          social_insurance_base: nil.to_i,
-          medical_insurance_base: nil.to_i,
-          house_accumulation_base: nil.to_i,
+          social_insurance_base: social_insurance_base,
+          medical_insurance_base: medical_insurance_base,
+          house_accumulation_base: house_accumulation_base,
           social_insurance_serial: social_insurance_serial.to_s,
           medical_insurance_serial: medical_insurance_serial.to_s,
           medical_insurance_card: medical_insurance_card.to_s,
@@ -284,14 +284,13 @@ class Import < Thor
         #
         #   :account
         #   :account_bank
-        #   :birth
         ns = NormalStaff.create!(
           nest_index: nest_index.to_i,
           name: name,
           account: nil,
           account_bank: nil,
           identity_card: identity_card.to_s,
-          birth: nil,
+          birth: identity_card[6,8],
           age: age,
           gender: {'男' => 'male', '女' => 'female'}[gender],
           nation: nation,
@@ -306,13 +305,13 @@ class Import < Thor
         )
 
         contract_type = parse_contract_type(contract_type)
+        social_insurance_base = 1861.15
+        medical_insurance_base = 3102
+        house_accumulation_base = 0
 
         # Need to confirm
         #
         #   :has_accident_insurance
-        #   :social_insurance_base
-        #   :medical_insurance_base
-        #   :house_accumulation_base
         #   :release_date
         #   :social_insurance_release_date
         #   :medical_insurance_release_date
@@ -327,9 +326,9 @@ class Import < Thor
           has_accident_insurance: nil,
           current_social_insurance_start_date: nil,
           current_medical_insurance_start_date: nil,
-          social_insurance_base: nil.to_i,
-          medical_insurance_base: nil.to_i,
-          house_accumulation_base: nil.to_i,
+          social_insurance_base: social_insurance_base,
+          medical_insurance_base: medical_insurance_base,
+          house_accumulation_base: house_accumulation_base,
           social_insurance_serial: nil,
           medical_insurance_serial: nil,
           medical_insurance_card: nil,
@@ -378,14 +377,13 @@ class Import < Thor
         #
         #   :account
         #   :account_bank
-        #   :birth
         ns = NormalStaff.create!(
           nest_index: nest_index.to_i,
           name: name,
           account: nil,
           account_bank: nil,
           identity_card: identity_card.to_s,
-          birth: nil,
+          birth: identity_card[6,8],
           age: age,
           gender: {'男' => 'male', '女' => 'female'}[gender],
           nation: nation,
@@ -400,13 +398,13 @@ class Import < Thor
         )
 
         contract_type = :none_contract
+        social_insurance_base = 1861.15
+        medical_insurance_base = 3102
+        house_accumulation_base = 0
 
         # Need to confirm
         #
         #   :has_accident_insurance
-        #   :social_insurance_base
-        #   :medical_insurance_base
-        #   :house_accumulation_base
         #   :release_date
         #   :social_insurance_release_date
         #   :medical_insurance_release_date
@@ -421,9 +419,9 @@ class Import < Thor
           has_accident_insurance: nil,
           current_social_insurance_start_date: nil,
           current_medical_insurance_start_date: nil,
-          social_insurance_base: nil.to_i,
-          medical_insurance_base: nil.to_i,
-          house_accumulation_base: nil.to_i,
+          social_insurance_base: social_insurance_base,
+          medical_insurance_base: medical_insurance_base,
+          house_accumulation_base: house_accumulation_base,
           social_insurance_serial: nil,
           medical_insurance_serial: nil,
           medical_insurance_card: nil,
