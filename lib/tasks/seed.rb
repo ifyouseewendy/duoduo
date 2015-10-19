@@ -25,7 +25,7 @@ class Seed < Thor
     puts "==> Cleaning DB data"
     [
       LaborContract,
-      SalaryItem, SalaryTable,
+      SalaryItem, Invoice, SalaryTable,
       NormalStaff, EngineeringStaff,
       NormalCorporation, EngineeringCorporation,
       ContractFile, SubCompany,
@@ -121,8 +121,8 @@ class Seed < Thor
     end
 
     def seed_salary_tables
-      puts "==> Preparing SalaryTable and SalaryItem"
-      count = NormalCorporation.count*5
+      puts "==> Preparing SalaryTable, SalaryItem and Invoice"
+      count = NormalCorporation.count*2
       (1..count).each do |id|
         puts "... Processing #{id}/#{count}" if id % 10 == 0
         nc = NormalCorporation.all.sample
@@ -132,6 +132,21 @@ class Seed < Thor
         st = SalaryTable.create!(
           name: "2015年#{month}月",
           normal_corporation: nc
+        )
+
+        date = "2015-01-01".to_date + id.days
+        Invoice.create!(
+          salary_table: st,
+          release_date: date,
+          encoding: 'XC10329837',
+          payer: NormalStaff.all.sample.name,
+          project_name: "#{nc.name} - #{st.name}",
+          amount: (1..5).to_a.sample*100000,
+          total_amount: (6..9).to_a.sample*100000,
+          contact_person: NormalStaff.all.sample.name,
+          refund_person: NormalStaff.all.sample.name,
+          income_date: date,
+          refund_date: date + 10.days
         )
 
         begin
