@@ -1,6 +1,27 @@
 ActiveAdmin.register Invoice do
   belongs_to :salary_table
 
+  config.filters = false
+
+  form do |f|
+    f.semantic_errors *f.object.errors.keys
+
+    f.inputs do
+      f.input :release_date, as: :datepicker
+      f.input :encoding, as: :string
+      f.input :payer, as: :string
+      f.input :project_name, as: :string
+      f.input :amount, as: :number
+      f.input :total_amount, as: :number
+      f.input :contact_person, as: :string
+      f.input :refund_person, as: :string
+      f.input :income_date, as: :datepicker
+      f.input :refund_date, as: :datepicker
+    end
+
+    f.actions
+  end
+
   # Collection actions
   collection_action :export_xlsx do
     options = {}
