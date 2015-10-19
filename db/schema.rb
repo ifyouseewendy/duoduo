@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019020414) do
+ActiveRecord::Schema.define(version: 20151019030148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,6 +180,7 @@ ActiveRecord::Schema.define(version: 20151019020414) do
     t.date     "refund_date"
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
+    t.text     "remark"
   end
 
   add_index "invoices", ["salary_table_id"], name: "index_invoices_on_salary_table_id", using: :btree

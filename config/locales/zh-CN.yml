@@ -317,6 +317,7 @@ zh-CN:
         income_date: '来款日期'
         refund_date: '回款日期'
         salary_table: '工资表'
+        remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
 
