@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  salary_table_id: 
+  release_date: 2015-10-19
+  encoding: MyText
+  payer: MyText
+  project_name: MyText
+  amount: MyString
+  total_amount: 9.99
+  contact_person: MyText
+  refund_person: MyText
+  income_date: 2015-10-19
+  refund_date: 2015-10-19
+
+two:
+  salary_table_id: 
+  release_date: 2015-10-19
+  encoding: MyText
+  payer: MyText
+  project_name: MyText
+  amount: MyString
+  total_amount: 9.99
+  contact_person: MyText
+  refund_person: MyText
+  income_date: 2015-10-19
+  refund_date: 2015-10-19
