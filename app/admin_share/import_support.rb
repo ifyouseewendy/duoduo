@@ -20,7 +20,11 @@ module ImportSupport
       end
 
       action_item :import_new, only: [:index] do
-        link_to "导入#{collection.model_name.human}", send("import_new_#{collection.name.underscore.pluralize}_path")
+        if collection.model.name == 'GuardSalaryItem'
+          link_to "导入#{collection.model_name.human}", send("import_new_guard_salary_table_#{collection.name.underscore.pluralize}_path")
+        else
+          link_to "导入#{collection.model_name.human}", send("import_new_#{collection.name.underscore.pluralize}_path")
+        end
       end
 
       collection_action :import_new do
