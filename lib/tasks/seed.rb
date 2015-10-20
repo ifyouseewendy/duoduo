@@ -27,7 +27,7 @@ class Seed < Thor
     [
       LaborContract,
       SalaryItem, Invoice, SalaryTable,
-      GuardSalaryTable,
+      GuardSalaryItem, GuardSalaryTable,
       NormalStaff, EngineeringStaff,
       NormalCorporation, EngineeringCorporation,
       ContractFile, SubCompany,
@@ -191,9 +191,26 @@ class Seed < Thor
         # )
 
         begin
-          # st.normal_corporation.normal_staffs.each do |staff|
-          #   SalaryItem.create_by(salary_table: st, salary: (1..8).to_a.sample*1000, name: staff.name, identity_card: staff.identity_card)
-          # end
+          st.normal_corporation.normal_staffs.each do |staff|
+            GuardSalaryItem.create!(
+              normal_staff: staff,
+              guard_salary_table: st,
+              income: 10000,
+              salary_deserve: 10000,
+              festival: 1000,
+              dress_return: 1000,
+              salary_deserve_total: nil,
+              physical_exam_deduct: 1000,
+              dress_deduct: 1000,
+              work_exam_deduct: 0,
+              other_deduct: 0,
+              total_deduct: nil,
+              salary_in_fact: nil,
+              accident_insurance: 1000,
+              total: nil,
+              balance: nil
+            )
+          end
         rescue => e
           require'pry';binding.pry
         end
