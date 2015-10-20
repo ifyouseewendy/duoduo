@@ -23,7 +23,7 @@ zh-CN:
       salary_table: "普通工资表"
       salary_table_entrance: '工资表'
       guard_salary_table: "保安工资表"
-      none_full_day_salary_table: "非全日制工资表"
+      non_full_day_salary_table: "非全日制工资表"
       salary_item: '普通工资条'
       guard_salary_item: '保安工资条'
       non_full_day_salary_item: '非全日制工资条'
@@ -370,7 +370,7 @@ zh-CN:
         remark: '备注'
         corporation: '所属单位'
         normal_corporation: '普通合作单位'
-        guard_salary_items: '工资条'
+        non_full_day_salary_items: '工资条'
         invoices: '发票'
         created_at: "创建时间"
         updated_at: "更新时间"

@@ -22,6 +22,8 @@ module ImportSupport
       action_item :import_new, only: [:index] do
         if collection.model.name == 'GuardSalaryItem'
           link_to "导入#{collection.model_name.human}", send("import_new_guard_salary_table_#{collection.name.underscore.pluralize}_path")
+        elsif collection.model.name == 'NonFullDaySalaryItem'
+          link_to "导入#{collection.model_name.human}", send("import_new_non_full_day_salary_table_#{collection.name.underscore.pluralize}_path")
         else
           link_to "导入#{collection.model_name.human}", send("import_new_#{collection.name.underscore.pluralize}_path")
         end

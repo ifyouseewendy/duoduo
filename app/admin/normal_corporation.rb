@@ -36,6 +36,8 @@ ActiveAdmin.register NormalCorporation do
       href = link_to("普通工资表", normal_corporation_salary_tables_path(obj) )
       href += link_to(" 保安工资表", normal_corporation_guard_salary_tables_path(obj) ) \
         if obj.guard_salary_tables.count > 0
+      href += link_to(" 非全日制工资表", normal_corporation_non_full_day_salary_tables_path(obj) ) \
+        if obj.non_full_day_salary_tables.count > 0
 
       href
     end
