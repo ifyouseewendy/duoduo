@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019030148) do
+ActiveRecord::Schema.define(version: 20151020041814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,16 @@ ActiveRecord::Schema.define(version: 20151019030148) do
   add_index "engineering_staffs", ["nation"], name: "index_engineering_staffs_on_nation", using: :btree
   add_index "engineering_staffs", ["nest_index"], name: "index_engineering_staffs_on_nest_index", using: :btree
   add_index "engineering_staffs", ["remark"], name: "index_engineering_staffs_on_remark", using: :btree
+
+  create_table "guard_salary_tables", force: :cascade do |t|
+    t.text     "name"
+    t.text     "remark"
+    t.integer  "normal_corporation_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "guard_salary_tables", ["normal_corporation_id"], name: "index_guard_salary_tables_on_normal_corporation_id", using: :btree
 
   create_table "individual_income_tax_bases", force: :cascade do |t|
     t.integer  "base"
@@ -406,6 +416,7 @@ ActiveRecord::Schema.define(version: 20151019030148) do
 
   add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "engineering_staffs", "engineering_corporations"
+  add_foreign_key "guard_salary_tables", "normal_corporations"
   add_foreign_key "invoices", "salary_tables"
   add_foreign_key "labor_contracts", "normal_corporations"
   add_foreign_key "labor_contracts", "normal_staffs"
