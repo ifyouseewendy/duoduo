@@ -23,7 +23,8 @@ zh-CN:
       salary_table: "普通工资表"
       salary_table_entrance: '工资表'
       guard_salary_table: "保安工资表"
-      salary_item: '工资条'
+      salary_item: '普通工资条'
+      guard_salary_item: '保安工资条'
       individual_income_tax: '个人所得税'
       individual_income_tax_base: '个税基数'
       settings: '设置'
@@ -332,3 +333,31 @@ zh-CN:
         invoices: '发票'
         created_at: "创建时间"
         updated_at: "更新时间"
+      guard_salary_item:
+        id: '编号'
+        staff_attribute: '属性'
+        staff_account: '工资卡号'
+        staff_name: '姓名'
+        income: '来款'
+        salary_deserve: '应发工资'
+        festival: '过节'
+        overtime: '加班费'
+        dress_return: '返服装费'
+        salary_deserve_total: '应发工资合计'
+        physical_exam_deduct: '扣款（体检费）'
+        dress_deduct: '扣款（服装费）'
+        work_exam_deduct: '扣款（考核）'
+        other_deduct: '扣款（其他）'
+        total_deduct: '个人扣款合计'
+        salary_in_fact: '实发工资'
+        accident_insurance: '意外险'
+        total: '劳务费汇总'
+        balance: '余额'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+        guard_salary_table: '保安工资表'
+        guard_salary_table_id: '保安工资表'
+        normal_staff: '员工姓名'
+        normal_staff_id: '员工姓名'
+        normal_staff_name: '员工姓名'

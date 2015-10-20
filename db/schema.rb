@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020041814) do
+ActiveRecord::Schema.define(version: 20151020043208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,31 @@ ActiveRecord::Schema.define(version: 20151020041814) do
   add_index "engineering_staffs", ["nation"], name: "index_engineering_staffs_on_nation", using: :btree
   add_index "engineering_staffs", ["nest_index"], name: "index_engineering_staffs_on_nest_index", using: :btree
   add_index "engineering_staffs", ["remark"], name: "index_engineering_staffs_on_remark", using: :btree
+
+  create_table "guard_salary_items", force: :cascade do |t|
+    t.decimal  "income",                precision: 8, scale: 2
+    t.decimal  "salary_deserve",        precision: 8, scale: 2
+    t.decimal  "festival",              precision: 8, scale: 2
+    t.decimal  "overtime",              precision: 8, scale: 2
+    t.decimal  "dress_return",          precision: 8, scale: 2
+    t.decimal  "salary_deserve_total",  precision: 8, scale: 2
+    t.decimal  "physical_exam_deduct",  precision: 8, scale: 2
+    t.decimal  "dress_deduct",          precision: 8, scale: 2
+    t.decimal  "work_exam_deduct",      precision: 8, scale: 2
+    t.decimal  "other_deduct",          precision: 8, scale: 2
+    t.decimal  "total_deduct",          precision: 8, scale: 2
+    t.decimal  "salary_in_fact",        precision: 8, scale: 2
+    t.decimal  "accident_insurance",    precision: 8, scale: 2
+    t.decimal  "total",                 precision: 8, scale: 2
+    t.decimal  "balance",               precision: 8, scale: 2
+    t.integer  "normal_staff_id"
+    t.integer  "guard_salary_table_id"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+  end
+
+  add_index "guard_salary_items", ["guard_salary_table_id"], name: "index_guard_salary_items_on_guard_salary_table_id", using: :btree
+  add_index "guard_salary_items", ["normal_staff_id"], name: "index_guard_salary_items_on_normal_staff_id", using: :btree
 
   create_table "guard_salary_tables", force: :cascade do |t|
     t.text     "name"
@@ -416,6 +441,8 @@ ActiveRecord::Schema.define(version: 20151020041814) do
 
   add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "engineering_staffs", "engineering_corporations"
+  add_foreign_key "guard_salary_items", "guard_salary_tables"
+  add_foreign_key "guard_salary_items", "normal_staffs"
   add_foreign_key "guard_salary_tables", "normal_corporations"
   add_foreign_key "invoices", "salary_tables"
   add_foreign_key "labor_contracts", "normal_corporations"

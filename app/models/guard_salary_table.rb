@@ -1,5 +1,6 @@
 class GuardSalaryTable < ActiveRecord::Base
   belongs_to :normal_corporation
+  has_many :guard_salary_items, dependent: :destroy
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
