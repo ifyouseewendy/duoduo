@@ -15,6 +15,7 @@ class Seed < Thor
     seed_insurance_fund
     seed_salary_tables
     seed_guard_salary_tables
+    seed_non_full_day_salary_tables
   end
 
 
@@ -28,6 +29,7 @@ class Seed < Thor
       LaborContract,
       SalaryItem, Invoice, SalaryTable,
       GuardSalaryItem, GuardSalaryTable,
+      NonFullDaySalaryItem, NonFullDaySalaryTable,
       NormalStaff, EngineeringStaff,
       NormalCorporation, EngineeringCorporation,
       ContractFile, SubCompany,
@@ -232,40 +234,37 @@ class Seed < Thor
         )
 
         date = "2015-01-01".to_date + id.days
-        # Invoice.create!(
-        #   non_full_day_salary_table: st,
-        #   release_date: date,
-        #   encoding: 'XC10329837',
-        #   payer: NormalStaff.all.sample.name,
-        #   project_name: "#{nc.name} - #{st.name}",
-        #   amount: (1..5).to_a.sample*100000,
-        #   total_amount: (6..9).to_a.sample*100000,
-        #   contact_person: NormalStaff.all.sample.name,
-        #   refund_person: NormalStaff.all.sample.name,
-        #   income_date: date,
-        #   refund_date: date + 10.days
-        # )
+        Invoice.create!(
+          non_full_day_salary_table: st,
+          release_date: date,
+          encoding: 'XC10329837',
+          payer: NormalStaff.all.sample.name,
+          project_name: "#{nc.name} - #{st.name}",
+          amount: (1..5).to_a.sample*100000,
+          total_amount: (6..9).to_a.sample*100000,
+          contact_person: NormalStaff.all.sample.name,
+          refund_person: NormalStaff.all.sample.name,
+          income_date: date,
+          refund_date: date + 10.days
+        )
 
         begin
           st.normal_corporation.normal_staffs.each do |staff|
-            # GuardSalaryItem.create!(
-            #   normal_staff: staff,
-            #   guard_salary_table: st,
-            #   income: 10000,
-            #   salary_deserve: 10000,
-            #   festival: 1000,
-            #   dress_return: 1000,
-            #   salary_deserve_total: nil,
-            #   physical_exam_deduct: 1000,
-            #   dress_deduct: 1000,
-            #   work_exam_deduct: 0,
-            #   other_deduct: 0,
-            #   total_deduct: nil,
-            #   salary_in_fact: nil,
-            #   accident_insurance: 1000,
-            #   total: nil,
-            #   balance: nil
-            # )
+            NonFullDaySalaryItem.create!(
+              normal_staff: staff,
+              non_full_day_salary_table: st,
+              month: "#{(1..12).to_a.sample}月",
+              work_hour: (10..30).to_a.sample,
+              work_wage: (10..50).to_a.sample,
+              salary_deserve: nil,
+              tax: 100,
+              other: 100,
+              salary_in_fact: nil,
+              accident_insurance: 100,
+              admin_amount: nil,
+              total: nil,
+              remark: '备注'
+            )
           end
         rescue => e
           require'pry';binding.pry
