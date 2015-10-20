@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020074332) do
+ActiveRecord::Schema.define(version: 20151020074531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -268,21 +268,23 @@ ActiveRecord::Schema.define(version: 20151020074332) do
 
   create_table "non_full_day_salary_items", force: :cascade do |t|
     t.text     "month"
-    t.decimal  "work_hour",          precision: 8, scale: 2
-    t.decimal  "work_wage",          precision: 8, scale: 2
-    t.decimal  "salary_deserve",     precision: 8, scale: 2
-    t.decimal  "tax",                precision: 8, scale: 2
-    t.decimal  "other",              precision: 8, scale: 2
-    t.decimal  "salary_in_fact",     precision: 8, scale: 2
-    t.decimal  "accident_insurance", precision: 8, scale: 2
-    t.decimal  "admin_amount",       precision: 8, scale: 2
-    t.decimal  "total",              precision: 8, scale: 2
+    t.decimal  "work_hour",                    precision: 8, scale: 2
+    t.decimal  "work_wage",                    precision: 8, scale: 2
+    t.decimal  "salary_deserve",               precision: 8, scale: 2
+    t.decimal  "tax",                          precision: 8, scale: 2
+    t.decimal  "other",                        precision: 8, scale: 2
+    t.decimal  "salary_in_fact",               precision: 8, scale: 2
+    t.decimal  "accident_insurance",           precision: 8, scale: 2
+    t.decimal  "admin_amount",                 precision: 8, scale: 2
+    t.decimal  "total",                        precision: 8, scale: 2
     t.integer  "normal_staff_id"
     t.text     "remark"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
+    t.integer  "non_full_day_salary_table_id"
   end
 
+  add_index "non_full_day_salary_items", ["non_full_day_salary_table_id"], name: "index_non_full_day_salary_items_on_non_full_day_salary_table_id", using: :btree
   add_index "non_full_day_salary_items", ["normal_staff_id"], name: "index_non_full_day_salary_items_on_normal_staff_id", using: :btree
 
   create_table "non_full_day_salary_tables", force: :cascade do |t|
@@ -481,6 +483,7 @@ ActiveRecord::Schema.define(version: 20151020074332) do
   add_foreign_key "labor_contracts", "normal_corporations"
   add_foreign_key "labor_contracts", "normal_staffs"
   add_foreign_key "labor_contracts", "sub_companies"
+  add_foreign_key "non_full_day_salary_items", "non_full_day_salary_tables"
   add_foreign_key "non_full_day_salary_items", "normal_staffs"
   add_foreign_key "non_full_day_salary_tables", "normal_corporations"
   add_foreign_key "normal_staffs", "normal_corporations"
