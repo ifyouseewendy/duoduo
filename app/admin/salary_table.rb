@@ -16,7 +16,7 @@ ActiveAdmin.register SalaryTable do
 
     actions do |st|
       text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-      item "发票", salary_table_invoices_path(st), class: "member_link"
+      item "发票", "/invoices?utf8=✓&q%5Bsalary_table_id_eq%5D=#{st.id}&commit=过滤&order=id_desc", class: "member_link"
       item "工资条", salary_table_salary_items_path(st), class: "member_link"
     end
   end

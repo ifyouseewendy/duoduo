@@ -1,6 +1,4 @@
 ActiveAdmin.register Invoice do
-  belongs_to :salary_table
-
   config.filters = false
 
   form do |f|
