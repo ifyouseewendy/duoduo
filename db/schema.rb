@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020055952) do
+ActiveRecord::Schema.define(version: 20151020070207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -266,6 +266,16 @@ ActiveRecord::Schema.define(version: 20151020055952) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "non_full_day_salary_tables", force: :cascade do |t|
+    t.text     "name"
+    t.text     "remark"
+    t.integer  "normal_corporation_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "non_full_day_salary_tables", ["normal_corporation_id"], name: "index_non_full_day_salary_tables_on_normal_corporation_id", using: :btree
+
   create_table "normal_corporations", force: :cascade do |t|
     t.text     "name"
     t.text     "license"
@@ -452,6 +462,7 @@ ActiveRecord::Schema.define(version: 20151020055952) do
   add_foreign_key "labor_contracts", "normal_corporations"
   add_foreign_key "labor_contracts", "normal_staffs"
   add_foreign_key "labor_contracts", "sub_companies"
+  add_foreign_key "non_full_day_salary_tables", "normal_corporations"
   add_foreign_key "normal_staffs", "normal_corporations"
   add_foreign_key "normal_staffs", "sub_companies"
   add_foreign_key "salary_items", "normal_staffs"

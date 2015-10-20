@@ -217,6 +217,62 @@ class Seed < Thor
       end
     end
 
+    def seed_non_full_day_salary_tables
+      puts "==> Preparing NonFullDaySalaryTable, NonFullDaySalaryItem and Invoice"
+      count = NormalCorporation.count*2
+      (1..count).each do |id|
+        puts "... Processing #{id}/#{count}" if id % 10 == 0
+        nc = NormalCorporation.all.sample
+
+        month = (1..12).to_a.sample
+
+        st = NonFullDaySalaryTable.create!(
+          name: "2015年#{month}月",
+          normal_corporation: nc
+        )
+
+        date = "2015-01-01".to_date + id.days
+        # Invoice.create!(
+        #   non_full_day_salary_table: st,
+        #   release_date: date,
+        #   encoding: 'XC10329837',
+        #   payer: NormalStaff.all.sample.name,
+        #   project_name: "#{nc.name} - #{st.name}",
+        #   amount: (1..5).to_a.sample*100000,
+        #   total_amount: (6..9).to_a.sample*100000,
+        #   contact_person: NormalStaff.all.sample.name,
+        #   refund_person: NormalStaff.all.sample.name,
+        #   income_date: date,
+        #   refund_date: date + 10.days
+        # )
+
+        begin
+          st.normal_corporation.normal_staffs.each do |staff|
+            # GuardSalaryItem.create!(
+            #   normal_staff: staff,
+            #   guard_salary_table: st,
+            #   income: 10000,
+            #   salary_deserve: 10000,
+            #   festival: 1000,
+            #   dress_return: 1000,
+            #   salary_deserve_total: nil,
+            #   physical_exam_deduct: 1000,
+            #   dress_deduct: 1000,
+            #   work_exam_deduct: 0,
+            #   other_deduct: 0,
+            #   total_deduct: nil,
+            #   salary_in_fact: nil,
+            #   accident_insurance: 1000,
+            #   total: nil,
+            #   balance: nil
+            # )
+          end
+        rescue => e
+          require'pry';binding.pry
+        end
+      end
+    end
+
     def load_rails
       require File.expand_path('config/environment.rb')
     end
