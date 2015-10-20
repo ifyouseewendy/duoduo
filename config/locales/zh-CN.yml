@@ -26,6 +26,7 @@ zh-CN:
       none_full_day_salary_table: "非全日制工资表"
       salary_item: '普通工资条'
       guard_salary_item: '保安工资条'
+      non_full_day_salary_item: '非全日制工资条'
       individual_income_tax: '个人所得税'
       individual_income_tax_base: '个税基数'
       settings: '设置'
@@ -63,6 +64,7 @@ zh-CN:
         normal_staffs: '普通员工列表'
         salary_tables: '普通工资表'
         guard_salary_tables: '保安工资表'
+        non_full_day_salary_tables: '非全日制工资表'
         labor_contracts: '劳务合同列表'
         created_at: "创建时间"
         updated_at: "更新时间"
@@ -372,3 +374,31 @@ zh-CN:
         invoices: '发票'
         created_at: "创建时间"
         updated_at: "更新时间"
+      non_full_day_salary_item:
+        id: '编号'
+        salary_table_id: '外键'
+        normal_staff_id: '外键'
+        corporation: '单位'
+        staff_category: '用工类别'
+        staff_account: '账号'
+        month: '月份'
+        staff_name: '姓名'
+        work_hour: '工作时间（小时）'
+        work_wage: '工资额（每小时）'
+        salary_deserve: '应发'
+        tax: '个税'
+        other: '其他'
+        salary_in_fact: '实发工资'
+        accident_insurance: '意外险'
+        admin_amount: '管理费'
+        total: '劳务费用合计'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+        non_full_day_salary_table: '非全日制工资表'
+        non_full_day_salary_table_id: '非全日制工资表'
+        normal_staff: '员工姓名'
+        normal_staff_id: '员工姓名'
+        normal_staff_name: '员工姓名'
+
+

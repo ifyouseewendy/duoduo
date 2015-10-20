@@ -7,6 +7,8 @@ class NormalCorporation < ActiveRecord::Base
   has_many :salary_items, through: :salary_tables
   has_many :guard_salary_tables
   has_many :guard_salary_items, through: :guard_salary_tables
+  has_many :non_full_day_salary_tables
+  has_many :non_full_day_salary_items, through: :non_full_day_salary_tables
 
   validates_uniqueness_of :name
 
