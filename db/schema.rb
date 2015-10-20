@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020055334) do
+ActiveRecord::Schema.define(version: 20151020055952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -209,16 +209,18 @@ ActiveRecord::Schema.define(version: 20151020055334) do
     t.text     "payer"
     t.text     "project_name"
     t.string   "amount"
-    t.decimal  "total_amount",    precision: 8, scale: 2
+    t.decimal  "total_amount",          precision: 8, scale: 2
     t.text     "contact_person"
     t.text     "refund_person"
     t.date     "income_date"
     t.date     "refund_date"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.text     "remark"
+    t.integer  "guard_salary_table_id"
   end
 
+  add_index "invoices", ["guard_salary_table_id"], name: "index_invoices_on_guard_salary_table_id", using: :btree
   add_index "invoices", ["salary_table_id"], name: "index_invoices_on_salary_table_id", using: :btree
 
   create_table "labor_contracts", force: :cascade do |t|
@@ -445,6 +447,7 @@ ActiveRecord::Schema.define(version: 20151020055334) do
   add_foreign_key "guard_salary_items", "guard_salary_tables"
   add_foreign_key "guard_salary_items", "normal_staffs"
   add_foreign_key "guard_salary_tables", "normal_corporations"
+  add_foreign_key "invoices", "guard_salary_tables"
   add_foreign_key "invoices", "salary_tables"
   add_foreign_key "labor_contracts", "normal_corporations"
   add_foreign_key "labor_contracts", "normal_staffs"

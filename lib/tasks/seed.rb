@@ -176,19 +176,19 @@ class Seed < Thor
         )
 
         date = "2015-01-01".to_date + id.days
-        # Invoice.create!(
-        #   salary_table: st,
-        #   release_date: date,
-        #   encoding: 'XC10329837',
-        #   payer: NormalStaff.all.sample.name,
-        #   project_name: "#{nc.name} - #{st.name}",
-        #   amount: (1..5).to_a.sample*100000,
-        #   total_amount: (6..9).to_a.sample*100000,
-        #   contact_person: NormalStaff.all.sample.name,
-        #   refund_person: NormalStaff.all.sample.name,
-        #   income_date: date,
-        #   refund_date: date + 10.days
-        # )
+        Invoice.create!(
+          guard_salary_table: st,
+          release_date: date,
+          encoding: 'XC10329837',
+          payer: NormalStaff.all.sample.name,
+          project_name: "#{nc.name} - #{st.name}",
+          amount: (1..5).to_a.sample*100000,
+          total_amount: (6..9).to_a.sample*100000,
+          contact_person: NormalStaff.all.sample.name,
+          refund_person: NormalStaff.all.sample.name,
+          income_date: date,
+          refund_date: date + 10.days
+        )
 
         begin
           st.normal_corporation.normal_staffs.each do |staff|

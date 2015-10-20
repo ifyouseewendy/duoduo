@@ -1,5 +1,6 @@
 class Invoice < ActiveRecord::Base
   belongs_to :salary_table
+  belongs_to :guard_salary_table
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
@@ -12,6 +13,7 @@ class Invoice < ActiveRecord::Base
     end
 
     def export_xlsx(options: {})
+      # TODO change filename 
       filename = "#{I18n.t("activerecord.models.invoice")}_#{Time.stamp}.xlsx"
       filepath = EXPORT_PATH.join filename
 
