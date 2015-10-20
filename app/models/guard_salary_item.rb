@@ -17,6 +17,15 @@ class GuardSalaryItem < ActiveRecord::Base
         - [:salary_deserve_total, :total_deduct, :salary_in_fact, :total, :balance]
       fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
+
+    def columns_based_on(options: {})
+      if options[:columns].present?
+        options[:columns].map(&:to_sym)
+      else
+        %i(id staff_attribute staff_account staff_name) \
+          + self.ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      end
+    end
   end
 
   def salary_deserve_total

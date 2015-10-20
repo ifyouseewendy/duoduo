@@ -337,7 +337,7 @@ zh-CN:
         id: '编号'
         staff_attribute: '属性'
         staff_account: '工资卡号'
-        staff_name: '姓名'
+        staff_name: '员工姓名'
         income: '来款'
         salary_deserve: '应发工资'
         festival: '过节'
