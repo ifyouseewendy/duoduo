@@ -16,8 +16,8 @@ ActiveAdmin.register GuardSalaryTable do
 
     actions do |st|
       text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-      item "发票", salary_table_invoices_path(st), class: "member_link"
-      item "工资条", salary_table_salary_items_path(st), class: "member_link"
+      # item "发票", guard_salary_table_invoices_path(st), class: "member_link"
+      item "工资条", guard_salary_table_guard_salary_items_path(st), class: "member_link"
     end
   end
 
