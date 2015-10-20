@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020043208) do
+ActiveRecord::Schema.define(version: 20151020055334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -159,6 +159,7 @@ ActiveRecord::Schema.define(version: 20151020043208) do
     t.integer  "guard_salary_table_id"
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
+    t.text     "remark"
   end
 
   add_index "guard_salary_items", ["guard_salary_table_id"], name: "index_guard_salary_items_on_guard_salary_table_id", using: :btree
