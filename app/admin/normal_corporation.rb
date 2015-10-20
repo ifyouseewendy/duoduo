@@ -33,7 +33,11 @@ ActiveAdmin.register NormalCorporation do
     end
 
     column :salary_tables, sortable: :id do |obj|
-      link_to "普通工资表", normal_corporation_salary_tables_path(obj)
+      href = link_to("普通工资表", normal_corporation_salary_tables_path(obj) )
+      href += link_to(" 保安工资表", normal_corporation_guard_salary_tables_path(obj) ) \
+        if obj.guard_salary_tables.count > 0
+
+      href
     end
 
     columns.map do |field|
