@@ -1,6 +1,23 @@
 class GuardSalaryItem < ActiveRecord::Base
-  belongs_to :normal_staff
   belongs_to :guard_salary_table
+  belongs_to :normal_staff
+
+  class << self
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
+      names = column_names.map(&:to_sym)
+
+      names -= %i(id created_at updated_at) if without_base_keys
+      names -= %i(normal_staff_id guard_salary_table_id) if without_foreign_keys
+
+      names
+    end
+
+    def batch_form_fields
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)\
+        - [:salary_deserve_total, :total_deduct, :salary_in_fact, :total, :balance]
+      fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+    end
+  end
 
   def salary_deserve_total
     [
