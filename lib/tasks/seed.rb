@@ -16,6 +16,8 @@ class Seed < Thor
     seed_salary_tables
     seed_guard_salary_tables
     seed_non_full_day_salary_tables
+
+    seed_engineering_customer
   end
 
 
@@ -269,6 +271,24 @@ class Seed < Thor
         rescue => e
           require'pry';binding.pry
         end
+      end
+    end
+
+    def seed_engineering_customer
+      puts "==> Preparing EngineeringCustomer"
+
+      (1..10).each do |i|
+        staff = NormalStaff.offset(i).limit(1).first
+
+        EngineeringCustomer.create!(
+          name: staff.name,
+          telephone: staff.telephone,
+          identity_card: staff.identity_card,
+          bank_account: staff.account,
+          bank_name: staff.account_bank,
+          bank_opening_place: nil,
+          remark: '备注'
+        )
       end
     end
 
