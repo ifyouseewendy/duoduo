@@ -17,7 +17,8 @@ class Seed < Thor
     seed_guard_salary_tables
     seed_non_full_day_salary_tables
 
-    seed_engineering_customer
+    seed_engineering_customers
+    seed_engineering_projects
   end
 
 
@@ -36,6 +37,7 @@ class Seed < Thor
       NormalCorporation, EngineeringCorporation,
       ContractFile, SubCompany,
       InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
+      EngineeringProject, EngineeringCustomer
     ].each(&:delete_all)
   end
 
@@ -274,7 +276,7 @@ class Seed < Thor
       end
     end
 
-    def seed_engineering_customer
+    def seed_engineering_customers
       puts "==> Preparing EngineeringCustomer"
 
       (1..10).each do |i|
@@ -289,6 +291,35 @@ class Seed < Thor
           bank_opening_place: nil,
           remark: '备注'
         )
+      end
+    end
+
+    def seed_engineering_projects
+      EngineeringCustomer.all.each do |ec|
+        (1..3).each do |id|
+          start_date = "2015-01-01".to_date + (id*10).days
+
+          EngineeringProject.create!(
+            engineering_customer: ec,
+            name: "#{ec.name} - 项目#{id}",
+            start_date: start_date,
+            project_start_date: start_date,
+            project_end_date: start_date + id.months,
+            project_range: nil, # Auto set
+            project_amount: 100000,
+            admin_amount: 10000,
+            total_amount: nil, # Auto set
+            income_date:  start_date + 90.days,
+            income_amount: 110000,
+            outcome_date: start_date + 91.days,
+            outcome_referee: nil,
+            outcome_amount: 100000,
+            proof: nil,
+            already_get_contract: [true, false].sample,
+            already_sign_dispatch: [true, false].sample,
+            remark: '备注'
+          )
+        end
       end
     end
 
