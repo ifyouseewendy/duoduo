@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020080120) do
+ActiveRecord::Schema.define(version: 20151021070412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,18 @@ ActiveRecord::Schema.define(version: 20151020080120) do
 
   add_index "engineering_corporations_sub_companies", ["engineering_corporation_id", "sub_company_id"], name: "idx_on_engineering_corporation_id_and_sub_company_id", using: :btree
   add_index "engineering_corporations_sub_companies", ["sub_company_id", "engineering_corporation_id"], name: "idx_sub_company_id_and_engineering_corporation_id", using: :btree
+
+  create_table "engineering_customers", force: :cascade do |t|
+    t.text     "name"
+    t.text     "telephone"
+    t.text     "identity_card"
+    t.text     "bank_account"
+    t.text     "bank_name",          default: "建设银行"
+    t.text     "bank_opening_place"
+    t.text     "remark"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
 
   create_table "engineering_staffs", force: :cascade do |t|
     t.integer  "nest_index"

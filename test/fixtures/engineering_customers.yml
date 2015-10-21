@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyText
+  telephone: MyText
+  identity_card: MyText
+  bank_account: MyText
+  bank_name: MyText
+  bank_opening_place: MyText
+  remark: MyText
+
+two:
+  name: MyText
+  telephone: MyText
+  identity_card: MyText
+  bank_account: MyText
+  bank_name: MyText
+  bank_opening_place: MyText
+  remark: MyText

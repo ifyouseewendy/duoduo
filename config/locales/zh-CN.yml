@@ -34,6 +34,8 @@ zh-CN:
       labor_contract: '劳务合同'
       sub_company: '吉易子公司'
       invoice: '发票'
+      engineering_business: '工程业务'
+      engineering_customer: '工程客户'
     attributes:
       normal_corporation:
         id: '编号'
@@ -400,5 +402,15 @@ zh-CN:
         normal_staff: '员工姓名'
         normal_staff_id: '员工姓名'
         normal_staff_name: '员工姓名'
-
+      engineering_customer:
+        id: '编号'
+        name: '名称'
+        telephone: '电话'
+        identity_card: '身份证号'
+        bank_account: '银行卡号'
+        bank_name: '开户银行'
+        bank_opening_place: '开户行名称'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
 
