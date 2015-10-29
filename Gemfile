@@ -74,6 +74,9 @@ group :development do
   # UML Diagram
   gem 'railroady'
   gem "rails-erd"
+
+  # Web-view DB
+  gem 'rails_db'
 end
 
 group :development, :test do
