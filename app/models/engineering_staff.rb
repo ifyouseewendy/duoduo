@@ -1,5 +1,4 @@
 class EngineeringStaff < ActiveRecord::Base
-  belongs_to :engineering_corporation
   has_many :salary_items
 
   enum gender: [:male, :female]
@@ -9,7 +8,7 @@ class EngineeringStaff < ActiveRecord::Base
       names = column_names.map(&:to_sym)
 
       names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(engineering_corporation_id) if without_foreign_keys
+      names -= %i() if without_foreign_keys
 
       names
     end
@@ -26,7 +25,7 @@ class EngineeringStaff < ActiveRecord::Base
       fields = ordered_columns(without_base_keys: true, without_foreign_keys: false)
       hash = fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
       hash['gender_性别'] = genders_option
-      hash['engineering_corporation_id_所属单位'] = EngineeringCorporation.reference_option
+      # hash['engineering_corporation_id_所属单位'] = EngineeringCorporation.reference_option
       hash
     end
   end
@@ -36,6 +35,6 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def company_name
-    engineering_corporation.name rescue ''
+    # engineering_corporation.name rescue ''
   end
 end

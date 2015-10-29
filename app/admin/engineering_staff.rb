@@ -1,6 +1,4 @@
 ActiveAdmin.register EngineeringStaff do
-  belongs_to :engineering_corporation, optional: true
-
   include ImportSupport
 
   menu \
@@ -17,8 +15,6 @@ ActiveAdmin.register EngineeringStaff do
         column :gender do |obj|
           obj.gender_i18n
         end
-      elsif field == :engineering_corporation_id
-        column :engineering_corporation, sortable: :engineering_corporation_id
       else
         column field
       end
@@ -56,8 +52,6 @@ ActiveAdmin.register EngineeringStaff do
             row :gender do |obj|
               obj.gender_i18n
             end
-          elsif field == :engineering_corporation_id
-            row :engineering_corporation
           else
             row field
           end
