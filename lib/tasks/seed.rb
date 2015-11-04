@@ -10,7 +10,6 @@ class Seed < Thor
 
     seed_admin_user
     seed_sub_companies
-    seed_corporations
     seed_normal_staffs
     seed_insurance_fund
     seed_salary_tables
@@ -18,6 +17,8 @@ class Seed < Thor
     seed_non_full_day_salary_tables
 
     seed_engineering_customers
+    seed_engineering_staffs
+    seed_engineering_corps
     seed_engineering_projects
   end
 
@@ -33,11 +34,10 @@ class Seed < Thor
       SalaryItem, Invoice, SalaryTable,
       GuardSalaryItem, GuardSalaryTable,
       NonFullDaySalaryItem, NonFullDaySalaryTable,
-      NormalStaff, EngineeringStaff,
-      NormalCorporation, EngineeringCorporation,
+      NormalStaff, NormalCorporation,
       ContractFile, SubCompany,
       InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
-      EngineeringProject, EngineeringCustomer
+      EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer
     ].each(&:delete_all)
   end
 
@@ -67,47 +67,8 @@ class Seed < Thor
       end
     end
 
-    def seed_corporations
-      puts "==> Preparing EngineeringCorporation"
-      (1..7).each do |id|
-        (1..5).each do |nest_id|
-          number        = (id-1)*5 + nest_id
-          name          = "#{id}-#{nest_id}"
-          days          = number.days
-          amount        = number*10
-
-          EngineeringCorporation.create!(
-            main_index:             id,
-            nest_index:             nest_id,
-            name:                   "工程合作单位#{name}",
-            start_date:             "2015-01-01".to_date + days,
-            project_date:           "2015-01-01".to_date + days,
-            project_name:           "工程#{name}",
-            project_amount:         100.0 + amount,
-            admin_amount:           50.0 + amount,
-            total_amount:           150.0 + amount,
-            income_date:            "2015-01-01".to_date + days,
-            income_amount:          150.0 + amount,
-            outcome_date:           "2015-05-01".to_date + days,
-            outcome_referee:        "用户#{number}",
-            outcome_amount:         150.0 + amount,
-            proof:                  "凭证#{number}",
-            actual_project_amount:  200.0 + amount,
-            actual_admin_amount:    100.0 + amount,
-            already_get_contract:   [true, false][rand(2)],
-            already_sign_dispatch:  [true, false][rand(2)],
-            remark:                 "备注",
-            sub_companies:          SubCompany.where(has_engineering_relation: true).sample(rand(2)+1),
-            created_at:             "2015-07-01".to_date + days,
-            updated_at:             "2015-07-01".to_date + days
-          )
-
-        end
-      end
-    end
-
     def seed_normal_staffs
-      puts "==> Preparing NormalStaff and LaborContract"
+      puts "==> Preparing NormalStaff, LaborContract, and NormalCorporation"
       Import.new.invoke('staff_and_contract', [], from: 'tmp/import/staff_and_contract/吉易通讯公司.xls' )
     end
 
@@ -294,6 +255,41 @@ class Seed < Thor
       end
     end
 
+    def seed_engineering_staffs
+      puts "==> Preparing EngineeringStaff"
+
+      EngineeringCustomer.all.each do |ec|
+        (1..3).each do |id|
+          staff = Jia::User.new
+
+          EngineeringStaff.create!(
+            engineering_customer: ec,
+            nest_index: id,
+            name: staff.full_name,
+            identity_card: rand_by(10),
+            birth: random_date,
+            age: 20,
+            gender: rand(2),
+            nation:  '汉族',
+            address: '住址',
+            remark: '备注'
+          )
+        end
+      end
+    end
+
+    def seed_engineering_corps
+      (1..10).each do |id|
+        start_date = "2015-01-01".to_date + (id*10).days
+
+        EngineeringCorp.create!(
+          name: "工程合作单位#{id}",
+          contract_start_date: start_date,
+          contract_end_date: start_date + id.months
+        )
+      end
+    end
+
     def seed_engineering_projects
       EngineeringCustomer.all.each do |ec|
         (1..3).each do |id|
@@ -301,6 +297,8 @@ class Seed < Thor
 
           EngineeringProject.create!(
             engineering_customer: ec,
+            engineering_staffs: ec.engineering_staffs.all.sample( rand(2)+1 ),
+            engineering_corp: EngineeringCorp.all.sample,
             name: "#{ec.name} - 项目#{id}",
             start_date: start_date,
             project_start_date: start_date,
