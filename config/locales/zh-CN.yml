@@ -19,7 +19,7 @@ zh-CN:
       sub_company: "吉易子公司"
       staff: "员工信息"
       normal_staff: "普通员工信息"
-      engineering_staff: "工程员工信息"
+      engineering_staff: "工程员工"
       salary_table: "普通工资表"
       salary_table_entrance: '工资表'
       guard_salary_table: "保安工资表"
@@ -37,6 +37,7 @@ zh-CN:
       engineering_business: '工程业务'
       engineering_customer: '工程客户'
       engineering_project: '工程项目'
+      engineering_corp: '工程单位'
     attributes:
       normal_corporation:
         id: '编号'
@@ -159,8 +160,9 @@ zh-CN:
         nation: '民族'
         address: '家庭住址'
         remark: '备注'
-        engineering_corporation: '所属单位'
-        engineering_corporation_id: '所属单位'
+        engineering_customer: '所属客户'
+        engineering_customer_id: '所属客户'
+        engineering_projects: '所属项目'
         created_at: "创建时间"
         updated_at: "更新时间"
       salary_table:
