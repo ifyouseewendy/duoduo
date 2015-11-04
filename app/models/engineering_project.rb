@@ -14,6 +14,10 @@ class EngineeringProject < ActiveRecord::Base
 
       names
     end
+
+    def columns_of(type)
+      self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
+    end
   end
 
   def revise_fields

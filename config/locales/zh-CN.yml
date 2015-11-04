@@ -440,6 +440,9 @@ zh-CN:
         updated_at: "更新时间"
         engineering_customer: '工程客户'
         engineering_corp: '工程单位'
+        engineering_customer_id: '工程客户'
+        engineering_corp_id: '工程单位'
+        engineering_staffs: '工程员工'
       engineering_corp:
         id: '编号'
         name: '单位名称'
