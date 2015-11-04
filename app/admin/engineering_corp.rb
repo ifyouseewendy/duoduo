@@ -7,4 +7,20 @@ ActiveAdmin.register EngineeringCorp do
   preserve_default_filters!
   remove_filter :engineering_projects
   remove_filter :contract_files
+
+  show do
+    attributes_table do
+      EngineeringCorp.ordered_columns(without_foreign_keys: true).map do |field|
+        row field
+      end
+    end
+
+    panel "业务代理合同" do
+      tabs do
+        # TODO
+      end
+    end
+
+    active_admin_comments
+  end
 end
