@@ -2,7 +2,7 @@
 
 one:
   contract_type: 1
-  in_contract: false
+  in_contract: true
   contract_start_date: 2015-10-10
   contract_end_date: 2015-10-10
   arrive_current_company_at: 2015-10-10
@@ -10,9 +10,9 @@ one:
   has_medical_insurance: false
   current_social_insurance_start_date: 2015-10-10
   current_medical_insurance_start_date: 2015-10-10
-  social_insurance_base: 9.99
-  medical_insurance_base: 9.99
-  house_accumulation_base: 9.99
+  social_insurance_base: 100
+  medical_insurance_base: 100
+  house_accumulation_base: 50
   social_insurance_serial: MyText
   medical_insurance_serial: MyText
   medical_insurance_card: MyText
@@ -26,21 +26,21 @@ one:
   remark: MyText
   sub_company_id: 
   normal_corporation_id: 
-  normal_staff_id: 
+  normal_staff: one
 
 two:
   contract_type: 1
-  in_contract: false
+  in_contract: true
   contract_start_date: 2015-10-10
   contract_end_date: 2015-10-10
   arrive_current_company_at: 2015-10-10
-  has_social_insurance: false
+  has_social_insurance: true
   has_medical_insurance: false
   current_social_insurance_start_date: 2015-10-10
   current_medical_insurance_start_date: 2015-10-10
-  social_insurance_base: 9.99
-  medical_insurance_base: 9.99
-  house_accumulation_base: 9.99
+  social_insurance_base: 100
+  medical_insurance_base: 100
+  house_accumulation_base: 50
   social_insurance_serial: MyText
   medical_insurance_serial: MyText
   medical_insurance_card: MyText
@@ -54,4 +54,32 @@ two:
   remark: MyText
   sub_company_id: 
   normal_corporation_id: 
-  normal_staff_id: 
+  normal_staff: two
+
+three:
+  contract_type: 1
+  in_contract: true
+  contract_start_date: 2015-10-10
+  contract_end_date: 2015-10-10
+  arrive_current_company_at: 2015-10-10
+  has_social_insurance: true
+  has_medical_insurance: true
+  current_social_insurance_start_date: 2015-10-10
+  current_medical_insurance_start_date: 2015-10-10
+  social_insurance_base: 100
+  medical_insurance_base: 100
+  house_accumulation_base: 50
+  social_insurance_serial: MyText
+  medical_insurance_serial: MyText
+  medical_insurance_card: MyText
+  backup_date: 2015-10-10
+  backup_place: MyText
+  work_place: MyText
+  work_type: MyText
+  release_date: 2015-10-10
+  social_insurance_release_date: 2015-10-10
+  medical_insurance_release_date: 2015-10-10
+  remark: MyText
+  sub_company_id: 
+  normal_corporation_id: 
+  normal_staff: three
