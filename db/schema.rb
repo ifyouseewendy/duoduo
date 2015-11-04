@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104055734) do
+ActiveRecord::Schema.define(version: 20151104060756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,9 +118,7 @@ ActiveRecord::Schema.define(version: 20151104055734) do
   add_index "engineering_projects_staffs", ["engineering_staff_id", "engineering_project_id"], name: "idx_on_engineering_staff_id_and_engineering_project_id", using: :btree
 
   create_table "engineering_staffs", force: :cascade do |t|
-    t.integer  "nest_index"
     t.text     "name"
-    t.text     "company_name"
     t.text     "identity_card"
     t.date     "birth"
     t.integer  "age"
@@ -136,13 +134,11 @@ ActiveRecord::Schema.define(version: 20151104055734) do
   add_index "engineering_staffs", ["address"], name: "index_engineering_staffs_on_address", using: :btree
   add_index "engineering_staffs", ["age"], name: "index_engineering_staffs_on_age", using: :btree
   add_index "engineering_staffs", ["birth"], name: "index_engineering_staffs_on_birth", using: :btree
-  add_index "engineering_staffs", ["company_name"], name: "index_engineering_staffs_on_company_name", using: :btree
   add_index "engineering_staffs", ["engineering_customer_id"], name: "index_engineering_staffs_on_engineering_customer_id", using: :btree
   add_index "engineering_staffs", ["gender"], name: "index_engineering_staffs_on_gender", using: :btree
   add_index "engineering_staffs", ["identity_card"], name: "index_engineering_staffs_on_identity_card", using: :btree
   add_index "engineering_staffs", ["name"], name: "index_engineering_staffs_on_name", using: :btree
   add_index "engineering_staffs", ["nation"], name: "index_engineering_staffs_on_nation", using: :btree
-  add_index "engineering_staffs", ["nest_index"], name: "index_engineering_staffs_on_nest_index", using: :btree
   add_index "engineering_staffs", ["remark"], name: "index_engineering_staffs_on_remark", using: :btree
 
   create_table "guard_salary_items", force: :cascade do |t|
