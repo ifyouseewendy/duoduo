@@ -8,8 +8,11 @@ ActiveAdmin.register EngineeringCustomer do
 
     column :id
     column :name
-    column :engineering_projects do |obj|
+    column :engineering_projects, sortable: :id do |obj|
       link_to "工程项目", engineering_customer_engineering_projects_path(obj)
+    end
+    column :engineering_projects, sortable: :id do |obj|
+      link_to "工程员工", engineering_customer_engineering_staffs_path(obj)
     end
     (EngineeringCustomer.ordered_columns - [:id, :name]).each do |field|
       column field
@@ -18,5 +21,6 @@ ActiveAdmin.register EngineeringCustomer do
 
   preserve_default_filters!
   remove_filter :engineering_projects
+  remove_filter :engineering_staffs
 
 end
