@@ -2,9 +2,9 @@
 
 one:
   name: MyText
-  start_date: 2015-10-21
-  project_start_date: 2015-10-21
-  project_end_date: 2015-10-21
+  start_date: 2015-09-01
+  project_start_date: 2015-09-01
+  project_end_date: 2015-09-30
   project_range: MyText
   project_amount: 9.99
   admin_amount: 9.99
@@ -18,12 +18,13 @@ one:
   already_get_contract: false
   already_sign_dispatch: false
   remark: MyText
+  engineering_customer: one
 
 two:
   name: MyText
-  start_date: 2015-10-21
-  project_start_date: 2015-10-21
-  project_end_date: 2015-10-21
+  start_date: 2015-10-01
+  project_start_date: 2015-10-01
+  project_end_date: 2015-10-31
   project_range: MyText
   project_amount: 9.99
   admin_amount: 9.99
@@ -37,3 +38,24 @@ two:
   already_get_contract: false
   already_sign_dispatch: false
   remark: MyText
+  engineering_customer: one
+
+three:
+  name: MyText
+  start_date: 2015-09-15
+  project_start_date: 2015-09-15
+  project_end_date: 2015-10-15
+  project_range: MyText
+  project_amount: 9.99
+  admin_amount: 9.99
+  total_amount: 9.99
+  income_date: 2015-10-21
+  income_amount: 9.99
+  outcome_date: 2015-10-21
+  outcome_referee: MyText
+  outcome_amount: 9.99
+  proof: MyText
+  already_get_contract: false
+  already_sign_dispatch: false
+  remark: MyText
+  engineering_customer: one

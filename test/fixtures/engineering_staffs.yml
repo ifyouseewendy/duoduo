@@ -3,7 +3,6 @@
 one:
   nest_index: 1
   name: MyText
-  company_name: MyText
   identity_card: MyText
   birth: 2015-08-28
   age: 1
@@ -11,11 +10,12 @@ one:
   nation: MyText
   address: MyText
   remark: MyText
+  engineering_customer: one
+  engineering_projects: one
 
 two:
   nest_index: 1
   name: MyText
-  company_name: MyText
   identity_card: MyText
   birth: 2015-08-28
   age: 1
@@ -23,3 +23,5 @@ two:
   nation: MyText
   address: MyText
   remark: MyText
+  engineering_customer: one
+  engineering_projects: one

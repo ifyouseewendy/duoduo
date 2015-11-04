@@ -15,4 +15,8 @@ class EngineeringProject < ActiveRecord::Base
       self.total_amount = project_amount + admin_amount
     end
   end
+
+  def range
+    [project_start_date, project_end_date]
+  end
 end

@@ -1,7 +1,7 @@
 class EngineeringStaff < ActiveRecord::Base
   belongs_to :engineering_customer
+  has_and_belongs_to_many :engineering_projects, before_add: :check_schedule
   has_many :salary_items
-  has_and_belongs_to_many :engineering_projects
 
   enum gender: [:male, :female]
 
@@ -38,5 +38,18 @@ class EngineeringStaff < ActiveRecord::Base
 
   def company_name
     # engineering_corporation.name rescue ''
+  end
+
+  # Returns an Array of ranges, which range is represented by an Array of start_date and end_date
+  def busy_range
+    engineering_projects.select(:project_start_date, :project_end_date).map{|ep| [ ep.project_start_date, ep.project_end_date ]}.sort
+  end
+
+  def check_schedule(project)
+    raise "Staff refuse the project schedule" unless accept_schedule?(*project.range)
+  end
+
+  def accept_schedule?(start_date, end_date)
+    busy_range.all?{|range| range[0] > end_date.to_date || range[1] < start_date.to_date }
   end
 end
