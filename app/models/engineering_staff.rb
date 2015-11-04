@@ -1,4 +1,5 @@
 class EngineeringStaff < ActiveRecord::Base
+  belongs_to :engineering_customer
   has_many :salary_items
 
   enum gender: [:male, :female]
