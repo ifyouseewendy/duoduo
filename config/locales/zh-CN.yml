@@ -437,3 +437,13 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
         engineering_customer: '工程客户'
+        engineering_corp: '工程单位'
+      engineering_corp:
+        id: '编号'
+        name: '单位名称'
+        contract_start_date: "协议起始日期"
+        contract_end_date: "协议结束日期"
+        contract_files: '业务代理合同'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
