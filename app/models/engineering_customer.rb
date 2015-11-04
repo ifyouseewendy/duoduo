@@ -12,4 +12,8 @@ class EngineeringCustomer < ActiveRecord::Base
       names
     end
   end
+
+  def free_staffs(start_date, end_date)
+    engineering_staffs.select{|es| es.accept_schedule?(start_date, end_date)}
+  end
 end
