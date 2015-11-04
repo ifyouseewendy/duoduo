@@ -16,8 +16,6 @@ one:
   accident_insurance: 9.99
   total: 9.99
   balance: 9.99
-  normal_staff_id: 
-  salary_table_id: 
 
 two:
   income: 9.99
@@ -35,5 +33,3 @@ two:
   accident_insurance: 9.99
   total: 9.99
   balance: 9.99
-  normal_staff_id: 
-  salary_table_id: 

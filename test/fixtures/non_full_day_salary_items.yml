@@ -11,8 +11,6 @@ one:
   accident_insurance: 9.99
   admin_amount: 9.99
   total: 9.99
-  salary_table_id: 
-  normal_staff_id: 
 
 two:
   month: MyText
@@ -25,5 +23,3 @@ two:
   accident_insurance: 9.99
   admin_amount: 9.99
   total: 9.99
-  salary_table_id: 
-  normal_staff_id: 
