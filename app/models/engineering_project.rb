@@ -1,5 +1,6 @@
 class EngineeringProject < ActiveRecord::Base
   belongs_to :engineering_customer
+  belongs_to :engineering_corp
 
   before_save :revise_fields
 
