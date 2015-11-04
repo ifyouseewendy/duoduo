@@ -5,6 +5,17 @@ class EngineeringProject < ActiveRecord::Base
 
   before_save :revise_fields
 
+  class << self
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
+      names = column_names.map(&:to_sym)
+
+      names -= %i(id created_at updated_at) if without_base_keys
+      names -= %i(engineering_customer_id engineering_corp_id) if without_foreign_keys
+
+      names
+    end
+  end
+
   def revise_fields
     self.project_range ||= -> {
       month = (project_end_date.to_date - project_start_date.to_date).to_i / 29
@@ -18,5 +29,9 @@ class EngineeringProject < ActiveRecord::Base
 
   def range
     [project_start_date, project_end_date]
+  end
+
+  def range_output
+    "#{name}： #{project_start_date} - #{project_end_date}"
   end
 end
