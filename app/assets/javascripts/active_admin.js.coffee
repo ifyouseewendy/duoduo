@@ -88,7 +88,7 @@ $(document).on 'ready', ->
 
     staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
-    ActiveAdmin.modal_dialog_index_custom_actions '项目列表', columns, names, 'multiple',
+    ActiveAdmin.modal_dialog_multiple_select '项目列表', columns, names, 'multiple',
       (inputs)=>
         $.ajax
           url: '/engineering_staffs/' + staff_id + '/add_project'
@@ -270,7 +270,7 @@ ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
         $(@).dialog('close').remove()
 
 # Cutsom Modal used in Index custom actions
-ActiveAdmin.modal_dialog_index_custom_actions = (message, inputs, display_names, multiple, callback)->
+ActiveAdmin.modal_dialog_multiple_select = (message, inputs, display_names, multiple, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
   idx = 0
   for name, type of inputs
