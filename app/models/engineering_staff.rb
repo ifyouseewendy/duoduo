@@ -42,7 +42,6 @@ class EngineeringStaff < ActiveRecord::Base
 
       columns = columns_based_on(options: options)
 
-      booleans = columns_of(:boolean)
       genders_i18n = {'female' => '女', 'male' => '男'}
       Axlsx::Package.new do |p|
         p.workbook.add_worksheet(name: name) do |sheet|
@@ -55,9 +54,9 @@ class EngineeringStaff < ActiveRecord::Base
                   item.send(col).name
                elsif [:gender].include? col
                   genders_i18n[ item.send(col) ]
-                else
-                  item.send(col)
-                end
+               else
+                 item.send(col)
+               end
               end
               sheet.add_row stats
           end
@@ -92,7 +91,7 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def check_schedule(project)
-    raise "#{name}，已分配项目与待分配项目时间重叠" unless accept_schedule?(*project.range)
+    raise "<#{name}>已分配项目与项目<#{project.name}>时间重叠" unless accept_schedule?(*project.range)
   end
 
   def accept_schedule?(start_date, end_date)
