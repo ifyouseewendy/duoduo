@@ -78,7 +78,7 @@ $(document).on 'ready', ->
       list.append(html)
 
   # Write all engineering staffs info into a hidden field
-  $.getJSON '/engineering_projects/all', (data) =>
+  $.getJSON '/engineering_projects/query_all', (data) =>
     $('.engineering_staffs').append """
       <input type="hidden" data-project-ids='#{data}' class="project_ids_cache">
     """
@@ -111,23 +111,24 @@ $(document).on 'ready', ->
     e.stopPropagation()
     e.preventDefault()
 
-    columns = $(this).data('project-ids')
-    names = $(this).data('names')
-
     staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
-    ActiveAdmin.modal_dialog_check_list '项目列表', columns, names,
-      (inputs)=>
-        wendi = 'hello'
-        $.ajax
-          url: '/engineering_staffs/' + staff_id + '/remove_projects'
-          data:
-            engineering_project_ids: $('.ui-dialog input:checked').map( (idx, ele) -> return $(ele).val() ).get()
-          type: 'post'
-          dataType: 'json'
-          success: (data, textStatus, jqXHR) ->
-            alert( data['message'] )
-            location.reload()
+    $.getJSON "/engineering_projects/query_staff?staff_id=#{staff_id}", (data) =>
+      columns = data['project_ids']
+      names = data['names']
+
+      ActiveAdmin.modal_dialog_check_list '项目列表', columns, names,
+        (inputs)=>
+          wendi = 'hello'
+          $.ajax
+            url: '/engineering_staffs/' + staff_id + '/remove_projects'
+            data:
+              engineering_project_ids: $('.ui-dialog input:checked').map( (idx, ele) -> return $(ele).val() ).get()
+            type: 'post'
+            dataType: 'json'
+            success: (data, textStatus, jqXHR) ->
+              alert( data['message'] )
+              location.reload()
 
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->

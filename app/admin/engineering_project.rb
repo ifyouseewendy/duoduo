@@ -106,7 +106,19 @@ ActiveAdmin.register EngineeringProject do
     send_file file, filename: file.basename
   end
 
-  collection_action :all do
+  collection_action :query_all do
     render json: EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}.inspect.to_json
+  end
+
+  collection_action :query_staff do
+    staff = EngineeringStaff.find( params[:staff_id] )
+
+    projects = staff.engineering_projects.select(:id, :name)
+    stats = {
+      project_ids: projects.reduce({}){|ha, ele| ha[ele.id] = 'checkbox'; ha},
+      names: projects.map(&:name)
+    }
+
+    render json: stats
   end
 end
