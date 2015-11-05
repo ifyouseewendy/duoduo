@@ -55,6 +55,28 @@ $(document).on 'ready', ->
       else
         select.attr('disabled', 'disabled')
 
+  # Batch Edit Fields
+  $('a[data-action=assign_project]').on 'click', ->
+    $('.ui-dialog-title').text('分配工程项目');
+
+    list = $('#dialog_confirm ul')
+    list.empty();
+
+    for key,val of $(this).data('inputs')
+      id = key.split('_')[0..-2].join('_')
+      name = key.split('_')[-1..-1].join()
+
+      # enum select options
+      html = "<li>"
+      html += "<label> #{name}</label>"
+      html += "<select name='#{id}' class='' type=''>"
+      html += "<option selected disabled>请选择</option>"
+      for options in val
+        html += "<option value='#{options[1]}'>#{options[0]}</option>"
+      html += "</select></li>"
+
+      list.append(html)
+
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->
     $('.ui-dialog-title').text('请选择');
