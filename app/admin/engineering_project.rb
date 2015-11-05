@@ -107,17 +107,24 @@ ActiveAdmin.register EngineeringProject do
   end
 
   collection_action :query_all do
-    render json: EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}.inspect.to_json
+    stats = EngineeringProject.select(:id, :name).reduce([]) do |ar, ele|
+      ar << {
+        id: ele.id,
+        name: ele.name
+      }
+    end
+    render json: stats
   end
 
   collection_action :query_staff do
     staff = EngineeringStaff.find( params[:staff_id] )
 
-    projects = staff.engineering_projects.select(:id, :name)
-    stats = {
-      project_ids: projects.reduce({}){|ha, ele| ha[ele.id] = 'checkbox'; ha},
-      names: projects.map(&:name)
-    }
+    stats = staff.engineering_projects.select(:id, :name).reduce([]) do |ar, ele|
+      ar << {
+        id: ele.id,
+        name: ele.name
+      }
+    end
 
     render json: stats
   end

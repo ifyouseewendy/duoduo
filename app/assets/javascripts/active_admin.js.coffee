@@ -80,8 +80,12 @@ $(document).on 'ready', ->
   # Write all engineering staffs info into a hidden field
   $.getJSON '/engineering_projects/query_all', (data) =>
     $('.engineering_staffs').append """
-      <input type="hidden" data-project-ids='#{data}' class="project_ids_cache">
+      <input type="hidden" class="project_ids_cache">
     """
+    stats = []
+    $.each data, (idx, ele) ->
+      stats.push( [ ele['name'], ele['id'] ] )
+    $('.project_ids_cache').data('project-ids', stats)
 
   # Engineering Staff, add project link
   $('.add_projects_link').on 'click', (e) ->
@@ -114,8 +118,11 @@ $(document).on 'ready', ->
     staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
     $.getJSON "/engineering_projects/query_staff?staff_id=#{staff_id}", (data) =>
-      columns = data['project_ids']
-      names = data['names']
+      columns = {}
+      names = []
+      $.each data, (idx, ele) ->
+        columns[ele['id']] = 'checkbox'
+        names.push( ele['name'] )
 
       ActiveAdmin.modal_dialog_check_list '项目列表', columns, names,
         (inputs)=>
