@@ -82,22 +82,24 @@ $(document).on 'ready', ->
     e.stopPropagation()
     e.preventDefault()
 
-    columns = {}
-    columns['engineering_project_ids'] = $(this).data('project-ids')[0]
-    names = ['工程项目']
+    $.getJSON '/engineering_projects/all', (data) =>
+      columns = {}
+      columns['engineering_project_ids'] = data
 
-    staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+      names = ['工程项目']
 
-    ActiveAdmin.modal_dialog_multiple_select '项目列表', columns, names, 'multiple',
-      (inputs)=>
-        $.ajax
-          url: '/engineering_staffs/' + staff_id + '/add_projects'
-          data:
-            engineering_project_ids: $('.ui-dialog option:checked').map( (idx, ele) -> return $(ele).val() ).get()
-          type: 'post'
-          dataType: 'json'
-          success: (data, textStatus, jqXHR) ->
-            alert( data['message'] )
+      staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+
+      ActiveAdmin.modal_dialog_multiple_select '项目列表', columns, names, 'multiple',
+        (inputs)=>
+          $.ajax
+            url: '/engineering_staffs/' + staff_id + '/add_projects'
+            data:
+              engineering_project_ids: $('.ui-dialog option:checked').map( (idx, ele) -> return $(ele).val() ).get()
+            type: 'post'
+            dataType: 'json'
+            success: (data, textStatus, jqXHR) ->
+              alert( data['message'] )
 
   # Engineering Staff, remove project link
   $('.remove_projects_link').on 'click', (e) ->

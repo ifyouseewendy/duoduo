@@ -105,4 +105,8 @@ ActiveAdmin.register EngineeringProject do
     file = EngineeringProject.export_xlsx(options: options)
     send_file file, filename: file.basename
   end
+
+  collection_action :all do
+    render json: EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}
+  end
 end
