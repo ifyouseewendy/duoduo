@@ -372,8 +372,8 @@ ActiveAdmin.modal_dialog_multiple_select = (message, inputs, display_names, mult
 
     klass = if type is 'datepicker' then type else ''
     html += """<li>
-      <label> #{display_names[idx]}</label>
-      <#{wrapper} name="#{name}" class="#{klass}" type="#{type}" checked='checked' #{multiple} style='height:200px'>""" +
+      <label style='float:left'> #{display_names[idx]}</label>
+      <#{wrapper} name="#{name}" class="#{klass}" type="#{type}" checked='checked' #{multiple} style='height:200px;width:100px;'>""" +
         "<option selected disabled>请选择</option>" +
         (if opts then (
           for v in opts
@@ -399,6 +399,7 @@ ActiveAdmin.modal_dialog_multiple_select = (message, inputs, display_names, mult
     modal: true
     open: (event, ui) ->
       $('body').trigger 'modal_dialog:after_open', [form]
+      $('.active_admin_dialog').css('width', '600px').css('left', '400px')
     dialogClass: 'active_admin_dialog'
     buttons:
       OK: ->
