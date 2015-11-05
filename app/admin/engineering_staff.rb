@@ -31,13 +31,9 @@ ActiveAdmin.register EngineeringStaff do
     end
     actions do |obj|
       text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-      item "加入项目", "#", class: "add_projects_link", data: { project_ids: [ EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]} ] }
+      item "加入项目", "#", class: "add_projects_link"
       text_node "&nbsp;&nbsp;".html_safe
-      projects = obj.engineering_projects.select(:id, :name)
-      item "离开项目", "#", class: "remove_projects_link", data: {
-        project_ids: projects.reduce({}){|ha, ele| ha[ele.id] = 'checkbox'; ha},
-        names: projects.map(&:name)
-      }
+      item "离开项目", "#", class: "remove_projects_link"
     end
   end
 
