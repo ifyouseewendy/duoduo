@@ -11,6 +11,13 @@ class EngineeringCustomer < ActiveRecord::Base
 
       names
     end
+
+    def batch_form_fields
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      hash = {}
+      fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash
+    end
   end
 
   def free_staffs(start_date, end_date)
