@@ -92,7 +92,7 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def check_schedule(project)
-    raise "Staff refuse the project schedule" unless accept_schedule?(*project.range)
+    raise "#{name}，已分配项目与待分配项目时间重叠" unless accept_schedule?(*project.range)
   end
 
   def accept_schedule?(start_date, end_date)
