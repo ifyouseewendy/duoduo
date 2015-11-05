@@ -75,7 +75,7 @@ class EngineeringProject < ActiveRecord::Base
 
   def revise_fields
     self.project_range ||= -> {
-      month = (project_end_date.to_date - project_start_date.to_date).to_i / 29
+      month = (project_end_date.to_date - project_start_date.to_date).to_i / 28
       "#{month} 月"
     }.call
 
