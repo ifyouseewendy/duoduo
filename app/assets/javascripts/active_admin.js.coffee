@@ -87,6 +87,9 @@ $(document).on 'ready', ->
       stats.push( [ ele['name'], ele['id'] ] )
     $('.project_ids_cache').data('project-ids', stats)
 
+  # Expand index table action width
+  $('.expand_table_action_width').closest('.table_actions').css('width', '250px')
+
   # Engineering Staff, add project link
   $('.add_projects_link').on 'click', (e) ->
     e.stopPropagation()

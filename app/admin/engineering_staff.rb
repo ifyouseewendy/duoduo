@@ -30,8 +30,8 @@ ActiveAdmin.register EngineeringStaff do
       end
     end
     actions do |obj|
-      text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-      item "加入项目", "#", class: "add_projects_link"
+      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      item "加入项目", "#", class: "add_projects_link expand_table_action_width"
       text_node "&nbsp;&nbsp;".html_safe
       item "离开项目", "#", class: "remove_projects_link"
     end

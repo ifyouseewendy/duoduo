@@ -15,8 +15,8 @@ ActiveAdmin.register NonFullDaySalaryTable do
     column :corporation, sortable: ->(obj){ obj.corporation.name }
 
     actions do |st|
-      text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-      item "发票", "/invoices?utf8=✓&q%5Bnon_full_day_salary_table_id_eq%5D=#{st.id}&commit=过滤&order=id_desc", class: "member_link"
+      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      item "发票", "/invoices?utf8=✓&q%5Bnon_full_day_salary_table_id_eq%5D=#{st.id}&commit=过滤&order=id_desc", class: "member_link expand_table_action_width"
       item "工资条", non_full_day_salary_table_non_full_day_salary_items_path(st), class: "member_link"
     end
   end

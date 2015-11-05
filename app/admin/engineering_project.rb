@@ -26,8 +26,8 @@ ActiveAdmin.register EngineeringProject do
     end
 
     actions do |obj|
-      text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-      item "添加员工", "#", class: "add_staffs_link"
+      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      item "添加员工", "#", class: "add_staffs_link expand_table_action_width"
       text_node "&nbsp;&nbsp;".html_safe
       item "删除员工", "#", class: "remove_staffs_link"
     end
