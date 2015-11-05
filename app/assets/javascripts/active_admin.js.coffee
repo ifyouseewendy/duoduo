@@ -78,7 +78,7 @@ $(document).on 'ready', ->
       list.append(html)
 
   # Engineering Staff, add project link
-  $('.add_project_link').on 'click', (e) ->
+  $('.add_projects_link').on 'click', (e) ->
     e.stopPropagation()
     e.preventDefault()
 
@@ -91,7 +91,7 @@ $(document).on 'ready', ->
     ActiveAdmin.modal_dialog_multiple_select '项目列表', columns, names, 'multiple',
       (inputs)=>
         $.ajax
-          url: '/engineering_staffs/' + staff_id + '/add_project'
+          url: '/engineering_staffs/' + staff_id + '/add_projects'
           data:
             engineering_project_ids: $('.ui-dialog option:checked').map( (idx, ele) -> return $(ele).val() ).get()
           type: 'post'
@@ -100,7 +100,7 @@ $(document).on 'ready', ->
             alert( data['message'] )
 
   # Engineering Staff, remove project link
-  $('.remove_project_link').on 'click', (e) ->
+  $('.remove_projects_link').on 'click', (e) ->
     e.stopPropagation()
     e.preventDefault()
 
@@ -113,7 +113,7 @@ $(document).on 'ready', ->
       (inputs)=>
         wendi = 'hello'
         $.ajax
-          url: '/engineering_staffs/' + staff_id + '/remove_project'
+          url: '/engineering_staffs/' + staff_id + '/remove_projects'
           data:
             engineering_project_ids: $('.ui-dialog input:checked').map( (idx, ele) -> return $(ele).val() ).get()
           type: 'post'
