@@ -24,10 +24,12 @@ class EngineeringStaff < ActiveRecord::Base
     end
 
     def batch_form_fields
-      fields = ordered_columns(without_base_keys: true, without_foreign_keys: false)
-      hash = fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      hash = {
+        'engineering_customer_id_工程客户' => EngineeringCustomer.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]},
+      }
+      fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
       hash['gender_性别'] = genders_option
-      # hash['engineering_corporation_id_所属单位'] = EngineeringCorporation.reference_option
       hash
     end
   end
