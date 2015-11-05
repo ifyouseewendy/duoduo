@@ -18,6 +18,16 @@ class EngineeringProject < ActiveRecord::Base
     def columns_of(type)
       self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
     end
+
+    def batch_form_fields
+      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      hash = {
+        'engineering_customer_id_工程客户' => EngineeringCustomer.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]},
+        'engineering_corp_id_工程单位' => EngineeringCorp.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}
+      }
+      fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash
+    end
   end
 
   def revise_fields
