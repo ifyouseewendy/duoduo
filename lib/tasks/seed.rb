@@ -293,7 +293,7 @@ class Seed < Thor
     def seed_engineering_projects
       EngineeringCustomer.all.each do |ec|
         (1..3).each do |id|
-          start_date = "2015-01-01".to_date + (id*10).days
+          start_date = "2015-01-01".to_date + (id*31).days
 
           EngineeringProject.create!(
             engineering_customer: ec,
@@ -302,7 +302,7 @@ class Seed < Thor
             name: "#{ec.name} - 项目#{id}",
             start_date: start_date,
             project_start_date: start_date,
-            project_end_date: start_date + id.months,
+            project_end_date: start_date + 1.months,
             project_range: nil, # Auto set
             project_amount: 100000,
             admin_amount: 10000,
