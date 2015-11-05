@@ -29,7 +29,12 @@ ActiveAdmin.register EngineeringStaff do
         column field
       end
     end
-    actions
+    actions do |obj|
+      text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+      item "加入项目", "#", class: "add_project_link", data: { project_ids: [ EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]} ] }
+      text_node "&nbsp;&nbsp;".html_safe
+      item "删除项目", "#", class: "remove_project_link"
+    end
   end
 
   preserve_default_filters!
@@ -148,5 +153,18 @@ ActiveAdmin.register EngineeringStaff do
 
     file = EngineeringStaff.export_xlsx(options: options)
     send_file file, filename: file.basename
+  end
+
+  # Member actions
+  member_action :add_project, method: :post do
+    staff = EngineeringStaff.find(params[:id])
+    project = EngineeringProject.find(params[:engineering_project_id])
+    require'pry';binding.pry
+    begin
+      staff.engineering_projects << project
+      render json: {message: '操作成功'}
+    rescue => e
+      render json: {message: "操作失败（#{e.message}）"}
+    end
   end
 end

@@ -77,6 +77,28 @@ $(document).on 'ready', ->
 
       list.append(html)
 
+  # Engineering Staff, add project link
+  $('.add_project_link').on 'click', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+
+    columns = {}
+    columns['engineering_project_id'] = $(this).data('project-ids')[0]
+    names = ['工程项目']
+
+    staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+
+    ActiveAdmin.modal_dialog_index_custom_actions '项目列表', columns, names,
+      (inputs)=>
+        $.ajax
+          url: '/engineering_staffs/' + staff_id + '/add_project'
+          data:
+            engineering_project_id: $('.ui-dialog option:checked').val()
+          type: 'post'
+          dataType: 'json'
+          success: (data, textStatus, jqXHR) ->
+            alert( data['message'] )
+
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->
     $('.ui-dialog-title').text('请选择');
@@ -225,6 +247,53 @@ ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
         ).join '' else '') +
       "</#{wrapper}>" +
       "<label> #{display_names[idx]}</label>"
+    "</li>"
+    [wrapper, elem, opts, type, klass] = [] # unset any temporary variables
+
+    idx += 1
+
+  html += "</ul></form>"
+
+  form = $(html).appendTo('body')
+  $('body').trigger 'modal_dialog:before_open', [form]
+
+  form.dialog
+    modal: true
+    open: (event, ui) ->
+      $('body').trigger 'modal_dialog:after_open', [form]
+    dialogClass: 'active_admin_dialog'
+    buttons:
+      OK: ->
+        callback $(@).serializeObject()
+        $(@).dialog('close')
+      Cancel: ->
+        $(@).dialog('close').remove()
+
+# Cutsom Modal used in Index custom actions
+ActiveAdmin.modal_dialog_index_custom_actions = (message, inputs, display_names, callback)->
+  html = """<form id="dialog_confirm" title="#{message}"><ul>"""
+  idx = 0
+  for name, type of inputs
+    if $.isArray type
+      [wrapper, elem, opts, type] = ['select', 'option', type, '']
+    else
+      throw new Error "Unsupported input type: {#{name}: #{type}}"
+
+    klass = if type is 'datepicker' then type else ''
+    html += """<li>
+      <label> #{display_names[idx]}</label>
+      <#{wrapper} name="#{name}" class="#{klass}" type="#{type}" checked='checked'>""" +
+        "<option selected disabled>请选择</option>" +
+        (if opts then (
+          for v in opts
+            $elem = $("<#{elem}/>")
+            if $.isArray v
+              $elem.text(v[0]).val(v[1])
+            else
+              $elem.text(v)
+            $elem.wrap('<div>').parent().html()
+        ).join '' else '') +
+      "</#{wrapper}>" +
     "</li>"
     [wrapper, elem, opts, type, klass] = [] # unset any temporary variables
 
