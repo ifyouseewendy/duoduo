@@ -158,13 +158,18 @@ ActiveAdmin.register EngineeringStaff do
   # Member actions
   member_action :add_project, method: :post do
     staff = EngineeringStaff.find(params[:id])
-    project = EngineeringProject.find(params[:engineering_project_id])
-    require'pry';binding.pry
-    begin
-      staff.engineering_projects << project
-      render json: {message: '操作成功'}
-    rescue => e
-      render json: {message: "操作失败（#{e.message}）"}
+    projects = params[:engineering_project_ids].map{|id| EngineeringProject.where(id: id).first}.compact
+
+    messages = []
+    projects.each do |project|
+      begin
+        staff.engineering_projects << project
+        messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
+      rescue => e
+        messages << "操作失败，#{e.message}"
+      end
     end
+
+    render json: {message: messages.join('；') }
   end
 end

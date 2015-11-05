@@ -88,12 +88,12 @@ $(document).on 'ready', ->
 
     staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
-    ActiveAdmin.modal_dialog_index_custom_actions '项目列表', columns, names,
+    ActiveAdmin.modal_dialog_index_custom_actions '项目列表', columns, names, 'multiple',
       (inputs)=>
         $.ajax
           url: '/engineering_staffs/' + staff_id + '/add_project'
           data:
-            engineering_project_id: $('.ui-dialog option:checked').val()
+            engineering_project_ids: $('.ui-dialog option:checked').map( (idx, ele) -> return $(ele).val() ).get()
           type: 'post'
           dataType: 'json'
           success: (data, textStatus, jqXHR) ->
@@ -270,7 +270,7 @@ ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
         $(@).dialog('close').remove()
 
 # Cutsom Modal used in Index custom actions
-ActiveAdmin.modal_dialog_index_custom_actions = (message, inputs, display_names, callback)->
+ActiveAdmin.modal_dialog_index_custom_actions = (message, inputs, display_names, multiple, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
   idx = 0
   for name, type of inputs
@@ -282,7 +282,7 @@ ActiveAdmin.modal_dialog_index_custom_actions = (message, inputs, display_names,
     klass = if type is 'datepicker' then type else ''
     html += """<li>
       <label> #{display_names[idx]}</label>
-      <#{wrapper} name="#{name}" class="#{klass}" type="#{type}" checked='checked'>""" +
+      <#{wrapper} name="#{name}" class="#{klass}" type="#{type}" checked='checked' #{multiple} style='height:200px'>""" +
         "<option selected disabled>请选择</option>" +
         (if opts then (
           for v in opts
@@ -312,7 +312,8 @@ ActiveAdmin.modal_dialog_index_custom_actions = (message, inputs, display_names,
     buttons:
       OK: ->
         callback $(@).serializeObject()
+        $(@).find('option:checked').prop('selected', false)
         $(@).dialog('close')
       Cancel: ->
+        $(@).find('option:checked').prop('selected', false)
         $(@).dialog('close').remove()
-
