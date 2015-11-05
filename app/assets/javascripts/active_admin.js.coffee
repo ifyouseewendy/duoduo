@@ -126,11 +126,36 @@ $(document).on 'ready', ->
 
       ActiveAdmin.modal_dialog_check_list '项目列表', columns, names,
         (inputs)=>
-          wendi = 'hello'
           $.ajax
             url: '/engineering_staffs/' + staff_id + '/remove_projects'
             data:
               engineering_project_ids: $('.ui-dialog input:checked').map( (idx, ele) -> return $(ele).val() ).get()
+            type: 'post'
+            dataType: 'json'
+            success: (data, textStatus, jqXHR) ->
+              alert( data['message'] )
+              location.reload()
+
+  # Engineering Staff, remove project link
+  $('.remove_staffs_link').on 'click', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+
+    project_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+
+    $.getJSON "/engineering_staffs/query_project?project_id=#{project_id}", (data) =>
+      columns = {}
+      names = []
+      $.each data, (idx, ele) ->
+        columns[ele['id']] = 'checkbox'
+        names.push( ele['name'] )
+
+      ActiveAdmin.modal_dialog_check_list '员工列表', columns, names,
+        (inputs)=>
+          $.ajax
+            url: '/engineering_projects/' + project_id + '/remove_staffs'
+            data:
+              engineering_staff_ids: $('.ui-dialog input:checked').map( (idx, ele) -> return $(ele).val() ).get()
             type: 'post'
             dataType: 'json'
             success: (data, textStatus, jqXHR) ->

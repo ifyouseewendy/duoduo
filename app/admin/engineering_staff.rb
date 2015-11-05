@@ -158,6 +158,19 @@ ActiveAdmin.register EngineeringStaff do
     send_file file, filename: file.basename
   end
 
+  collection_action :query_project do
+    project = EngineeringProject.find( params[:project_id] )
+
+    stats = project.engineering_staffs.select(:id, :name).reduce([]) do |ar, ele|
+      ar << {
+        id: ele.id,
+        name: ele.name
+      }
+    end
+
+    render json: stats
+  end
+
   # Member actions
   member_action :add_projects, method: :post do
     staff = EngineeringStaff.find(params[:id])

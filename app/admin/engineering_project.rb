@@ -25,7 +25,12 @@ ActiveAdmin.register EngineeringProject do
       column field
     end
 
-    actions
+    actions do |obj|
+      text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+      item "添加员工", "#", class: "add_staffs_link"
+      text_node "&nbsp;&nbsp;".html_safe
+      item "删除员工", "#", class: "remove_staffs_link"
+    end
   end
 
   preserve_default_filters!
@@ -127,5 +132,24 @@ ActiveAdmin.register EngineeringProject do
     end
 
     render json: stats
+  end
+
+  # Member actions
+  member_action :remove_staffs, method: :post do
+    project = EngineeringProject.find(params[:id])
+    staff_ids = project.engineering_staffs.select(:id).map(&:id) - (params[:engineering_staff_ids].reject(&:blank?).map(&:to_i) rescue [])
+    staffs =  staff_ids.map{|id| EngineeringStaff.where(id: id).first}.compact
+
+    messages = []
+    staffs.each do |staff|
+      begin
+        project.engineering_staffs.delete staff
+        messages << "操作成功，员工<#{staff.name}>已离开项目<#{project.name}>"
+      rescue => e
+        messages << "操作失败，#{e.message}"
+      end
+    end
+
+    render json: {message: messages.join('；') }
   end
 end
