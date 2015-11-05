@@ -24,4 +24,14 @@ ActiveAdmin.register EngineeringCorp do
 
     active_admin_comments
   end
+
+  # Collection actions
+  collection_action :export_xlsx do
+    options = {}
+    options[:selected] = params[:selected].split('-') if params[:selected].present?
+    options[:columns] = params[:columns].split('-') if params[:columns].present?
+
+    file = EngineeringCorp.export_xlsx(options: options)
+    send_file file, filename: file.basename
+  end
 end
