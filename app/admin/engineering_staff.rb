@@ -129,19 +129,22 @@ ActiveAdmin.register EngineeringStaff do
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
     project = EngineeringProject.find(inputs[:engineering_project_id])
 
-    names = []
+    messages = []
+    failed = false
     batch_action_collection.find(ids).each do |obj|
       begin
         obj.engineering_projects << project
-      rescue => _
-        names << obj.name
+        messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
+      rescue => e
+        failed = true
+        messages << "操作失败，#{e.message}"
       end
     end
 
-    if names.blank?
-      redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+    if failed
+      redirect_to :back, alert: messages.join('；')
     else
-      redirect_to :back, alert: "更新失败（#{names.join(',')}），已分配项目与待分配项目时间重叠"
+      redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
     end
   end
 
