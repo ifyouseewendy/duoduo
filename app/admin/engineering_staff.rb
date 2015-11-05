@@ -116,4 +116,14 @@ ActiveAdmin.register EngineeringStaff do
 
     redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
   end
+
+  # Collection actions
+  collection_action :export_xlsx do
+    options = {}
+    options[:selected] = params[:selected].split('-') if params[:selected].present?
+    options[:columns] = params[:columns].split('-') if params[:columns].present?
+
+    file = EngineeringStaff.export_xlsx(options: options)
+    send_file file, filename: file.basename
+  end
 end

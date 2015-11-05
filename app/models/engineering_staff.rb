@@ -32,6 +32,50 @@ class EngineeringStaff < ActiveRecord::Base
       hash['gender_性别'] = genders_option
       hash
     end
+
+    def export_xlsx(options: {})
+      filename = "#{I18n.t("activerecord.models.#{name.underscore}")}_#{Time.stamp}.xlsx"
+      filepath = EXPORT_PATH.join filename
+
+      collection = self.all
+      collection = collection.where(id: options[:selected]) if options[:selected].present?
+
+      columns = columns_based_on(options: options)
+
+      booleans = columns_of(:boolean)
+      genders_i18n = {'female' => '女', 'male' => '男'}
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet(name: name) do |sheet|
+          sheet.add_row columns.map{|col| self.human_attribute_name(col)}
+
+          collection.each do |item|
+             stats = \
+              columns.map do |col|
+               if [:engineering_customer].include? col
+                  item.send(col).name
+               elsif [:gender].include? col
+                  genders_i18n[ item.send(col) ]
+                else
+                  item.send(col)
+                end
+              end
+              sheet.add_row stats
+          end
+        end
+        p.serialize(filepath.to_s)
+      end
+
+      filepath
+    end
+
+    def columns_based_on(options: {})
+      if options[:columns].present?
+        options[:columns].map(&:to_sym)
+      else
+        %i(id nest_index name engineering_customer) \
+          + (ordered_columns(without_foreign_keys: true) - %i(id nest_index name))
+      end
+    end
   end
 
   def gender_i18n
