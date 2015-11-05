@@ -302,7 +302,7 @@ class Seed < Thor
             name: "#{ec.name} - 项目#{id}",
             start_date: start_date,
             project_start_date: start_date,
-            project_end_date: start_date + 1.months,
+            project_end_date: start_date + 29.days,
             project_range: nil, # Auto set
             project_amount: 100000,
             admin_amount: 10000,
