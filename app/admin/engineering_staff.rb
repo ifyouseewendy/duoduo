@@ -158,6 +158,25 @@ ActiveAdmin.register EngineeringStaff do
     send_file file, filename: file.basename
   end
 
+  collection_action :query_free do
+    project = EngineeringProject.find( params[:project_id] )
+
+    customer = project.engineering_customer
+    own_staffs = customer.free_staffs( *project.range )
+
+    stats = {
+      customer: customer.name,
+      range_output: project.range_output
+    }
+    stats[:stat] = own_staffs.reduce([]) do |ar, ele|
+      ar << {
+        id: ele.id,
+        name: ele.name
+      }
+    end
+    render json: stats
+  end
+
   collection_action :query_project do
     project = EngineeringProject.find( params[:project_id] )
 

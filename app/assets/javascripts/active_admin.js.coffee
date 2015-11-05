@@ -136,7 +136,35 @@ $(document).on 'ready', ->
               alert( data['message'] )
               location.reload()
 
-  # Engineering Staff, remove project link
+  # Engineering Project, add staff link
+  $('.add_staffs_link').on 'click', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+
+    project_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+
+    $.getJSON "/engineering_staffs/query_free?project_id=#{project_id}", (data) =>
+      stats = []
+      $.each data['stat'], (idx, ele) ->
+        stats.push( [ ele['name'], ele['id'] ] )
+
+      columns = {}
+      columns['engineering_staff_ids'] = stats
+
+      names = ["当前客户<#{data['customer']}>下可用员工"]
+
+      ActiveAdmin.modal_dialog_multiple_select "可用员工列表（#{data['range_output']}）", columns, names, 'multiple',
+        (inputs)=>
+          $.ajax
+            url: '/engineering_projects/' + project_id + '/add_staffs'
+            data:
+              engineering_staff_ids: $('.ui-dialog option:checked').map( (idx, ele) -> return $(ele).val() ).get()
+            type: 'post'
+            dataType: 'json'
+            success: (data, textStatus, jqXHR) ->
+              alert( data['message'] )
+
+  # Engineering Project, remove staff link
   $('.remove_staffs_link').on 'click', (e) ->
     e.stopPropagation()
     e.preventDefault()

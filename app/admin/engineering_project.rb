@@ -135,6 +135,23 @@ ActiveAdmin.register EngineeringProject do
   end
 
   # Member actions
+  member_action :add_staffs, method: :post do
+    project = EngineeringProject.find(params[:id])
+    staffs = params[:engineering_staff_ids].map{|id| EngineeringStaff.where(id: id).first}.compact
+
+    messages = []
+    staffs.each do |staff|
+      begin
+        project.engineering_staffs << staff
+        messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
+      rescue => e
+        messages << "操作失败，#{e.message}"
+      end
+    end
+
+    render json: {message: messages.join('；') }
+  end
+
   member_action :remove_staffs, method: :post do
     project = EngineeringProject.find(params[:id])
     staff_ids = project.engineering_staffs.select(:id).map(&:id) - (params[:engineering_staff_ids].reject(&:blank?).map(&:to_i) rescue [])
