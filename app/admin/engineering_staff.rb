@@ -33,7 +33,11 @@ ActiveAdmin.register EngineeringStaff do
       text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
       item "加入项目", "#", class: "add_project_link", data: { project_ids: [ EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]} ] }
       text_node "&nbsp;&nbsp;".html_safe
-      item "删除项目", "#", class: "remove_project_link"
+      projects = obj.engineering_projects.select(:id, :name)
+      item "离开项目", "#", class: "remove_project_link", data: {
+        project_ids: projects.reduce({}){|ha, ele| ha[ele.id] = 'checkbox'; ha},
+        names: projects.map(&:name)
+      }
     end
   end
 
@@ -168,6 +172,24 @@ ActiveAdmin.register EngineeringStaff do
       begin
         staff.engineering_projects << project
         messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
+      rescue => e
+        messages << "操作失败，#{e.message}"
+      end
+    end
+
+    render json: {message: messages.join('；') }
+  end
+
+  member_action :remove_project, method: :post do
+    staff = EngineeringStaff.find(params[:id])
+    project_ids = staff.engineering_projects.select(:id).map(&:id) - (params[:engineering_project_ids].reject(&:blank?).map(&:to_i) rescue [])
+    projects =  project_ids.map{|id| EngineeringProject.where(id: id).first}.compact
+
+    messages = []
+    projects.each do |project|
+      begin
+        staff.engineering_projects.delete project
+        messages << "操作成功，员工<#{staff.name}>已离开项目<#{project.name}>"
       rescue => e
         messages << "操作失败，#{e.message}"
       end

@@ -83,7 +83,7 @@ $(document).on 'ready', ->
     e.preventDefault()
 
     columns = {}
-    columns['engineering_project_id'] = $(this).data('project-ids')[0]
+    columns['engineering_project_ids'] = $(this).data('project-ids')[0]
     names = ['工程项目']
 
     staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
@@ -98,6 +98,29 @@ $(document).on 'ready', ->
           dataType: 'json'
           success: (data, textStatus, jqXHR) ->
             alert( data['message'] )
+
+  # Engineering Staff, remove project link
+  $('.remove_project_link').on 'click', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+
+    columns = $(this).data('project-ids')
+    names = $(this).data('names')
+
+    staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+
+    ActiveAdmin.modal_dialog_check_list '项目列表', columns, names,
+      (inputs)=>
+        wendi = 'hello'
+        $.ajax
+          url: '/engineering_staffs/' + staff_id + '/remove_project'
+          data:
+            engineering_project_ids: $('.ui-dialog input:checked').map( (idx, ele) -> return $(ele).val() ).get()
+          type: 'post'
+          dataType: 'json'
+          success: (data, textStatus, jqXHR) ->
+            alert( data['message'] )
+            location.reload()
 
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->
@@ -294,6 +317,53 @@ ActiveAdmin.modal_dialog_multiple_select = (message, inputs, display_names, mult
             $elem.wrap('<div>').parent().html()
         ).join '' else '') +
       "</#{wrapper}>" +
+    "</li>"
+    [wrapper, elem, opts, type, klass] = [] # unset any temporary variables
+
+    idx += 1
+
+  html += "</ul></form>"
+
+  form = $(html).appendTo('body')
+  $('body').trigger 'modal_dialog:before_open', [form]
+
+  form.dialog
+    modal: true
+    open: (event, ui) ->
+      $('body').trigger 'modal_dialog:after_open', [form]
+    dialogClass: 'active_admin_dialog'
+    buttons:
+      OK: ->
+        callback $(@).serializeObject()
+        $(@).find('option:checked').prop('selected', false)
+        $(@).dialog('close')
+      Cancel: ->
+        $(@).find('option:checked').prop('selected', false)
+        $(@).dialog('close').remove()
+
+ActiveAdmin.modal_dialog_check_list = (message, inputs, display_names, callback)->
+  html = """<form id="dialog_confirm" title="#{message}"><ul>"""
+  idx = 0
+  for name, type of inputs
+    if /^(datepicker|checkbox|text)$/.test type
+      wrapper = 'input'
+    else
+      throw new Error "Unsupported input type: {#{name}: #{type}}"
+
+    klass = if type is 'datepicker' then type else ''
+    html += """<li>
+      <#{wrapper} name="#{name}" value="#{name}" class="#{klass}" type="#{type}" checked='checked'>""" +
+        (if opts then (
+          for v in opts
+            $elem = $("<#{elem}/>")
+            if $.isArray v
+              $elem.text(v[0]).val(v[1])
+            else
+              $elem.text(v)
+            $elem.wrap('<div>').parent().html()
+        ).join '' else '') +
+      "</#{wrapper}>" +
+      "<label> #{display_names[idx]}</label>"
     "</li>"
     [wrapper, elem, opts, type, klass] = [] # unset any temporary variables
 
