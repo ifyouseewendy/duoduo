@@ -28,6 +28,49 @@ class EngineeringProject < ActiveRecord::Base
       fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
       hash
     end
+
+    def export_xlsx(options: {})
+      filename = "#{I18n.t("activerecord.models.#{name.underscore}")}_#{Time.stamp}.xlsx"
+      filepath = EXPORT_PATH.join filename
+
+      collection = self.all
+      collection = collection.where(id: options[:selected]) if options[:selected].present?
+
+      columns = columns_based_on(options: options)
+
+      booleans = columns_of(:boolean)
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet(name: name) do |sheet|
+          sheet.add_row columns.map{|col| self.human_attribute_name(col)}
+
+          collection.each do |item|
+             stats = \
+              columns.map do |col|
+               if [:engineering_customer, :engineering_corp].include? col
+                  item.send(col).name
+                elsif booleans.include? col
+                  item.send(col) ? '是' : '否'
+                else
+                  item.send(col)
+                end
+              end
+              sheet.add_row stats
+          end
+        end
+        p.serialize(filepath.to_s)
+      end
+
+      filepath
+    end
+
+    def columns_based_on(options: {})
+      if options[:columns].present?
+        options[:columns].map(&:to_sym)
+      else
+        %i(id name engineering_customer engineering_corp) \
+          + (ordered_columns(without_foreign_keys: true) - %i(id name))
+      end
+    end
   end
 
   def revise_fields
