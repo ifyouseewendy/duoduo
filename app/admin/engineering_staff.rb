@@ -6,8 +6,6 @@ ActiveAdmin.register EngineeringStaff do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 4
 
-  permit_params *EngineeringStaff.ordered_columns(without_base_keys: true, without_foreign_keys: true)
-
   index do
     selectable_column
 
@@ -37,12 +35,14 @@ ActiveAdmin.register EngineeringStaff do
   preserve_default_filters!
   remove_filter :salary_items
 
+  permit_params *( EngineeringStaff.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []] )
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
 
     f.inputs do
       f.input :engineering_customer, collection: EngineeringCustomer.all
-      f.input :engineering_projects, as: :select, collection: EngineeringProject.all
+      # f.input :engineering_projects, as: :select, collection: EngineeringProject.all
       f.input :nest_index, as: :number
       f.input :name, as: :string
       f.input :identity_card, as: :string
@@ -57,25 +57,25 @@ ActiveAdmin.register EngineeringStaff do
     f.actions
   end
 
-  member_action :update, method: :post do
-    attrs = params.require(:engineering_staff).permit( EngineeringStaff.ordered_columns + [engineering_project_ids: []] )
-
-    begin
-      obj = EngineeringStaff.find(params[:id])
-      obj.update! attrs
-
-      redirect_to engineering_staff_path(obj), notice: "成功更新工程员工信息"
-    rescue => e
-      if e.message == "Staff refuse the project schedule"
-        alert = "更新失败，多个工程项目的起止日期有重叠。"
-        projects = params[:engineering_staff][:engineering_project_ids].map{|id| EngineeringProject.where(id: id).first }.reject(&:blank?)
-        alert += projects.map{|pr| pr.range_output}.join('；')
-      else
-        alert = e.message
-      end
-      redirect_to engineering_staff_path(obj), alert: alert
-    end
-  end
+  # member_action :update, method: :post do
+  #   attrs = params.require(:engineering_staff).permit( EngineeringStaff.ordered_columns + [engineering_project_ids: []] )
+  #
+  #   begin
+  #     obj = EngineeringStaff.find(params[:id])
+  #     obj.update! attrs
+  #
+  #     redirect_to engineering_staff_path(obj), notice: "成功更新工程员工信息"
+  #   rescue => e
+  #     if e.message == "Staff refuse the project schedule"
+  #       alert = "更新失败，多个工程项目的起止日期有重叠。"
+  #       projects = params[:engineering_staff][:engineering_project_ids].map{|id| EngineeringProject.where(id: id).first }.reject(&:blank?)
+  #       alert += projects.map{|pr| pr.range_output}.join('；')
+  #     else
+  #       alert = e.message
+  #     end
+  #     redirect_to engineering_staff_path(obj), alert: alert
+  #   end
+  # end
 
   show do
     attributes_table do
