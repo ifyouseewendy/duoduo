@@ -77,29 +77,34 @@ $(document).on 'ready', ->
 
       list.append(html)
 
+  # Write all engineering staffs info into a hidden field
+  $.getJSON '/engineering_projects/all', (data) =>
+    $('.engineering_staffs').append """
+      <input type="hidden" data-project-ids='#{data}' class="project_ids_cache">
+    """
+
   # Engineering Staff, add project link
   $('.add_projects_link').on 'click', (e) ->
     e.stopPropagation()
     e.preventDefault()
 
-    $.getJSON '/engineering_projects/all', (data) =>
-      columns = {}
-      columns['engineering_project_ids'] = data
+    columns = {}
+    columns['engineering_project_ids'] = $('.project_ids_cache').data('project-ids')
 
-      names = ['工程项目']
+    names = ['工程项目']
 
-      staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+    staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
-      ActiveAdmin.modal_dialog_multiple_select '项目列表', columns, names, 'multiple',
-        (inputs)=>
-          $.ajax
-            url: '/engineering_staffs/' + staff_id + '/add_projects'
-            data:
-              engineering_project_ids: $('.ui-dialog option:checked').map( (idx, ele) -> return $(ele).val() ).get()
-            type: 'post'
-            dataType: 'json'
-            success: (data, textStatus, jqXHR) ->
-              alert( data['message'] )
+    ActiveAdmin.modal_dialog_multiple_select '项目列表', columns, names, 'multiple',
+      (inputs)=>
+        $.ajax
+          url: '/engineering_staffs/' + staff_id + '/add_projects'
+          data:
+            engineering_project_ids: $('.ui-dialog option:checked').map( (idx, ele) -> return $(ele).val() ).get()
+          type: 'post'
+          dataType: 'json'
+          success: (data, textStatus, jqXHR) ->
+            alert( data['message'] )
 
   # Engineering Staff, remove project link
   $('.remove_projects_link').on 'click', (e) ->

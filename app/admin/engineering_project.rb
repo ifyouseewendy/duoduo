@@ -107,6 +107,6 @@ ActiveAdmin.register EngineeringProject do
   end
 
   collection_action :all do
-    render json: EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}
+    render json: EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}.inspect.to_json
   end
 end
