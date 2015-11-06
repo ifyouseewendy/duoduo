@@ -158,10 +158,16 @@ $(document).on 'ready', ->
 
       ActiveAdmin.modal_dialog_project_add_staffs "可用员工列表（#{data['range_output']}）", columns, names, project_id,
         (inputs)=>
+          staff_ids = []
+          $('.current_staff_select option:checked').each (idx, ele) ->
+            staff_ids.push( $(ele).val() )
+          $('.other_staff_select option:checked').each (idx, ele) ->
+            staff_ids.push( $(ele).val() )
+
           $.ajax
             url: '/engineering_projects/' + project_id + '/add_staffs'
             data:
-              engineering_staff_ids: $('.ui-dialog option:checked').map( (idx, ele) -> return $(ele).val() ).get()
+              engineering_staff_ids: staff_ids
             type: 'post'
             dataType: 'json'
             success: (data, textStatus, jqXHR) ->
@@ -472,7 +478,7 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
     html += """
       <li>
         <label style='float:left'>#{display_names[idx]}</label>
-        <select name="#{name}" class="" type="" checked='checked' multiple style='height:200px;width:100px;'>
+        <select name="#{name}" class="current_staff_select" type="" checked='checked' multiple style='height:200px;width:100px;'>
           <option selected disabled>请选择</option>
     """
 
@@ -489,11 +495,11 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
   html += """
     <li>
       <label style='float:left'>其他客户可用员工 <a href='#' class='load_select'>(加载)</a></label>
-      <select name="" class="other_customer_select" data-loaded='false' type="" checked='checked' style='display:none;float:left;margin-right:10px;'>
-        <option class='default_option' selected disabled>请选择</option>
+      <select name="" class="other_customer_select" type="" checked='checked' style='display:none;float:left;margin-right:10px;'>
+        <option class='default_option' disabled>请选择</option>
       </select>
-      <select name '' class='other_staff_select' data-loaded='false' checked='checked' multiple style='display:none;height:200px;width:100px'>
-        <option selected disabled>请选择</option>
+      <select name '' class='other_staff_select' checked='checked' multiple style='display:none;height:200px;width:100px'>
+        <option disabled>请选择</option>
       </select>
     </li>
   """
@@ -508,19 +514,18 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
     e.preventDefault()
     select = $('.other_customer_select')
 
-    if select.data('loaded') == false
-      $.getJSON "/engineering_customers/other_customers?project_id=#{project_id}", (data) =>
-        $.each data, (idx, ele) =>
-          select.append """
-            <option class='other_customer_option' value="#{ele['id']}">#{ele['name']}</option>
-          """
-        select.data('loaded', true)
-        select.show()
+    $.getJSON "/engineering_customers/other_customers?project_id=#{project_id}", (data) =>
+      $.each data, (idx, ele) =>
+        select.append """
+          <option class='other_customer_option' value="#{ele['id']}">#{ele['name']}</option>
+        """
+      select.data('loaded', true)
+      select.show()
 
     select.on 'change', ->
       staff_select = $('.other_staff_select')
       staff_select.empty().append """
-        <option selected disabled>请选择</option>
+        <option disabled>请选择</option>
       """
       customer_id = $(this).val()
       $.getJSON "/engineering_customers/" + customer_id + "/free_staffs?project_id=#{project_id}", (data) =>
@@ -539,8 +544,11 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
     buttons:
       OK: ->
         callback $(@).serializeObject()
-        $(@).find('option:checked').prop('selected', false)
+        $('.current_staff_select option:checked').prop('selected', false)
+        $('.other_staff_select option:checked').prop('selected', false)
         $(@).dialog('close')
       Cancel: ->
         $(@).find('option:checked').prop('selected', false)
+        $('.current_staff_select option:checked').prop('selected', false)
+        $('.other_staff_select option:checked').prop('selected', false)
         $(@).dialog('close').remove()
