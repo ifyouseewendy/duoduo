@@ -156,7 +156,7 @@ $(document).on 'ready', ->
 
       names = ["当前客户<#{data['customer']}>下可用员工"]
 
-      ActiveAdmin.modal_dialog_project_add_staffs "可用员工列表（#{data['range_output']}）", columns, names,
+      ActiveAdmin.modal_dialog_project_add_staffs "可用员工列表（#{data['range_output']}）", columns, names, project_id,
         (inputs)=>
           $.ajax
             url: '/engineering_projects/' + project_id + '/add_staffs'
@@ -460,7 +460,7 @@ ActiveAdmin.modal_dialog_check_list = (message, inputs, display_names, callback)
         $(@).find('option:checked').prop('selected', false)
         $(@).dialog('close').remove()
 
-ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, callback)->
+ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, project_id, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
   idx = 0
   for name, type of inputs
@@ -485,10 +485,50 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, c
 
     idx += 1
 
+  # Other customers
+  html += """
+    <li>
+      <label style='float:left'>其他客户可用员工 <a href='#' class='load_select'>(加载)</a></label>
+      <select name="" class="other_customer_select" data-loaded='false' type="" checked='checked' style='display:none;float:left;margin-right:10px;'>
+        <option class='default_option' selected disabled>请选择</option>
+      </select>
+      <select name '' class='other_staff_select' data-loaded='false' checked='checked' multiple style='display:none;height:200px;width:100px'>
+        <option selected disabled>请选择</option>
+      </select>
+    </li>
+  """
+
   html += "</ul></form>"
 
   form = $(html).appendTo('body')
   $('body').trigger 'modal_dialog:before_open', [form]
+
+  $('.load_select').on 'click', (e)->
+    e.stopPropagation()
+    e.preventDefault()
+    select = $('.other_customer_select')
+
+    if select.data('loaded') == false
+      $.getJSON "/engineering_customers/other_customers?project_id=#{project_id}", (data) =>
+        $.each data, (idx, ele) =>
+          select.append """
+            <option class='other_customer_option' value="#{ele['id']}">#{ele['name']}</option>
+          """
+        select.data('loaded', true)
+        select.show()
+
+    select.on 'change', ->
+      staff_select = $('.other_staff_select')
+      staff_select.empty().append """
+        <option selected disabled>请选择</option>
+      """
+      customer_id = $(this).val()
+      $.getJSON "/engineering_customers/" + customer_id + "/free_staffs?project_id=#{project_id}", (data) =>
+        $.each data, (idx, ele) ->
+          staff_select.append """
+            <option value="#{ele['id']}">#{ele['name']}</option>
+          """
+        staff_select.show()
 
   form.dialog
     modal: true

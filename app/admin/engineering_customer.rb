@@ -82,4 +82,33 @@ ActiveAdmin.register EngineeringCustomer do
     file = EngineeringCustomer.export_xlsx(options: options)
     send_file file, filename: file.basename
   end
+
+  collection_action :other_customers do
+    project = EngineeringProject.find( params[:project_id] )
+    customer = project.engineering_customer
+
+    stats = EngineeringCustomer.where.not(id: customer.id).select(:id, :name).reduce([]) do |ar, ele|
+      ar << {
+        id: ele.id,
+        name: ele.name
+      }
+    end
+
+    render json: stats
+  end
+
+  member_action :free_staffs do
+    customer = EngineeringCustomer.find( params[:id] )
+    project = EngineeringProject.find( params[:project_id] )
+
+    staffs = customer.free_staffs( *project.range )
+    stats = staffs.reduce([]) do |ar, ele|
+      ar << {
+        id: ele.id,
+        name: ele.name
+      }
+    end
+
+    render json: stats
+  end
 end
