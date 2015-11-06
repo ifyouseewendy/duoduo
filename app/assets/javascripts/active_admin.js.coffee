@@ -156,7 +156,7 @@ $(document).on 'ready', ->
 
       names = ["当前客户<#{data['customer']}>下可用员工"]
 
-      ActiveAdmin.modal_dialog_multiple_select "可用员工列表（#{data['range_output']}）", columns, names, 'multiple',
+      ActiveAdmin.modal_dialog_project_add_staffs "可用员工列表（#{data['range_output']}）", columns, names,
         (inputs)=>
           $.ajax
             url: '/engineering_projects/' + project_id + '/add_staffs'
@@ -450,6 +450,51 @@ ActiveAdmin.modal_dialog_check_list = (message, inputs, display_names, callback)
     modal: true
     open: (event, ui) ->
       $('body').trigger 'modal_dialog:after_open', [form]
+    dialogClass: 'active_admin_dialog'
+    buttons:
+      OK: ->
+        callback $(@).serializeObject()
+        $(@).find('option:checked').prop('selected', false)
+        $(@).dialog('close')
+      Cancel: ->
+        $(@).find('option:checked').prop('selected', false)
+        $(@).dialog('close').remove()
+
+ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, callback)->
+  html = """<form id="dialog_confirm" title="#{message}"><ul>"""
+  idx = 0
+  for name, type of inputs
+    if $.isArray type
+      [wrapper, elem, opts, type] = ['select', 'option', type, '']
+    else
+      throw new Error "Unsupported input type: {#{name}: #{type}}"
+
+    html += """
+      <li>
+        <label style='float:left'>#{display_names[idx]}</label>
+        <select name="#{name}" class="" type="" checked='checked' multiple style='height:200px;width:100px;'>
+          <option selected disabled>请选择</option>
+    """
+
+    for v in opts
+      html += "<option value='#{v[1]}'>#{v[0]}</option>"
+
+    html += "</select></li>"
+
+    [wrapper, elem, opts, type, klass] = [] # unset any temporary variables
+
+    idx += 1
+
+  html += "</ul></form>"
+
+  form = $(html).appendTo('body')
+  $('body').trigger 'modal_dialog:before_open', [form]
+
+  form.dialog
+    modal: true
+    open: (event, ui) ->
+      $('body').trigger 'modal_dialog:after_open', [form]
+      $('.active_admin_dialog').css('width', '600px').css('left', '400px')
     dialogClass: 'active_admin_dialog'
     buttons:
       OK: ->
