@@ -89,6 +89,6 @@ class EngineeringProject < ActiveRecord::Base
   end
 
   def range_output
-    "#{name}： #{project_start_date} - #{project_end_date}"
+    "项目：#{name}，起止日期：#{project_start_date} - #{project_end_date}"
   end
 end
