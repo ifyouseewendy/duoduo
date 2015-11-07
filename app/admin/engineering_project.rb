@@ -172,4 +172,12 @@ ActiveAdmin.register EngineeringProject do
 
     render json: {message: messages.join('；') }
   end
+
+  member_action :generate_salary_table, method: :post do
+    project = EngineeringProject.find(params[:id])
+    project.generate_salary_table(type: params[:salary_type])
+
+    render json: {message: 'hello' }
+  end
+
 end

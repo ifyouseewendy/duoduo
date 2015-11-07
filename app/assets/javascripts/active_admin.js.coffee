@@ -208,18 +208,31 @@ $(document).on 'ready', ->
     project_ele = $(this).closest('tr')
     project_id = project_ele.attr('id').split('_')[-1..][0]
 
-    project  =
-      id: project_id
-      name: project_ele.find('.col-name').text()
-      start_date: project_ele.find('.col-project_start_date').text()
-      end_date: project_ele.find('.col-project_end_date').text()
-      range: project_ele.find('.col-project_range').text()
-      amount: project_ele.find('.col-project_amount').text()
-      upper_salary: 3500
-      free_staff_count: 3
+    $.getJSON "/engineering_staffs/query_free?project_id=#{project_id}", (data) =>
+      amount = project_ele.find('.col-project_amount').text()
+      upper_salary = 3500
+      project  =
+        id: project_id
+        name: project_ele.find('.col-name').text()
+        start_date: project_ele.find('.col-project_start_date').text()
+        end_date: project_ele.find('.col-project_end_date').text()
+        range: project_ele.find('.col-project_range').text()
+        amount: amount
+        upper_salary: upper_salary
+        need_staff_count: parseInt(amount/upper_salary)+1
+        free_staff_count: data['stat'].length
 
-    ActiveAdmin.modal_dialog_generate_salary_table project, (inputs)=>
-      alert('worked')
+      ActiveAdmin.modal_dialog_generate_salary_table project, (inputs)=>
+        if project['free_staff_count'] >= project['need_staff_count']
+          salary_type = $("#salary_type_list_#{project['id']}").find('input:checked').val()
+          $.ajax
+            url: '/engineering_projects/' + project['id'] + '/generate_salary_table'
+            type: 'post'
+            data:
+              salary_type: salary_type
+            dataType: 'json'
+            success: (data, textStatus, jqXHR) ->
+              alert( data['message'] )
 
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->
@@ -576,7 +589,6 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
         $(@).dialog('close').remove()
 
 ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
-  need_staff_count = parseInt(data['amount']/data['upper_salary'])+1
   html = """
     <form novalidate="novalidate" class="formtastic" id="dialog_confirm" title="生成工资表">
     <fieldset class="inputs">
@@ -603,7 +615,7 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
         </li>
         <li>
           <label>需提供员工数</label>
-          <span>#{need_staff_count}</span>
+          <span>#{data['need_staff_count']}</span>
         </li>
         <li>
           <label>可用员工数</label>
@@ -611,14 +623,14 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
         </li>
   """
 
-  if data['free_staff_count'] >= need_staff_count
+  if data['free_staff_count'] >= data['need_staff_count']
     html += """
-      <li>
+      <li id="salary_type_list_#{data['id']}">
         <label>工资表类型</label>
         <input type="radio" name="salary_type" value="normal" checked> 基础</input>
-        <input type="radio" name="salary_type" value="normal_with_tax" checked> 基础（带个税）</input>
-        <input type="radio" name="salary_type" value="big_table" checked> 大表</input>
-        <input type="radio" name="salary_type" value="dongfang" checked> 东方</input>
+        <input type="radio" name="salary_type" value="normal_with_tax"> 基础（带个税）</input>
+        <input type="radio" name="salary_type" value="big_table"> 大表</input>
+        <input type="radio" name="salary_type" value="dongfang"> 东方</input>
       </li>
     """
   else
@@ -628,7 +640,7 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
           <li><b>建议如下操作后重新进入此页面</b></li>
           <li>调整项目起止日期与工作量，请至 <a href='/engineering_projects/#{data["id"]}/edit'>编辑</a> 页面</li>
           <li>请求客户提供更多员工，请至 <a href='/engineering_staffs/import_new'>导入员工</a> 页面</li>
-          <li>从其他客户借人，请关闭后选择 <b>添加员工</b> 按钮</li>
+          <li>从其他客户借入员工，请关闭后选择 <b>添加员工</b> 按钮</li>
         </ul>
       </li>
     """

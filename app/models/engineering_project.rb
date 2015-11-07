@@ -91,4 +91,7 @@ class EngineeringProject < ActiveRecord::Base
   def range_output
     "项目：#{name}，起止日期：#{project_start_date} - #{project_end_date}"
   end
+
+  def generate_salary_table(type:)
+  end
 end
