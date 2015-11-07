@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151107143341) do
+ActiveRecord::Schema.define(version: 20151107144536) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,9 +121,12 @@ ActiveRecord::Schema.define(version: 20151107143341) do
     t.text     "name"
     t.text     "type"
     t.text     "remark"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "engineering_project_id"
   end
+
+  add_index "engineering_salary_tables", ["engineering_project_id"], name: "index_engineering_salary_tables_on_engineering_project_id", using: :btree
 
   create_table "engineering_staffs", force: :cascade do |t|
     t.integer  "nest_index"
@@ -490,6 +493,7 @@ ActiveRecord::Schema.define(version: 20151107143341) do
   add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "engineering_projects", "engineering_corps"
   add_foreign_key "engineering_projects", "engineering_customers"
+  add_foreign_key "engineering_salary_tables", "engineering_projects"
   add_foreign_key "engineering_staffs", "engineering_customers"
   add_foreign_key "guard_salary_items", "guard_salary_tables"
   add_foreign_key "guard_salary_items", "normal_staffs"

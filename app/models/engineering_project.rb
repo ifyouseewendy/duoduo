@@ -3,6 +3,8 @@ class EngineeringProject < ActiveRecord::Base
   belongs_to :engineering_corp
   has_and_belongs_to_many :engineering_staffs
 
+  has_many :engineering_salary_tables, dependent: :destroy
+
   before_save :revise_fields
 
   class << self
