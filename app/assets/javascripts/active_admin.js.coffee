@@ -208,10 +208,17 @@ $(document).on 'ready', ->
     project_ele = $(this).closest('tr')
     project_id = project_ele.attr('id').split('_')[-1..][0]
 
-    data =
-      project_name: 'wendi'
+    project  =
+      id: project_id
+      name: project_ele.find('.col-name').text()
+      start_date: project_ele.find('.col-project_start_date').text()
+      end_date: project_ele.find('.col-project_end_date').text()
+      range: project_ele.find('.col-project_range').text()
+      amount: project_ele.find('.col-project_amount').text()
+      upper_salary: 3500
+      free_staff_count: 3
 
-    ActiveAdmin.modal_dialog_generate_salary_table data, (inputs)=>
+    ActiveAdmin.modal_dialog_generate_salary_table project, (inputs)=>
       alert('worked')
 
   # Manipulate Insurance Fund
@@ -569,16 +576,66 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
         $(@).dialog('close').remove()
 
 ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
+  need_staff_count = parseInt(data['amount']/data['upper_salary'])+1
   html = """
-    <form id="dialog_confirm" title="生成工资表">
-      <ul>
-        <li><lable>项目名称：#{data['project_name']}</lable></li>
-        <li><lable>项目名称：#{data['project_name']}</lable></li>
-        <li><lable>项目名称：#{data['project_name']}</lable></li>
-        <li><lable>项目名称：#{data['project_name']}</lable></li>
-        <li><lable>项目名称：#{data['project_name']}</lable></li>
+    <form novalidate="novalidate" class="formtastic" id="dialog_confirm" title="生成工资表">
+    <fieldset class="inputs">
+      <ol>
+        <li>
+          <label>项目名称</label>
+          <span>#{data['name']}</span>
         </li>
-      </ul>
+        <li>
+          <label>起止时间</label>
+          <span>#{data['start_date']} ~ #{data['end_date']}</span>
+        </li>
+        <li>
+          <label>工作量</label>
+          <span>#{data['range']}</span>
+        </li>
+        <li>
+          <label>劳务费</label>
+          <span>#{data['amount']}</span>
+        </li>
+        <li>
+          <label>员工工资上限</label>
+          <span>#{data['upper_salary']}</span>
+        </li>
+        <li>
+          <label>需提供员工数</label>
+          <span>#{need_staff_count}</span>
+        </li>
+        <li>
+          <label>可用员工数</label>
+          <span>#{data['free_staff_count']}</span>
+        </li>
+  """
+
+  if data['free_staff_count'] >= need_staff_count
+    html += """
+      <li>
+        <label>工资表类型</label>
+        <input type="radio" name="salary_type" value="normal" checked> 基础</input>
+        <input type="radio" name="salary_type" value="normal_with_tax" checked> 基础（带个税）</input>
+        <input type="radio" name="salary_type" value="big_table" checked> 大表</input>
+        <input type="radio" name="salary_type" value="dongfang" checked> 东方</input>
+      </li>
+    """
+  else
+    html += """
+      <li>
+        <ul>
+          <li><b>建议如下操作后重新进入此页面</b></li>
+          <li>调整项目起止日期与工作量，请至 <a href='/engineering_projects/#{data["id"]}/edit'>编辑</a> 页面</li>
+          <li>请求客户提供更多员工，请至 <a href='/engineering_staffs/import_new'>导入员工</a> 页面</li>
+          <li>从其他客户借人，请关闭后选择 <b>添加员工</b> 按钮</li>
+        </ul>
+      </li>
+    """
+
+  html += """
+        </ol>
+      </fieldset>
     </form>
   """
 
@@ -589,6 +646,7 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
     modal: true
     open: (event, ui) ->
       $('body').trigger 'modal_dialog:after_open', [form]
+      $('.active_admin_dialog').css('width', '600px').css('left', '400px').css('max-height', '700px').css('top', '80px')
     dialogClass: 'active_admin_dialog'
     buttons:
       OK: ->
