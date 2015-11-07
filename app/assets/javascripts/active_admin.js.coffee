@@ -220,7 +220,7 @@ $(document).on 'ready', ->
         amount: amount
         upper_salary: upper_salary
         need_staff_count: parseInt(amount/upper_salary)+1
-        free_staff_count: data['stat'].length
+        free_staff_count: data['stat'].length # 30
 
       ActiveAdmin.modal_dialog_generate_salary_table project, (inputs)=>
         if project['free_staff_count'] >= project['need_staff_count']
@@ -627,10 +627,10 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
     html += """
       <li id="salary_type_list_#{data['id']}">
         <label>工资表类型</label>
-        <input type="radio" name="salary_type" value="normal" checked> 基础</input>
-        <input type="radio" name="salary_type" value="normal_with_tax"> 基础（带个税）</input>
-        <input type="radio" name="salary_type" value="big_table"> 大表</input>
-        <input type="radio" name="salary_type" value="dongfang"> 东方</input>
+        <input type="radio" name="salary_type" value="EngineeringNormalSalaryTable" checked> 基础</input>
+        <input type="radio" name="salary_type" value="EngineeringNormalWithTaxSalaryTable"> 基础（带个税）</input>
+        <input type="radio" name="salary_type" value="EngineeringBigTableSalaryTable"> 大表</input>
+        <input type="radio" name="salary_type" value="EngineeringDongFangSalaryTable"> 东方</input>
       </li>
     """
   else
