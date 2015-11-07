@@ -89,6 +89,7 @@ $(document).on 'ready', ->
 
   # Expand index table action width
   $('.expand_table_action_width').closest('.table_actions').css('width', '250px')
+  $('.expand_table_action_width_large').closest('.table_actions').css('width', '300px')
 
   # Engineering Staff, add project link
   $('.add_projects_link').on 'click', (e) ->
@@ -198,6 +199,20 @@ $(document).on 'ready', ->
             success: (data, textStatus, jqXHR) ->
               alert( data['message'] )
               location.reload()
+
+  # Engineering Project, generate salary table link
+  $('.generate_salary_table_link').on 'click', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+
+    project_ele = $(this).closest('tr')
+    project_id = project_ele.attr('id').split('_')[-1..][0]
+
+    data =
+      project_name: 'wendi'
+
+    ActiveAdmin.modal_dialog_generate_salary_table data, (inputs)=>
+      alert('worked')
 
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->
@@ -551,4 +566,34 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
         $(@).find('option:checked').prop('selected', false)
         $('.current_staff_select option:checked').prop('selected', false)
         $('.other_staff_select option:checked').prop('selected', false)
+        $(@).dialog('close').remove()
+
+ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
+  html = """
+    <form id="dialog_confirm" title="生成工资表">
+      <ul>
+        <li><lable>项目名称：#{data['project_name']}</lable></li>
+        <li><lable>项目名称：#{data['project_name']}</lable></li>
+        <li><lable>项目名称：#{data['project_name']}</lable></li>
+        <li><lable>项目名称：#{data['project_name']}</lable></li>
+        <li><lable>项目名称：#{data['project_name']}</lable></li>
+        </li>
+      </ul>
+    </form>
+  """
+
+  form = $(html).appendTo('body')
+  $('body').trigger 'modal_dialog:before_open', [form]
+
+  form.dialog
+    modal: true
+    open: (event, ui) ->
+      $('body').trigger 'modal_dialog:after_open', [form]
+    dialogClass: 'active_admin_dialog'
+    buttons:
+      OK: ->
+        callback $(@).serializeObject()
+        $(@).dialog('close')
+      Cancel: ->
+        $(@).find('option:checked').prop('selected', false)
         $(@).dialog('close').remove()

@@ -27,9 +27,12 @@ ActiveAdmin.register EngineeringProject do
 
     actions do |obj|
       text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      item "添加员工", "#", class: "add_staffs_link expand_table_action_width"
+      item "添加员工", "#", class: "add_staffs_link"
       text_node "&nbsp;&nbsp;".html_safe
       item "删除员工", "#", class: "remove_staffs_link"
+
+      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      item "生成工资表", "#", class: "generate_salary_table_link expand_table_action_width_large"
     end
   end
 
