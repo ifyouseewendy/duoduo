@@ -20,6 +20,8 @@ class Seed < Thor
     seed_engineering_staffs
     seed_engineering_corps
     seed_engineering_projects
+
+    seed_engineering_salary_tables
   end
 
 
@@ -37,7 +39,8 @@ class Seed < Thor
       NormalStaff, NormalCorporation,
       ContractFile, SubCompany,
       InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
-      EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer
+      EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
+      EngineeringSalaryTable
     ].each(&:delete_all)
   end
 
@@ -279,6 +282,8 @@ class Seed < Thor
     end
 
     def seed_engineering_corps
+      puts "==> Preparing EngineeringCorp"
+
       (1..10).each do |id|
         start_date = "2015-01-01".to_date + (id*10).days
 
@@ -291,6 +296,8 @@ class Seed < Thor
     end
 
     def seed_engineering_projects
+      puts "==> Preparing EngineeringProject"
+
       EngineeringCustomer.all.each do |ec|
         (1..3).each do |id|
           start_date = "2015-01-01".to_date + (id*31).days
@@ -315,6 +322,20 @@ class Seed < Thor
             proof: nil,
             already_get_contract: [true, false].sample,
             already_sign_dispatch: [true, false].sample,
+            remark: '备注'
+          )
+        end
+      end
+    end
+
+    def seed_engineering_salary_tables
+      puts "==> Preparing EngineeringSalaryTable"
+
+      EngineeringProject.all.each do |ep|
+        EngineeringSalaryTable.types.each do |klass|
+          klass.create!(
+            engineering_project: ep,
+            name: "#{ep.name} 工资表 - #{klass.model_name.human}",
             remark: '备注'
           )
         end

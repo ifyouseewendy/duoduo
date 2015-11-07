@@ -38,6 +38,11 @@ zh-CN:
       engineering_customer: '工程客户'
       engineering_project: '工程项目'
       engineering_corp: '工程单位'
+      engineering_salary_table: '工程工资表'
+      engineering_normal_salary_table: '基础'
+      engineering_normal_with_tax_salary_table: '基础（带个税）'
+      engineering_big_table_salary_table: '大表'
+      engineering_dong_fang_salary_table: '东方'
     attributes:
       normal_corporation:
         id: '编号'
@@ -449,6 +454,13 @@ zh-CN:
         contract_start_date: "协议起始日期"
         contract_end_date: "协议结束日期"
         contract_files: '业务代理合同'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      engineering_salary_table:
+        id: '编号'
+        name: '名称'
+        type: '类型'
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
