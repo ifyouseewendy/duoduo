@@ -1,0 +1,2 @@
+class EngineeringNormalWithTaxSalaryTable < EngineeringSalaryTable
+end

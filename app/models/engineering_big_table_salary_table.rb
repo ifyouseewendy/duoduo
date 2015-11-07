@@ -1,0 +1,2 @@
+class EngineeringBigTableSalaryTable < EngineeringSalaryTable
+end
