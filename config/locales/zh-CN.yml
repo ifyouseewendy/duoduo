@@ -14,6 +14,7 @@ zh-CN:
     models:
       corporation: "合作单位"
       normal_corporation: "普通合作单位"
+      normal_business: "普通业务"
       engineering_corporation: "工程合作单位"
       project: "测试项目"
       sub_company: "吉易子公司"

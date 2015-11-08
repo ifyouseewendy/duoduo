@@ -2,8 +2,8 @@ ActiveAdmin.register NonFullDaySalaryTable do
   belongs_to :normal_corporation, optional: true
 
   menu \
-    parent: I18n.t("activerecord.models.salary_table_entrance"),
-    priority: 3
+    parent: I18n.t("activerecord.models.normal_business"),
+    priority: 6
 
   permit_params *NonFullDaySalaryTable.ordered_columns(without_base_keys: true, without_foreign_keys: false)
 

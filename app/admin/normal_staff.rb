@@ -4,8 +4,8 @@ ActiveAdmin.register NormalStaff do
   include ImportSupport
 
   menu \
-    parent: I18n.t("activerecord.models.staff"),
-    priority: 21
+    parent: I18n.t("activerecord.models.normal_business"),
+    priority: 3
 
   permit_params *NormalStaff.ordered_columns(without_base_keys: true, without_foreign_keys: true)
 

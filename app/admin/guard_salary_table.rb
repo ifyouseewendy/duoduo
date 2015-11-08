@@ -2,8 +2,8 @@ ActiveAdmin.register GuardSalaryTable do
   belongs_to :normal_corporation, optional: true
 
   menu \
-    parent: I18n.t("activerecord.models.salary_table_entrance"),
-    priority: 2
+    parent: I18n.t("activerecord.models.normal_business"),
+    priority: 5
 
   permit_params *GuardSalaryTable.ordered_columns(without_base_keys: true, without_foreign_keys: false)
 

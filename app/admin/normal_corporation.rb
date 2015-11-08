@@ -2,8 +2,8 @@ ActiveAdmin.register NormalCorporation do
   include ImportSupport
 
   menu \
-    parent: I18n.t("activerecord.models.corporation"),
-    priority: 21
+    parent: I18n.t("activerecord.models.normal_business"),
+    priority: 1
 
   permit_params *NormalCorporation.ordered_columns(without_base_keys: true, without_foreign_keys: true)
 

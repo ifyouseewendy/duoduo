@@ -5,7 +5,9 @@ ActiveAdmin.register LaborContract do
 
   include ImportSupport
 
-  menu priority: 4
+  menu \
+    parent: I18n.t("activerecord.models.normal_business"),
+    priority: 2
 
   permit_params *LaborContract.ordered_columns(without_base_keys: true, without_foreign_keys: true)
 

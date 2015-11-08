@@ -1,4 +1,8 @@
 ActiveAdmin.register Invoice do
+  menu \
+    parent: I18n.t("activerecord.models.normal_business"),
+    priority: 7
+
   config.filters = false
 
   form do |f|

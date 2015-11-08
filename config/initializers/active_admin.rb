@@ -219,9 +219,7 @@ ActiveAdmin.setup do |config|
   config.namespace false do |default|
     default.build_menu do |menu|
       menu.add label: I18n.t("activerecord.models.engineering_business"), priority: 2
-      menu.add label: I18n.t("activerecord.models.corporation"), priority: 3
-      menu.add label: I18n.t("activerecord.models.staff"), priority: 5
-      menu.add label: I18n.t("activerecord.models.salary_table_entrance"), priority: 6
+      menu.add label: I18n.t("activerecord.models.normal_business"), priority: 3
       menu.add label: I18n.t("activerecord.models.settings"), priority: 10
       menu.add label: "开发相关", priority: 11
       menu.add label: '需求文档', parent: "开发相关", priority: 1, url: 'https://quip.com/rljZAYw1rPLB', html_options: { target: :blank }
