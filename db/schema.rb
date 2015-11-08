@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151108124616) do
+ActiveRecord::Schema.define(version: 20151108131445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,25 @@ ActiveRecord::Schema.define(version: 20151108124616) do
   add_index "contract_files", ["engineering_corp_id"], name: "index_contract_files_on_engineering_corp_id", using: :btree
   add_index "contract_files", ["sub_company_id"], name: "index_contract_files_on_sub_company_id", using: :btree
 
+  create_table "engineering_big_table_salary_items", force: :cascade do |t|
+    t.decimal  "salary_deserve",        precision: 8, scale: 2
+    t.decimal  "pension_personal",      precision: 8, scale: 2
+    t.decimal  "unemployment_personal", precision: 8, scale: 2
+    t.decimal  "medical_personal",      precision: 8, scale: 2
+    t.decimal  "total_personal",        precision: 8, scale: 2
+    t.decimal  "salary_in_fact",        precision: 8, scale: 2
+    t.decimal  "pension_company",       precision: 8, scale: 2
+    t.decimal  "unemployment_company",  precision: 8, scale: 2
+    t.decimal  "medical_company",       precision: 8, scale: 2
+    t.decimal  "injury_company",        precision: 8, scale: 2
+    t.decimal  "birth_company",         precision: 8, scale: 2
+    t.decimal  "total_company",         precision: 8, scale: 2
+    t.decimal  "total_sum",             precision: 8, scale: 2
+    t.text     "remark"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+  end
+
   create_table "engineering_corps", force: :cascade do |t|
     t.text     "name"
     t.date     "contract_start_date"
@@ -84,15 +103,18 @@ ActiveRecord::Schema.define(version: 20151108124616) do
 
   create_table "engineering_normal_salary_items", force: :cascade do |t|
     t.text     "name"
-    t.decimal  "salary_deserve",    precision: 8, scale: 2
-    t.decimal  "social_insurance",  precision: 8, scale: 2
-    t.decimal  "medical_insurance", precision: 8, scale: 2
-    t.decimal  "total_insurance",   precision: 8, scale: 2
-    t.decimal  "salary_in_fact",    precision: 8, scale: 2
+    t.decimal  "salary_deserve",              precision: 8, scale: 2
+    t.decimal  "social_insurance",            precision: 8, scale: 2
+    t.decimal  "medical_insurance",           precision: 8, scale: 2
+    t.decimal  "total_insurance",             precision: 8, scale: 2
+    t.decimal  "salary_in_fact",              precision: 8, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.integer  "engineering_salary_table_id"
   end
+
+  add_index "engineering_normal_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_normal_salary_items_of_table", using: :btree
 
   create_table "engineering_normal_with_tax_salary_items", force: :cascade do |t|
     t.text     "name"
@@ -517,6 +539,7 @@ ActiveRecord::Schema.define(version: 20151108124616) do
 
   add_foreign_key "contract_files", "engineering_corps"
   add_foreign_key "contract_files", "sub_companies"
+  add_foreign_key "engineering_normal_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_projects", "engineering_corps"
   add_foreign_key "engineering_projects", "engineering_customers"
   add_foreign_key "engineering_salary_tables", "engineering_projects"
