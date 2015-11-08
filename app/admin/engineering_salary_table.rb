@@ -20,12 +20,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     column :created_at
     column :updated_at
 
-    actions defaults: false do |obj|
-      item "查看", engineering_salary_table_path(obj)
-      text_node "&nbsp;".html_safe
-      item "编辑", edit_engineering_salary_table_path(obj)
-      text_node "&nbsp;".html_safe
-      item "删除", engineering_salary_table_path(obj), method: :delete
+    actions do |obj|
       text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       item "工资表", "#"
     end
@@ -39,6 +34,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     f.inputs do
       f.input :engineering_project, collection: EngineeringProject.all
       f.input :name, as: :string
+      f.input :type, as: :radio, collection: EngineeringSalaryTable.types.map{|k| [k.model_name.human, k.to_s]}
       f.input :remark, as: :text
     end
 
@@ -61,4 +57,17 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
     active_admin_comments
   end
+
+  member_action :update, method: :post do
+    attrs = params.require(:engineering_salary_table).permit( EngineeringSalaryTable.ordered_columns )
+
+    begin
+      obj = EngineeringSalaryTable.find(params[:id])
+      obj.update! attrs
+      redirect_to engineering_salary_table_path(obj), notice: "成功更新工资表<#{obj.name}>"
+    rescue => e
+      redirect_to engineering_salary_table_path(obj), alert: "更新失败，#{e.message}"
+    end
+  end
+
 end
