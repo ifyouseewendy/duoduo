@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151107144536) do
+ActiveRecord::Schema.define(version: 20151108124616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,32 @@ ActiveRecord::Schema.define(version: 20151107144536) do
     t.text     "remark"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+  end
+
+  create_table "engineering_normal_salary_items", force: :cascade do |t|
+    t.text     "name"
+    t.decimal  "salary_deserve",    precision: 8, scale: 2
+    t.decimal  "social_insurance",  precision: 8, scale: 2
+    t.decimal  "medical_insurance", precision: 8, scale: 2
+    t.decimal  "total_insurance",   precision: 8, scale: 2
+    t.decimal  "salary_in_fact",    precision: 8, scale: 2
+    t.text     "remark"
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+  end
+
+  create_table "engineering_normal_with_tax_salary_items", force: :cascade do |t|
+    t.text     "name"
+    t.decimal  "salary_deserve",    precision: 8, scale: 2
+    t.decimal  "social_insurance",  precision: 8, scale: 2
+    t.decimal  "medical_insurance", precision: 8, scale: 2
+    t.decimal  "total_insurance",   precision: 8, scale: 2
+    t.decimal  "total_amount",      precision: 8, scale: 2
+    t.decimal  "tax",               precision: 8, scale: 2
+    t.decimal  "salary_in_fact",    precision: 8, scale: 2
+    t.text     "remark"
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
   end
 
   create_table "engineering_projects", force: :cascade do |t|

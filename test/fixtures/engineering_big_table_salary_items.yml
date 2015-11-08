@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  salary_deserve: 9.99
+  pension_personal: 9.99
+  unemployment_personal: 9.99
+  medical_personal: 9.99
+  total_personal: 9.99
+  salary_in_fact: 9.99
+  pension_company: 9.99
+  unemployment_company: 9.99
+  medical_company: 9.99
+  injury_company: 9.99
+  birth_company: 9.99
+  total_company: 9.99
+  total_sum: 9.99
+  remark: MyText
+
+two:
+  salary_deserve: 9.99
+  pension_personal: 9.99
+  unemployment_personal: 9.99
+  medical_personal: 9.99
+  total_personal: 9.99
+  salary_in_fact: 9.99
+  pension_company: 9.99
+  unemployment_company: 9.99
+  medical_company: 9.99
+  injury_company: 9.99
+  birth_company: 9.99
+  total_company: 9.99
+  total_sum: 9.99
+  remark: MyText
