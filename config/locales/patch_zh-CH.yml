@@ -22,4 +22,6 @@ zh-CN:
       file: '文件'
       import_btn: '上传'
       import_btn_disabled: '无法上传'
-
+  views:
+    pagination:
+      truncate: ''
