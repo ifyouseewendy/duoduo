@@ -44,6 +44,10 @@ zh-CN:
       engineering_normal_with_tax_salary_table: '基础（带个税）'
       engineering_big_table_salary_table: '大表'
       engineering_dong_fang_salary_table: '东方'
+      engineering_normal_salary_item: '基础工资条'
+      engineering_normal_with_tax_salary_item: '基础（带个税）工资条'
+      engineering_big_table_salary_item: '大表工资条'
+      engineering_dong_fang_salary_item: '东方工资条'
     attributes:
       normal_corporation:
         id: '编号'
@@ -466,3 +470,45 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
         engineering_project: '工程项目'
+      engineering_normal_salary_item:
+        id: '编号'
+        name: '姓名'
+        salary_deserve: '应发工资'
+        social_insurance: '社保养老失业保险单位22%'
+        medical_insurance: '医保医疗工伤生育保险单位7.9%'
+        total_insurance: '单位保险合计'
+        salary_in_fact: '实发工资'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+        engineering_project: '工程项目'
+      engineering_normal_with_tax_salary_item:
+        id: '编号'
+        name: '姓名'
+        salary_deserve: '应发工资'
+        social_insurance: '社保养老失业保险单位22%'
+        medical_insurance: '医保医疗工伤生育保险单位7.9%'
+        total_insurance: '单位保险合计'
+        total_amount: '劳务费合计'
+        tax: '应缴个税'
+        salary_in_fact: '实发工资'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+        engineering_project: '工程项目'
+      engineering_normal_salary_item:
+        id: '编号'
+        salary_deserve: '应发工资'
+        pension_personal: '养老保险个人'
+        unemployment_personal: '失业保险个人'
+        medical_personal: '医疗保险个人'
+        total_personal: '个人缴费合计'
+        salary_in_fact: '实发工资'
+        pension_company: '养老保险单位'
+        unemployment_company: '失业保险单位'
+        medical_company: '医疗保险单位'
+        injury_company: '工伤保险单位'
+        birth_company: '生育保险单位'
+        total_company: '单位缴费合计'
+        total_sum: '劳务费用合计'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
