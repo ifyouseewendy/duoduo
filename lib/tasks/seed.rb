@@ -346,8 +346,11 @@ class Seed < Thor
     def seed_engineering_salary_items
       puts "==> Preparing EngineeringSalaryItem"
 
-      EngineeringSalaryTable.all.each do |est|
-        est.seed_items
+      EngineeringNormalSalaryTable.all.each do |est|
+        est.create_salary_item(
+          salary: 10000,
+          name: 'todo'
+        )
       end
     end
 
@@ -363,13 +366,6 @@ class Seed < Thor
       Date.parse(base) + rand(10).years + rand(300).days
     end
 
-end
-
-class EngineeringNormalSalaryTable
-  def seed_items
-    salary_items.create!(
-    )
-  end
 end
 
 Seed.start(ARGV)
