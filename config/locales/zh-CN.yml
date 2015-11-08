@@ -512,3 +512,9 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
+      engineering_dong_fang_salary_item:
+        id: '编号'
+        salary_deserve: '应发工资'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"

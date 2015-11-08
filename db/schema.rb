@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151108141329) do
+ActiveRecord::Schema.define(version: 20151108142049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,16 @@ ActiveRecord::Schema.define(version: 20151108141329) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
   end
+
+  create_table "engineering_dong_fang_salary_items", force: :cascade do |t|
+    t.decimal  "salary_deserve",              precision: 8, scale: 2
+    t.text     "remark"
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.integer  "engineering_salary_table_id"
+  end
+
+  add_index "engineering_dong_fang_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_dong_fang_salary_items_of_table", using: :btree
 
   create_table "engineering_normal_salary_items", force: :cascade do |t|
     t.text     "name"
@@ -546,6 +556,7 @@ ActiveRecord::Schema.define(version: 20151108141329) do
   add_foreign_key "contract_files", "engineering_corps"
   add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "engineering_big_table_salary_items", "engineering_salary_tables"
+  add_foreign_key "engineering_dong_fang_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_normal_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_normal_with_tax_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_projects", "engineering_corps"
