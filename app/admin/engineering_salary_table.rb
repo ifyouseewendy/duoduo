@@ -22,7 +22,7 @@ ActiveAdmin.register EngineeringSalaryTable do
 
     actions do |obj|
       text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      item "工资表", "#"
+      item "工资条", "#"
     end
   end
 
