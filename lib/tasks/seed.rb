@@ -22,6 +22,7 @@ class Seed < Thor
     seed_engineering_projects
 
     seed_engineering_salary_tables
+    seed_engineering_salary_items
   end
 
 
@@ -342,6 +343,14 @@ class Seed < Thor
       end
     end
 
+    def seed_engineering_salary_items
+      puts "==> Preparing EngineeringSalaryItem"
+
+      EngineeringSalaryTable.all.each do |est|
+        est.seed_items
+      end
+    end
+
     def load_rails
       require File.expand_path('config/environment.rb')
     end
@@ -354,6 +363,13 @@ class Seed < Thor
       Date.parse(base) + rand(10).years + rand(300).days
     end
 
+end
+
+class EngineeringNormalSalaryTable
+  def seed_items
+    salary_items.create!(
+    )
+  end
 end
 
 Seed.start(ARGV)

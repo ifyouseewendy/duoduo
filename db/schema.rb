@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151108142945) do
+ActiveRecord::Schema.define(version: 20151108152311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,9 +80,11 @@ ActiveRecord::Schema.define(version: 20151108142945) do
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
     t.integer  "engineering_salary_table_id"
+    t.integer  "engineering_staff_id"
   end
 
   add_index "engineering_big_table_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_big_table_salary_items_of_table", using: :btree
+  add_index "engineering_big_table_salary_items", ["engineering_staff_id"], name: "idx_engineering_big_table_salary_items_of_staff", using: :btree
 
   create_table "engineering_corps", force: :cascade do |t|
     t.text     "name"
@@ -110,9 +112,11 @@ ActiveRecord::Schema.define(version: 20151108142945) do
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
     t.integer  "engineering_salary_table_id"
+    t.integer  "engineering_staff_id"
   end
 
   add_index "engineering_dong_fang_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_dong_fang_salary_items_of_table", using: :btree
+  add_index "engineering_dong_fang_salary_items", ["engineering_staff_id"], name: "idx_engineering_dong_fang_salary_items_of_staff", using: :btree
 
   create_table "engineering_normal_salary_items", force: :cascade do |t|
     t.decimal  "salary_deserve",              precision: 8, scale: 2
@@ -124,9 +128,11 @@ ActiveRecord::Schema.define(version: 20151108142945) do
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
     t.integer  "engineering_salary_table_id"
+    t.integer  "engineering_staff_id"
   end
 
   add_index "engineering_normal_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_normal_salary_items_of_table", using: :btree
+  add_index "engineering_normal_salary_items", ["engineering_staff_id"], name: "index_engineering_normal_salary_items_on_engineering_staff_id", using: :btree
 
   create_table "engineering_normal_with_tax_salary_items", force: :cascade do |t|
     t.decimal  "salary_deserve",              precision: 8, scale: 2
@@ -140,9 +146,11 @@ ActiveRecord::Schema.define(version: 20151108142945) do
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
     t.integer  "engineering_salary_table_id"
+    t.integer  "engineering_staff_id"
   end
 
   add_index "engineering_normal_with_tax_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_normal_with_tax_salary_items_of_table", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["engineering_staff_id"], name: "idx_engineering_normal_with_tax_salary_items_of_staff", using: :btree
 
   create_table "engineering_projects", force: :cascade do |t|
     t.text     "name"
@@ -554,9 +562,13 @@ ActiveRecord::Schema.define(version: 20151108142945) do
   add_foreign_key "contract_files", "engineering_corps"
   add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "engineering_big_table_salary_items", "engineering_salary_tables"
+  add_foreign_key "engineering_big_table_salary_items", "engineering_staffs"
   add_foreign_key "engineering_dong_fang_salary_items", "engineering_salary_tables"
+  add_foreign_key "engineering_dong_fang_salary_items", "engineering_staffs"
   add_foreign_key "engineering_normal_salary_items", "engineering_salary_tables"
+  add_foreign_key "engineering_normal_salary_items", "engineering_staffs"
   add_foreign_key "engineering_normal_with_tax_salary_items", "engineering_salary_tables"
+  add_foreign_key "engineering_normal_with_tax_salary_items", "engineering_staffs"
   add_foreign_key "engineering_projects", "engineering_corps"
   add_foreign_key "engineering_projects", "engineering_customers"
   add_foreign_key "engineering_salary_tables", "engineering_projects"
