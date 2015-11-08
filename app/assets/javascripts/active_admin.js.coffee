@@ -77,19 +77,20 @@ $(document).on 'ready', ->
 
       list.append(html)
 
-  # Write all engineering staffs info into a hidden field
-  $.getJSON '/engineering_projects/query_all', (data) =>
-    $('.engineering_staffs').append """
-      <input type="hidden" class="project_ids_cache">
-    """
-    stats = []
-    $.each data, (idx, ele) ->
-      stats.push( [ ele['name'], ele['id'] ] )
-    $('.project_ids_cache').data('project-ids', stats)
-
   # Expand index table action width
   $('.expand_table_action_width').closest('.table_actions').css('width', '250px')
   $('.expand_table_action_width_large').closest('.table_actions').css('width', '300px')
+
+  # Write all engineering staffs info into a hidden field
+  if $('.engineering_staffs.index').length > 0
+    $.getJSON '/engineering_projects/query_all', (data) =>
+      $('.engineering_staffs').append """
+        <input type="hidden" class="project_ids_cache">
+      """
+      stats = []
+      $.each data, (idx, ele) ->
+        stats.push( [ ele['name'], ele['id'] ] )
+      $('.project_ids_cache').data('project-ids', stats)
 
   # Engineering Staff, add project link
   $('.add_projects_link').on 'click', (e) ->
