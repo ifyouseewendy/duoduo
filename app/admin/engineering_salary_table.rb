@@ -30,4 +30,35 @@ ActiveAdmin.register EngineeringSalaryTable do
       item "工资表", "#"
     end
   end
+
+  permit_params *EngineeringSalaryTable.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+
+  form do |f|
+    f.semantic_errors *f.object.errors.keys
+
+    f.inputs do
+      f.input :engineering_project, collection: EngineeringProject.all
+      f.input :name, as: :string
+      f.input :remark, as: :text
+    end
+
+    f.actions
+  end
+
+  show do
+    attributes_table do
+      row :id
+      row :name
+      row :type do |obj|
+        obj.model_name.human
+      end
+      row :engineering_project do |obj|
+        link_to obj.engineering_project.name, engineering_project_path(obj.engineering_project)
+      end
+      row :remark
+      row :created_at
+      row :updated_at
+    end
+    active_admin_comments
+  end
 end
