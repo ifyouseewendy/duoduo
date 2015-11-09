@@ -303,16 +303,17 @@ class Seed < Thor
         (1..3).each do |id|
           start_date = "2015-01-01".to_date + (id*31).days
 
+          staffs = ec.engineering_staffs.all.sample( rand(2)+1 )
           EngineeringProject.create!(
             engineering_customer: ec,
-            engineering_staffs: ec.engineering_staffs.all.sample( rand(2)+1 ),
+            engineering_staffs: staffs,
             engineering_corp: EngineeringCorp.all.sample,
             name: "#{ec.name} - 项目#{id}",
             start_date: start_date,
             project_start_date: start_date,
             project_end_date: start_date + 29.days,
             project_range: nil, # Auto set
-            project_amount: 100000,
+            project_amount: (staffs.count * 3500) - 200 + rand(4)*100,
             admin_amount: 10000,
             total_amount: nil, # Auto set
             income_date:  start_date + 90.days,
@@ -346,12 +347,6 @@ class Seed < Thor
     def seed_engineering_salary_items
       puts "==> Preparing EngineeringSalaryItem"
 
-      EngineeringNormalSalaryTable.all.each do |est|
-        est.create_salary_item(
-          salary: 10000,
-          name: 'todo'
-        )
-      end
     end
 
     def load_rails
