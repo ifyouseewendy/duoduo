@@ -33,6 +33,8 @@ ActiveAdmin.register EngineeringProject do
 
       text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       item "生成工资表", "#", class: "generate_salary_table_link expand_table_action_width_large"
+      text_node "&nbsp;&nbsp;".html_safe
+      item "查看工资表", engineering_project_engineering_salary_tables_path(obj)
     end
   end
 

@@ -20,8 +20,14 @@ ActiveAdmin.register EngineeringSalaryTable do
     column :created_at
     column :updated_at
 
-    actions do |obj|
-      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+    actions defaults: false do |obj|
+      item "查看", engineering_salary_table_path(obj)
+      text_node "&nbsp;&nbsp;".html_safe
+      item "编辑", edit_engineering_salary_table_path(obj)
+      text_node "&nbsp;&nbsp;".html_safe
+      item "删除", engineering_salary_table_path(obj), method: :delete
+
+      text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
       item "工资条", "#"
     end
   end
