@@ -302,9 +302,9 @@ class Seed < Thor
       EngineeringCustomer.all.each do |ec|
         (1..3).each do |id|
           start_date = "2015-01-01".to_date + id.months
-          end_date = start_date.end_of_month + ([-15, 0, 15].sample.days)
+          end_date = start_date.end_of_month + ([-15, 0, 15, 15].sample.days)
 
-          staffs = ec.engineering_staffs.all.sample( rand(2)+1 )
+          staffs = ec.engineering_staffs
           EngineeringProject.create!(
             engineering_customer: ec,
             engineering_staffs: staffs,
@@ -314,7 +314,7 @@ class Seed < Thor
             project_start_date: start_date,
             project_end_date: end_date,
             project_range: nil, # Auto set
-            project_amount: (staffs.count * 3500) - 200 + rand(4)*100,
+            project_amount: (id * 3500),
             admin_amount: 10000,
             total_amount: nil, # Auto set
             income_date:  start_date + 90.days,
