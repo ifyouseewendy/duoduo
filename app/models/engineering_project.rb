@@ -76,14 +76,33 @@ class EngineeringProject < ActiveRecord::Base
   end
 
   def revise_fields
-    self.project_range ||= -> {
-      month = (project_end_date.to_date - project_start_date.to_date).to_i / 28
-      "#{month} 月"
-    }.call
+    if (changed && [:project_start_date, :project_end_date]).present?
+      self.project_range = -> {
+        month, day = calc_range
+
+        range = ''
+        range += "#{month} 个月 " if month > 0
+        range += "#{day} 天" if day > 0
+      }.call
+    end
 
     if (changed && [:project_amount, :admin_amount]).present?
       self.total_amount = project_amount + admin_amount
     end
+  end
+
+  def calc_range
+    start_date, end_date = project_start_date.to_date, project_end_date.to_date
+    month = 0
+
+    while (start_date + 1.month - 1.day) <= end_date
+      month += 1
+      start_date += 1.month
+    end
+
+    day = (end_date - start_date).to_i
+
+    [month, day]
   end
 
   def range
