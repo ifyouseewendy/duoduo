@@ -175,11 +175,15 @@ ActiveAdmin.register EngineeringProject do
     render json: {message: messages.join('；') }
   end
 
-  member_action :generate_salary_table, method: :post do
-    project = EngineeringProject.find(params[:id])
-    project.generate_salary_table(type: params[:salary_type])
+  member_action :available_staff_count do
+    project = EngineeringProject.find( params[:id] )
+    own_staff_count = project.engineering_staffs.count
 
-    render json: {message: 'hello' }
+    customer = project.engineering_customer
+    other_staff_count = customer.free_staffs( *project.range ).count
+
+    render json: { count: own_staff_count + other_staff_count  }
   end
+
 
 end

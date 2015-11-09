@@ -79,7 +79,7 @@ $(document).on 'ready', ->
 
   # Expand index table action width
   $('.expand_table_action_width').closest('.table_actions').css('width', '250px')
-  $('.expand_table_action_width_large').closest('.table_actions').css('width', '300px')
+  $('.expand_table_action_width_large').closest('.table_actions').css('width', '350px')
 
   # Write all engineering staffs info into a hidden field
   if $('.engineering_staffs.index').length > 0
@@ -209,9 +209,13 @@ $(document).on 'ready', ->
     project_ele = $(this).closest('tr')
     project_id = project_ele.attr('id').split('_')[-1..][0]
 
-    $.getJSON "/engineering_staffs/query_free?project_id=#{project_id}", (data) =>
+    $.getJSON "/engineering_projects/#{project_id}/available_staff_count", (data) =>
       amount = project_ele.find('.col-project_amount').text()
       upper_salary = 3500
+      need_count = parseInt(amount/upper_salary)
+      if need_count * upper_salary < amount
+        need_count += 1
+
       project  =
         id: project_id
         name: project_ele.find('.col-name').text()
@@ -220,8 +224,8 @@ $(document).on 'ready', ->
         range: project_ele.find('.col-project_range').text()
         amount: amount
         upper_salary: upper_salary
-        need_staff_count: parseInt(amount/upper_salary)+1
-        free_staff_count: data['stat'].length # 30
+        need_staff_count: need_count
+        free_staff_count: data['count'] # 30
 
       ActiveAdmin.modal_dialog_generate_salary_table project, (inputs)=>
         if project['free_staff_count'] >= project['need_staff_count']
