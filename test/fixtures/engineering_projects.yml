@@ -3,6 +3,7 @@
 one:
   name: MyText
   start_date: 2015-09-01
+  # whole month
   project_start_date: 2015-09-01
   project_end_date: 2015-09-30
   project_range: MyText
@@ -23,8 +24,9 @@ one:
 two:
   name: MyText
   start_date: 2015-10-01
+  # less than a month
   project_start_date: 2015-10-01
-  project_end_date: 2015-10-31
+  project_end_date: 2015-10-15
   project_range: MyText
   project_amount: 9.99
   admin_amount: 9.99
@@ -43,8 +45,9 @@ two:
 three:
   name: MyText
   start_date: 2015-09-15
+  # more than a month
   project_start_date: 2015-09-15
-  project_end_date: 2015-10-15
+  project_end_date: 2015-11-30
   project_range: MyText
   project_amount: 9.99
   admin_amount: 9.99

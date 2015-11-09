@@ -16,7 +16,7 @@ class EngineeringStaffTest < ActiveSupport::TestCase
       @staff.engineering_projects << @project_two
     end
     assert_equal 2, @staff.busy_range.count
-    assert_equal ['2015-10-01', '2015-10-31'], @staff.busy_range.last.map(&:to_s)
+    assert_equal ['2015-10-01', '2015-10-15'], @staff.busy_range.last.map(&:to_s)
 
     assert_raises RuntimeError, /时间重叠/ do
       @staff.engineering_projects << @project_three
