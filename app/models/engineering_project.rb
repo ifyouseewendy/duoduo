@@ -83,6 +83,7 @@ class EngineeringProject < ActiveRecord::Base
         range = ''
         range += "#{month} 个月 " if month > 0
         range += "#{day} 天" if day > 0
+        range
       }.call
     end
 
