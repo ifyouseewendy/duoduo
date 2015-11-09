@@ -113,6 +113,34 @@ class EngineeringProject < ActiveRecord::Base
     "项目：#{name}，起止日期：#{project_start_date} - #{project_end_date}"
   end
 
-  def generate_salary_table(type:)
+  # Precondition:
+  #   amount - should be an Integer
+  def gennerate_random_salary(amount:, count:)
+    raise "Argument amount should not be Float" if amount != amount.to_i
+
+    tax_limit = 3500
+    raise "Value of #{amount}<amount> is too big, higher than #{tax_limit*count} ( = #{count}<count> * #{tax_limit}<tax_limit> )" if amount > count*tax_limit
+
+    amount, count = [amount, count].map(&:to_i)
+
+    avg = amount / count
+    mod = amount % count
+
+    max_wave = tax_limit - avg
+
+    wave_array = [1]*mod + [0]*(count-mod)
+
+    pos = 0
+    while pos + 1 < count
+      num = max_wave > 0 ? rand(max_wave) : 0
+
+      wave_array[pos] += num
+      wave_array[pos+1] += 0 - num
+
+      pos += 2
+    end
+
+    result = wave_array.map{|num| avg + num}.shuffle
+    # result[-1] = avg - result[0...-1].sum
   end
 end
