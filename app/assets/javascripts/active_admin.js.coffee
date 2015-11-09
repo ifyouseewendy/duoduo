@@ -235,9 +235,13 @@ $(document).on 'ready', ->
             type: 'post'
             data:
               salary_type: salary_type
+              need_count: need_count
             dataType: 'json'
             success: (data, textStatus, jqXHR) ->
-              alert( data['message'] )
+              if data['status'] == 'succeed'
+                window.location = data['url']
+              else
+                alert( data['message'] )
 
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->
@@ -634,8 +638,8 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
         <label>工资表类型</label>
         <input type="radio" name="salary_type" value="EngineeringNormalSalaryTable" checked> 基础</input>
         <input type="radio" name="salary_type" value="EngineeringNormalWithTaxSalaryTable"> 基础（带个税）</input>
-        <input type="radio" name="salary_type" value="EngineeringBigTableSalaryTable"> 大表</input>
-        <input type="radio" name="salary_type" value="EngineeringDongFangSalaryTable"> 东方</input>
+        # <input type="radio" name="salary_type" value="EngineeringBigTableSalaryTable"> 大表</input>
+        # <input type="radio" name="salary_type" value="EngineeringDongFangSalaryTable"> 东方</input>
       </li>
     """
   else

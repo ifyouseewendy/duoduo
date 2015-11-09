@@ -185,5 +185,18 @@ ActiveAdmin.register EngineeringProject do
     render json: { count: own_staff_count + other_staff_count  }
   end
 
+  member_action :generate_salary_table, method: :post do
+    project = EngineeringProject.find(params[:id])
+
+    begin
+      if 'EngineeringNormalSalaryTable' == params[:salary_type]
+        project.generate_salary_table(need_count: params[:need_count].to_i)
+      end
+
+      render json: {status: 'succeed', url: engineering_project_engineering_salary_tables_path(project) }
+    rescue => e
+      render json: {status: 'failed', message: e.message }
+    end
+  end
 
 end
