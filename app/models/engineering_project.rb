@@ -113,6 +113,35 @@ class EngineeringProject < ActiveRecord::Base
     "项目：#{name}，起止日期：#{project_start_date} - #{project_end_date}"
   end
 
+  def generate_salary_table(need_count:)
+    month, day = calc_range
+    table_count = month + ( day > 0 ? 1 : 0 )
+    salaries = gennerate_random_salary(amount: project_amount, count: need_count*table_count)
+    pos = 0
+
+    staffs = engineering_staffs.limit(need_count)
+
+    start_date, end_date = project_start_date.to_date, project_end_date.to_date
+    (1..table_count).each do |idx|
+      month_end_date = start_date + 1.month - 1.day
+      month_end_date = end_date if idx == table_count
+
+      st = EngineeringNormalSalaryTable.create!(
+        engineering_project: self,
+        name: "#{start_date} ~ #{month_end_date}"
+      )
+
+      staffs.each do |staff|
+        salary = salaries[pos]
+        pos += 1
+
+        st.salary_items.create_by(table: st, staff: staff, salary_in_fact: salary)
+      end
+
+      start_date += 1.month
+    end
+  end
+
   # Precondition:
   #   amount - should be an Integer
   def gennerate_random_salary(amount:, count:)
