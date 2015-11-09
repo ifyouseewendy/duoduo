@@ -1,7 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyText
   salary_deserve: 9.99
   social_insurance: 9.99
   medical_insurance: 9.99
@@ -10,7 +9,6 @@ one:
   remark: MyText
 
 two:
-  name: MyText
   salary_deserve: 9.99
   social_insurance: 9.99
   medical_insurance: 9.99
