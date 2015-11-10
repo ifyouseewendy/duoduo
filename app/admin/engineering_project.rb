@@ -93,6 +93,8 @@ ActiveAdmin.register EngineeringProject do
         end
       end
     end
+
+    active_admin_comments
   end
 
   # Batch actions

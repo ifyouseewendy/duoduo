@@ -46,6 +46,28 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
     f.actions
   end
 
+  show do
+    attributes_table do
+      row :id
+      row :name do |obj|
+        staff = obj.engineering_staff
+        link_to staff.name, engineering_staff_path(staff)
+      end
+      row :salary_table do |obj|
+        st = obj.salary_table
+        link_to st.name, engineering_salary_table_path(st)
+      end
+      row :engineering_project do |obj|
+        pr = obj.salary_table.engineering_project
+        link_to pr.name, engineering_project_path(pr)
+      end
+      (EngineeringNormalSalaryItem.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
+        row field
+      end
+    end
+    active_admin_comments
+  end
+
   # Collection actions
   collection_action :export_xlsx do
     options = {}
