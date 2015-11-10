@@ -29,6 +29,13 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
       names
     end
 
+    def batch_form_fields
+      hash = {}
+      fields = [:social_insurance, :medical_insurance, :salary_in_fact]
+      fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash
+    end
+
     def export_xlsx(options: {})
       collection = self.all
       names = [self.model_name.human]

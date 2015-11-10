@@ -68,6 +68,17 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
     active_admin_comments
   end
 
+  # Batch actions
+  batch_action :batch_edit, form: EngineeringNormalSalaryItem.batch_form_fields do |ids|
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+
+    batch_action_collection.find(ids).each do |obj|
+      obj.update(inputs)
+    end
+
+    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+  end
+
   # Collection actions
   collection_action :export_xlsx do
     options = {}
