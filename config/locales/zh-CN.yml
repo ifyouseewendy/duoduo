@@ -478,6 +478,7 @@ zh-CN:
         medical_insurance: '医保医疗工伤生育保险单位7.9%'
         total_insurance: '单位保险合计'
         salary_in_fact: '实发工资'
+        remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
         engineering_project: '工程项目'
@@ -491,10 +492,11 @@ zh-CN:
         total_amount: '劳务费合计'
         tax: '应缴个税'
         salary_in_fact: '实发工资'
+        remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
         engineering_project: '工程项目'
-      engineering_normal_salary_item:
+      engineering_big_table_salary_item:
         id: '编号'
         salary_deserve: '应发工资'
         pension_personal: '养老保险个人'
