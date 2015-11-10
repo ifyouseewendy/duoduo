@@ -258,7 +258,10 @@ $(document).on 'ready', ->
             contentType: false
             processData: false
             success: (data, textStatus, jqXHR) ->
-              alert('done')
+              if data['status'] == 'succeed'
+                window.location = data['url']
+              else
+                alert( data['message'] )
 
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->

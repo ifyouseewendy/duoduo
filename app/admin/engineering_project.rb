@@ -40,6 +40,7 @@ ActiveAdmin.register EngineeringProject do
 
   preserve_default_filters!
   remove_filter :engineering_staffs
+  remove_filter :engineering_salary_tables
 
   permit_params *EngineeringProject.ordered_columns(without_base_keys: true, without_foreign_keys: false)
 
@@ -193,6 +194,8 @@ ActiveAdmin.register EngineeringProject do
     begin
       if 'EngineeringNormalSalaryTable' == params[:salary_type]
         project.generate_salary_table(need_count: params[:need_count].to_i)
+      elsif 'EngineeringNormalWithTaxSalaryTable' == params[:salary_type]
+        project.generate_salary_table_with_tax(file: params[:salary_file])
       end
 
       render json: {status: 'succeed', url: engineering_project_engineering_salary_tables_path(project) }
