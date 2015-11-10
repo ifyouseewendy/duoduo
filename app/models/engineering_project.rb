@@ -120,7 +120,21 @@ class EngineeringProject < ActiveRecord::Base
     salaries = gennerate_random_salary(amount: project_amount, count: need_count*table_count)
     pos = 0
 
-    staffs = engineering_staffs.limit(need_count)
+    own_staffs = engineering_staffs.limit(need_count).to_a
+    new_staffs = []
+    if own_staffs.count < need_count
+      new_count = need_count - own_staffs.count
+
+      if new_count > 0
+        new_staffs = engineering_customer.free_staffs( *(range << new_count) )
+
+        new_staffs.each do |staff|
+          self.engineering_staffs << staff
+        end
+      end
+    end
+
+    staffs = own_staffs + new_staffs
 
     start_date, end_date = project_start_date.to_date, project_end_date.to_date
     (1..table_count).each do |idx|
