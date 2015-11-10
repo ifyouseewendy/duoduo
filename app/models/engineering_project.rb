@@ -184,7 +184,41 @@ class EngineeringProject < ActiveRecord::Base
       pos += 2
     end
 
-    result = wave_array.map{|num| avg + num}.shuffle
-    # result[-1] = avg - result[0...-1].sum
+    wave_array.map{|n| avg + n}.shuffle
+  end
+
+
+  def generate_salary_table_with_tax(file:)
+    raise '导入失败（未找到文件），请选择上传文件' if file.nil?
+
+    raise '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
+      unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
+
+    xls = Roo::Spreadsheet.open(file.path)
+    sheet = xls.sheet(0)
+
+    stats = (1..sheet.last_row).reduce([]) do |ar, row|
+      name, salary = sheet.row(row).to_a
+      name.strip!
+
+      staff = engineering_staffs.where(name: name).first
+      if staff.nil?
+        staff = engineering_customer.engineering_staffs.where(name: name).first
+        self.engineering_staffs << staff if staff.present?
+      end
+
+      raise "导入失败，未找到员工<#{name}>" if staff.nil?
+
+      ar << {staff: staff, salary: salary}
+    end
+
+    st = EngineeringNormalWithTaxSalaryTable.create!(
+      engineering_project: self,
+      name: "#{range.join(' ~ ')}"
+    )
+
+    stats.each do |stat|
+      st.salary_items.create_by(table:st, staff:stat[:staff], salary_deserve:stat[:salary])
+    end
   end
 end
