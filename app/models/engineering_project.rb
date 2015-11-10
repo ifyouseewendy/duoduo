@@ -48,7 +48,7 @@ class EngineeringProject < ActiveRecord::Base
           collection.each do |item|
              stats = \
               columns.map do |col|
-               if [:engineering_customer, :engineering_corp].include? col
+                if [:engineering_customer, :engineering_corp].include? col
                   item.send(col).name
                 elsif booleans.include? col
                   item.send(col) ? '是' : '否'

@@ -482,6 +482,9 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
         engineering_project: '工程项目'
+        engineering_staff_id: '工程员工'
+        engineering_staff: '工程员工'
+        salary_table: '工资表'
       engineering_normal_with_tax_salary_item:
         id: '编号'
         name: '姓名'
