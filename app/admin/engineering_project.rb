@@ -196,6 +196,8 @@ ActiveAdmin.register EngineeringProject do
         project.generate_salary_table(need_count: params[:need_count].to_i)
       elsif 'EngineeringNormalWithTaxSalaryTable' == params[:salary_type]
         project.generate_salary_table_with_tax(file: params[:salary_file])
+      else
+        project.generate_salary_table_big(url: params[:salary_url])
       end
 
       render json: {status: 'succeed', url: engineering_project_engineering_salary_tables_path(project) }

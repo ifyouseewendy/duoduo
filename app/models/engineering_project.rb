@@ -221,4 +221,15 @@ class EngineeringProject < ActiveRecord::Base
       st.salary_items.create_by(table:st, staff:stat[:staff], salary_deserve:stat[:salary])
     end
   end
+
+  def generate_salary_table_big(url:)
+    uri = URI(url)
+    url = [uri.path, uri.query].join('?')
+
+    EngineeringBigTableSalaryTable.create!(
+      engineering_project: self,
+      name: "#{range.join(' ~ ')}",
+      reference: EngineeringBigTableSalaryTableReference.create!(url: url)
+    )
+  end
 end
