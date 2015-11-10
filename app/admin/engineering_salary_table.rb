@@ -44,7 +44,12 @@ ActiveAdmin.register EngineeringSalaryTable do
     f.inputs do
       f.input :engineering_project, collection: EngineeringProject.all
       f.input :name, as: :string
-      f.input :type, as: :radio, collection: EngineeringSalaryTable.types.map{|k| [k.model_name.human, k.to_s]}
+      if request.url.split('/')[-1] == 'new'
+        f.input :type, as: :radio, collection: EngineeringSalaryTable.types.map{|k| [k.model_name.human, k.to_s]}
+      end
+      if resource.type == 'EngineeringBigTableSalaryTable'
+        f.input :url, as: :string
+      end
       f.input :remark, as: :text
     end
 
@@ -55,11 +60,16 @@ ActiveAdmin.register EngineeringSalaryTable do
     attributes_table do
       row :id
       row :name
+      row :engineering_project do |obj|
+        link_to obj.engineering_project.name, engineering_project_path(obj.engineering_project)
+      end
       row :type do |obj|
         obj.model_name.human
       end
-      row :engineering_project do |obj|
-        link_to obj.engineering_project.name, engineering_project_path(obj.engineering_project)
+      if resource.type == 'EngineeringBigTableSalaryTable'
+        row :url do |obj|
+          obj.url
+        end
       end
       row :remark
       row :created_at
@@ -73,7 +83,12 @@ ActiveAdmin.register EngineeringSalaryTable do
 
     begin
       obj = EngineeringSalaryTable.find(params[:id])
-      obj.update! attrs
+
+      if obj.type == 'EngineeringBigTableSalaryTable'
+        obj.update_reference_url(params[:engineering_salary_table][:url])
+      else
+        obj.update! attrs
+      end
       redirect_to engineering_salary_table_path(obj), notice: "成功更新工资表<#{obj.name}>"
     rescue => e
       redirect_to engineering_salary_table_path(obj), alert: "更新失败，#{e.message}"
