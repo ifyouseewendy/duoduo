@@ -1,6 +1,8 @@
 class EngineeringSalaryTable < ActiveRecord::Base
   belongs_to :engineering_project
 
+  has_many :references, class_name: EngineeringBigTableSalaryTableReference
+
   class << self
     def types
       [
