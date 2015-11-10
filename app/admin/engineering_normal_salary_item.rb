@@ -31,6 +31,21 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   preserve_default_filters!
   remove_filter :engineering_staff
 
+  permit_params *EngineeringNormalSalaryItem.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+
+  form do |f|
+    f.semantic_errors *f.object.errors.keys
+
+    f.inputs do
+      f.input :social_insurance, as: :number
+      f.input :medical_insurance, as: :number
+      f.input :salary_in_fact, as: :number
+      f.input :remark, as: :text
+    end
+
+    f.actions
+  end
+
   # Collection actions
   collection_action :export_xlsx do
     options = {}
