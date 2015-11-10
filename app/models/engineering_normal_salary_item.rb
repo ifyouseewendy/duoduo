@@ -6,6 +6,8 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
 
   belongs_to :engineering_staff
 
+  before_save :revise_fields
+
   class << self
     def create_by(table:, staff:, salary_in_fact:)
       item = self.new(salary_table: table, engineering_staff: staff)
@@ -73,6 +75,15 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
         %i(id engineering_staff) \
           + (ordered_columns(without_foreign_keys: true) - %i(id))
       end
+    end
+  end
+
+  def revise_fields
+    if (changed && [:social_insurance, :medical_insurance]).present?
+      self.total_insurance = self.social_insurance + self.medical_insurance
+    end
+    if (changed && [:salary_in_fact]).present?
+      self.salary_deserve = self.salary_in_fact - self.total_insurance
     end
   end
 end
