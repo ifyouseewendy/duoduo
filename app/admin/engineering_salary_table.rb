@@ -28,7 +28,7 @@ ActiveAdmin.register EngineeringSalaryTable do
       item "删除", engineering_salary_table_path(obj), method: :delete
 
       text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-      item "工资条", "/#{obj.class.name.underscore.pluralize}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      item "工资条", "/#{obj.class.name.underscore.pluralize.gsub('table','item')}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
   end
 
