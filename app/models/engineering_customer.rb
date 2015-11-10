@@ -55,7 +55,8 @@ class EngineeringCustomer < ActiveRecord::Base
     end
   end
 
-  def free_staffs(start_date, end_date)
-    engineering_staffs.select{|es| es.accept_schedule?(start_date, end_date)}
+  def free_staffs(start_date, end_date, count = nil)
+    count ||= engineering_staff.count
+    engineering_staffs.lazy.select{|es| es.accept_schedule?(start_date, end_date)}.first(count)
   end
 end
