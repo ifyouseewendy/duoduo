@@ -1,6 +1,8 @@
 ActiveAdmin.register EngineeringNormalSalaryItem do
   menu false
 
+  config.clear_action_items!
+
   breadcrumb do
     if params['q'].present?
       st = EngineeringSalaryTable.find(params['q']['salary_table_id_eq'])
