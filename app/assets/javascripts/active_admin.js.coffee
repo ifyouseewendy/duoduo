@@ -228,20 +228,37 @@ $(document).on 'ready', ->
         free_staff_count: data['count'] # 30
 
       ActiveAdmin.modal_dialog_generate_salary_table project, (inputs)=>
-        if project['free_staff_count'] >= project['need_staff_count']
-          salary_type = $("#salary_type_list_#{project['id']}").find('input:checked').val()
+        if inputs['salary_type'] == 'EngineeringNormalSalaryTable'
+          if project['free_staff_count'] >= project['need_staff_count']
+            salary_type = $("#salary_type_list_#{project['id']}").find('input:checked').val()
+            $.ajax
+              url: '/engineering_projects/' + project['id'] + '/generate_salary_table'
+              type: 'post'
+              data:
+                salary_type: salary_type
+                need_count: need_count
+              dataType: 'json'
+              success: (data, textStatus, jqXHR) ->
+                if data['status'] == 'succeed'
+                  window.location = data['url']
+                else
+                  alert( data['message'] )
+        else
+          li = $("#salary_type_list_#{project['id']}")
+          salary_type = li.find('input:checked').val()
+          form_data = new FormData
+          form_data.append('salary_file', li.closest('ol').find('.salary_file')[0].files[0])
+          form_data.append('salary_type', salary_type)
+
           $.ajax
             url: '/engineering_projects/' + project['id'] + '/generate_salary_table'
             type: 'post'
-            data:
-              salary_type: salary_type
-              need_count: need_count
+            data: form_data
             dataType: 'json'
+            contentType: false
+            processData: false
             success: (data, textStatus, jqXHR) ->
-              if data['status'] == 'succeed'
-                window.location = data['url']
-              else
-                alert( data['message'] )
+              alert('done')
 
   # Manipulate Insurance Fund
   $('a[data-action=manipulate_insurance_fund]').on 'click', ->
@@ -602,31 +619,40 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
     <form novalidate="novalidate" class="formtastic" id="dialog_confirm" title="生成工资表">
     <fieldset class="inputs">
       <ol>
-        <li>
+        <li id="salary_type_list_#{data['id']}" class='modal_li'>
+          <label>工资表类型</label>
+          <input class='salary_type_check' type="radio" name="salary_type" value="EngineeringNormalSalaryTable" checked> 基础</input>
+          <input class='salary_type_check' type="radio" name="salary_type" value="EngineeringNormalWithTaxSalaryTable"> 基础（带个税）</input>
+        </li>
+        <li class='normal_with_tax_item' style='display:none'>
+          <label>请上传 xlsx 文件</label>
+          <input class='salary_file' type='file' name='salary_file' value=''></input>
+        </li>
+        <li class='normal_item'>
           <label>项目名称</label>
           <span>#{data['name']}</span>
         </li>
-        <li>
+        <li class='normal_item'>
           <label>起止时间</label>
           <span>#{data['start_date']} ~ #{data['end_date']}</span>
         </li>
-        <li>
+        <li class='normal_item'>
           <label>工作量</label>
           <span>#{data['range']}</span>
         </li>
-        <li>
+        <li class='normal_item'>
           <label>劳务费</label>
           <span>#{data['amount']}</span>
         </li>
-        <li>
+        <li class='normal_item'>
           <label>员工工资上限</label>
           <span>#{data['upper_salary']}</span>
         </li>
-        <li>
+        <li class='normal_item'>
           <label>需提供员工数</label>
           <span>#{data['need_staff_count']}</span>
         </li>
-        <li>
+        <li class='normal_item'>
           <label>可用员工数</label>
           <span>#{data['free_staff_count']}</span>
         </li>
@@ -634,17 +660,10 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
 
   if data['free_staff_count'] >= data['need_staff_count']
     html += """
-      <li id="salary_type_list_#{data['id']}">
-        <label>工资表类型</label>
-        <input type="radio" name="salary_type" value="EngineeringNormalSalaryTable" checked> 基础</input>
-        <input type="radio" name="salary_type" value="EngineeringNormalWithTaxSalaryTable"> 基础（带个税）</input>
-        # <input type="radio" name="salary_type" value="EngineeringBigTableSalaryTable"> 大表</input>
-        # <input type="radio" name="salary_type" value="EngineeringDongFangSalaryTable"> 东方</input>
-      </li>
     """
   else
     html += """
-      <li>
+      <li class='normal_item'>
         <ul>
           <li><b>建议如下操作后重新进入此页面</b></li>
           <li>调整项目起止日期与工作量，请至 <a href='/engineering_projects/#{data["id"]}/edit'>编辑</a> 页面</li>
@@ -668,6 +687,14 @@ ActiveAdmin.modal_dialog_generate_salary_table = (data, callback)->
     open: (event, ui) ->
       $('body').trigger 'modal_dialog:after_open', [form]
       $('.active_admin_dialog').css('width', '600px').css('left', '400px').css('max-height', '700px').css('top', '80px')
+      $(".salary_type_check").on 'click', ->
+        ol = $(this).closest('ol')
+        if $(this).val() == 'EngineeringNormalSalaryTable'
+          ol.find('.normal_with_tax_item').hide()
+          ol.find('.normal_item').show()
+        else
+          ol.find('.normal_with_tax_item').show()
+          ol.find('.normal_item').hide()
     dialogClass: 'active_admin_dialog'
     buttons:
       OK: ->
