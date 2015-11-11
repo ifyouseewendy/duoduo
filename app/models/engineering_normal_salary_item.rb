@@ -12,10 +12,14 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
     def create_by(table:, staff:, salary_in_fact:)
       item = self.new(salary_table: table, engineering_staff: staff)
       item.salary_in_fact =  salary_in_fact
-      item.social_insurance = 407
-      item.medical_insurance = 249
-      item.total_insurance = 407 + 249
-      item.salary_deserve = salary_in_fact - 407 - 249
+
+      # TODO
+      #   whether to split out project's range
+      project = salary_table.engineering_project
+      item.social_insurance = EngineeringCompanySocialInsuranceAmount.query_amount(date: project.project_start_date)
+      item.medical_insurance = EngineeringCompanyMedicalInsuranceAmount.query_amount(date: project.project_start_date)
+      item.total_insurance = item.social_insurance + item.medical_insurance
+      item.salary_deserve = salary_in_fact - item.total_insurance
 
       item.save!
     end

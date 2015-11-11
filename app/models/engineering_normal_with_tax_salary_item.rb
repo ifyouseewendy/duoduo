@@ -13,8 +13,12 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       item = self.new(salary_table: table, engineering_staff: staff)
 
       item.salary_deserve     = salary_deserve
-      item.social_insurance   = 407
-      item.medical_insurance  = 249
+
+      # TODO
+      #   whether to split out project's range
+      project = salary_table.engineering_project
+      item.social_insurance = EngineeringCompanySocialInsuranceAmount.query_amount(date: project.project_start_date)
+      item.medical_insurance = EngineeringCompanyMedicalInsuranceAmount.query_amount(date: project.project_start_date)
 
       item.save!
     end
