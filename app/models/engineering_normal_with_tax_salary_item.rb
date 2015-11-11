@@ -16,7 +16,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
 
       # TODO
       #   whether to split out project's range
-      project = salary_table.engineering_project
+      project = item.salary_table.engineering_project
       item.social_insurance = EngineeringCompanySocialInsuranceAmount.query_amount(date: project.project_start_date)
       item.medical_insurance = EngineeringCompanyMedicalInsuranceAmount.query_amount(date: project.project_start_date)
 
