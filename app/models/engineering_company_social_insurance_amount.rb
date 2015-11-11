@@ -8,6 +8,15 @@ class EngineeringCompanySocialInsuranceAmount < ActiveRecord::Base
 
       names
     end
+
+    def current
+      where(end_date: nil).last
+    end
+
+    def query_amount(date:)
+      record = where("start_date <= ? AND end_date >= ?", date, date).first || current
+      record.amount
+    end
   end
 
 end
