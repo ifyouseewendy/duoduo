@@ -335,6 +335,8 @@ zh-CN:
         total_amount: '总金额'
         contact_person: '联系人'
         refund_person: '回款人'
+        refund_bank: '回款银行'
+        refund_account: '回款账号'
         income_date: '来款日期'
         refund_date: '回款日期'
         salary_table: '工资表'
