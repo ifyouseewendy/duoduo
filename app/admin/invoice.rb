@@ -5,6 +5,16 @@ ActiveAdmin.register Invoice do
 
   config.filters = false
 
+  index do
+    selectable_column
+
+    Invoice.ordered_columns(without_foreign_keys: true).each do |field|
+      column field
+    end
+
+    actions
+  end
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
 
@@ -17,6 +27,8 @@ ActiveAdmin.register Invoice do
       f.input :total_amount, as: :number
       f.input :contact_person, as: :string
       f.input :refund_person, as: :string
+      f.input :refund_bank, as: :string
+      f.input :refund_account, as: :string
       f.input :income_date, as: :datepicker
       f.input :refund_date, as: :datepicker
     end
