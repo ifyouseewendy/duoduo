@@ -1,4 +1,6 @@
 ActiveAdmin.register EngineeringBigTableSalaryItem do
+  menu false
+
   controller do
     def index
       id = params[:q][:salary_table_id_eq] rescue nil
