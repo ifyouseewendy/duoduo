@@ -1,7 +1,5 @@
 class Invoice < ActiveRecord::Base
-  belongs_to :salary_table
-  belongs_to :guard_salary_table
-  belongs_to :non_full_day_salary_table
+  belongs_to :invoicable, polymorphic: true
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
