@@ -12,8 +12,8 @@ class Invoice < ActiveRecord::Base
     end
 
     def export_xlsx(options: {})
-      # TODO change filename 
-      filename = "#{I18n.t("activerecord.models.invoice")}_#{Time.stamp}.xlsx"
+      names = [self.model_name.human, self.invoicable.name, Time.stamp]
+      filename = "#{names.join('_')}.xlsx"
       filepath = EXPORT_PATH.join filename
 
       st = SalaryTable.find(options[:salary_table_id])

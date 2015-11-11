@@ -212,6 +212,8 @@ class EngineeringProject < ActiveRecord::Base
       ar << {staff: staff, salary: salary}
     end
 
+    # TODO
+    #   Need to ensure no spliting range is right
     st = EngineeringNormalWithTaxSalaryTable.create!(
       engineering_project: self,
       name: "#{range.join(' ~ ')}"
