@@ -48,6 +48,8 @@ zh-CN:
       engineering_normal_with_tax_salary_item: '基础（带个税）工资条'
       engineering_big_table_salary_item: '大表工资条'
       engineering_dong_fang_salary_item: '东方工资条'
+      engineering_company_social_insurance_amount: '单位部分社保金额（工程）'
+      engineering_company_medical_insurance_amount: '单位部分社保金额（工程）'
     attributes:
       normal_corporation:
         id: '编号'
@@ -526,6 +528,22 @@ zh-CN:
       engineering_dong_fang_salary_item:
         id: '编号'
         salary_deserve: '应发工资'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      engineering_company_social_insurance_amount:
+        id: '编号'
+        start_date: '开始日期'
+        end_date: '结束日期'
+        amount: '金额'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      engineering_company_medical_insurance_amount:
+        id: '编号'
+        start_date: '开始日期'
+        end_date: '结束日期'
+        amount: '金额'
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"

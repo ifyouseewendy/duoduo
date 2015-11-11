@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151111064142) do
+ActiveRecord::Schema.define(version: 20151111071031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,24 @@ ActiveRecord::Schema.define(version: 20151111064142) do
   end
 
   add_index "engineering_big_table_salary_table_references", ["engineering_salary_table_id"], name: "idx_engineering_big_table_reference_of_salary_table", using: :btree
+
+  create_table "engineering_company_medical_insurance_amounts", force: :cascade do |t|
+    t.date     "start_date"
+    t.date     "end_date"
+    t.decimal  "amount",     precision: 8, scale: 2
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.text     "remark"
+  end
+
+  create_table "engineering_company_social_insurance_amounts", force: :cascade do |t|
+    t.date     "start_date"
+    t.date     "end_date"
+    t.decimal  "amount",     precision: 8, scale: 2
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.text     "remark"
+  end
 
   create_table "engineering_corps", force: :cascade do |t|
     t.text     "name"
