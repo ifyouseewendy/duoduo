@@ -29,6 +29,9 @@ ActiveAdmin.register EngineeringSalaryTable do
 
       text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
 
+      item "发票",  "/invoices?utf8=✓&q%5Binvoicable_id_eq%5D=#{obj.id}&invoicable_type%5D=#{obj.class.name}&commit=过滤&order=id_desc"
+      text_node "&nbsp;&nbsp;".html_safe
+
       parts = obj.class.name.underscore.pluralize.split('_')
       parts[-1] = parts[-1].sub('table', 'item')
       path = parts.join('_')
