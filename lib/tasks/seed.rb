@@ -41,8 +41,8 @@ class Seed < Thor
       ContractFile, SubCompany,
       InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
       EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
-      EngineeringSalaryTable
-    ].each(&:delete_all)
+      EngineeringSalaryTable,
+    ].each(&:destroy_all)
   end
 
   private
@@ -109,7 +109,7 @@ class Seed < Thor
 
         date = "2015-01-01".to_date + id.days
         Invoice.create!(
-          salary_table: st,
+          invoicable: st,
           release_date: date,
           encoding: 'XC10329837',
           payer: NormalStaff.all.sample.name,
@@ -148,7 +148,7 @@ class Seed < Thor
 
         date = "2015-01-01".to_date + id.days
         Invoice.create!(
-          guard_salary_table: st,
+          invoicable: st,
           release_date: date,
           encoding: 'XC10329837',
           payer: NormalStaff.all.sample.name,
@@ -204,7 +204,7 @@ class Seed < Thor
 
         date = "2015-01-01".to_date + id.days
         Invoice.create!(
-          non_full_day_salary_table: st,
+          invoicable: st,
           release_date: date,
           encoding: 'XC10329837',
           payer: NormalStaff.all.sample.name,
