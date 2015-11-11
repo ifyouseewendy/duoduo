@@ -1,7 +1,7 @@
 class EngineeringSalaryTable < ActiveRecord::Base
   belongs_to :engineering_project
 
-  has_one :reference, class_name: EngineeringBigTableSalaryTableReference
+  has_one :reference, class_name: EngineeringBigTableSalaryTableReference, dependent: :destroy
 
   class << self
     def types
