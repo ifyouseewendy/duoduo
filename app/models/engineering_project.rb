@@ -160,10 +160,14 @@ class EngineeringProject < ActiveRecord::Base
   # Precondition:
   #   amount - should be an Integer
   def gennerate_random_salary(amount:, count:)
-    raise "Argument amount should not be Float" if amount != amount.to_i
+    raise "来款金额需为整数" if amount != amount.to_i
 
     tax_limit = 3500
     raise "Value of #{amount}<amount> is too big, higher than #{tax_limit*count} ( = #{count}<count> * #{tax_limit}<tax_limit> )" if amount > count*tax_limit
+
+    lower_bound = EngineeringCompanySocialInsuranceAmount.order(amount: :desc).first.amount \
+      + EngineeringCompanyMedicalInsuranceAmount.order(amount: :desc).first.amount
+    raise "Value of #{amount}<amount> is too small, lower than #{lower_bound*count} ( = #{count}<count> * #{lower_bound}<lower_bound> )" if amount < count*lower_bound
 
     amount, count = [amount, count].map(&:to_i)
 
@@ -171,12 +175,14 @@ class EngineeringProject < ActiveRecord::Base
     mod = amount % count
 
     max_wave = tax_limit - avg
+    min_wave = avg - lower_bound
+    wave = [max_wave, min_wave].min
 
     wave_array = [1]*mod + [0]*(count-mod)
 
     pos = 0
     while pos + 1 < count
-      num = max_wave > 0 ? rand(max_wave) : 0
+      num = wave > 0 ? rand(wave) : 0
 
       wave_array[pos] += num
       wave_array[pos+1] += 0 - num
