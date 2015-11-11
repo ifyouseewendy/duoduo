@@ -23,6 +23,9 @@ class Seed < Thor
 
     seed_engineering_salary_tables
     seed_engineering_salary_items
+
+    seed_engineering_company_social_insurce_amounts
+    seed_engineering_company_medical_insurce_amounts
   end
 
 
@@ -42,6 +45,7 @@ class Seed < Thor
       InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
       EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
       EngineeringSalaryTable,
+      EngineeringCompanySocialInsuranceAmount, EngineeringCompanyMedicalInsuranceAmount
     ].each(&:destroy_all)
   end
 
@@ -348,6 +352,40 @@ class Seed < Thor
     def seed_engineering_salary_items
       puts "==> Preparing EngineeringSalaryItem"
 
+    end
+
+    def seed_engineering_company_social_insurce_amounts
+      puts "==> Preparing EngineeringCompanySocialInsuranceAmount"
+
+      dates = %w(2000-01-01 2014-01-01 2014-07-01 2015-01-01)
+      amounts = [0, 200, 300, 407]
+
+      dates.each_with_index do |start_date, idx|
+        next_date = dates[idx+1]
+        end_date = next_date.to_date.yesterday rescue nil
+        EngineeringCompanySocialInsuranceAmount.create!(
+          start_date: Date.parse(start_date),
+          end_date: end_date,
+          amount: amounts[idx]
+        )
+      end
+    end
+
+    def seed_engineering_company_medical_insurce_amounts
+      puts "==> Preparing EngineeringCompanyMedicalInsuranceAmount"
+
+      dates = %w(2000-01-01 2014-01-01 2014-07-01 2015-01-01)
+      amounts = [0, 100, 200, 249]
+
+      dates.each_with_index do |start_date, idx|
+        next_date = dates[idx+1]
+        end_date = next_date.to_date.yesterday rescue nil
+        EngineeringCompanyMedicalInsuranceAmount.create!(
+          start_date: Date.parse(start_date),
+          end_date: end_date,
+          amount: amounts[idx]
+        )
+      end
     end
 
     def load_rails
