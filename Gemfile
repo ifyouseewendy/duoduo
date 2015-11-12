@@ -77,6 +77,9 @@ group :development do
 
   # Web-view DB
   gem 'rails_db'
+
+  # Targeting N+1
+  gem "bullet"
 end
 
 group :development, :test do
