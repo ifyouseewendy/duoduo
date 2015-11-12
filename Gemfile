@@ -68,6 +68,9 @@ gem 'roo-xls'           # xls support
 gem 'axlsx_rails'       # Write xlsx
 gem 'zip-zip'           # Fix axlsx dependency
 
+# Optimize
+gem 'goldiloader'
+
 group :development do
   gem 'quiet_assets'
 

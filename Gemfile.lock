@@ -144,6 +144,9 @@ GEM
       sass (>= 3.3.0, < 3.5)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
+    goldiloader (0.0.9)
+      activerecord (>= 3.2, < 4.3)
+      activesupport (>= 3.2, < 4.3)
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
@@ -345,6 +348,7 @@ DEPENDENCIES
   devise-i18n
   dotenv-rails
   draper
+  goldiloader
   jbuilder (~> 2.0)
   jia
   jquery-rails
