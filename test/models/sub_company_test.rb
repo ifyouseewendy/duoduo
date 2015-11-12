@@ -36,7 +36,7 @@ class SubCompanyTest < ActiveSupport::TestCase
     file_path = Rails.root.join('test').join('resources').join('origin.docx')
     @one.add_file(file_path, template: true, override: true)
 
-    docx = @one.generate_docx(gsub: {user_name: "wendi", user_email: "wd@example.com"}, file_path: file_path)
+    docx = DocGenerator.generate_docx(gsub: {user_name: "wendi", user_email: "wd@example.com"}, file_path: file_path)
 
     SubCompany::TempPath.execute do |temp_path|
       FileUtils.mv docx, temp_path

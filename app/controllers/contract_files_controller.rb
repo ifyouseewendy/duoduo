@@ -18,7 +18,7 @@ class ContractFilesController < ApplicationController
       sub_company = SubCompany.find params.require(:sub_company_id)
       template = sub_company.contract_templates[params.require(:template).to_i]
 
-      contract = sub_company.generate_docx \
+      contract = DocGenerator.generate_docx \
         gsub: {company_name: 'wendi'},
         file_path: template.current_path
 
