@@ -12,11 +12,4 @@
       </li>
     <% end %>
   </ul>
-
-  <%= form_for EngineeringContractFile.new, url: engineering_contract_files_path, class: 'form_tag' do |f| %>
-    <%= f.file_field :contract %>
-    <%= f.hidden_field :engineering_project_id, value: engineering_project.id %>
-    <%= f.hidden_field :role, value: role %>
-    <%= link_to "上传",  "#", :onclick=>"$(this).closest('form').submit()" %>
-  <% end %>
 </div>
