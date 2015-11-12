@@ -99,7 +99,7 @@ ActiveAdmin.register EngineeringProject do
       render partial: 'shared/contract_engineering', locals: { contract_files: resource.contract_files.normal, engineering_project_id: resource.id, role: :normal }
     end
     panel "代发协议" do
-      render partial: 'shared/contract_engineering', locals: { contract_files: resource.contract_files.proxy, engineering_project_id: resource.id, role: :proxy }
+      render partial: 'shared/contract_engineering', locals: { contract_files: resource.contract_files.proxy, engineering_project_id: resource.id, role: :proxy, auto_generate: true }
     end
     active_admin_comments
   end

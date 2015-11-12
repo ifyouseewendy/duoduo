@@ -17,12 +17,12 @@ class EngineeringContractFilesController < ApplicationController
 
   def generate_and_download
     begin
-      sub_company = SubCompany.find params.require(:sub_company_id)
-      template = sub_company.contract_templates[params.require(:template).to_i]
+      project = EngineeringProject.find params.require(:engineering_project_id)
+      template = EngineeringContractFile.template.first
 
-      contract = sub_company.generate_docx \
+      contract =  DocGenerator.generate_docx \
         gsub: {company_name: 'wendi'},
-        file_path: template.current_path
+        file_path: template.contract.path
 
       send_file contract
     rescue => e

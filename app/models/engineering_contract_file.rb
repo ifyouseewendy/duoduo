@@ -3,5 +3,5 @@ class EngineeringContractFile < ActiveRecord::Base
 
   mount_uploader :contract, ContractUploader
 
-  enum role: [:normal, :proxy]
+  enum role: [:normal, :proxy, :template]
 end

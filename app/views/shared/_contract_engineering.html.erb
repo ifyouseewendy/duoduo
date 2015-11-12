@@ -1,4 +1,13 @@
+<% auto_generate ||= nil %>
+
 <div class='contract_file_upload_panel'>
+  <% if auto_generate %>
+    <ul>
+      <li>
+        <span><%= link_to '自动生成', '#', onclick: "window.location='#{generate_and_download_engineering_contract_files_path}?engineering_project_id=#{engineering_project_id}'" %>
+      </li>
+    </ul>
+  <% end %>
   <ul>
     <% contract_files.each do |cf| %>
       <li>
