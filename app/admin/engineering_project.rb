@@ -95,6 +95,9 @@ ActiveAdmin.register EngineeringProject do
       end
     end
 
+    panel "工程合同（劳务派遣协议）" do
+      render partial: 'shared/contract_engineering', locals: { contract_files: resource.contract_files, engineering_project_id: resource.id, role: :normal }
+    end
     active_admin_comments
   end
 

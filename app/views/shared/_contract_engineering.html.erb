@@ -1,0 +1,22 @@
+<div class='contract_file_upload_panel'>
+  <ul>
+    <% contract_files.each do |cf| %>
+      <li>
+        <span><%= cf.contract_identifier %></span>
+        <span>( <%= link_to '下载', cf.contract.url %> 
+          <%= form_tag(engineering_contract_file_path(cf), method: :delete, class: 'form_tag') do %>
+            <%= link_to "删除",  "#", :onclick=>"$(this).closest('form').submit()" %>
+          <% end %>
+           )
+        </span>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= form_for EngineeringContractFile.new, url: engineering_contract_files_path, class: 'form_tag' do |f| %>
+    <%= f.file_field :contract %>
+    <%= f.hidden_field :engineering_project_id, value: engineering_project_id %>
+    <%= f.hidden_field :role, value: role %>
+    <%= link_to "上传",  "#", :onclick=>"$(this).closest('form').submit()" %>
+  <% end %>
+</div>
