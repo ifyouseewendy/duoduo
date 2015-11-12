@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151112030056) do
+ActiveRecord::Schema.define(version: 20151112045007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 20151112030056) do
     t.date     "contract_end_date"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
+    t.text     "outcome_bank"
   end
 
   create_table "engineering_customers", force: :cascade do |t|
@@ -211,6 +212,7 @@ ActiveRecord::Schema.define(version: 20151112030056) do
     t.datetime "updated_at",                                      null: false
     t.integer  "engineering_customer_id"
     t.integer  "engineering_corp_id"
+    t.text     "outcome_bank"
   end
 
   add_index "engineering_projects", ["engineering_corp_id"], name: "index_engineering_projects_on_engineering_corp_id", using: :btree
