@@ -17,11 +17,18 @@ class EngineeringContractFilesController < ApplicationController
 
   def generate_and_download
     begin
-      project = EngineeringProject.find params.require(:engineering_project_id)
+      project = EngineeringProject.find contract_file_params[:engineering_project_id]
       template = EngineeringContractFile.template.first
 
+      content = {
+        amount_number: project.total_amount.to_s,
+        amount_zh: '',
+        refund_person: project.outcome_referee.to_s,
+        refund_bank: project.outcome_bank.to_s,
+        refund_account: project.outcome_amount.to_s,
+      }
       contract =  DocGenerator.generate_docx \
-        gsub: {company_name: 'wendi'},
+        gsub: content.merge(contract_file_params),
         file_path: template.contract.path
 
       send_file contract
