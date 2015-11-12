@@ -5,6 +5,8 @@ class EngineeringProject < ActiveRecord::Base
 
   has_many :engineering_salary_tables, dependent: :destroy
 
+  has_many :contract_files, class: EngineeringContractFile, dependent: :destroy
+
   before_save :revise_fields
 
   class << self
