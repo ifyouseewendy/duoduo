@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   end
   resources :engineering_contract_files, only: [:create, :destroy] do
     collection do
-      get "generate_and_download"
+      post "generate_and_download"
     end
   end
 end
