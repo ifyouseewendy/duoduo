@@ -71,6 +71,9 @@ gem 'zip-zip'           # Fix axlsx dependency
 # Optimize
 gem 'goldiloader'
 
+# RMB
+gem 'rmb_chinese_yuan'
+
 group :development do
   gem 'quiet_assets'
 
