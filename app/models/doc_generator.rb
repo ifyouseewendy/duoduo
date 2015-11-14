@@ -48,7 +48,7 @@ class DocGenerator
       end
 
       def generate_temp_path
-        dir ||= base.join(SecureRandom.hex(10))
+        dir = base.join(SecureRandom.hex(10))
         dir.mkdir unless dir.exist?
         dir
       end

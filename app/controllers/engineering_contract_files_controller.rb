@@ -21,8 +21,8 @@ class EngineeringContractFilesController < ApplicationController
       template = EngineeringContractFile.template.first
 
       content = {
-        amount_number: project.total_amount.to_s,
-        amount_zh: '',
+        amount: project.total_amount.to_s,
+        money: ::RMB.convert(project.total_amount.to_i),
         refund_person: project.outcome_referee.to_s,
         refund_bank: project.outcome_bank.to_s,
         refund_account: project.outcome_amount.to_s,
