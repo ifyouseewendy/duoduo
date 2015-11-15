@@ -22,7 +22,7 @@ class EngineeringContractFilesController < ApplicationController
 
       content = {
         amount: project.total_amount.to_s,
-        money: ::RMB.convert(project.total_amount.to_i),
+        money: RMB.new(project.total_amount.to_i).convert,
         refund_person: project.outcome_referee.to_s,
         refund_bank: project.outcome_bank.to_s,
         refund_account: project.outcome_amount.to_s,

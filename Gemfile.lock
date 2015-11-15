@@ -266,7 +266,7 @@ GEM
     request_store (1.2.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
-    rmb_chinese_yuan (0.1.2)
+    rmb_chinese_yuan (1.1.0)
     rmmseg-cpp (0.2.9)
     roo (2.0.0beta1)
       nokogiri (~> 1)
