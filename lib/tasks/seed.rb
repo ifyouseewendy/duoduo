@@ -35,8 +35,14 @@ class Seed < Thor
       raise "项目#{pn}不在信息汇总中" if projects[id.to_i].nil?
       project = projects[id.to_i]
 
+      staff_file = customer_dir.join(pn).entries.detect{|file| file.to_s.index('用工明细')}
+      next if staff_file.nil?
+      puts "----- #{staff_file.to_s}"
+      path = customer_dir.join(pn).join(staff_file)
+      handling_staff(path: path, project: project)
+
       customer_dir.join(pn).entries.each do |file|
-        next if file.to_s.start_with?('.')
+        next if file.to_s.start_with?('.') or file.to_s.start_with?('用工明细')
         puts "----- #{file.to_s}"
 
         path = customer_dir.join(pn).join(file)
@@ -46,8 +52,7 @@ class Seed < Thor
         elsif file.to_s.index('工程合同')
           project.add_contract_file(path: path, role: :normal)
         elsif file.to_s.index('工资表')
-        elsif file.to_s.index('用工明细')
-          handling_staff(path: path, project: project)
+          handling_salary_table(path: path, project: project, type: :normal)
         else
           fail "Unknow file name: #{file}"
         end
@@ -84,8 +89,8 @@ class Seed < Thor
         NormalStaff, NormalCorporation,
         ContractFile, SubCompany,
         InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
-        EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
         EngineeringSalaryTable,
+        EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
         EngineeringCompanySocialInsuranceAmount, EngineeringCompanyMedicalInsuranceAmount
       ].each(&:destroy_all)
     end
@@ -183,7 +188,7 @@ class Seed < Thor
               outcome_amount: data[12]
             }
             total.each do |k,v|
-              puts "----- Validation failed: unequal #{k} total: #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
+              puts "----- Validation failed: unequal #{k} total in #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
             end
 
             next
@@ -242,6 +247,74 @@ class Seed < Thor
           identity_card: identity_card
         )
         staff.engineering_projects << project
+      end
+    end
+
+    def handling_salary_table(path:, project:, type:)
+      type = case type
+             when :with_tax
+               'EngineeringNormalWithTaxSalaryTable'
+             when :big_table
+               'EngineeringBigTableSalaryTable'
+             when :dong_fang
+               'EngineeringDongFangSalaryTable'
+             else
+               'EngineeringNormalSalaryTable'
+             end
+
+      xlsx_name = path.to_s
+      xlsx = Roo::Spreadsheet.open(xlsx_name)
+      sheet_id = 0
+      sheet = xlsx.sheet(sheet_id)
+
+      begin
+        name = sheet.row(2)[0].match(/(\d*年\d*月)./)[1]
+      rescue => _
+        fail "无法解析工资表名称: #{path}"
+      end
+
+      st = EngineeringSalaryTable.create!(
+        engineering_project: project,
+        name: name,
+        type: type
+      )
+
+      last_row = sheet.last_row
+      items = {}
+      (4..last_row).each do |row_id|
+        if row_id == last_row
+          data = sheet.row(row_id).compact
+          if data[0] == '合计'
+            total = {
+              salary_deserve: data[1],
+              social_insurance: data[2],
+              salary_in_fact: data[3]
+            }
+            total.each do |k,v|
+              puts "Validation failed: unequal #{k} total in #{xlsx_name}-#{sheet_id}" \
+                unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
+            end
+
+            next
+          end
+        end
+
+        id, name, salary_deserve, social_insurance, salary_in_fact, _ = \
+          sheet.row(row_id).map{|col| String === col ? col.strip : col}
+
+        next if id.nil?
+
+        staff = project.engineering_staffs.where(name: name).first
+        fail "未找到员工: #{name} in #{path}" if staff.nil?
+
+        item = st.salary_items.create!(
+          engineering_staff: staff,
+          salary_deserve: salary_deserve,
+          social_insurance: social_insurance,
+          salary_in_fact: salary_in_fact
+        )
+
+        items[id.to_i] = item
       end
     end
 end
