@@ -22,79 +22,25 @@ class Seed < Thor
     customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
 
     puts "- #{customer_dir.basename}"
+
+    info = customer_dir.entries.detect{|pn| pn.to_s.start_with?('信息汇总') }
+    raise "没有信息汇总" if info.nil?
+    handling_project_info(file: customer_dir.join(info), customer: customer)
+
     customer_dir.entries.each do |pn|
-      next if pn.to_s.start_with?('.')
+      next if pn.to_s.start_with?('.') or pn.to_s.start_with?('信息汇总')
       puts "--- #{pn}"
 
-      if pn.to_s.start_with?('信息汇总')
-        sc = get_sub_company_by(name: pn.to_s)
-        customer.sub_companies << sc
+      customer_dir.join(pn).entries.each do |file|
+        next if file.to_s.start_with?('.')
+        puts "----- #{file.to_s}"
 
-        xlsx_name = customer_dir.join(pn).to_s
-        xlsx = Roo::Spreadsheet.open(xlsx_name)
-        sheet_id = 0
-        sheet = xlsx.sheet(sheet_id)
-
-        last_row = sheet.last_row
-        projects = []
-        (3..last_row).each do |row_id|
-          if row_id == last_row
-            data = sheet.row(row_id)
-            if data[0] == '合计'
-              total = {
-                project_amount: data[4],
-                admin_amount: data[5],
-                total_amount: data[8],
-                outcome_amount: data[12]
-              }
-              total.each do |k,v|
-                puts "----- Validation failed: unequal #{k} total: #{xlsx_name}" unless total[k].to_f == projects.map(&k).map(&:to_f).sum
-              end
-
-              next
-            end
-          end
-
-          id, start_date, project_dates, name, project_amount, admin_amount, _project_amount, _admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof = \
-            sheet.row(row_id).map{|col| String === col ? col.strip : col}
-
-          project = customer.engineering_projects.where(name: name).first
-          if project.present?
-            projects << project
-            next
-          end
-
-          project_start_date, project_end_date = parse_project_dates(project_dates)
-          project = customer.engineering_projects.create!(
-            name: name,
-            start_date: start_date,
-            project_start_date: project_start_date,
-            project_end_date: project_end_date,
-            project_amount: project_amount,
-            admin_amount: admin_amount,
-            income_date: income_date,
-            outcome_date: outcome_date,
-            outcome_referee: outcome_referee,
-            outcome_amount: outcome_amount,
-            proof: proof
-          )
-
-          fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
-
-          projects << project
-        end
-      else
-        customer_dir.join(pn).entries.each do |file|
-          next if file.to_s.start_with?('.')
-          puts "----- #{file.to_s}"
-
-          if file.to_s.index('代发协议')
-          elsif file.to_s.index('工程合同')
-          elsif file.to_s.index('工资表')
-          elsif file.to_s.index('用工明细')
-          else
-            fail "Unknow file name: #{file}"
-          end
+        if file.to_s.index('代发协议')
+        elsif file.to_s.index('工程合同')
+        elsif file.to_s.index('工资表')
+        elsif file.to_s.index('用工明细')
+        else
+          fail "Unknow file name: #{file}"
         end
       end
     end
@@ -203,6 +149,65 @@ class Seed < Thor
       end
     end
 
+    def handling_project_info(file:, customer:)
+      # 处理信息汇总
+      sc = get_sub_company_by(name: file.basename.to_s)
+      customer.sub_companies << sc
+
+      xlsx_name = file.to_s
+      xlsx = Roo::Spreadsheet.open(xlsx_name)
+      sheet_id = 0
+      sheet = xlsx.sheet(sheet_id)
+
+      last_row = sheet.last_row
+      projects = []
+      (3..last_row).each do |row_id|
+        if row_id == last_row
+          data = sheet.row(row_id)
+          if data[0] == '合计'
+            total = {
+              project_amount: data[4],
+              admin_amount: data[5],
+              total_amount: data[8],
+              outcome_amount: data[12]
+            }
+            total.each do |k,v|
+              puts "----- Validation failed: unequal #{k} total: #{xlsx_name}" unless total[k].to_f == projects.map(&k).map(&:to_f).sum
+            end
+
+            next
+          end
+        end
+
+        id, start_date, project_dates, name, project_amount, admin_amount, _project_amount, _admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof = \
+          sheet.row(row_id).map{|col| String === col ? col.strip : col}
+
+        project = customer.engineering_projects.where(name: name).first
+        if project.present?
+          projects << project
+          next
+        end
+
+        project_start_date, project_end_date = parse_project_dates(project_dates)
+        project = customer.engineering_projects.create!(
+          name: name,
+          start_date: start_date,
+          project_start_date: project_start_date,
+          project_end_date: project_end_date,
+          project_amount: project_amount,
+          admin_amount: admin_amount,
+          income_date: income_date,
+          outcome_date: outcome_date,
+          outcome_referee: outcome_referee,
+          outcome_amount: outcome_amount,
+          proof: proof
+        )
+
+        fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
+
+        projects << project
+      end
+    end
 end
 
 Seed.start(ARGV)
