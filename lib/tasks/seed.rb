@@ -1,55 +1,111 @@
 require 'thor'
-require_relative 'import'
 
-class Demo < Thor
-  desc "start", ''
-  def start
+class Seed < Thor
+  desc "base", ''
+  def base
     load_rails
-
     clean_db
 
     seed_admin_user
     seed_sub_companies
-    seed_normal_staffs
-    seed_insurance_fund
-    seed_salary_tables
-    seed_guard_salary_tables
-    seed_non_full_day_salary_tables
-
-    seed_engineering_customers
-    seed_engineering_staffs
-    seed_engineering_corps
-    seed_engineering_projects
-
-    seed_engineering_salary_tables
-    seed_engineering_salary_items
-
-    seed_engineering_company_social_insurce_amounts
-    seed_engineering_company_medical_insurce_amounts
   end
 
+  desc "engineering", "Import engineering data"
+  option :from, required: true
+  def engineering
+    fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
+    customer_dir = Pathname(options[:from])
 
-  desc "clean_db", 'Clean DB'
-  def clean_db
-    puts "==> Loading Rails"
     load_rails
+    customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
 
-    puts "==> Cleaning DB data"
-    [
-      LaborContract,
-      SalaryItem, Invoice, SalaryTable,
-      GuardSalaryItem, GuardSalaryTable,
-      NonFullDaySalaryItem, NonFullDaySalaryTable,
-      NormalStaff, NormalCorporation,
-      ContractFile, SubCompany,
-      InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
-      EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
-      EngineeringSalaryTable,
-      EngineeringCompanySocialInsuranceAmount, EngineeringCompanyMedicalInsuranceAmount
-    ].each(&:destroy_all)
+    puts "- #{customer_dir.basename}"
+    customer_dir.entries.each do |pn|
+      next if pn.to_s.start_with?('.')
+      puts "--- #{pn}"
+
+      if pn.to_s.start_with?('信息汇总')
+        sc = get_sub_company_by(name: pn.to_s)
+        customer.sub_companies << sc
+
+        xlsx = Roo::Spreadsheet.open(customer_dir.join(pn).to_s)
+        sheet_id = 0
+        sheet = xlsx.sheet(sheet_id)
+
+        last_row = sheet.last_row - 1
+        (3..last_row).each do |row_id|
+          id, start_date, project_dates, name, _real_project_amount, _real_admin_amount, project_amount, admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof = \
+            sheet.row(row_id).map{|col| String === col ? col.strip : col}
+
+          project_start_date, project_end_date = parse_project_dates(project_dates)
+          next if customer.engineering_projects.where(name: name).count > 0
+          project = customer.engineering_projects.create!(
+            name: name,
+            start_date: start_date,
+            project_start_date: project_start_date,
+            project_end_date: project_end_date,
+            project_amount: project_amount,
+            admin_amount: admin_amount,
+            income_date: income_date,
+            outcome_date: outcome_date,
+            outcome_referee: outcome_referee,
+            outcome_amount: outcome_amount,
+            proof: proof
+          )
+
+          fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
+        end
+      else
+        customer_dir.join(pn).entries.each do |file|
+          next if file.to_s.start_with?('.')
+          puts "----- #{file.to_s}"
+
+          if file.to_s.index('代发协议')
+          elsif file.to_s.index('工程合同')
+          elsif file.to_s.index('工资表')
+          elsif file.to_s.index('用工明细')
+          else
+            fail "Unknow file name: #{file}"
+          end
+        end
+      end
+    end
   end
 
   private
+
+    def get_sub_company_by(name:)
+      if name.index('东方')
+        SubCompany.query_name('东方').first
+      elsif name.index('人力分') || name.index('公主岭')
+        SubCompany.query_name('公主岭').first
+      elsif name.index('人力')
+        SubCompany.where(name: '吉易人力资源').first
+      else
+        fail "Failed parsing SubCompany name: #{name}"
+      end
+    end
+
+    def load_rails
+      puts "==> Loading Rails"
+      require File.expand_path('config/environment.rb')
+    end
+
+    def clean_db
+      puts "==> Cleaning DB data"
+      [
+        LaborContract,
+        SalaryItem, Invoice, SalaryTable,
+        GuardSalaryItem, GuardSalaryTable,
+        NonFullDaySalaryItem, NonFullDaySalaryTable,
+        NormalStaff, NormalCorporation,
+        ContractFile, SubCompany,
+        InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
+        EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
+        EngineeringSalaryTable,
+        EngineeringCompanySocialInsuranceAmount, EngineeringCompanyMedicalInsuranceAmount
+      ].each(&:destroy_all)
+    end
 
     def seed_admin_user
       if AdminUser.where(email: 'admin').first.nil?
@@ -63,345 +119,62 @@ class Demo < Thor
       Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
         has_engineering_relation = (name =~ /人力/ ? true : false)
         sc = SubCompany.create(name: name, has_engineering_relation: has_engineering_relation)
-        (1..2).each_with_object([]) do |idx, ar|
-          if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
-            contract = "tmp/#{name}.合同#{idx}.txt"
-            sc.contract_files.create(contract: File.open(contract) )
-            sc.add_file(contract, template: true)
-          end
-        end
+
+        # TODO
+        #   - Set contract and template files
+        # (1..2).each_with_object([]) do |idx, ar|
+        #   if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
+        #     contract = "tmp/#{name}.合同#{idx}.txt"
+        #     sc.contract_files.create(contract: File.open(contract) )
+        #     sc.add_file(contract, template: true)
+        #   end
+        # end
 
         companies << sc
       end
     end
 
-    def seed_normal_staffs
-      puts "==> Preparing NormalStaff, LaborContract, and NormalCorporation"
-      Import.new.invoke('staff_and_contract', [], from: 'tmp/import/staff_and_contract/吉易通讯公司.xls' )
-    end
+    def parse_project_dates(str)
+      fail "Invalid project dates: #{str}" if str.split('-').count > 2
 
-    def seed_insurance_fund
-      puts "==> Preparing Individual Income Tax Table"
-      IndividualIncomeTaxBase.create(base: 3500)
-      IndividualIncomeTax.create(grade: 1, tax_range_start: 0,     tax_range_end: 1500,       rate: 0.03)
-      IndividualIncomeTax.create(grade: 2, tax_range_start: 1500,  tax_range_end: 4500,       rate: 0.1)
-      IndividualIncomeTax.create(grade: 3, tax_range_start: 4500,  tax_range_end: 9000,       rate: 0.2)
-      IndividualIncomeTax.create(grade: 4, tax_range_start: 9000,  tax_range_end: 35000,      rate: 0.25)
-      IndividualIncomeTax.create(grade: 5, tax_range_start: 35000, tax_range_end: 55000,      rate: 0.3)
-      IndividualIncomeTax.create(grade: 6, tax_range_start: 55000, tax_range_end: 80000,      rate: 0.35)
-      IndividualIncomeTax.create(grade: 7, tax_range_start: 80000, tax_range_end: 999999999,  rate: 0.45)
+      start_date, end_date = str.split('-')
 
-      puts "==> Preparing Insurance Fund Rate Table"
-      InsuranceFundRate.create(name: '个人', pension: 0.08, unemployment: 0.005, medical: 0.02, injury: 0, birth: 0, house_accumulation: 96)
-      InsuranceFundRate.create(name: '公司', pension: 0.2,  unemployment: 0.015, medical: 0.06, injury: 0.015, birth: 0.004, house_accumulation: 96)
+      start_date = revise_date start_date
 
-    end
+      if end_date.nil?
+        end_date = start_date.end_of_month
+      else
+        year = start_date.year
 
-    def seed_salary_tables
-      puts "==> Preparing SalaryTable, SalaryItem and Invoice"
-      count = NormalCorporation.count*2
-      (1..count).each do |id|
-        puts "... Processing #{id}/#{count}" if id % 10 == 0
-        nc = NormalCorporation.all.sample
+        parts = end_date.split('.')
 
-        month = (1..12).to_a.sample
-
-        st = SalaryTable.create!(
-          name: "2015年#{month}月",
-          normal_corporation: nc
-        )
-
-        date = "2015-01-01".to_date + id.days
-        Invoice.create!(
-          invoicable: st,
-          release_date: date,
-          encoding: 'XC10329837',
-          payer: NormalStaff.all.sample.name,
-          project_name: "#{nc.name} - #{st.name}",
-          amount: (1..5).to_a.sample*100000,
-          total_amount: (6..9).to_a.sample*100000,
-          contact_person: NormalStaff.all.sample.name,
-          refund_person: NormalStaff.all.sample.name,
-          income_date: date,
-          refund_date: date + 10.days
-        )
-
-        begin
-          st.normal_corporation.normal_staffs.each do |staff|
-            SalaryItem.create_by(salary_table: st, salary: (1..8).to_a.sample*1000, name: staff.name, identity_card: staff.identity_card)
-          end
-        rescue => e
-          require'pry';binding.pry
+        if parts[0].to_i > 12
+          parts[0] = "20#{parts[0]}"
+        elsif parts[0].length != 4
+          parts.unshift year
         end
+
+        end_date = revise_date(parts.join('.'))
+        end_date = end_date.end_of_month if end_date.day == 1
       end
+
+      [start_date, end_date]
     end
 
-    def seed_guard_salary_tables
-      puts "==> Preparing GuardSalaryTable, GuardSalaryItem and Invoice"
-      count = NormalCorporation.count*2
-      (1..count).each do |id|
-        puts "... Processing #{id}/#{count}" if id % 10 == 0
-        nc = NormalCorporation.all.sample
+    # 2015.4
+    def revise_date(date)
+      parts = date.split('.')
+      parts << '1' if parts.count == 2
 
-        month = (1..12).to_a.sample
-
-        st = GuardSalaryTable.create!(
-          name: "2015年#{month}月",
-          normal_corporation: nc
-        )
-
-        date = "2015-01-01".to_date + id.days
-        Invoice.create!(
-          invoicable: st,
-          release_date: date,
-          encoding: 'XC10329837',
-          payer: NormalStaff.all.sample.name,
-          project_name: "#{nc.name} - #{st.name}",
-          amount: (1..5).to_a.sample*100000,
-          total_amount: (6..9).to_a.sample*100000,
-          contact_person: NormalStaff.all.sample.name,
-          refund_person: NormalStaff.all.sample.name,
-          income_date: date,
-          refund_date: date + 10.days
-        )
-
-        begin
-          st.normal_corporation.normal_staffs.each do |staff|
-            GuardSalaryItem.create!(
-              normal_staff: staff,
-              guard_salary_table: st,
-              income: 10000,
-              salary_deserve: 10000,
-              festival: 1000,
-              dress_return: 1000,
-              salary_deserve_total: nil,
-              physical_exam_deduct: 1000,
-              dress_deduct: 1000,
-              work_exam_deduct: 0,
-              other_deduct: 0,
-              total_deduct: nil,
-              salary_in_fact: nil,
-              accident_insurance: 1000,
-              total: nil,
-              balance: nil
-            )
-          end
-        rescue => e
-          require'pry';binding.pry
-        end
+      begin
+        Date.parse parts.join('.')
+      rescue => e
+        puts "revise_date: Invalid date: #{date}"
+        puts e.backtrace
+        raise e
       end
-    end
-
-    def seed_non_full_day_salary_tables
-      puts "==> Preparing NonFullDaySalaryTable, NonFullDaySalaryItem and Invoice"
-      count = NormalCorporation.count*2
-      (1..count).each do |id|
-        puts "... Processing #{id}/#{count}" if id % 10 == 0
-        nc = NormalCorporation.all.sample
-
-        month = (1..12).to_a.sample
-
-        st = NonFullDaySalaryTable.create!(
-          name: "2015年#{month}月",
-          normal_corporation: nc
-        )
-
-        date = "2015-01-01".to_date + id.days
-        Invoice.create!(
-          invoicable: st,
-          release_date: date,
-          encoding: 'XC10329837',
-          payer: NormalStaff.all.sample.name,
-          project_name: "#{nc.name} - #{st.name}",
-          amount: (1..5).to_a.sample*100000,
-          total_amount: (6..9).to_a.sample*100000,
-          contact_person: NormalStaff.all.sample.name,
-          refund_person: NormalStaff.all.sample.name,
-          income_date: date,
-          refund_date: date + 10.days
-        )
-
-        begin
-          st.normal_corporation.normal_staffs.each do |staff|
-            NonFullDaySalaryItem.create!(
-              normal_staff: staff,
-              non_full_day_salary_table: st,
-              month: "#{(1..12).to_a.sample}月",
-              work_hour: (10..30).to_a.sample,
-              work_wage: (10..50).to_a.sample,
-              salary_deserve: nil,
-              tax: 100,
-              other: 100,
-              salary_in_fact: nil,
-              accident_insurance: 100,
-              admin_amount: nil,
-              total: nil,
-              remark: '备注'
-            )
-          end
-        rescue => e
-          require'pry';binding.pry
-        end
-      end
-    end
-
-    def seed_engineering_customers
-      puts "==> Preparing EngineeringCustomer"
-
-      (1..10).each do |i|
-        sub_companies = SubCompany.hr.samples( rand(2)+1 )
-        staff = NormalStaff.offset(i).limit(1).first
-
-        EngineeringCustomer.create!(
-          sub_companies = sub_companies,
-          name: staff.name,
-          telephone: staff.telephone,
-          identity_card: staff.identity_card,
-          bank_account: staff.account,
-          bank_name: staff.account_bank,
-          bank_opening_place: nil,
-          remark: '备注'
-        )
-      end
-    end
-
-    def seed_engineering_staffs
-      puts "==> Preparing EngineeringStaff"
-
-      EngineeringCustomer.all.each do |ec|
-        (1..3).each do |id|
-          staff = Jia::User.new
-
-          EngineeringStaff.create!(
-            engineering_customer: ec,
-            nest_index: id,
-            name: staff.full_name,
-            identity_card: rand_by(10),
-            birth: random_date,
-            age: 20,
-            gender: rand(2),
-            nation:  '汉族',
-            address: '住址',
-            remark: '备注'
-          )
-        end
-      end
-    end
-
-    def seed_engineering_corps
-      puts "==> Preparing EngineeringCorp"
-
-      (1..10).each do |id|
-        start_date = "2015-01-01".to_date + (id*10).days
-
-        EngineeringCorp.create!(
-          name: "工程合作单位#{id}",
-          contract_start_date: start_date,
-          contract_end_date: start_date + id.months
-        )
-      end
-    end
-
-    def seed_engineering_projects
-      puts "==> Preparing EngineeringProject"
-
-      EngineeringCustomer.all.each do |ec|
-        (1..3).each do |id|
-          start_date = "2015-01-01".to_date + id.months
-          end_date = start_date.end_of_month + ([-15, 0, 15, 15].sample.days)
-
-          staffs = ec.engineering_staffs
-          EngineeringProject.create!(
-            engineering_customer: ec,
-            engineering_staffs: staffs,
-            engineering_corp: EngineeringCorp.all.sample,
-            name: "#{ec.name} - 项目#{id}",
-            start_date: start_date,
-            project_start_date: start_date,
-            project_end_date: end_date,
-            project_range: nil, # Auto set
-            project_amount: (id * 3500),
-            admin_amount: 10000,
-            total_amount: nil, # Auto set
-            income_date:  start_date + 90.days,
-            income_amount: 110000,
-            outcome_date: start_date + 91.days,
-            outcome_referee: nil,
-            outcome_amount: 100000,
-            proof: nil,
-            already_get_contract: [true, false].sample,
-            already_sign_dispatch: [true, false].sample,
-            remark: '备注'
-          )
-        end
-      end
-    end
-
-    def seed_engineering_salary_tables
-      puts "==> Preparing EngineeringSalaryTable"
-
-      EngineeringProject.all.each do |ep|
-        EngineeringSalaryTable.types.each do |klass|
-          klass.create!(
-            engineering_project: ep,
-            name: "#{ep.name} 工资表 - #{klass.model_name.human}",
-            remark: '备注'
-          )
-        end
-      end
-    end
-
-    def seed_engineering_salary_items
-      puts "==> Preparing EngineeringSalaryItem"
-
-    end
-
-    def seed_engineering_company_social_insurce_amounts
-      puts "==> Preparing EngineeringCompanySocialInsuranceAmount"
-
-      dates = %w(2000-01-01 2014-01-01 2014-07-01 2015-01-01)
-      amounts = [0, 200, 300, 407]
-
-      dates.each_with_index do |start_date, idx|
-        next_date = dates[idx+1]
-        end_date = next_date.to_date.yesterday rescue nil
-        EngineeringCompanySocialInsuranceAmount.create!(
-          start_date: Date.parse(start_date),
-          end_date: end_date,
-          amount: amounts[idx]
-        )
-      end
-    end
-
-    def seed_engineering_company_medical_insurce_amounts
-      puts "==> Preparing EngineeringCompanyMedicalInsuranceAmount"
-
-      dates = %w(2000-01-01 2014-01-01 2014-07-01 2015-01-01)
-      amounts = [0, 100, 200, 249]
-
-      dates.each_with_index do |start_date, idx|
-        next_date = dates[idx+1]
-        end_date = next_date.to_date.yesterday rescue nil
-        EngineeringCompanyMedicalInsuranceAmount.create!(
-          start_date: Date.parse(start_date),
-          end_date: end_date,
-          amount: amounts[idx]
-        )
-      end
-    end
-
-    def load_rails
-      require File.expand_path('config/environment.rb')
-    end
-
-    def rand_by(len)
-      rand.to_s[2..(2+len-1)]
-    end
-
-    def random_date(base = '1980-01-01')
-      Date.parse(base) + rand(10).years + rand(300).days
     end
 
 end
 
-Demo.start(ARGV)
+Seed.start(ARGV)
