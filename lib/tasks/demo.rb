@@ -2,7 +2,7 @@ require 'thor'
 require_relative 'import'
 
 class Demo < Thor
-  desc "start", ''
+  desc "start", 'Seed development demo data'
   def start
     load_rails
 
