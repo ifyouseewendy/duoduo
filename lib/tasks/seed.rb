@@ -16,7 +16,9 @@ class Seed < Thor
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
     customer_dir = Pathname(options[:from])
 
-    load_rails
+    # load_rails
+    base
+
     customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
 
     puts "- #{customer_dir.basename}"
@@ -28,17 +30,41 @@ class Seed < Thor
         sc = get_sub_company_by(name: pn.to_s)
         customer.sub_companies << sc
 
-        xlsx = Roo::Spreadsheet.open(customer_dir.join(pn).to_s)
+        xlsx_name = customer_dir.join(pn).to_s
+        xlsx = Roo::Spreadsheet.open(xlsx_name)
         sheet_id = 0
         sheet = xlsx.sheet(sheet_id)
 
-        last_row = sheet.last_row - 1
+        last_row = sheet.last_row
+        projects = []
         (3..last_row).each do |row_id|
-          id, start_date, project_dates, name, _real_project_amount, _real_admin_amount, project_amount, admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof = \
+          if row_id == last_row
+            data = sheet.row(row_id)
+            if data[0] == '合计'
+              total = {
+                project_amount: data[4],
+                admin_amount: data[5],
+                total_amount: data[8],
+                outcome_amount: data[12]
+              }
+              total.each do |k,v|
+                puts "----- Validation failed: unequal #{k} total: #{xlsx_name}" unless total[k].to_f == projects.map(&k).map(&:to_f).sum
+              end
+
+              next
+            end
+          end
+
+          id, start_date, project_dates, name, project_amount, admin_amount, _project_amount, _admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof = \
             sheet.row(row_id).map{|col| String === col ? col.strip : col}
 
+          project = customer.engineering_projects.where(name: name).first
+          if project.present?
+            projects << project
+            next
+          end
+
           project_start_date, project_end_date = parse_project_dates(project_dates)
-          next if customer.engineering_projects.where(name: name).count > 0
           project = customer.engineering_projects.create!(
             name: name,
             start_date: start_date,
@@ -54,6 +80,8 @@ class Seed < Thor
           )
 
           fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
+
+          projects << project
         end
       else
         customer_dir.join(pn).entries.each do |file|
