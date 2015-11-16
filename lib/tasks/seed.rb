@@ -23,35 +23,35 @@ class Seed < Thor
 
     puts "- #{customer_dir.basename}"
 
-    info = customer_dir.entries.detect{|pn| pn.to_s.start_with?('信息汇总') }
+    info = customer_dir.entries.detect{|pn| pn.to_s =~ /信息汇总/ }
     raise "没有信息汇总" if info.nil?
     projects = handling_project_info(file: customer_dir.join(info), customer: customer)
 
     customer_dir.entries.each do |pn|
-      next if pn.to_s.start_with?('.') or pn.to_s.start_with?('信息汇总')
+      next if pn.to_s.start_with?('.') or pn.to_s =~ /信息汇总/ or pn.to_s.start_with?('skip')
       puts "--- #{pn}"
 
       id, _name = pn.to_s.split('、')
       raise "项目#{pn}不在信息汇总中" if projects[id.to_i].nil?
       project = projects[id.to_i]
 
-      staff_file = customer_dir.join(pn).entries.detect{|file| file.to_s.index('用工明细')}
+      staff_file = customer_dir.join(pn).entries.detect{|file| file.to_s =~ /用工/}
       next if staff_file.nil?
       puts "----- #{staff_file.to_s}"
       path = customer_dir.join(pn).join(staff_file)
       handling_staff(path: path, project: project)
 
       customer_dir.join(pn).entries.each do |file|
-        next if file.to_s.start_with?('.') or file.to_s.start_with?('用工明细')
+        next if file.to_s.start_with?('.') or file.to_s =~ /用工/
         puts "----- #{file.to_s}"
 
         path = customer_dir.join(pn).join(file)
 
-        if file.to_s.index('代发协议')
+        if file.to_s =~ /协议/
           project.add_contract_file(path: path, role: :proxy)
-        elsif file.to_s.index('工程合同')
+        elsif file.to_s =~ /合同/
           project.add_contract_file(path: path, role: :normal)
-        elsif file.to_s.index('工资表')
+        elsif file.to_s =~ /工资/
           handling_salary_table(path: path, project: project, type: :normal)
         else
           fail "Unknow file name: #{file}"
