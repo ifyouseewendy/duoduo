@@ -1,6 +1,6 @@
 class EngineeringStaff < ActiveRecord::Base
   belongs_to :engineering_customer
-  has_and_belongs_to_many :engineering_projects, before_add: :check_schedule
+  has_and_belongs_to_many :engineering_projects #, before_add: :check_schedule
 
   has_many :engineering_normal_salary_items
   has_many :engineering_normal_with_tax_salary_items
