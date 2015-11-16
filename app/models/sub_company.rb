@@ -10,6 +10,7 @@ class SubCompany < ActiveRecord::Base
 
   validates_uniqueness_of :name
 
+  scope :query_name, ->(name){ where("name LIKE '%#{name}%'") }
   scope :hr, ->{ where("name LIKE '%人力%'") }
 
   class << self
