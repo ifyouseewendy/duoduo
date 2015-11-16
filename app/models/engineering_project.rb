@@ -242,4 +242,11 @@ class EngineeringProject < ActiveRecord::Base
       reference: EngineeringBigTableSalaryTableReference.create!(url: url)
     )
   end
+
+  def add_contract_file(path:, role: :normal)
+    self.contract_files.create!(
+      contract: File.open(path),
+      role: role
+    )
+  end
 end
