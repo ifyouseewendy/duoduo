@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151112045007) do
+ActiveRecord::Schema.define(version: 20151116022700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,14 @@ ActiveRecord::Schema.define(version: 20151112045007) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
   end
+
+  create_table "engineering_customers_sub_companies", id: false, force: :cascade do |t|
+    t.integer "engineering_customer_id", null: false
+    t.integer "sub_company_id",          null: false
+  end
+
+  add_index "engineering_customers_sub_companies", ["engineering_customer_id", "sub_company_id"], name: "idx_engineering_customer_and_sub_company", using: :btree
+  add_index "engineering_customers_sub_companies", ["sub_company_id", "engineering_customer_id"], name: "idx_sub_company_and_engineering_customer", using: :btree
 
   create_table "engineering_dong_fang_salary_items", force: :cascade do |t|
     t.decimal  "salary_deserve",              precision: 8, scale: 2
