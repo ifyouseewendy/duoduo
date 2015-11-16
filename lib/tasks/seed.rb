@@ -25,18 +25,26 @@ class Seed < Thor
 
     info = customer_dir.entries.detect{|pn| pn.to_s.start_with?('信息汇总') }
     raise "没有信息汇总" if info.nil?
-    handling_project_info(file: customer_dir.join(info), customer: customer)
+    projects = handling_project_info(file: customer_dir.join(info), customer: customer)
 
     customer_dir.entries.each do |pn|
       next if pn.to_s.start_with?('.') or pn.to_s.start_with?('信息汇总')
       puts "--- #{pn}"
 
+      id, _name = pn.to_s.split('、')
+      raise "项目#{pn}不在信息汇总中" if projects[id.to_i].nil?
+      project = projects[id.to_i]
+
       customer_dir.join(pn).entries.each do |file|
         next if file.to_s.start_with?('.')
         puts "----- #{file.to_s}"
 
+        path = customer_dir.join(pn).join(file)
+
         if file.to_s.index('代发协议')
+          project.add_contract_file(path: path, role: :proxy)
         elsif file.to_s.index('工程合同')
+          project.add_contract_file(path: path, role: :normal)
         elsif file.to_s.index('工资表')
         elsif file.to_s.index('用工明细')
         else
@@ -149,8 +157,10 @@ class Seed < Thor
       end
     end
 
+    # 处理信息汇总
     def handling_project_info(file:, customer:)
-      # 处理信息汇总
+      puts "--- #{file.basename}"
+
       sc = get_sub_company_by(name: file.basename.to_s)
       customer.sub_companies << sc
 
@@ -160,7 +170,7 @@ class Seed < Thor
       sheet = xlsx.sheet(sheet_id)
 
       last_row = sheet.last_row
-      projects = []
+      projects = {}
       (3..last_row).each do |row_id|
         if row_id == last_row
           data = sheet.row(row_id)
@@ -172,7 +182,7 @@ class Seed < Thor
               outcome_amount: data[12]
             }
             total.each do |k,v|
-              puts "----- Validation failed: unequal #{k} total: #{xlsx_name}" unless total[k].to_f == projects.map(&k).map(&:to_f).sum
+              puts "----- Validation failed: unequal #{k} total: #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
             end
 
             next
@@ -184,7 +194,7 @@ class Seed < Thor
 
         project = customer.engineering_projects.where(name: name).first
         if project.present?
-          projects << project
+          projects[id.to_i] = project
           next
         end
 
@@ -205,8 +215,10 @@ class Seed < Thor
 
         fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
 
-        projects << project
+        projects[id.to_i] = project
       end
+
+      projects
     end
 end
 
