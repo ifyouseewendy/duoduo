@@ -264,57 +264,60 @@ class Seed < Thor
 
       xlsx_name = path.to_s
       xlsx = Roo::Spreadsheet.open(xlsx_name)
-      sheet_id = 0
-      sheet = xlsx.sheet(sheet_id)
 
-      begin
-        name = sheet.row(2)[0].match(/(\d*年\d*月)./)[1]
-      rescue => _
-        fail "无法解析工资表名称: #{path}"
-      end
+      xlsx.sheets.each_index do |sheet_id|
+        puts "------- Sheet #{sheet_id+1}"
+        sheet = xlsx.sheet(sheet_id)
 
-      st = EngineeringSalaryTable.create!(
-        engineering_project: project,
-        name: name,
-        type: type
-      )
-
-      last_row = sheet.last_row
-      items = {}
-      (4..last_row).each do |row_id|
-        if row_id == last_row
-          data = sheet.row(row_id).compact
-          if data[0] == '合计'
-            total = {
-              salary_deserve: data[1],
-              social_insurance: data[2],
-              salary_in_fact: data[3]
-            }
-            total.each do |k,v|
-              puts "----- Validation failed: unequal #{k} total in #{xlsx_name}-#{sheet_id}" \
-                unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
-            end
-
-            next
-          end
+        begin
+          name = sheet.row(2)[0].match(/(\d*年\d*月)./)[1]
+        rescue => _
+          fail "无法解析工资表名称: #{path}"
         end
 
-        id, name, salary_deserve, social_insurance, salary_in_fact, _ = \
-          sheet.row(row_id).map{|col| String === col ? col.strip : col}
-
-        next if id.nil?
-
-        staff = project.engineering_staffs.where(name: name).first
-        fail "未找到员工: #{name} in #{path}" if staff.nil?
-
-        item = st.salary_items.create!(
-          engineering_staff: staff,
-          salary_deserve: salary_deserve,
-          social_insurance: social_insurance,
-          salary_in_fact: salary_in_fact
+        st = EngineeringSalaryTable.create!(
+          engineering_project: project,
+          name: name,
+          type: type
         )
 
-        items[id.to_i] = item
+        last_row = sheet.last_row
+        items = {}
+        (4..last_row).each do |row_id|
+          if row_id == last_row
+            data = sheet.row(row_id).compact
+            if data[0] == '合计'
+              total = {
+                salary_deserve: data[1],
+                social_insurance: data[2],
+                salary_in_fact: data[3]
+              }
+              total.each do |k,v|
+                puts "----- Validation failed: unequal #{k} total in #{xlsx_name}-#{sheet_id}" \
+                  unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
+              end
+
+              next
+            end
+          end
+
+          id, name, salary_deserve, social_insurance, salary_in_fact, _ = \
+            sheet.row(row_id).map{|col| String === col ? col.strip : col}
+
+          next if id.nil?
+
+          staff = project.engineering_staffs.where(name: name).first
+          fail "未找到员工: #{name} in #{path}" if staff.nil?
+
+          item = st.salary_items.create!(
+            engineering_staff: staff,
+            salary_deserve: salary_deserve,
+            social_insurance: social_insurance,
+            salary_in_fact: salary_in_fact
+          )
+
+          items[id.to_i] = item
+        end
       end
     end
 end
