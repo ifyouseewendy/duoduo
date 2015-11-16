@@ -249,9 +249,11 @@ class Seed < Thor
       puts "==> Preparing EngineeringCustomer"
 
       (1..10).each do |i|
+        sub_companies = SubCompany.hr.samples( rand(2)+1 )
         staff = NormalStaff.offset(i).limit(1).first
 
         EngineeringCustomer.create!(
+          sub_companies = sub_companies,
           name: staff.name,
           telephone: staff.telephone,
           identity_card: staff.identity_card,
