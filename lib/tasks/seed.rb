@@ -47,6 +47,7 @@ class Seed < Thor
           project.add_contract_file(path: path, role: :normal)
         elsif file.to_s.index('工资表')
         elsif file.to_s.index('用工明细')
+          handling_staff(path: path, project: project)
         else
           fail "Unknow file name: #{file}"
         end
@@ -219,6 +220,29 @@ class Seed < Thor
       end
 
       projects
+    end
+
+    def handling_staff(path: , project:)
+      xlsx_name = path.to_s
+      xlsx = Roo::Spreadsheet.open(xlsx_name)
+      sheet_id = 0
+      sheet = xlsx.sheet(sheet_id)
+
+      last_row = sheet.last_row
+
+      (3..last_row).each do |row_id|
+        _id, name, gender, identity_card = sheet.row(row_id).map{|col| String === col ? col.strip : col}
+        next if _id.nil?
+
+        gender_map = {'男' => :male, '女' => :female}
+        staff = EngineeringStaff.find_or_create_by!(
+          engineering_customer: project.engineering_customer,
+          name: name,
+          gender: gender_map[gender],
+          identity_card: identity_card
+        )
+        staff.engineering_projects << project
+      end
     end
 end
 
