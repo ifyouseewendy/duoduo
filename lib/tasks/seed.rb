@@ -179,13 +179,13 @@ class Seed < Thor
       projects = {}
       (3..last_row).each do |row_id|
         if row_id == last_row
-          data = sheet.row(row_id)
+          data = sheet.row(row_id).compact
           if data[0] == '合计'
             total = {
-              project_amount: data[4],
-              admin_amount: data[5],
-              total_amount: data[8],
-              outcome_amount: data[12]
+              project_amount: data[1],
+              admin_amount: data[2],
+              total_amount: data[3],
+              outcome_amount: data[4]
             }
             total.each do |k,v|
               puts "----- Validation failed: unequal #{k} total in #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
@@ -291,7 +291,7 @@ class Seed < Thor
               salary_in_fact: data[3]
             }
             total.each do |k,v|
-              puts "Validation failed: unequal #{k} total in #{xlsx_name}-#{sheet_id}" \
+              puts "----- Validation failed: unequal #{k} total in #{xlsx_name}-#{sheet_id}" \
                 unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
             end
 
