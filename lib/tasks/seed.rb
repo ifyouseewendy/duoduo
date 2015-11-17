@@ -32,7 +32,7 @@ class Seed < Thor
     end
 
     customer_dir.entries.each do |pn|
-      next if pn.to_s.start_with?('.') or pn.to_s =~ /信息汇总/ or pn.to_s.start_with?('skip')
+      next if pn.to_s.start_with?('.') or pn.to_s =~ /信息汇总/ or pn.to_s.start_with?('__')
       puts "--- #{pn}"
 
       id, _name = pn.to_s.split('、')
@@ -69,7 +69,7 @@ class Seed < Thor
     def get_sub_company_by(name:)
       if name.index('东方')
         SubCompany.query_name('东方').first
-      elsif name.index('人力分') || name.index('公主岭')
+      elsif name.index('人力分')
         SubCompany.query_name('公主岭').first
       elsif name.index('人力')
         SubCompany.where(name: '吉易人力资源').first
