@@ -159,10 +159,9 @@ class EngineeringProject < ActiveRecord::Base
     end
   end
 
-  # Precondition:
-  #   amount - should be an Integer
   def gennerate_random_salary(amount:, count:)
-    raise "来款金额需为整数" if amount != amount.to_i
+    fraction_gap = amount.ceil - amount
+    amount = amount.ceil
 
     tax_limit = 3500
     raise "Value of #{amount}<amount> is too big, higher than #{tax_limit*count} ( = #{count}<count> * #{tax_limit}<tax_limit> )" if amount > count*tax_limit
@@ -192,6 +191,7 @@ class EngineeringProject < ActiveRecord::Base
       pos += 2
     end
 
+    wave_array[0] = (wave_array[0] - fraction_gap).round(2)
     wave_array.map{|n| avg + n}.shuffle
   end
 
