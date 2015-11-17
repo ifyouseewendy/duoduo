@@ -19,7 +19,11 @@ ActiveAdmin.register EngineeringProject do
       link_to obj.engineering_customer.name, engineering_customer_path(obj.engineering_customer)
     end
     column :engineering_corp, sortable: :id do |obj|
-      link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
+      if obj.engineering_corp.nil?
+        link_to '', '#'
+      else
+        link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
+      end
     end
     (EngineeringProject.ordered_columns(without_foreign_keys: true) - [:id, :name]).each do |field|
       column field
