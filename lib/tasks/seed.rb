@@ -23,9 +23,13 @@ class Seed < Thor
 
     puts "- #{customer_dir.basename}"
 
-    info = customer_dir.entries.detect{|pn| pn.to_s =~ /信息汇总/ }
-    raise "没有信息汇总" if info.nil?
-    projects = handling_project_info(file: customer_dir.join(info), customer: customer)
+    infos = customer_dir.entries.select{|pn| pn.to_s =~ /信息汇总/ }
+    raise "没有信息汇总" if infos.blank?
+    projects = {}
+    infos.each do |info|
+      stats = handling_project_info(file: customer_dir.join(info), customer: customer)
+      projects.merge!(stats)
+    end
 
     customer_dir.entries.each do |pn|
       next if pn.to_s.start_with?('.') or pn.to_s =~ /信息汇总/ or pn.to_s.start_with?('skip')
@@ -47,10 +51,10 @@ class Seed < Thor
 
         path = customer_dir.join(pn).join(file)
 
-        if file.to_s =~ /协议/
-          project.add_contract_file(path: path, role: :proxy)
-        elsif file.to_s =~ /合同/
+        if file.to_s =~ /合同/
           project.add_contract_file(path: path, role: :normal)
+        elsif file.to_s =~ /协议/
+          project.add_contract_file(path: path, role: :proxy)
         elsif file.to_s =~ /工资/
           handling_salary_table(path: path, project: project, type: :normal)
         else
@@ -165,6 +169,7 @@ class Seed < Thor
 
     # 处理信息汇总
     def handling_project_info(file:, customer:)
+
       puts "--- #{file.basename}"
 
       sc = get_sub_company_by(name: file.basename.to_s)
@@ -176,32 +181,34 @@ class Seed < Thor
       sheet = xlsx.sheet(sheet_id)
 
       last_row = sheet.last_row
+      col_count = sheet.row(2).compact.count
       projects = {}
       (3..last_row).each do |row_id|
-        if row_id == last_row
-          data = sheet.row(row_id).compact
-          if data[0] == '合计'
-            total = {
-              project_amount: data[1],
-              admin_amount: data[2],
-              total_amount: data[3],
-              outcome_amount: data[4]
-            }
-            total.each do |k,v|
-              puts "----- Validation failed: unequal #{k} total in #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
-            end
-
-            next
+        data = sheet.row(row_id)
+        next if data[0].nil?
+        if data[0] == '合计'
+          data = data.compact
+          total = {
+            project_amount: data[1],
+            admin_amount: data[2],
+            total_amount: data[3],
+            outcome_amount: data[4]
+          }
+          total.each do |k,v|
+            puts "----- Validation failed: unequal #{k} total in #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
           end
+
+          break
         end
 
-        id, start_date, project_dates, name, project_amount, admin_amount, _project_amount, _admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof = \
-          sheet.row(row_id).map{|col| String === col ? col.strip : col}
-
-        project = customer.engineering_projects.where(name: name).first
-        if project.present?
-          projects[id.to_i] = project
-          next
+        if col_count == 14
+          id, start_date, project_dates, name, project_amount, admin_amount, _project_amount, _admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof, remark = \
+            sheet.row(row_id).map{|col| String === col ? col.strip : col}
+        elsif col_count == 12 || col_count == 11
+          id, start_date, project_dates, name, project_amount, admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof, remark = \
+            sheet.row(row_id).map{|col| String === col ? col.strip : col}
+        else
+          fail "无法解析信息汇总：#{file}"
         end
 
         project_start_date, project_end_date = parse_project_dates(project_dates)
@@ -216,7 +223,8 @@ class Seed < Thor
           outcome_date: outcome_date,
           outcome_referee: outcome_referee,
           outcome_amount: outcome_amount,
-          proof: proof
+          proof: proof,
+          remark: remark
         )
 
         fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
@@ -270,7 +278,15 @@ class Seed < Thor
         sheet = xlsx.sheet(sheet_id)
 
         begin
-          name = sheet.row(2)[0].match(/(\d*年\d*月)./)[1]
+          if sheet.row(2).compact.count == 1
+            name = sheet.row(2)[0].match(/(\d*年\d*月)./)[1]
+            start_row = 4
+          elsif sheet.row(1).compact.count == 1
+            name = sheet.row(1)[0].match(/(\d+年\(?\d*\)?月)/)[1]
+            start_row = 3
+          else
+            fail "无法解析工资表名称: #{path}"
+          end
         rescue => _
           fail "无法解析工资表名称: #{path}"
         end
@@ -283,26 +299,46 @@ class Seed < Thor
 
         last_row = sheet.last_row
         items = {}
-        (4..last_row).each do |row_id|
-          if row_id == last_row
-            data = sheet.row(row_id).compact
-            if data[0] == '合计'
+        col_count = sheet.row(start_row-1).compact.count
+        (start_row..last_row).each do |row_id|
+          data = sheet.row(row_id)
+          next if data[0].nil?
+
+          if data[0] == '合计'
+            data = data.compact
+            if col_count == 6
               total = {
                 salary_deserve: data[1],
                 social_insurance: data[2],
                 salary_in_fact: data[3]
               }
-              total.each do |k,v|
-                puts "----- Validation failed: unequal #{k} total in #{xlsx_name}-#{sheet_id}" \
-                  unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
-              end
-
-              next
+            elsif col_count == 8
+              total = {
+                salary_deserve: data[1],
+                social_insurance: data[2],
+                salary_in_fact: data[5]
+              }
+            else
+              fail "工资表汇总信息获取失败"
             end
+            total.each do |k,v|
+              puts "----- Validation failed: unequal #{k} total in #{xlsx_name}-#{sheet_id}" \
+                unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
+            end
+
+            break
           end
 
-          id, name, salary_deserve, social_insurance, salary_in_fact, _ = \
-            sheet.row(row_id).map{|col| String === col ? col.strip : col}
+          if col_count == 6
+            id, name, salary_deserve, social_insurance, salary_in_fact, _ = \
+              sheet.row(row_id).map{|col| String === col ? col.strip : col}
+            medical_insurance = nil
+          elsif col_count == 8
+            id, name, salary_deserve, social_insurance, medical_insurance, _total_insurance, salary_in_fact, _ = \
+              sheet.row(row_id).map{|col| String === col ? col.strip : col}
+          else
+            fail "工资表无法解析：#{path}"
+          end
 
           next if id.nil?
 
@@ -313,6 +349,7 @@ class Seed < Thor
             engineering_staff: staff,
             salary_deserve: salary_deserve,
             social_insurance: social_insurance,
+            medical_insurance: medical_insurance,
             salary_in_fact: salary_in_fact
           )
 
