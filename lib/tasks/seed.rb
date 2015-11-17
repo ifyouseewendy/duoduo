@@ -213,7 +213,7 @@ class Seed < Thor
 
         project_start_date, project_end_date = parse_project_dates(project_dates)
         project = customer.engineering_projects.create!(
-          name: name,
+          name: "#{id.to_i}、#{name}",
           start_date: start_date,
           project_start_date: project_start_date,
           project_end_date: project_end_date,
