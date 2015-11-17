@@ -13,11 +13,13 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
       item = self.new(salary_table: table, engineering_staff: staff)
       item.salary_in_fact =  salary_in_fact
 
-      # TODO
-      #   whether to split out project's range
       project = item.salary_table.engineering_project
-      item.social_insurance = EngineeringCompanySocialInsuranceAmount.query_amount(date: project.project_start_date)
-      item.medical_insurance = EngineeringCompanyMedicalInsuranceAmount.query_amount(date: project.project_start_date)
+
+      dates = table.name.split('~').map(&:strip)
+      date = dates.count == 2 ? dates[0] : project.project_start_date
+
+      item.social_insurance = EngineeringCompanySocialInsuranceAmount.query_amount(date: date)
+      item.medical_insurance = EngineeringCompanyMedicalInsuranceAmount.query_amount(date: date)
       item.total_insurance = item.social_insurance + item.medical_insurance
       item.salary_deserve = salary_in_fact - item.total_insurance
 
