@@ -9,6 +9,8 @@ class EngineeringProject < ActiveRecord::Base
 
   has_many :income_items, class: EngineeringIncomeItem, dependent: :destroy
   accepts_nested_attributes_for :income_items
+  has_many :outcome_items, class: EngineeringOutcomeItem, dependent: :destroy
+  accepts_nested_attributes_for :outcome_items
 
   before_save :revise_fields
 

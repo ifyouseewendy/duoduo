@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118060222) do
+ActiveRecord::Schema.define(version: 20151118061002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -208,6 +208,18 @@ ActiveRecord::Schema.define(version: 20151118060222) do
 
   add_index "engineering_normal_with_tax_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_normal_with_tax_salary_items_of_table", using: :btree
   add_index "engineering_normal_with_tax_salary_items", ["engineering_staff_id"], name: "idx_engineering_normal_with_tax_salary_items_of_staff", using: :btree
+
+  create_table "engineering_outcome_items", force: :cascade do |t|
+    t.datetime "date"
+    t.decimal  "amount",                 precision: 8, scale: 2
+    t.text     "person"
+    t.text     "remark"
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.integer  "engineering_project_id"
+  end
+
+  add_index "engineering_outcome_items", ["engineering_project_id"], name: "index_engineering_outcome_items_on_engineering_project_id", using: :btree
 
   create_table "engineering_projects", force: :cascade do |t|
     t.text     "name"
@@ -629,6 +641,7 @@ ActiveRecord::Schema.define(version: 20151118060222) do
   add_foreign_key "engineering_normal_salary_items", "engineering_staffs"
   add_foreign_key "engineering_normal_with_tax_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_normal_with_tax_salary_items", "engineering_staffs"
+  add_foreign_key "engineering_outcome_items", "engineering_projects"
   add_foreign_key "engineering_projects", "engineering_corps"
   add_foreign_key "engineering_projects", "engineering_customers"
   add_foreign_key "engineering_salary_tables", "engineering_projects"
