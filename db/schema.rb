@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118061002) do
+ActiveRecord::Schema.define(version: 20151118065148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -165,7 +165,7 @@ ActiveRecord::Schema.define(version: 20151118061002) do
   add_index "engineering_dong_fang_salary_items", ["engineering_staff_id"], name: "idx_engineering_dong_fang_salary_items_of_staff", using: :btree
 
   create_table "engineering_income_items", force: :cascade do |t|
-    t.datetime "date"
+    t.date     "date"
     t.decimal  "amount",                 precision: 8, scale: 2
     t.text     "remark"
     t.datetime "created_at",                                     null: false
@@ -210,7 +210,7 @@ ActiveRecord::Schema.define(version: 20151118061002) do
   add_index "engineering_normal_with_tax_salary_items", ["engineering_staff_id"], name: "idx_engineering_normal_with_tax_salary_items_of_staff", using: :btree
 
   create_table "engineering_outcome_items", force: :cascade do |t|
-    t.datetime "date"
+    t.date     "date"
     t.decimal  "amount",                 precision: 8, scale: 2
     t.text     "person"
     t.text     "remark"
