@@ -8,9 +8,9 @@ class EngineeringProject < ActiveRecord::Base
   has_many :contract_files, class: EngineeringContractFile, dependent: :destroy
 
   has_many :income_items, class: EngineeringIncomeItem, dependent: :destroy
-  accepts_nested_attributes_for :income_items
+  accepts_nested_attributes_for :income_items, allow_destroy: true
   has_many :outcome_items, class: EngineeringOutcomeItem, dependent: :destroy
-  accepts_nested_attributes_for :outcome_items
+  accepts_nested_attributes_for :outcome_items, allow_destroy: true
 
   before_save :revise_fields
 
@@ -251,5 +251,25 @@ class EngineeringProject < ActiveRecord::Base
       contract: File.open(path),
       role: role
     )
+  end
+
+  def income_date
+    income_items.order(date: :desc).map(&:date).map(&:to_s)
+  end
+
+  def income_amount
+    income_items.order(date: :desc).map(&:amount).map(&:to_s)
+  end
+
+  def outcome_date
+    outcome_items.order(date: :desc).map(&:date).map(&:to_s)
+  end
+
+  def outcome_referee
+    outcome_items.order(date: :desc).map(&:person).map(&:to_s)
+  end
+
+  def outcome_amount
+    outcome_items.order(date: :desc).map(&:amount).map(&:to_s)
   end
 end
