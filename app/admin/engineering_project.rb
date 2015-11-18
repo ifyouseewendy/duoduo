@@ -58,30 +58,49 @@ ActiveAdmin.register EngineeringProject do
   remove_filter :engineering_staffs
   remove_filter :engineering_salary_tables
 
-  permit_params *EngineeringProject.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+  permit_params *(
+    EngineeringProject.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
+    + [{ income_items_attributes: [:id, :date, :amount, :remark, :_destroy], outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [] ] }]
+  )
 
   form do |f|
     f.semantic_errors *f.object.errors.keys
 
-    f.inputs do
-      f.input :engineering_customer, collection: EngineeringCustomer.all
-      f.input :engineering_corp, collection: EngineeringCorp.all
-      f.input :name, as: :string
-      f.input :start_date, as: :datepicker
-      f.input :project_start_date, as: :datepicker
-      f.input :project_end_date, as: :datepicker
-      f.input :project_range, as: :string
-      f.input :project_amount, as: :number
-      f.input :admin_amount, as: :number
-      f.input :income_date, as: :datepicker
-      f.input :income_amount, as: :number
-      f.input :outcome_date, as: :datepicker
-      f.input :outcome_referee, as: :string
-      f.input :outcome_amount, as: :number
-      f.input :proof, as: :string
-      f.input :already_get_contract, as: :boolean
-      f.input :already_sign_dispatch, as: :boolean
-      f.input :remark, as: :text
+    tabs do
+      tab "基本信息" do
+        f.inputs do
+          f.input :engineering_customer, collection: EngineeringCustomer.all
+          f.input :engineering_corp, collection: EngineeringCorp.all
+          f.input :name, as: :string
+          f.input :start_date, as: :datepicker
+          f.input :project_start_date, as: :datepicker
+          f.input :project_end_date, as: :datepicker
+          f.input :project_range, as: :string
+          f.input :project_amount, as: :number
+          f.input :admin_amount, as: :number
+          f.input :proof, as: :string
+          f.input :already_get_contract, as: :boolean
+          f.input :already_sign_dispatch, as: :boolean
+          f.input :remark, as: :text
+        end
+      end
+      tab "来款记录" do
+        f.inputs do
+          f.has_many :income_items, heading: '来款记录', allow_destroy: true, new_record: true do |a|
+            a.input :date, as: :datepicker
+            a.input :amount, as: :number
+            a.input :remark, as: :string
+          end
+        end
+      end
+      tab "回款记录" do
+        f.has_many :outcome_items, heading: '回款记录', allow_destroy: true, new_record: true do |a|
+          a.input :date, as: :datepicker
+          a.input :amount, as: :number
+          a.input :persons, as: :string, hint: '姓名需要以空格分隔，例如：张三 李四'
+          a.input :remark, as: :string
+        end
+      end
     end
 
     f.actions
@@ -250,4 +269,15 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
+  controller do
+    before_action :wrap_params, only: :update
+
+    private
+
+      def wrap_params
+        params[:engineering_project][:outcome_items_attributes].each do |k, v|
+          v[:persons] = v[:persons].split.map(&:strip)
+        end
+      end
+  end
 end
