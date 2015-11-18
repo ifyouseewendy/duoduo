@@ -50,6 +50,8 @@ zh-CN:
       engineering_dong_fang_salary_item: '东方工资条'
       engineering_company_social_insurance_amount: '单位部分社保金额（工程）'
       engineering_company_medical_insurance_amount: '单位部分医保金额（工程）'
+      engineering_income_item: '来款记录'
+      engineering_outcome_item: '回款记录'
     attributes:
       normal_corporation:
         id: '编号'
@@ -549,3 +551,17 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
+      engineering_income_item:
+        date: '来款日期'
+        amount: '来款金额'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      engineering_outcome_item:
+        date: '回款日期'
+        amount: '回款金额'
+        person: '回款人'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+
