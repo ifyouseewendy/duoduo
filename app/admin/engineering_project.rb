@@ -26,7 +26,19 @@ ActiveAdmin.register EngineeringProject do
       end
     end
     (EngineeringProject.ordered_columns(without_foreign_keys: true) - [:id, :name]).each do |field|
-      column field
+      if [:income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount].include? field
+        column field do |obj|
+          data = obj.send(field)
+          if data.count > 1
+            options = data.each_with_index.reduce([]){|ar, (e,i)| ar << ["第#{i+1}批 - #{e}", i+1] }
+            select_tag(nil, options_for_select(options) )
+          else
+            data[0]
+          end
+        end
+      else
+        column field
+      end
     end
 
     actions do |obj|
