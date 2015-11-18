@@ -258,22 +258,22 @@ class EngineeringProject < ActiveRecord::Base
   end
 
   def income_date
-    income_items.order(date: :desc).map(&:date).map(&:to_s)
+    income_items.map(&:date).map(&:to_s)
   end
 
   def income_amount
-    income_items.order(date: :desc).map(&:amount).map(&:to_s)
+    income_items.map(&:amount).map(&:to_s)
   end
 
   def outcome_date
-    outcome_items.order(date: :desc).map(&:date).map(&:to_s)
+    outcome_items.map(&:date).map(&:to_s)
   end
 
   def outcome_referee
-    outcome_items.order(date: :desc).map(&:person).map(&:to_s)
+    outcome_items.map(&:persons).map{|ps| ps.join(',')}
   end
 
   def outcome_amount
-    outcome_items.order(date: :desc).map(&:amount).map(&:to_s)
+    outcome_items.map(&:amount).map(&:to_s)
   end
 end
