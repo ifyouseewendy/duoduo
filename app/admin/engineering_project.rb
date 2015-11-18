@@ -54,9 +54,15 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
+  filter :income_items_date, as: :date_range
+  filter :income_items_amount, as: :numeric
+  filter :outcome_items_date, as: :date_range
+  filter :outcome_items_amount, as: :numeric
+  # filter :outcome_items_persons, as: :string
   preserve_default_filters!
   remove_filter :engineering_staffs
   remove_filter :engineering_salary_tables
+  remove_filter :contract_files
 
   permit_params *(
     EngineeringProject.ordered_columns(without_base_keys: true, without_foreign_keys: false) \

@@ -461,6 +461,11 @@ zh-CN:
         engineering_customer_id: '工程客户'
         engineering_corp_id: '工程单位'
         engineering_staffs: '工程员工'
+        income_items_date: '来款日期'
+        income_items_amount: '来款金额'
+        outcome_items_date: '回款日期'
+        outcome_items_amount: '回款金额'
+        outcome_items_persons: '回款人'
       engineering_corp:
         id: '编号'
         name: '单位名称'
