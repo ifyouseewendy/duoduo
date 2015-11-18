@@ -30,7 +30,7 @@ ActiveAdmin.register EngineeringProject do
         column field do |obj|
           data = obj.send(field)
           if data.count > 1
-            options = data.each_with_index.reduce([]){|ar, (e,i)| ar << ["第#{i+1}批 - #{e}", i+1] }
+            options = data.zip( data.count.downto(1) ).reduce([]){|ar, (e,i)| ar << ["第#{i}批 - #{e}", i] }
             select_tag(nil, options_for_select(options) )
           else
             data[0]
@@ -113,7 +113,7 @@ ActiveAdmin.register EngineeringProject do
           row field do |obj|
             data = obj.send(field)
             if data.count > 1
-              options = data.each_with_index.reduce([]){|ar, (e,i)| ar << ["第#{i+1}批 - #{e}", i+1] }
+              options = data.zip( data.count.downto(1) ).reduce([]){|ar, (e,i)| ar << ["第#{i}批 - #{e}", i] }
               select_tag(nil, options_for_select(options) )
             else
               data[0]
