@@ -26,7 +26,7 @@ ActiveAdmin.register EngineeringProject do
       end
     end
     (EngineeringProject.ordered_columns(without_foreign_keys: true) - [:id, :name]).each do |field|
-      if [:income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount].include? field
+      if resource_class.nest_fields.include? field
         column field do |obj|
           data = obj.send(field)
           if data.count > 1

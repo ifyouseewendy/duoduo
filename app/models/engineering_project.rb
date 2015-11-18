@@ -80,6 +80,10 @@ class EngineeringProject < ActiveRecord::Base
           + (ordered_columns(without_foreign_keys: true) - %i(id name))
       end
     end
+
+    def nest_fields
+      [:income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
+    end
   end
 
   def revise_fields
