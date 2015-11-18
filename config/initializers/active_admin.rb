@@ -224,6 +224,13 @@ ActiveAdmin.setup do |config|
       menu.add label: "开发相关", priority: 11
       menu.add label: '需求文档', parent: "开发相关", priority: 1, url: 'https://quip.com/rljZAYw1rPLB', html_options: { target: :blank }
     end
+
+    # default.build_menu :utility_navigation do |menu|
+    #   menu.add label: "ActiveAdmin.info", url: "http://www.activeadmin.info",
+    #                                       html_options: { target: :blank }
+    #   default.add_current_user_to_menu  menu
+    #   default.add_logout_button_to_menu menu
+    # end
   end
 
   # == Download Links
