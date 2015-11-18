@@ -231,6 +231,16 @@ ActiveAdmin.setup do |config|
     #   default.add_current_user_to_menu  menu
     #   default.add_logout_button_to_menu menu
     # end
+    #
+    # default.build_menu :utility_navigation do |menu|
+    #   menu.add label: "The Application", url: "/", priority: 0
+    #
+    #   menu.add label: "Sites" do |sites|
+    #     sites.add label: "Google",   url: "http://google.com", html_options: { target: :blank }
+    #     sites.add label: "Facebook", url: "http://facebook.com"
+    #     sites.add label: "Github",   url: "http://github.com"
+    #   end
+    # end
   end
 
   # == Download Links
