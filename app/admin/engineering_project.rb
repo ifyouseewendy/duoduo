@@ -109,6 +109,16 @@ ActiveAdmin.register EngineeringProject do
       (EngineeringProject.ordered_columns(without_foreign_keys: true) - [:id, :name]).map(&:to_sym).map do |field|
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
+        elsif resource_class.nest_fields.include? field
+          row field do |obj|
+            data = obj.send(field)
+            if data.count > 1
+              options = data.each_with_index.reduce([]){|ar, (e,i)| ar << ["第#{i+1}批 - #{e}", i+1] }
+              select_tag(nil, options_for_select(options) )
+            else
+              data[0]
+            end
+          end
         else
           row field
         end
