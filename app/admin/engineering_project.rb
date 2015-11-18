@@ -86,7 +86,11 @@ ActiveAdmin.register EngineeringProject do
         link_to obj.engineering_customer.name, engineering_customer_path(obj.engineering_customer)
       end
       row :engineering_corp do |obj|
-        link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
+        if obj.engineering_corp.nil?
+          link_to '', '#'
+        else
+          link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
+        end
       end
 
       boolean_columns = EngineeringProject.columns_of(:boolean)
@@ -106,7 +110,7 @@ ActiveAdmin.register EngineeringProject do
       render partial: 'shared/contract_engineering_list', locals: { contract_files: resource.contract_files.proxy }
       tabs do
         tab '自动生成' do
-          render partial: "shared/contract_engineering_generate_form", locals: {engineering_project_id: resource.id, sub_company: "四平吉易人力资源服务有限公司", engineering_corp: engineering_project.engineering_corp.name}
+          render partial: "shared/contract_engineering_generate_form", locals: {engineering_project_id: resource.id, sub_company: "四平吉易人力资源服务有限公司", engineering_corp: engineering_project.engineering_corp.try(:name)}
         end
         tab '手动上传' do
           render partial: "shared/contract_engineering_upload_form", locals: {engineering_project_id: resource.id, role: :proxy}
