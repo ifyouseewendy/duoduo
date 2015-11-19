@@ -1,5 +1,5 @@
 ActiveAdmin.register EngineeringCustomer do
-  include ImportSupport
+  # include ImportSupport
 
   menu \
     parent: I18n.t("activerecord.models.engineering_business"),

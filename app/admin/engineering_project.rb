@@ -1,7 +1,7 @@
 ActiveAdmin.register EngineeringProject do
   belongs_to :engineering_customer, optional: true
 
-  include ImportSupport
+  # include ImportSupport
 
   menu \
     parent: I18n.t("activerecord.models.engineering_business"),
