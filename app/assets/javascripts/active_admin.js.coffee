@@ -375,6 +375,20 @@ $(document).on 'ready', ->
       window.location = $(@).val('href')
 
   $('.admin_users .download_links').hide();
+  $('.admin_users .admin_user_delete').on 'click', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+
+    if confirm("确认彻底删除员工？")
+      user_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+      $.ajax
+        url: "/admin_users/#{user_id}"
+        type: 'delete'
+        success: (data, textStatus, jqXHR) ->
+          if data['status'] == 'succeed'
+            window.location = data['url']
+          else
+            alert( data['message'] )
 
   # Normal Staff sidebar
   current_contract = $('body.normal_staffs .current_contract')

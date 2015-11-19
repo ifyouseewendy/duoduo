@@ -1,6 +1,6 @@
 ActiveAdmin.register AdminUser do
   config.filters = false
-  actions :all, except: [:show, :update, :destroy]
+  actions :all, except: [:show, :update]
 
   menu \
     parent: I18n.t("activerecord.models.settings"),
@@ -82,7 +82,17 @@ ActiveAdmin.register AdminUser do
     rescue => e
       redirect_to :back, alert: "操作失败，请联系网络管理员（#{e.message}）"
     end
+  end
 
+  # Ajax delete
+  collection_action :destroy, method: :delete do
+    begin
+      AdminUser.find(params[:id]).destroy
+
+      render json: {status: 'succeed', url: admin_users_path}
+    rescue => e
+      render json: {status: 'failed', message: e.message}
+    end
   end
 
   member_action :lock do
@@ -108,6 +118,5 @@ ActiveAdmin.register AdminUser do
     rescue => e
       redirect_to admin_users_path, alert: "操作失败，请联系网络管理员（#{e.message}）"
     end
-
   end
 end
