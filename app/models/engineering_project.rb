@@ -7,12 +7,14 @@ class EngineeringProject < ActiveRecord::Base
 
   has_many :contract_files, class: EngineeringContractFile, dependent: :destroy
 
-  has_many :income_items, class: EngineeringIncomeItem, dependent: :destroy
+  has_many :income_items, class: EngineeringIncomeItem, dependent: :destroy, after_add: :set_fields
   accepts_nested_attributes_for :income_items, allow_destroy: true
-  has_many :outcome_items, class: EngineeringOutcomeItem, dependent: :destroy, before_add: :set_fields
+  has_many :outcome_items, class: EngineeringOutcomeItem, dependent: :destroy, after_add: :set_fields
   accepts_nested_attributes_for :outcome_items, allow_destroy: true
 
   before_save :revise_fields
+
+  enum status: [:active, :archive]
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
@@ -105,9 +107,18 @@ class EngineeringProject < ActiveRecord::Base
 
   def set_fields(outcome_item)
     # First time assign outcome_item
-    if !self.already_sign_dispatch && outcome_items.count == 0
+    if !self.already_sign_dispatch && outcome_items.count == 1
       self.update_column(:already_sign_dispatch, true) # Skip validation and callback
     end
+
+    if can_archive?
+      self.archive!
+    end
+  end
+
+  def can_archive?
+    income_amount.map(&:to_f).sum.round(2) == total_amount.round(2) \
+      && outcome_amount.map(&:to_f).sum.round(2) == project_amount.round(2)
   end
 
   def calc_range

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151119020531) do
+ActiveRecord::Schema.define(version: 20151119022926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -238,11 +238,12 @@ ActiveRecord::Schema.define(version: 20151119020531) do
     t.text     "proof"
     t.boolean  "already_sign_dispatch"
     t.text     "remark"
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
     t.integer  "engineering_customer_id"
     t.integer  "engineering_corp_id"
     t.text     "outcome_bank"
+    t.integer  "status",                                          default: 0
   end
 
   add_index "engineering_projects", ["engineering_corp_id"], name: "index_engineering_projects_on_engineering_corp_id", using: :btree
