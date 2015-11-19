@@ -54,3 +54,14 @@
 .views_selector {
   margin-left: 10px;
 }
+
+#utility_nav {
+  .has_nested {
+    margin-left: 113px;
+  }
+
+  #current_user ul {
+    border-top-right-radius: 0;
+    border-top-left-radius: 10px;
+  }
+}
