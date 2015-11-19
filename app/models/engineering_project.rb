@@ -9,7 +9,7 @@ class EngineeringProject < ActiveRecord::Base
 
   has_many :income_items, class: EngineeringIncomeItem, dependent: :destroy
   accepts_nested_attributes_for :income_items, allow_destroy: true
-  has_many :outcome_items, class: EngineeringOutcomeItem, dependent: :destroy
+  has_many :outcome_items, class: EngineeringOutcomeItem, dependent: :destroy, before_add: :set_fields
   accepts_nested_attributes_for :outcome_items, allow_destroy: true
 
   before_save :revise_fields
@@ -100,6 +100,13 @@ class EngineeringProject < ActiveRecord::Base
 
     if (changed && [:project_amount, :admin_amount]).present?
       self.total_amount = project_amount + admin_amount
+    end
+  end
+
+  def set_fields(outcome_item)
+    # First time assign outcome_item
+    if !self.already_sign_dispatch && outcome_items.count == 0
+      self.update_column(:already_sign_dispatch, true) # Skip validation and callback
     end
   end
 
