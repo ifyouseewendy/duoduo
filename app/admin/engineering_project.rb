@@ -36,6 +36,10 @@ ActiveAdmin.register EngineeringProject do
             data[0]
           end
         end
+      elsif field == :status
+        column field do |obj|
+          status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+        end
       else
         column field
       end
@@ -54,6 +58,7 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
+  filter :status, as: :check_boxes, collection: EngineeringProject.statuses_option
   filter :income_items_date, as: :date_range
   filter :income_items_amount, as: :numeric
   filter :outcome_items_date, as: :date_range
@@ -86,6 +91,7 @@ ActiveAdmin.register EngineeringProject do
           f.input :admin_amount, as: :number
           f.input :proof, as: :string
           f.input :already_sign_dispatch, as: :boolean
+          f.input :status, as: :radio, collection: EngineeringProject.statuses_option
           f.input :remark, as: :text
         end
       end
@@ -142,6 +148,10 @@ ActiveAdmin.register EngineeringProject do
             else
               data[0]
             end
+          end
+        elsif field == :status
+          row field do |obj|
+            status_tag obj.status_i18n, (obj.active? ? :yes : :no)
           end
         else
           row field
@@ -280,6 +290,8 @@ ActiveAdmin.register EngineeringProject do
     private
 
       def wrap_params
+        return if params[:engineering_project][:outcome_items_attributes].blank?
+
         params[:engineering_project][:outcome_items_attributes].each do |k, v|
           v[:persons] = v[:persons].split.map(&:strip)
         end

@@ -30,6 +30,10 @@ class EngineeringProject < ActiveRecord::Base
       self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
     end
 
+    def statuses_option
+      statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+    end
+
     def batch_form_fields
       fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
       hash = {
@@ -86,6 +90,10 @@ class EngineeringProject < ActiveRecord::Base
     def nest_fields
       [:income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
     end
+  end
+
+  def status_i18n
+    I18n.t("activerecord.attributes.#{self.class.name.underscore}.statuses.#{status}")
   end
 
   def revise_fields

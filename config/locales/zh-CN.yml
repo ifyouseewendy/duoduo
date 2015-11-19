@@ -451,8 +451,11 @@ zh-CN:
         outcome_bank: '回款银行'
         outcome_amount: '回款金额'
         proof: '凭证'
-        already_get_contract: '合同是否拿回'
         already_sign_dispatch: '代发是否签署'
+        status: '状态'
+        statuses:
+          active: '活动'
+          archive: '存档'
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
