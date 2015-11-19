@@ -28,10 +28,8 @@ ActiveAdmin.register AdminUser do
   end
 
   form do |f|
-    f.inputs "个人设置" do
+    f.inputs do
       f.input :name, as: :string
-      f.input :password
-      f.input :password_confirmation
     end
     f.actions
   end
@@ -45,9 +43,31 @@ ActiveAdmin.register AdminUser do
 
       # sign_in(current_admin_user, bypass: true)
 
-      redirect_to admin_users_path, notice: "已重置用户<#{resource.name}>密码为：#{new_password}"
+      redirect_to admin_users_path, notice: "已重置用户<#{resource.name}>密码为：#{new_password}，用户登录后可自行修改密码"
     rescue => e
       redirect_to admin_users_path, alert: "重置失败，请联系网络管理员（#{e.message}）"
+    end
+
+  end
+
+  collection_action :create, method: :post do
+    name = params[:admin_user][:name].strip
+
+    redirect_to :back, alert: "操作失败，用户名为空" and return if name.blank?
+    redirect_to :back, alert: "操作失败，用户名已存在" and return if AdminUser.where(name: name).first.present?
+
+    begin
+      new_password = SecureRandom.hex(5)
+      AdminUser.create!(
+        name: name,
+        email: "#{name}@jiyi.com",
+        password: new_password,
+        password_confirmation: new_password
+      )
+
+      redirect_to admin_users_path, notice: "已创建用户：#{name}，初始密码为：#{new_password}，用户登录后可自行修改密码"
+    rescue => e
+      redirect_to :back, alert: "操作失败，请联系网络管理员（#{e.message}）"
     end
 
   end
