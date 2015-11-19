@@ -85,7 +85,6 @@ ActiveAdmin.register EngineeringProject do
           f.input :project_amount, as: :number
           f.input :admin_amount, as: :number
           f.input :proof, as: :string
-          f.input :already_get_contract, as: :boolean
           f.input :already_sign_dispatch, as: :boolean
           f.input :remark, as: :text
         end

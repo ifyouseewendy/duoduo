@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118132528) do
+ActiveRecord::Schema.define(version: 20151119020531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -236,7 +236,6 @@ ActiveRecord::Schema.define(version: 20151118132528) do
     t.text     "outcome_referee"
     t.decimal  "outcome_amount",          precision: 8, scale: 2
     t.text     "proof"
-    t.boolean  "already_get_contract"
     t.boolean  "already_sign_dispatch"
     t.text     "remark"
     t.datetime "created_at",                                      null: false
