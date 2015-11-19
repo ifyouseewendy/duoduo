@@ -226,9 +226,10 @@ ActiveAdmin.setup do |config|
     end
 
     default.build_menu :utility_navigation do |menu|
-      menu.add id: 'current_user', label: -> { current_active_admin_user.email }, url: '#', html_options: { style: :blank } do |sub_menu|
-        sub_menu.add label: '个人设置', url: -> { edit_admin_user_path(current_active_admin_user) }, priority: 1
-        default.add_logout_button_to_menu sub_menu, 2
+      menu.add id: 'current_user', label: -> { current_active_admin_user.name }, url: '#', html_options: { style: :blank } do |sub_menu|
+        sub_menu.add label: '用户管理', url: -> { admin_users_path }, priority: 1, if: -> { current_active_admin_user.in_administration? }
+        sub_menu.add label: '个人设置', url: -> { edit_admin_user_path(current_active_admin_user) }, priority: 2
+        default.add_logout_button_to_menu sub_menu, 3
       end
       # default.add_current_user_to_menu  menu
       # default.add_logout_button_to_menu menu
