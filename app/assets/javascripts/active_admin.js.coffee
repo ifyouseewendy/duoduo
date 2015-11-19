@@ -374,6 +374,8 @@ $(document).on 'ready', ->
     else
       window.location = $(@).val('href')
 
+  $('.admin_users .download_links').hide();
+
   # Normal Staff sidebar
   current_contract = $('body.normal_staffs .current_contract')
   current_contract.css("padding-right", "10px")

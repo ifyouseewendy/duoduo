@@ -52,6 +52,7 @@ zh-CN:
       engineering_company_medical_insurance_amount: '单位部分医保金额（工程）'
       engineering_income_item: '来款记录'
       engineering_outcome_item: '回款记录'
+      admin_user: '用户'
     attributes:
       normal_corporation:
         id: '编号'
@@ -572,4 +573,11 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
+      admin_user:
+        id: '编号'
+        name: '用户名'
+        current_sign_in_at: '最近登录时间'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+
 
