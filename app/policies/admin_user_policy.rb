@@ -5,8 +5,24 @@ class AdminUserPolicy < ApplicationPolicy
     end
   end
 
-  def demo?
-    false
+  def index?
+    user.admin?
+  end
+
+  def new?
+    user.admin?
+  end
+
+  def create?
+    user.admin?
+  end
+
+  def edit?
+    user.admin?
+  end
+
+  def destroy?
+    user.admin?
   end
 
   def reset_password?

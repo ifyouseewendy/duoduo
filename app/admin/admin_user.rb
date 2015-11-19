@@ -1,6 +1,6 @@
 ActiveAdmin.register AdminUser do
   config.filters = false
-  actions :all, except: [:show, :destroy]
+  actions :all, except: [:show, :update, :destroy]
 
   menu \
     parent: I18n.t("activerecord.models.settings"),
