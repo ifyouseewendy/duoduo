@@ -21,7 +21,9 @@ ActiveAdmin.register AdminUser do
     actions defaults: false do |obj|
       item "重置密码", reset_password_admin_user_path(obj)
       text_node "&nbsp;&nbsp;".html_safe
-      item "锁定用户", lock_admin_user_path(obj)
+      item "锁定", lock_admin_user_path(obj)
+      text_node "&nbsp;&nbsp;".html_safe
+      item "解锁", unlock_admin_user_path(obj)
     end
   end
 
@@ -58,7 +60,20 @@ ActiveAdmin.register AdminUser do
 
       redirect_to admin_users_path, notice: "已锁定用户<#{resource.name}>"
     rescue => e
-      redirect_to admin_users_path, alert: "重置失败，请联系网络管理员（#{e.message}）"
+      redirect_to admin_users_path, alert: "操作失败，请联系网络管理员（#{e.message}）"
+    end
+
+  end
+
+  member_action :unlock do
+    authorize! :reset_password, current_admin_user
+
+    begin
+      resource.active!
+
+      redirect_to admin_users_path, notice: "已解锁用户<#{resource.name}>"
+    rescue => e
+      redirect_to admin_users_path, alert: "操作失败，请联系网络管理员（#{e.message}）"
     end
 
   end

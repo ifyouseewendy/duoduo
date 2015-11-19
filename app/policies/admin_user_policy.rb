@@ -16,4 +16,8 @@ class AdminUserPolicy < ApplicationPolicy
   def lock?
     user.admin?
   end
+
+  def unlock?
+    user.admin?
+  end
 end
