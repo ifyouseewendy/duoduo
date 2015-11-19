@@ -576,6 +576,10 @@ zh-CN:
       admin_user:
         id: '编号'
         name: '用户名'
+        status: '状态'
+        statuses:
+          active: '正常'
+          locked: '锁定'
         current_sign_in_at: '最近登录时间'
         created_at: "创建时间"
         updated_at: "更新时间"

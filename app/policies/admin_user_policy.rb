@@ -12,4 +12,8 @@ class AdminUserPolicy < ApplicationPolicy
   def reset_password?
     user.admin?
   end
+
+  def lock?
+    user.admin?
+  end
 end

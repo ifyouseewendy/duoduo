@@ -13,10 +13,15 @@ ActiveAdmin.register AdminUser do
     selectable_column
     id_column
     column :name
+    column :status do |obj|
+      status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+    end
     column :current_sign_in_at
     column :created_at
     actions defaults: false do |obj|
       item "重置密码", reset_password_admin_user_path(obj)
+      text_node "&nbsp;&nbsp;".html_safe
+      item "锁定用户", lock_admin_user_path(obj)
     end
   end
 
@@ -45,4 +50,16 @@ ActiveAdmin.register AdminUser do
 
   end
 
+  member_action :lock do
+    authorize! :reset_password, current_admin_user
+
+    begin
+      resource.locked!
+
+      redirect_to admin_users_path, notice: "已锁定用户<#{resource.name}>"
+    rescue => e
+      redirect_to admin_users_path, alert: "重置失败，请联系网络管理员（#{e.message}）"
+    end
+
+  end
 end
