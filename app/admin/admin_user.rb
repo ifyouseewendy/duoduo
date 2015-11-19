@@ -1,6 +1,6 @@
 ActiveAdmin.register AdminUser do
   config.filters = false
-  actions :all, except: [:show, :update]
+  actions :all, except: [:show]
 
   menu \
     parent: I18n.t("activerecord.models.settings"),
@@ -43,6 +43,10 @@ ActiveAdmin.register AdminUser do
   form do |f|
     f.inputs do
       f.input :name, as: :string
+      unless f.object.new_record?
+        f.input :password
+        f.input :password_confirmation
+      end
     end
     f.actions
   end

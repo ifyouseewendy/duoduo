@@ -577,6 +577,8 @@ zh-CN:
         id: '编号'
         name: '用户名'
         status: '状态'
+        password: '密码'
+        password_confirmation: '密码确认'
         statuses:
           active: '正常'
           locked: '锁定'

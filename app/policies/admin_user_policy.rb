@@ -21,6 +21,10 @@ class AdminUserPolicy < ApplicationPolicy
     user.admin?
   end
 
+  def update?
+    user.admin? or user.id == record.id
+  end
+
   def destroy?
     user.admin?
   end
