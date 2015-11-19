@@ -225,22 +225,14 @@ ActiveAdmin.setup do |config|
       menu.add label: '需求文档', parent: "开发相关", priority: 1, url: 'https://quip.com/rljZAYw1rPLB', html_options: { target: :blank }
     end
 
-    # default.build_menu :utility_navigation do |menu|
-    #   menu.add label: "ActiveAdmin.info", url: "http://www.activeadmin.info",
-    #                                       html_options: { target: :blank }
-    #   default.add_current_user_to_menu  menu
-    #   default.add_logout_button_to_menu menu
-    # end
-    #
-    # default.build_menu :utility_navigation do |menu|
-    #   menu.add label: "The Application", url: "/", priority: 0
-    #
-    #   menu.add label: "Sites" do |sites|
-    #     sites.add label: "Google",   url: "http://google.com", html_options: { target: :blank }
-    #     sites.add label: "Facebook", url: "http://facebook.com"
-    #     sites.add label: "Github",   url: "http://github.com"
-    #   end
-    # end
+    default.build_menu :utility_navigation do |menu|
+      menu.add id: 'current_user', label: -> { current_active_admin_user.email }, url: '#', html_options: { style: :blank } do |sub_menu|
+        sub_menu.add label: '个人设置', url: -> { edit_admin_user_path(current_active_admin_user) }, priority: 1
+        default.add_logout_button_to_menu sub_menu, 2
+      end
+      # default.add_current_user_to_menu  menu
+      # default.add_logout_button_to_menu menu
+    end
   end
 
   # == Download Links
