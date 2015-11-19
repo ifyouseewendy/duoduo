@@ -24,6 +24,19 @@ ActiveAdmin.register AdminUser do
       item "锁定", lock_admin_user_path(obj)
       text_node "&nbsp;&nbsp;".html_safe
       item "解锁", unlock_admin_user_path(obj)
+      text_node "&nbsp;&nbsp;".html_safe
+      item "删除", '#', class: 'admin_user_delete'
+    end
+  end
+
+  sidebar '说明', only: [:index] do
+    span "该页面只有超级管理员有权限访问并操作"
+  end
+
+  sidebar '锁定与删除', only: [:index] do
+    ul do
+      li "锁定员工 - 员工不可再访问系统，但是会保留操作痕迹。建议有员工离职时使用。"
+      li "删除员工 - 擦除该员工在系统内所有痕迹，请谨慎操作。建议对还未使用系统的员工使用。"
     end
   end
 
