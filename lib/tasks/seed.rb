@@ -64,7 +64,7 @@ class Seed < Thor
         elsif file.to_s =~ /工资/
           handling_salary_table(path: path, project: project, type: :normal)
         else
-          fail "Unknow file name: #{file}"
+          puts "Unknow file name: #{file}"
         end
       end
     end
@@ -336,7 +336,9 @@ class Seed < Thor
           unless date >= project.range[0].beginning_of_month && date <= project.range[1].end_of_month
 
         begin
-          if sheet.row(2).compact.count == 1
+          if sheet.row(3).compact.count == 1
+            start_row = 5
+          elsif sheet.row(2).compact.count == 1
             start_row = 4
           elsif sheet.row(1).compact.count == 1
             start_row = 3
@@ -398,6 +400,7 @@ class Seed < Thor
 
           next if id.nil?
 
+          name = name.delete(' ')
           staff = project.engineering_staffs.where(name: name).first
           fail "未找到员工: #{name} in #{path}" if staff.nil?
 
