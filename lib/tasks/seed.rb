@@ -52,7 +52,7 @@ class Seed < Thor
 
       # 合同、协议、工资表
       customer_dir.join(pn).entries.each do |file|
-        next if file.to_s.start_with?('.') or file.to_s =~ /用工/ or file.to_s =~ /明细表/
+        next if file.to_s.start_with?('.') or file.to_s =~ /用工/ or file.to_s =~ /明细表/ or file.to_s.start_with?('__')
         puts "----- #{file.to_s}"
 
         path = customer_dir.join(pn).join(file)
@@ -244,7 +244,7 @@ class Seed < Thor
           fail "无法解析信息汇总：#{file}"
         end
 
-        project_start_date, project_end_date = parse_project_dates(project_dates)
+        project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
         project = customer.engineering_projects.create!(
           name: "#{id.to_i}、#{name}",
           start_date: start_date,
@@ -277,7 +277,7 @@ class Seed < Thor
           end
         end
 
-        fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
+        puts "xxx Validation failed: unequal project total_amount. id: #{id.to_i}" if project.total_amount != total_amount.to_f
 
         projects[id.to_i] = project
       end
@@ -332,8 +332,13 @@ class Seed < Thor
         date = Date.parse parts.join('.')
         name = "#{date.year}年#{date.month}月"
 
+        begin
         fail "工资表日期不在工程日期内：#{path}" \
           unless date >= project.range[0].beginning_of_month && date <= project.range[1].end_of_month
+        rescue => e
+
+          require'pry';binding.pry
+        end
 
         begin
           if sheet.row(3).compact.count == 1
@@ -349,6 +354,11 @@ class Seed < Thor
           fail "无法解析工资表名称: #{path}"
         end
 
+        col_count = sheet.row(start_row-1).compact.count
+        if col_count == 10
+          type = 'EngineeringNormalWithTaxSalaryTable'
+        end
+
         st = EngineeringSalaryTable.create!(
           engineering_project: project,
           name: name,
@@ -357,14 +367,13 @@ class Seed < Thor
 
         last_row = sheet.last_row
         items = {}
-        col_count = sheet.row(start_row-1).compact.count
         (start_row..last_row).each do |row_id|
           data = sheet.row(row_id)
           next if data[0].nil?
 
-          if data[0] == '合计'
+          if data[0] == '合计' or data[0] == '小计'
             data = data.compact
-            if col_count == 6
+            if col_count == 6 or col_count == 5
               total = {
                 salary_deserve: data[1],
                 social_insurance: data[2],
@@ -375,6 +384,12 @@ class Seed < Thor
                 salary_deserve: data[1],
                 social_insurance: data[2],
                 salary_in_fact: data[5]
+              }
+            elsif col_count == 10 # 带个税
+              total = {
+                salary_deserve: data[1],
+                social_insurance: data[2],
+                salary_in_fact: data[-1]
               }
             elsif col_count >= 15
               # TODO 待处理工程大表导入
@@ -389,12 +404,15 @@ class Seed < Thor
             break
           end
 
-          if col_count == 6
+          if col_count == 6 or col_count == 5
             id, name, salary_deserve, social_insurance, salary_in_fact, _ = \
               sheet.row(row_id).map{|col| String === col ? col.strip : col}
             medical_insurance = nil
           elsif col_count == 8
             id, name, salary_deserve, social_insurance, medical_insurance, _total_insurance, salary_in_fact, _ = \
+              sheet.row(row_id).map{|col| String === col ? col.strip : col}
+          elsif col_count == 10
+            id, name, salary_deserve, social_insurance, medical_insurance, _total_insurance, _total_amount, tax, salary_in_fact, _ = \
               sheet.row(row_id).map{|col| String === col ? col.strip : col}
           elsif col_count >= 15
             # TODO 待处理工程大表导入
@@ -410,13 +428,24 @@ class Seed < Thor
           staff = project.engineering_staffs.where(name: name).first
           fail "未找到员工: #{name} in #{path}" if staff.nil?
 
-          item = st.salary_items.create!(
-            engineering_staff: staff,
-            salary_deserve: salary_deserve,
-            social_insurance: social_insurance,
-            medical_insurance: medical_insurance,
-            salary_in_fact: salary_in_fact
-          )
+          if col_count == 10
+            item = st.salary_items.create!(
+              engineering_staff: staff,
+              salary_deserve: salary_deserve,
+              social_insurance: social_insurance,
+              medical_insurance: medical_insurance,
+              salary_in_fact: salary_in_fact,
+              tax: tax.to_f
+            )
+          else
+            item = st.salary_items.create!(
+              engineering_staff: staff,
+              salary_deserve: salary_deserve,
+              social_insurance: social_insurance,
+              medical_insurance: medical_insurance,
+              salary_in_fact: salary_in_fact
+            )
+          end
 
           items[id.to_i] = item
         end
