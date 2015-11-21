@@ -248,13 +248,24 @@ class Seed < Thor
           project_end_date: project_end_date,
           project_amount: project_amount,
           admin_amount: admin_amount,
-          income_date: income_date,
-          outcome_date: outcome_date,
-          outcome_referee: outcome_referee,
-          outcome_amount: outcome_amount,
           proof: proof,
           remark: remark
         )
+
+        income_date, income_amount, outcome_amount, outcome_date, outcome_referee = \
+          split_by_comma(income_date),
+          split_by_comma(income_amount),
+          split_by_comma(outcome_amount),
+          split_by_comma(outcome_date),
+          split_by_comma(outcome_referee)
+
+        income_date.zip(income_amount).each do |date, amount|
+          project.income_items.create!(date: date, amount: amount)
+        end
+
+        [outcome_date, outcome_amount, outcome_referee].transpose.each do |date, amount, referee|
+          project.outcome_items.create!(date: date, amount: amount, persons: referee.to_s.split(' ').map(&:strip))
+        end
 
         fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
 
