@@ -329,16 +329,19 @@ class Seed < Thor
       xlsx_name = path.to_s
       xlsx = Roo::Spreadsheet.open(xlsx_name)
 
-      xlsx.sheets.each_index do |sheet_id|
+      xlsx.sheets.each_with_index do |sheet_name, sheet_id|
         puts "------- Sheet #{sheet_id+1}"
         sheet = xlsx.sheet(sheet_id)
 
+        parts = sheet_name.split('.')
+        parts << '1' if parts.count == 2
+        date = Date.parse parts.join('.')
+        name = "#{date.year}年#{date.month}月"
+
         begin
           if sheet.row(2).compact.count == 1
-            name = sheet.row(2)[0].match(/(\d*年\d*月)./)[1]
             start_row = 4
           elsif sheet.row(1).compact.count == 1
-            name = sheet.row(1)[0].match(/(\d+年\(?\d*\)?月)/)[1]
             start_row = 3
           else
             fail "无法解析工资表名称: #{path}"
