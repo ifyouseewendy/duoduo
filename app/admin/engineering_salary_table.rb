@@ -39,6 +39,9 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
   end
 
+  preserve_default_filters!
+  remove_filter :reference
+
   permit_params *EngineeringSalaryTable.ordered_columns(without_base_keys: true, without_foreign_keys: false)
 
   form do |f|

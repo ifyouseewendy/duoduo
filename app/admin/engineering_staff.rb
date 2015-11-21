@@ -39,6 +39,10 @@ ActiveAdmin.register EngineeringStaff do
 
   preserve_default_filters!
   remove_filter :salary_items
+  remove_filter :engineering_normal_salary_items
+  remove_filter :engineering_normal_with_tax_salary_items
+  remove_filter :engineering_big_table_salary_items
+  remove_filter :engineering_dong_fang_salary_items
 
   permit_params *( EngineeringStaff.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []] )
 
