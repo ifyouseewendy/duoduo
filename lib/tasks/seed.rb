@@ -52,7 +52,7 @@ class Seed < Thor
 
       # 合同、协议、工资表
       customer_dir.join(pn).entries.each do |file|
-        next if file.to_s.start_with?('.') or file.to_s =~ /用工/
+        next if file.to_s.start_with?('.') or file.to_s =~ /用工/ or file.to_s =~ /明细表/
         puts "----- #{file.to_s}"
 
         path = customer_dir.join(pn).join(file)
@@ -378,7 +378,6 @@ class Seed < Thor
               }
             elsif col_count >= 15
               # TODO 待处理工程大表导入
-              puts "待处理大表"
             else
               fail "工资表汇总信息获取失败"
             end
@@ -399,8 +398,8 @@ class Seed < Thor
               sheet.row(row_id).map{|col| String === col ? col.strip : col}
           elsif col_count >= 15
             # TODO 待处理工程大表导入
-            puts "待处理大表"
-            next
+            puts "xxxxxxx 待处理大表"
+            break
           else
             fail "工资表无法解析：#{path}"
           end
@@ -473,7 +472,7 @@ class Seed < Thor
     end
 
     def handling_project_staff(dir:, project:)
-      staff_file = dir.entries.detect{|file| file.to_s =~ /用工/}
+      staff_file = dir.entries.detect{|file| file.to_s =~ /用工/ or file.to_s =~ /明细表/ }
       return if staff_file.nil?
 
       puts "----- #{staff_file.to_s}"
