@@ -11,14 +11,20 @@ class Seed < Thor
   end
 
   desc "engineering", "Import engineering data"
+  long_desc <<-LONGDESC
+    Examples:
+
+      ruby lib/tasks/seed.rb engineering --from=
+  LONGDESC
   option :from, required: true
   def engineering
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
     customer_dir = Pathname(options[:from])
-    puts "- #{customer_dir.basename}"
 
     # load_rails
     base
+
+    puts "- #{customer_dir.basename}"
 
     # 信息汇总
     customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
@@ -33,7 +39,7 @@ class Seed < Thor
 
     # 项目
     customer_dir.entries.each do |pn|
-      next if pn.to_s.start_with?('.') or pn.to_s =~ /信息汇总/ or pn.to_s.start_with?('__')
+      next if pn.to_s.start_with?('.') or pn.to_s =~ /信息汇总/ or pn.to_s =~ /提供人员/ or pn.to_s.start_with?('__')
       puts "--- #{pn}"
 
       id, _name = pn.to_s.split('、')
@@ -64,7 +70,19 @@ class Seed < Thor
           fail "Unknow file name: #{file}"
         end
       end
+
     end
+
+    staff_dir = customer_dir.entries.detect{|dir| dir.to_s =~ /提供人员/ && !dir.to_s.start_with?('__')}
+    if staff_dir.present?
+      puts "--- #{staff_dir}"
+      customer_dir.join(staff_dir).entries.each do |list|
+        next if list.to_s.start_with?('.')
+
+        handling_project_staff_list(file: customer_dir.join(staff_dir).join(list), customer: customer)
+      end
+    end
+
   end
 
   private
@@ -189,7 +207,6 @@ class Seed < Thor
 
     # 处理信息汇总
     def handling_project_info(file:, customer:)
-
       puts "--- #{file.basename}"
 
       sc = get_sub_company_by(name: file.basename.to_s)
@@ -219,7 +236,6 @@ class Seed < Thor
             admin_amount: data[1],
             total_amount: data[2],
           }
-          require'pry';binding.pry
           total.each do |k,v|
             puts "----- Validation failed: unequal #{k} total in #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
           end
@@ -395,6 +411,42 @@ class Seed < Thor
 
           items[id.to_i] = item
         end
+      end
+    end
+
+    def split_by_comma(string)
+      string.to_s.split(',').map(&:strip)
+    end
+
+    def handling_project_staff_list(file:, customer:)
+      puts "----- #{file.basename}"
+
+      xlsx_name = file.to_s
+      xlsx = Roo::Spreadsheet.open(xlsx_name)
+      sheet_id = 0
+      sheet = xlsx.sheet(sheet_id)
+
+      last_row = sheet.last_row
+      (3..last_row).each do |row_id|
+        _id, name, gender, identity_card, remark = \
+          sheet.row(row_id).map{|col| String === col ? col.strip : col}
+
+        next if _id.nil?
+
+        gender_map = {'男' => :male, '女' => :female}
+
+        staff = customer.engineering_staffs.where(name: name).first
+        next if staff.present? && staff.identity_card.present? && remark.blank?
+
+        staff ||= EngineeringStaff.create!(
+          engineering_customer: customer,
+          name: name,
+          gender: gender_map[gender],
+          identity_card: identity_card
+        )
+        staff.identity_card = identity_card if staff.identity_card.blank?
+        staff.remark = remark
+        staff.save!
       end
     end
 end
