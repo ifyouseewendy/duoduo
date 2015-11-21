@@ -208,24 +208,33 @@ class Seed < Thor
         next if data[0].nil?
         if data[0] == '合计'
           data = data.compact
+          if col_count == 16
+            data = data[3..-1]
+          elsif col_count == 14
+            data = data[1..-1]
+          end
+
           total = {
-            project_amount: data[1],
-            admin_amount: data[2],
-            total_amount: data[3],
-            outcome_amount: data[4]
+            project_amount: data[0],
+            admin_amount: data[1],
+            total_amount: data[2],
           }
+          require'pry';binding.pry
           total.each do |k,v|
             puts "----- Validation failed: unequal #{k} total in #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
           end
 
+          outcome_amount = data[-1]
+          puts "----- Validation failed: unequal outcome_amount total in #{xlsx_name}" unless outcome_amount == projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum
+
           break
         end
 
-        if col_count == 14
-          id, start_date, project_dates, name, project_amount, admin_amount, _project_amount, _admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof, remark = \
+        if col_count == 16
+          id, start_date, project_dates, name, _project_amount, _admin_amount, project_amount, admin_amount, total_amount, income_date, income_amount, outcome_date, outcome_referee, outcome_amount, proof, remark = \
             sheet.row(row_id).map{|col| String === col ? col.strip : col}
-        elsif col_count == 12 || col_count == 11
-          id, start_date, project_dates, name, project_amount, admin_amount, total_amount, income_date, outcome_date, outcome_referee, outcome_amount, proof, remark = \
+        elsif col_count == 14
+          id, start_date, project_dates, name, project_amount, admin_amount, total_amount, income_date, income_amount, outcome_date, outcome_referee, outcome_amount, proof, remark = \
             sheet.row(row_id).map{|col| String === col ? col.strip : col}
         else
           fail "无法解析信息汇总：#{file}"
