@@ -376,6 +376,9 @@ class Seed < Thor
                 social_insurance: data[2],
                 salary_in_fact: data[5]
               }
+            elsif col_count >= 15
+              # TODO 待处理工程大表导入
+              puts "待处理大表"
             else
               fail "工资表汇总信息获取失败"
             end
@@ -394,6 +397,10 @@ class Seed < Thor
           elsif col_count == 8
             id, name, salary_deserve, social_insurance, medical_insurance, _total_insurance, salary_in_fact, _ = \
               sheet.row(row_id).map{|col| String === col ? col.strip : col}
+          elsif col_count >= 15
+            # TODO 待处理工程大表导入
+            puts "待处理大表"
+            next
           else
             fail "工资表无法解析：#{path}"
           end
