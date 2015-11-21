@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151119133919) do
+ActiveRecord::Schema.define(version: 20151121152330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,23 +229,23 @@ ActiveRecord::Schema.define(version: 20151119133919) do
     t.date     "project_start_date"
     t.date     "project_end_date"
     t.text     "project_range"
-    t.decimal  "project_amount",          precision: 8, scale: 2
-    t.decimal  "admin_amount",            precision: 8, scale: 2
-    t.decimal  "total_amount",            precision: 8, scale: 2
+    t.decimal  "project_amount",          precision: 12, scale: 2
+    t.decimal  "admin_amount",            precision: 12, scale: 2
+    t.decimal  "total_amount",            precision: 12, scale: 2
     t.date     "income_date"
-    t.decimal  "income_amount",           precision: 8, scale: 2
+    t.decimal  "income_amount",           precision: 12, scale: 2
     t.date     "outcome_date"
     t.text     "outcome_referee"
-    t.decimal  "outcome_amount",          precision: 8, scale: 2
+    t.decimal  "outcome_amount",          precision: 12, scale: 2
     t.text     "proof"
     t.boolean  "already_sign_dispatch"
     t.text     "remark"
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
     t.integer  "engineering_customer_id"
     t.integer  "engineering_corp_id"
     t.text     "outcome_bank"
-    t.integer  "status",                                          default: 0
+    t.integer  "status",                                           default: 0
   end
 
   add_index "engineering_projects", ["engineering_corp_id"], name: "index_engineering_projects_on_engineering_corp_id", using: :btree
