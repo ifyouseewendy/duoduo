@@ -19,42 +19,36 @@ class Seed < Thor
   option :from, required: true
   def engineering
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
-    customer_dir = Pathname(options[:from])
 
     # load_rails
     base
 
+    customer_dir = Pathname(options[:from])
     puts "- #{customer_dir.basename}"
 
-    # 信息汇总
+    # 客户
     customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
 
-    infos = customer_dir.entries.select{|pn| pn.to_s =~ /信息汇总/ }
-    raise "没有信息汇总" if infos.blank?
-    projects = {}
-    infos.each do |info|
-      stats = handling_project_info(file: customer_dir.join(info), customer: customer)
-      projects.merge!(stats)
-    end
+    # 信息汇总
+    projects = handling_project_info_files(dir: customer_dir, customer: customer)
 
     # 项目
     customer_dir.entries.each do |pn|
-      next if pn.to_s.start_with?('.') or pn.to_s =~ /信息汇总/ or pn.to_s =~ /提供人员/ or pn.to_s.start_with?('__')
+      next if skip_files.any?{|f| pn.to_s.start_with?(f)} \
+        or special_files.any?{|f| pn.to_s =~ /#{f}/}
+
       puts "--- #{pn}"
 
       id, _name = pn.to_s.split('、')
-      if projects[id.to_i].nil?
+      project = projects[id.to_i]
+
+      if project.nil?
         puts "----- 特例跳过"
         next
       end
-      project = projects[id.to_i]
 
       # 用工明细
-      staff_file = customer_dir.join(pn).entries.detect{|file| file.to_s =~ /用工/}
-      next if staff_file.nil?
-      puts "----- #{staff_file.to_s}"
-      path = customer_dir.join(pn).join(staff_file)
-      handling_staff(path: path, project: project)
+      handling_project_staff(dir: customer_dir.join(pn), project: project)
 
       # 合同、协议、工资表
       customer_dir.join(pn).entries.each do |file|
@@ -73,19 +67,10 @@ class Seed < Thor
           fail "Unknow file name: #{file}"
         end
       end
-
     end
 
-    staff_dir = customer_dir.entries.detect{|dir| dir.to_s =~ /提供人员/ && !dir.to_s.start_with?('__')}
-    if staff_dir.present?
-      puts "--- #{staff_dir}"
-      customer_dir.join(staff_dir).entries.each do |list|
-        next if list.to_s.start_with?('.')
-
-        handling_project_staff_list(file: customer_dir.join(staff_dir).join(list), customer: customer)
-      end
-    end
-
+    # 提供人员
+    handling_staff_dirs(dir: customer_dir, customer: customer)
   end
 
   private
@@ -463,6 +448,47 @@ class Seed < Thor
         staff.remark = remark
         staff.save!
       end
+    end
+
+    def handling_project_info_files(dir:, customer:)
+      infos = dir.entries.select{|pn| pn.to_s =~ /信息汇总/ }
+      raise "没有信息汇总" if infos.blank?
+      projects = {}
+      infos.each do |info|
+        stats = handling_project_info(file: dir.join(info), customer: customer)
+        projects.merge!(stats)
+      end
+
+      projects
+    end
+
+    def handling_project_staff(dir:, project:)
+      staff_file = dir.entries.detect{|file| file.to_s =~ /用工/}
+      return if staff_file.nil?
+
+      puts "----- #{staff_file.to_s}"
+      path = dir.join(staff_file)
+      handling_staff(path: path, project: project)
+    end
+
+    def handling_staff_dirs(dir:, customer:)
+      staff_dir = dir.entries.detect{|dir| dir.to_s =~ /提供人员/ && !dir.to_s.start_with?('__')}
+      return unless staff_dir.present?
+
+      puts "--- #{staff_dir}"
+      dir.join(staff_dir).entries.each do |list|
+        next if list.to_s.start_with?('.')
+
+        handling_project_staff_list(file: dir.join(staff_dir).join(list), customer: customer)
+      end
+    end
+
+    def special_files
+      @_special_files ||= %w(信息汇总 提供人员)
+    end
+
+    def skip_files
+      @_skip_files ||= %w(. __)
     end
 end
 
