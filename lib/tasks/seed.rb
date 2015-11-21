@@ -143,10 +143,27 @@ class Seed < Thor
 
         parts = end_date.split('.')
 
-        if parts[0].to_i > 12
-          parts[0] = "20#{parts[0]}"
-        elsif parts[0].length != 4
+        if parts.count == 3
+          # 2013.1.1
+        elsif parts.count == 2
+          if parts[0].length == 4
+            # 2014.1
+            parts << '1'
+          elsif parts[0].length == 2
+            if parts[0].to_i <= 12
+              # 12.5 => 2015.12.5
+              parts.unshift '2015'
+            else
+              # 13.5 => 2013.5.1
+              parts[0] = "20#{parts[0]}"
+              parts << '1'
+            end
+          end
+        elsif parts.count == 1
           parts.unshift year
+          parts.push '1'
+        else
+          raise "Can't parse or revise end_date: #{end_date}"
         end
 
         end_date = revise_date(parts.join('.'))
