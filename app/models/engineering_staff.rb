@@ -9,6 +9,8 @@ class EngineeringStaff < ActiveRecord::Base
 
   enum gender: [:male, :female]
 
+  before_save :revise_fields
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -100,5 +102,20 @@ class EngineeringStaff < ActiveRecord::Base
 
   def accept_schedule?(start_date, end_date)
     busy_range.all?{|range| range[0] > end_date.to_date || range[1] < start_date.to_date }
+  end
+
+  def revise_fields
+    if (changed && [:identity_card]).present?
+      id_card = self.identity_card
+      if id_card.length == 18
+        self.birth = Date.parse(id_card[6,8])
+      end
+    end
+  end
+
+  def age
+    return '' if birth.blank?
+
+    Date.today.year - birth.year
   end
 end
