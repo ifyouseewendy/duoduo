@@ -94,7 +94,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
     if (changed && [:salary_deserve, :social_insurance, :medical_insurance]).present?
       self.total_insurance  = self.social_insurance + self.medical_insurance
       self.total_amount     = self.salary_deserve + self.total_insurance
-      self.tax              = IndividualIncomeTax.calculate(salary: self.total_amount)
+      self.tax              = IndividualIncomeTax.calculate(salary: self.total_amount) unless (changed && [:tax]).present?
       self.salary_in_fact   = self.total_amount - self.tax
     end
   end
