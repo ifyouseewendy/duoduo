@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151121152330) do
+ActiveRecord::Schema.define(version: 20151121152758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,10 +168,10 @@ ActiveRecord::Schema.define(version: 20151121152330) do
 
   create_table "engineering_income_items", force: :cascade do |t|
     t.date     "date"
-    t.decimal  "amount",                 precision: 8, scale: 2
+    t.decimal  "amount",                 precision: 12, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.integer  "engineering_project_id"
   end
 
@@ -213,12 +213,12 @@ ActiveRecord::Schema.define(version: 20151121152330) do
 
   create_table "engineering_outcome_items", force: :cascade do |t|
     t.date     "date"
-    t.decimal  "amount",                 precision: 8, scale: 2
+    t.decimal  "amount",                 precision: 12, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
     t.integer  "engineering_project_id"
-    t.text     "persons",                                        default: [],              array: true
+    t.text     "persons",                                         default: [],              array: true
   end
 
   add_index "engineering_outcome_items", ["engineering_project_id"], name: "index_engineering_outcome_items_on_engineering_project_id", using: :btree
