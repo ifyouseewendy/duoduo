@@ -338,6 +338,9 @@ class Seed < Thor
         date = Date.parse parts.join('.')
         name = "#{date.year}年#{date.month}月"
 
+        fail "工资表日期不在工程日期内：#{path}" \
+          unless date >= project.range[0].beginning_of_month && date <= project.range[1].end_of_month
+
         begin
           if sheet.row(2).compact.count == 1
             start_row = 4
