@@ -43,7 +43,10 @@ class Seed < Thor
       puts "--- #{pn}"
 
       id, _name = pn.to_s.split('、')
-      raise "项目#{pn}不在信息汇总中" if projects[id.to_i].nil?
+      if projects[id.to_i].nil?
+        puts "----- 特例跳过"
+        next
+      end
       project = projects[id.to_i]
 
       # 用工明细
@@ -184,7 +187,7 @@ class Seed < Thor
           raise "Can't parse or revise end_date: #{end_date}"
         end
 
-        end_date = revise_date(parts.join('.'))
+        end_date = Date.parse parts.join('.')
         end_date = end_date.end_of_month if end_date.day == 1
       end
 
@@ -275,12 +278,18 @@ class Seed < Thor
           split_by_comma(outcome_date),
           split_by_comma(outcome_referee)
 
-        income_date.zip(income_amount).each do |date, amount|
-          project.income_items.create!(date: date, amount: amount)
+        unless income_date.blank?
+          income_date.zip(income_amount).each do |date, amount|
+            project.income_items.create!(date: date, amount: amount)
+          end
         end
 
-        [outcome_date, outcome_amount, outcome_referee].transpose.each do |date, amount, referee|
-          project.outcome_items.create!(date: date, amount: amount, persons: referee.to_s.split(' ').map(&:strip))
+        unless outcome_referee.blank?
+          outcome_referee.each_with_index do |referee, idx|
+            date = outcome_date[idx]
+            amount = outcome_amount[idx]
+            project.outcome_items.create!(date: date, amount: amount, persons: referee.to_s.split(' ').map(&:strip))
+          end
         end
 
         fail "Validation failed: unequal project total_amount: #{id}" if project.total_amount != total_amount.to_f
@@ -333,7 +342,7 @@ class Seed < Thor
         puts "------- Sheet #{sheet_id+1}"
         sheet = xlsx.sheet(sheet_id)
 
-        parts = sheet_name.split('.')
+        parts = sheet_name.split('.').map(&:strip)
         parts << '1' if parts.count == 2
         date = Date.parse parts.join('.')
         name = "#{date.year}年#{date.month}月"
