@@ -15,13 +15,13 @@ class Seed < Thor
   def engineering
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
     customer_dir = Pathname(options[:from])
+    puts "- #{customer_dir.basename}"
 
     # load_rails
     base
 
+    # 信息汇总
     customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
-
-    puts "- #{customer_dir.basename}"
 
     infos = customer_dir.entries.select{|pn| pn.to_s =~ /信息汇总/ }
     raise "没有信息汇总" if infos.blank?
@@ -31,6 +31,7 @@ class Seed < Thor
       projects.merge!(stats)
     end
 
+    # 项目
     customer_dir.entries.each do |pn|
       next if pn.to_s.start_with?('.') or pn.to_s =~ /信息汇总/ or pn.to_s.start_with?('__')
       puts "--- #{pn}"
@@ -39,12 +40,14 @@ class Seed < Thor
       raise "项目#{pn}不在信息汇总中" if projects[id.to_i].nil?
       project = projects[id.to_i]
 
+      # 用工明细
       staff_file = customer_dir.join(pn).entries.detect{|file| file.to_s =~ /用工/}
       next if staff_file.nil?
       puts "----- #{staff_file.to_s}"
       path = customer_dir.join(pn).join(staff_file)
       handling_staff(path: path, project: project)
 
+      # 合同、协议、工资表
       customer_dir.join(pn).entries.each do |file|
         next if file.to_s.start_with?('.') or file.to_s =~ /用工/
         puts "----- #{file.to_s}"
