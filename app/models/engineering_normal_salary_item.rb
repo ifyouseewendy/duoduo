@@ -9,6 +9,10 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
   before_save :revise_fields
 
   class << self
+    def policy_class
+      EngineeringPolicy
+    end
+
     def create_by(table:, staff:, salary_in_fact:)
       item = self.new(salary_table: table, engineering_staff: staff)
       item.salary_in_fact =  salary_in_fact

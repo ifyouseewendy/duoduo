@@ -17,6 +17,10 @@ class EngineeringProject < ActiveRecord::Base
   enum status: [:active, :archive]
 
   class << self
+    def policy_class
+      EngineeringPolicy
+    end
+
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 

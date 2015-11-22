@@ -4,6 +4,10 @@ class EngineeringSalaryTable < ActiveRecord::Base
   has_one :reference, class_name: EngineeringBigTableSalaryTableReference, dependent: :destroy
 
   class << self
+    def policy_class
+      EngineeringPolicy
+    end
+
     def types
       [
         EngineeringNormalSalaryTable,

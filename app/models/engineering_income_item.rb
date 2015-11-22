@@ -4,4 +4,10 @@ class EngineeringIncomeItem < ActiveRecord::Base
   validates_presence_of :date, :amount
 
   default_scope { order('created_at DESC') }
+
+  class << self
+    def policy_class
+      EngineeringPolicy
+    end
+  end
 end

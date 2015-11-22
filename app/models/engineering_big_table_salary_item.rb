@@ -5,4 +5,11 @@ class EngineeringBigTableSalaryItem < ActiveRecord::Base
     inverse_of: :salary_items
 
   belongs_to :engineering_staff
+
+  class << self
+    def policy_class
+      EngineeringPolicy
+    end
+  end
+
 end
