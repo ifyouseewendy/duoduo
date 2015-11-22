@@ -3,6 +3,8 @@ class EngineeringSalaryTable < ActiveRecord::Base
 
   has_one :reference, class_name: EngineeringBigTableSalaryTableReference, dependent: :destroy
 
+  has_one :audition, as: :auditable, class_name: AuditionItem, dependent: :destroy
+
   class << self
     def policy_class
       EngineeringPolicy
