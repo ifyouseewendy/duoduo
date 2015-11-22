@@ -1,7 +1,13 @@
 class AdminUserPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope
+      if user.is_super_admin?
+        scope
+      elsif user.is_finance_admin?
+        scope.finance
+      elsif user.is_business_admin?
+        scope.business
+      end
     end
   end
 
