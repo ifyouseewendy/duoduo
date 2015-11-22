@@ -4,7 +4,13 @@ class AdminUser < ActiveRecord::Base
   devise :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  enum role: [:in_administration, :in_business, :in_finance]
+  enum role: [
+    :is_super_admin,
+    :is_finance_admin,
+    :is_finance_senior,
+    :is_finance_junior,
+    :is_business_admin,
+  ]
   enum status: [:active, :locked]
 
   class << self
@@ -19,8 +25,20 @@ class AdminUser < ActiveRecord::Base
     I18n.t("activerecord.attributes.#{self.class.name.underscore}.statuses.#{status}")
   end
 
+  def super_admin?
+    is_super_admin?
+  end
+
   def admin?
-    in_administration?
+    is_super_admin?
+  end
+
+  def finance?
+    is_finance_admin? or is_finance_junior? or is_finance_senior?
+  end
+
+  def business?
+    is_business_admin?
   end
 
   def email_required?
