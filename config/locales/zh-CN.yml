@@ -576,14 +576,21 @@ zh-CN:
       admin_user:
         id: '编号'
         name: '用户名'
-        status: '状态'
         password: '密码'
         password_confirmation: '密码确认'
+        status: '状态'
         statuses:
           active: '正常'
           locked: '锁定'
         current_sign_in_at: '最近登录时间'
         created_at: "创建时间"
         updated_at: "更新时间"
+        role: '角色'
+        roles:
+          is_super_admin: '超级管理员'
+          is_finance_admin: '财务复核'
+          is_finance_senior: '财务制作高级'
+          is_finance_junior: '财务制作初级'
+          is_business_admin: '业务部'
 
 
