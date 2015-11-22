@@ -41,16 +41,16 @@ ActiveAdmin.register EngineeringSalaryTable do
 
       if current_admin_user.finance_admin?
         if obj.audition.try(:already_audit?)
-          text_node "&nbsp;&nbsp;".html_safe
-          item "解除复核", "#{release_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}"
+          text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+          item "解除复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=init"
         else
           text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-          item "确认复核", "#{ensure_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}"
+          item "确认复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=already_audit"
         end
       elsif current_admin_user.finance_normal?
         if obj.audition.nil? or obj.audition.try(:init?)
           text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-          item "申请复核", "#{apply_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}"
+          item "申请复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=apply_audit"
         end
       end
     end

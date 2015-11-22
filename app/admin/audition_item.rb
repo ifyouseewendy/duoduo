@@ -30,42 +30,17 @@ ActiveAdmin.register AuditionItem do
     actions defaults: false
   end
 
-  collection_action :apply do
+  collection_action :update_status do
     begin
       ai = AuditionItem.find_or_create_by!(
         auditable_id: params[:auditable_id],
         auditable_type: fix_engineering_salary_table(type: params[:auditable_type])
       )
 
-      ai.update_attribute(:status, :apply_audit)
-      redirect_to :back, notice: "已申请复核"
-    rescue => e
-      redirect_to :back, alert: "操作失败，请把这段信息存入问题反馈：#{Time.now} - #{e.message}"
-    end
-  end
+      status = params[:status].strip
+      fail "错误的更新状态 #{params[:status]}" unless AuditionItem.statuses.keys.include?(status)
 
-  collection_action :ensure do
-    begin
-      ai = AuditionItem.find_or_create_by!(
-        auditable_id: params[:auditable_id],
-        auditable_type: fix_engineering_salary_table(type: params[:auditable_type])
-      )
-
-      ai.update_attribute(:status, :already_audit)
-      redirect_to :back, notice: "已复核"
-    rescue => e
-      redirect_to :back, alert: "操作失败，请把这段信息存入问题反馈：#{Time.now} - #{e.message}"
-    end
-  end
-
-  collection_action :release do
-    begin
-      ai = AuditionItem.find_or_create_by!(
-        auditable_id: params[:auditable_id],
-        auditable_type: fix_engineering_salary_table(type: params[:auditable_type])
-      )
-
-      ai.update_attribute(:status, :init)
+      ai.update_attribute(:status, status)
       redirect_to :back, notice: "已复核"
     rescue => e
       redirect_to :back, alert: "操作失败，请把这段信息存入问题反馈：#{Time.now} - #{e.message}"
