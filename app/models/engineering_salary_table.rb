@@ -29,4 +29,8 @@ class EngineeringSalaryTable < ActiveRecord::Base
     end
 
   end
+
+  def audition_status
+    audition.nil? ? nil : audition.status_i18n
+  end
 end

@@ -53,6 +53,7 @@ zh-CN:
       engineering_income_item: '来款记录'
       engineering_outcome_item: '回款记录'
       admin_user: '用户'
+      audition_item: '复核记录'
     attributes:
       normal_corporation:
         id: '编号'
@@ -485,6 +486,7 @@ zh-CN:
         type: '类型'
         remark: '备注'
         url: '大表链接'
+        audition_status: '复核状态'
         created_at: "创建时间"
         updated_at: "更新时间"
         engineering_project: '工程项目'
@@ -592,5 +594,13 @@ zh-CN:
           is_finance_senior: '财务制作高级'
           is_finance_junior: '财务制作初级'
           is_business_admin: '业务部'
-
-
+      audition_item:
+        id: '编号'
+        status: '状态'
+        statuses:
+          init: '未复核'
+          apply_audit: '申请复核'
+          already_audit: '已复核'
+          history: '历史数据'
+        created_at: "创建时间"
+        updated_at: "更新时间"

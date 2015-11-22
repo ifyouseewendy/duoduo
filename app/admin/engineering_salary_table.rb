@@ -20,6 +20,8 @@ ActiveAdmin.register EngineeringSalaryTable do
     column :created_at
     column :updated_at
 
+    column :audition_status, sortable: :id
+
     actions defaults: false do |obj|
       item "查看", engineering_salary_table_path(obj)
       text_node "&nbsp;&nbsp;".html_safe
