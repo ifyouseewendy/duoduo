@@ -13,7 +13,20 @@ class AdminUser < ActiveRecord::Base
   ]
   enum status: [:active, :locked]
 
+  scope :finance, -> { where(role: finance_enum_ids) }
+  scope :business, -> { where(role: business_enum_ids) }
+
   class << self
+
+    def finance_enum_ids
+      @_finance_enum_ids ||= \
+        [:is_finance_admin, :is_finance_senior, :is_finance_junior].map{|f| self.roles[f]}
+    end
+
+    def business_enum_ids
+      @_business_enum_ids ||= \
+        [:is_business_admin].map{|f| self.roles[f]}
+    end
 
     def statuses_option
       statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
