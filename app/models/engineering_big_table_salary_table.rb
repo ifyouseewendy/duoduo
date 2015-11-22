@@ -5,12 +5,6 @@ class EngineeringBigTableSalaryTable < EngineeringSalaryTable
     inverse_of: :salary_table,
     dependent: :destroy
 
-  class << self
-    def policy_class
-      EngineeringPolicy
-    end
-  end
-
   def update_reference_url(url)
     uri = URI(url)
     url = [uri.path, uri.query].join('?')

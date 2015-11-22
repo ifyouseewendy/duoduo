@@ -7,7 +7,7 @@ class EngineeringSalaryTable < ActiveRecord::Base
 
   class << self
     def policy_class
-      EngineeringPolicy
+      EngineeringSalaryTablePolicy
     end
 
     def types

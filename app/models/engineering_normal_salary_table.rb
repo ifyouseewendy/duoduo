@@ -5,9 +5,4 @@ class EngineeringNormalSalaryTable < EngineeringSalaryTable
     inverse_of: :salary_table,
     dependent: :destroy
 
-  class << self
-    def policy_class
-      EngineeringPolicy
-    end
-  end
 end
