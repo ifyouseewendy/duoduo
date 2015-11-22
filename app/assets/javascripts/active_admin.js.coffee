@@ -375,6 +375,9 @@ $(document).on 'ready', ->
       window.location = $(@).val('href')
 
   $('.admin_users .download_links').hide();
+  $('.audition_items .download_links').hide();
+
+  # Admin User delete
   $('.admin_users .admin_user_delete').on 'click', (e) ->
     e.stopPropagation()
     e.preventDefault()

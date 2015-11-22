@@ -596,6 +596,8 @@ zh-CN:
           is_business_admin: '业务部'
       audition_item:
         id: '编号'
+        name: '表名称'
+        auditable_type: '表类型'
         status: '状态'
         statuses:
           init: '未复核'
