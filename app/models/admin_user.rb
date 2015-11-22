@@ -78,6 +78,14 @@ class AdminUser < ActiveRecord::Base
     is_business_admin?
   end
 
+  def finance_admin?
+    is_super_admin? or is_finance_admin?
+  end
+
+  def finance_normal?
+    is_finance_junior? or is_finance_senior?
+  end
+
   def email_required?
     false
   end

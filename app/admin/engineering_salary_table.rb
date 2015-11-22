@@ -38,6 +38,21 @@ ActiveAdmin.register EngineeringSalaryTable do
       parts[-1] = parts[-1].sub('table', 'item')
       path = parts.join('_')
       item "工资条", "/#{path}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+
+      if current_admin_user.finance_admin?
+        if obj.audition.try(:already_audit?)
+          text_node "&nbsp;&nbsp;".html_safe
+          item "解除复核", "#{release_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}"
+        else
+          text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+          item "确认复核", "#{ensure_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}"
+        end
+      elsif current_admin_user.finance_normal?
+        if obj.audition.nil? or obj.audition.try(:init?)
+          text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+          item "申请复核", "#{apply_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}"
+        end
+      end
     end
   end
 
