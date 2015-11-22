@@ -44,6 +44,34 @@ ActiveAdmin.register AuditionItem do
     end
   end
 
+  collection_action :ensure do
+    begin
+      ai = AuditionItem.find_or_create_by!(
+        auditable_id: params[:auditable_id],
+        auditable_type: fix_engineering_salary_table(type: params[:auditable_type])
+      )
+
+      ai.update_attribute(:status, :already_audit)
+      redirect_to :back, notice: "已复核"
+    rescue => e
+      redirect_to :back, alert: "操作失败，请把这段信息存入问题反馈：#{Time.now} - #{e.message}"
+    end
+  end
+
+  collection_action :release do
+    begin
+      ai = AuditionItem.find_or_create_by!(
+        auditable_id: params[:auditable_id],
+        auditable_type: fix_engineering_salary_table(type: params[:auditable_type])
+      )
+
+      ai.update_attribute(:status, :init)
+      redirect_to :back, notice: "已复核"
+    rescue => e
+      redirect_to :back, alert: "操作失败，请把这段信息存入问题反馈：#{Time.now} - #{e.message}"
+    end
+  end
+
   controller do
     private
 
