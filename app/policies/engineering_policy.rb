@@ -8,8 +8,12 @@ class EngineeringPolicy
     @record = record
   end
 
-  def method_missing(m, *args)
+  def method_missing(method, *args, &block)
     user.super_admin? or user.finance?
+  end
+
+  def respond_to?(method, *)
+    true
   end
 
   def scope
