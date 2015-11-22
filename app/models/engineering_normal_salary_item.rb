@@ -10,7 +10,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
 
   class << self
     def policy_class
-      EngineeringPolicy
+      EngineeringSalaryItemPolicy
     end
 
     def create_by(table:, staff:, salary_in_fact:)

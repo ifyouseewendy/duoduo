@@ -8,7 +8,7 @@ class EngineeringBigTableSalaryItem < ActiveRecord::Base
 
   class << self
     def policy_class
-      EngineeringPolicy
+      EngineeringSalaryItemPolicy
     end
   end
 
