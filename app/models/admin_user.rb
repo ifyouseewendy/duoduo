@@ -19,10 +19,18 @@ class AdminUser < ActiveRecord::Base
       statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
     end
 
+    def roles_option
+      roles.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.roles.#{k}"), k]}
+    end
+
   end
 
   def status_i18n
     I18n.t("activerecord.attributes.#{self.class.name.underscore}.statuses.#{status}")
+  end
+
+  def role_i18n
+    I18n.t("activerecord.attributes.#{self.class.name.underscore}.roles.#{role}")
   end
 
   def super_admin?
@@ -30,7 +38,7 @@ class AdminUser < ActiveRecord::Base
   end
 
   def admin?
-    is_super_admin?
+    is_super_admin? or is_finance_admin? or is_business_admin?
   end
 
   def finance?

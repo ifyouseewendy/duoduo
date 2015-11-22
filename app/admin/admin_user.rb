@@ -7,7 +7,7 @@ ActiveAdmin.register AdminUser do
     label: proc{ I18n.t("active_admin.admin_user.title") },
     priority: 1
 
-  permit_params :name, :email, :password, :password_confirmation
+  permit_params :name, :email, :password, :password_confirmation, :role
 
   index do
     selectable_column
@@ -16,15 +16,22 @@ ActiveAdmin.register AdminUser do
     column :status do |obj|
       status_tag obj.status_i18n, (obj.active? ? :yes : :no)
     end
+    column :role do |obj|
+      obj.role_i18n
+    end
     column :current_sign_in_at
     column :created_at
     actions defaults: false do |obj|
+      if obj.id != current_admin_user.id
+        item "更改角色", edit_admin_user_path(obj)
+        text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      end
       item "重置密码", reset_password_admin_user_path(obj)
-      text_node "&nbsp;&nbsp;".html_safe
+      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       item "锁定", lock_admin_user_path(obj)
       text_node "&nbsp;&nbsp;".html_safe
       item "解锁", unlock_admin_user_path(obj)
-      text_node "&nbsp;&nbsp;".html_safe
+      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       item "删除", '#', class: 'admin_user_delete'
     end
   end
@@ -43,7 +50,14 @@ ActiveAdmin.register AdminUser do
   form do |f|
     f.inputs do
       f.input :name, as: :string
-      unless f.object.new_record?
+
+      if f.object.admin? && f.object.id != current_admin_user.id
+        # Update others
+        unless f.object.new_record?
+          f.input :role, as: :radio, collection: AdminUser.roles_option
+        end
+      else
+        # Update self
         f.input :password
         f.input :password_confirmation
       end
