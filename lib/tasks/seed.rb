@@ -132,7 +132,8 @@ class Seed < Thor
       elsif name.index('人力')
         SubCompany.where(name: '吉易人力资源').first
       else
-        fail "xxx 无法解析子公司名称: #{name}"
+        logger.error "xxx 无法解析子公司名称: #{name} #{join_current_path}"
+        nil
       end
     end
 
@@ -185,7 +186,7 @@ class Seed < Thor
     end
 
     def parse_project_dates(str)
-      fail "xxxxx 无法解析工程日期: #{str}" if str.split('-').count > 2
+      fail "xxxxx 无法解析工程日期: #{str} #{join_current_path}" if str.split('-').count > 2
 
       start_date, end_date = str.split('-')
 
@@ -218,7 +219,7 @@ class Seed < Thor
           parts.unshift year
           parts.push '1'
         else
-          fail "xxxxx 无法解析工程结束日期：#{end_date}"
+          fail "xxxxx 无法解析工程结束日期：#{end_date} #{join_current_path}"
         end
 
         end_date = Date.parse parts.join('.')
@@ -236,7 +237,7 @@ class Seed < Thor
       begin
         Date.parse parts.join('.')
       rescue => e
-        logger.error "xxxxx 无法解析工程开始日期：#{date}"
+        logger.error "xxxxx 无法解析工程开始日期：#{date} #{join_current_path}"
         raise e
       end
     end
@@ -246,6 +247,8 @@ class Seed < Thor
       logger.info "--- #{file.basename}"
 
       sc = get_sub_company_by(name: file.basename.to_s)
+      return if sc.nil?
+
       customer.sub_companies << sc
 
       xlsx_name = file.to_s
@@ -279,12 +282,12 @@ class Seed < Thor
             outcome_amount: '回款合计'
           }
           total.each do |k,v|
-            logger.error "----- 校验失败: #{total_i18n[k]} #{total[k]}" unless total[k] == projects.values.map(&k).map(&:to_f).sum.round(2)
+            logger.error "xxxxx 校验失败: #{total_i18n[k]} #{total[k]} #{join_current_path}" unless total[k] == projects.values.map(&k).map(&:to_f).sum.round(2)
           end
 
           outcome_amount = data[-1]
           outcome_amount = outcome_amount.to_f.round(2)
-          logger.error "----- 校验失败: #{total_i18n[:outcome_amount]} #{outcome_amount}" unless outcome_amount == projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum.round(2)
+          logger.error "xxxxx 校验失败: #{total_i18n[:outcome_amount]} #{outcome_amount} #{join_current_path}" unless outcome_amount == projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum.to_f.round(2)
 
           break
         end
@@ -296,11 +299,17 @@ class Seed < Thor
           id, start_date, project_dates, name, project_amount, admin_amount, total_amount, income_date, income_amount, outcome_date, outcome_referee, outcome_amount, proof, remark = \
             sheet.row(row_id).map{|col| String === col ? col.strip : col}
         else
-          logger.error "xxxxx 无法解析信息汇总：错误的列数 #{col_count}"
+          logger.error "xxxxx 无法解析信息汇总：错误的列数 #{col_count} #{join_current_path}"
           break
         end
 
-        project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
+        begin
+          project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
+        rescue => e
+          logger.error e.message
+          next
+        end
+
         project = customer.engineering_projects.create!(
           name: "#{id.to_i}、#{name}",
           start_date: start_date,
@@ -333,7 +342,7 @@ class Seed < Thor
           end
         end
 
-        logger.error "xxx 校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i}" if project.total_amount != total_amount.to_f
+        logger.error "xxx 校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i} #{join_current_path}" if project.total_amount.to_f.round(2) != total_amount.to_f.round(2)
 
         projects[id.to_i] = project
       end
@@ -385,29 +394,32 @@ class Seed < Thor
 
         parts = sheet_name.split('.').map(&:strip)
         parts << '1' if parts.count == 2
+
+        if parts.count != 3
+          logger.error "xxxxxxx 无法解析工资表表单名：#{sheet_name} #{join_current_path}"
+          next
+        end
+
         begin
           date = Date.parse parts.join('.')
         rescue => _
-          logger.error "xxxxxxx 无法解析工资表表单名：#{sheet_name}"
+          logger.error "xxxxxxx 无法解析工资表表单名：#{sheet_name} #{join_current_path}"
           next
         end
         name = "#{date.year}年#{date.month}月"
 
-        logger.error "xxxxxxx 工资表日期不在工程日期内：#{path}" \
+        logger.error "xxxxxxx 工资表日期不在工程日期内: #{sheet_name} #{join_current_path}" \
           unless date >= project.range[0].beginning_of_month && date <= project.range[1].end_of_month
 
-        begin
-          if sheet.row(3).compact.count == 1
-            start_row = 5
-          elsif sheet.row(2).compact.count == 1
-            start_row = 4
-          elsif sheet.row(1).compact.count == 1
-            start_row = 3
-          else
-            fail "xxxxxxx 无法解析工资表: #{path}"
-          end
-        rescue => _
-          fail "xxxxxxx 无法解析工资表: #{path}"
+        if sheet.row(3).compact.count == 1
+          start_row = 5
+        elsif sheet.row(2).compact.count == 1
+          start_row = 4
+        elsif sheet.row(1).compact.count == 1
+          start_row = 3
+        else
+          logger.error "xxxxxxx 无法解析工资表：#{sheet_name} #{join_current_path}"
+          next
         end
 
         col_count = sheet.row(start_row-1).compact.count
@@ -450,7 +462,8 @@ class Seed < Thor
             elsif col_count >= 15
               # TODO 待处理工程大表导入
             else
-              fail "xxxxxxx 无法解析工资表：汇总信息获取失败，错误"
+              logger.error "xxxxxxx 无法解析工资表，错误的列数 #{col_count}： #{join_current_path}"
+              next
             end
 
             total_i18n = {
@@ -460,8 +473,8 @@ class Seed < Thor
             }
 
             total.each do |k,v|
-              logger.error "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f}" \
-                unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
+              logger.error "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f} #{join_current_path}" \
+                unless total[k].to_f.round(2) == items.values.map(&k).map(&:to_f).sum.round(2)
             end
 
             break
@@ -482,7 +495,8 @@ class Seed < Thor
             logger.info "xxxxxxx 待处理大表"
             break
           else
-            fail "xxxxxxx 无法解析工资表：错误的列数 #{col_count}"
+            logger.error "xxxxxxx 无法解析工资表，错误的列数 #{col_count}: #{sheet_name} #{join_current_path}"
+            next
           end
 
           next if id.nil?
@@ -490,7 +504,7 @@ class Seed < Thor
           name = name.delete(' ')
           staff = project.engineering_staffs.where(name: name).first
           if staff.nil?
-            logger.error "xxxxxxx 未找到员工: #{name}"
+            logger.error "xxxxxxx 未找到员工: #{name} #{join_current_path}"
             next
           end
 
