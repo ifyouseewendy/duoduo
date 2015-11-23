@@ -291,4 +291,11 @@ module ActiveAdmin
       end
     end
   end
+
+  # class Comment
+  #   before_destroy :check_permission
+  #
+  #   def check_permission
+  #   end
+  # end
 end
