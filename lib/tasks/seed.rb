@@ -6,8 +6,9 @@ class Seed < Thor
   desc "base", ''
   def base
     load_rails
-    clean_db
     init_logger
+
+    clean_db
 
     seed_admin_user
     seed_sub_companies
@@ -23,10 +24,11 @@ class Seed < Thor
 
     logger.info "[#{Time.now}] Import start"
 
-    # begin
-    #   invoke('engineering', [], from: options[:from])
-    # rescue => e
-    # end
+    begin
+      invoke('engineering', [], from: options[:from])
+    rescue => e
+      logger.error e.message
+    end
 
     logger.info "[#{Time.now}] Import end"
   end
@@ -41,9 +43,10 @@ class Seed < Thor
   def engineering
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
+    init_logger
 
     customer_dir = Pathname(options[:from])
-    puts "- #{customer_dir.basename}"
+    logger.info "- #{customer_dir.basename}"
 
     # 客户
     customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
