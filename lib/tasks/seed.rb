@@ -41,11 +41,7 @@ class Seed < Thor
     dir.entries.sort.each do |customer|
       next if skip_files.any?{|f| customer.to_s.start_with?(f)}
 
-      begin
-        self.class.new.invoke('engineering', [], from: dir.join(customer) )
-      rescue => e
-        logger.error e.message
-      end
+      self.class.new.invoke('engineering', [], from: dir.join(customer) )
     end
 
     logger.info "[#{Time.now}] Import end"
@@ -61,10 +57,15 @@ class Seed < Thor
   def engineering
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
-    init_logger
+    load_rails unless defined? Rails
 
+    init_logger
+    logger.level = Logger::ERROR
     customer_dir = Pathname(options[:from])
     logger.info "- #{customer_dir.basename}"
+
+    init_current_path customer_dir
+    logger.error "--> #{customer_dir.basename}"
 
     # 客户
     customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
@@ -78,12 +79,14 @@ class Seed < Thor
         or special_files.any?{|f| pn.to_s =~ /#{f}/}
 
       logger.info "--- #{pn}"
+      current_path.push(pn)
 
       id, _name = pn.to_s.split('、')
       project = projects[id.to_i]
 
       if project.nil?
         logger.info "----- 特例跳过"
+        current_path.pop
         next
       end
 
@@ -92,8 +95,10 @@ class Seed < Thor
 
       # 合同、协议、工资表
       customer_dir.join(pn).entries.each do |file|
-        next if file.to_s.start_with?('.') or file.to_s =~ /用工/ or file.to_s =~ /明细表/ or file.to_s.start_with?('__')
+        next if skip_files.any?{|f| file.to_s.start_with?(f)} or file.to_s =~ /用工/ or file.to_s =~ /明细表/
         logger.info "----- #{file.to_s}"
+
+        current_path.push file
 
         path = customer_dir.join(pn).join(file)
 
@@ -104,9 +109,13 @@ class Seed < Thor
         elsif file.to_s =~ /工资/
           handling_salary_table(path: path, project: project, type: :normal)
         else
-          logger.error "xxxxx 无法解析文件: #{file}"
+          logger.error "xxxxx 无法解析文件: #{join_current_path}"
         end
+
+        current_path.pop
       end
+
+      current_path.pop
     end
 
     # 提供人员
@@ -547,11 +556,19 @@ class Seed < Thor
 
     def handling_project_info_files(dir:, customer:)
       infos = dir.entries.select{|pn| pn.to_s =~ /信息汇总/ }
-      fail "没有信息汇总" if infos.blank?
+      if infos.blank?
+        logger.error "xxx 没有信息汇总 #{join_current_path}"
+        return
+      end
+
       projects = {}
       infos.each do |info|
+        current_path.push info
+
         stats = handling_project_info(file: dir.join(info), customer: customer)
         projects.merge!(stats)
+
+        current_path.pop
       end
 
       projects
@@ -562,8 +579,10 @@ class Seed < Thor
       return if staff_file.nil?
 
       logger.info "----- #{staff_file.to_s}"
-      path = dir.join(staff_file)
-      handling_staff(path: path, project: project)
+
+      current_path.push(staff_file)
+      handling_staff(path: dir.join(staff_file), project: project)
+      current_path.pop
     end
 
     def handling_staff_dirs(dir:, customer:)
