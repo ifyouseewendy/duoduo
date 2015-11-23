@@ -24,10 +24,15 @@ class Seed < Thor
 
     logger.info "[#{Time.now}] Import start"
 
-    begin
-      invoke('engineering', [], from: options[:from])
-    rescue => e
-      logger.error e.message
+    dir = Pathname(options[:from])
+    dir.entries.sort.each do |customer|
+      next if skip_files.any?{|f| customer.to_s.start_with?(f)}
+
+      begin
+        self.class.new.invoke('engineering', [], from: dir.join(customer) )
+      rescue => e
+        logger.error e.message
+      end
     end
 
     logger.info "[#{Time.now}] Import end"
@@ -55,7 +60,7 @@ class Seed < Thor
     projects = handling_project_info_files(dir: customer_dir, customer: customer)
 
     # 项目
-    customer_dir.entries.each do |pn|
+    customer_dir.entries.sort.each do |pn|
       next if skip_files.any?{|f| pn.to_s.start_with?(f)} \
         or special_files.any?{|f| pn.to_s =~ /#{f}/}
 
