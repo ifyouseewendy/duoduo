@@ -1,13 +1,34 @@
 require 'thor'
 
 class Seed < Thor
+  attr_reader :logger
+
   desc "base", ''
   def base
     load_rails
     clean_db
+    init_logger
 
     seed_admin_user
     seed_sub_companies
+  end
+
+  desc "import", ''
+  option :from, required: true
+  def import
+    fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
+
+    # load_rails
+    base
+
+    logger.info "[#{Time.now}] Import start"
+
+    # begin
+    #   invoke('engineering', [], from: options[:from])
+    # rescue => e
+    # end
+
+    logger.info "[#{Time.now}] Import end"
   end
 
   desc "engineering", "Import engineering data"
@@ -20,8 +41,6 @@ class Seed < Thor
   def engineering
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
-    # load_rails
-    base
 
     customer_dir = Pathname(options[:from])
     puts "- #{customer_dir.basename}"
@@ -522,6 +541,10 @@ class Seed < Thor
 
     def skip_files
       @_skip_files ||= %w(. __)
+    end
+
+    def init_logger
+      @logger = ActiveSupport::Logger.new('log/import.log')
     end
 end
 
