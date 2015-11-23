@@ -59,13 +59,13 @@ class Seed < Thor
       next if skip_files.any?{|f| pn.to_s.start_with?(f)} \
         or special_files.any?{|f| pn.to_s =~ /#{f}/}
 
-      puts "--- #{pn}"
+      logger.info "--- #{pn}"
 
       id, _name = pn.to_s.split('、')
       project = projects[id.to_i]
 
       if project.nil?
-        puts "----- 特例跳过"
+        logger.info "----- 特例跳过"
         next
       end
 
@@ -75,7 +75,7 @@ class Seed < Thor
       # 合同、协议、工资表
       customer_dir.join(pn).entries.each do |file|
         next if file.to_s.start_with?('.') or file.to_s =~ /用工/ or file.to_s =~ /明细表/ or file.to_s.start_with?('__')
-        puts "----- #{file.to_s}"
+        logger.info "----- #{file.to_s}"
 
         path = customer_dir.join(pn).join(file)
 
@@ -86,7 +86,7 @@ class Seed < Thor
         elsif file.to_s =~ /工资/
           handling_salary_table(path: path, project: project, type: :normal)
         else
-          puts "Unknow file name: #{file}"
+          logger.info "xxxxx 无法解析文件: #{file}"
         end
       end
     end
@@ -105,7 +105,7 @@ class Seed < Thor
       elsif name.index('人力')
         SubCompany.where(name: '吉易人力资源').first
       else
-        fail "Failed parsing SubCompany name: #{name}"
+        fail "xxx 无法解析子公司名称: #{name}"
       end
     end
 
@@ -158,7 +158,7 @@ class Seed < Thor
     end
 
     def parse_project_dates(str)
-      fail "Invalid project dates: #{str}" if str.split('-').count > 2
+      fail "xxxxx 无法解析工程日期: #{str}" if str.split('-').count > 2
 
       start_date, end_date = str.split('-')
 
@@ -191,7 +191,7 @@ class Seed < Thor
           parts.unshift year
           parts.push '1'
         else
-          raise "Can't parse or revise end_date: #{end_date}"
+          fail "xxxxx 无法解析工程结束日期：#{end_date}"
         end
 
         end_date = Date.parse parts.join('.')
@@ -209,15 +209,14 @@ class Seed < Thor
       begin
         Date.parse parts.join('.')
       rescue => e
-        puts "revise_date: Invalid date: #{date}"
-        puts e.backtrace
+        logger.info "xxxxx 无法解析工程开始日期：#{date}"
         raise e
       end
     end
 
     # 处理信息汇总
     def handling_project_info(file:, customer:)
-      puts "--- #{file.basename}"
+      logger.info "--- #{file.basename}"
 
       sc = get_sub_company_by(name: file.basename.to_s)
       customer.sub_companies << sc
@@ -246,12 +245,18 @@ class Seed < Thor
             admin_amount: data[1],
             total_amount: data[2],
           }
+          total_i18n = {
+            project_amount: '劳务费',
+            admin_amount: '管理费',
+            total_amount: '费用合计',
+            outcome_amount: '回款合计'
+          }
           total.each do |k,v|
-            puts "----- Validation failed: unequal #{k} total in #{xlsx_name}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
+            logger.info "----- 校验失败: #{total_i18n[k]} #{total[k].to_f}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
           end
 
           outcome_amount = data[-1]
-          puts "----- Validation failed: unequal outcome_amount total in #{xlsx_name}" unless outcome_amount == projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum
+          logger.info "----- 校验失败: #{total_i18n[:outcome_amount]} #{outcome_amount}" unless outcome_amount == projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum
 
           break
         end
@@ -263,7 +268,7 @@ class Seed < Thor
           id, start_date, project_dates, name, project_amount, admin_amount, total_amount, income_date, income_amount, outcome_date, outcome_referee, outcome_amount, proof, remark = \
             sheet.row(row_id).map{|col| String === col ? col.strip : col}
         else
-          fail "无法解析信息汇总：#{file}"
+          fail "无法解析信息汇总：错误的列数 #{col_count}"
         end
 
         project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
@@ -299,7 +304,7 @@ class Seed < Thor
           end
         end
 
-        puts "xxx Validation failed: unequal project total_amount. id: #{id.to_i}" if project.total_amount != total_amount.to_f
+        logger.info "xxx 校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i}" if project.total_amount != total_amount.to_f
 
         projects[id.to_i] = project
       end
@@ -322,7 +327,7 @@ class Seed < Thor
         gender_map = {'男' => :male, '女' => :female}
         staff = EngineeringStaff.find_or_create_by!(
           engineering_customer: project.engineering_customer,
-          name: name,
+          name: name.delete(' '),
           gender: gender_map[gender],
           identity_card: identity_card
         )
@@ -346,15 +351,20 @@ class Seed < Thor
       xlsx = Roo::Spreadsheet.open(xlsx_name)
 
       xlsx.sheets.each_with_index do |sheet_name, sheet_id|
-        puts "------- Sheet #{sheet_id+1}"
+        logger.info "------- Sheet #{sheet_id+1}"
         sheet = xlsx.sheet(sheet_id)
 
         parts = sheet_name.split('.').map(&:strip)
         parts << '1' if parts.count == 2
-        date = Date.parse parts.join('.')
+        begin
+          date = Date.parse parts.join('.')
+        rescue => _
+          logger.error "xxxxxxx 无法解析工资表表单名：#{sheet_name}"
+          next
+        end
         name = "#{date.year}年#{date.month}月"
 
-        fail "工资表日期不在工程日期内：#{path}" \
+        logger.error "xxxxxxx 工资表日期不在工程日期内：#{path}" \
           unless date >= project.range[0].beginning_of_month && date <= project.range[1].end_of_month
 
         begin
@@ -365,10 +375,10 @@ class Seed < Thor
           elsif sheet.row(1).compact.count == 1
             start_row = 3
           else
-            fail "无法解析工资表名称: #{path}"
+            fail "xxxxxxx 无法解析工资表: #{path}"
           end
         rescue => _
-          fail "无法解析工资表名称: #{path}"
+          fail "xxxxxxx 无法解析工资表: #{path}"
         end
 
         col_count = sheet.row(start_row-1).compact.count
@@ -411,10 +421,17 @@ class Seed < Thor
             elsif col_count >= 15
               # TODO 待处理工程大表导入
             else
-              fail "工资表汇总信息获取失败"
+              fail "xxxxxxx 无法解析工资表：汇总信息获取失败，错误"
             end
+
+            total_i18n = {
+              salary_deserve: '应发工资',
+              social_insurance: '税金',
+              salary_in_fact: '实发工资'
+            }
+
             total.each do |k,v|
-              puts "----- Validation failed: unequal #{k} total in #{xlsx_name}-#{sheet_id}" \
+              logger.info "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f}" \
                 unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
             end
 
@@ -433,17 +450,20 @@ class Seed < Thor
               sheet.row(row_id).map{|col| String === col ? col.strip : col}
           elsif col_count >= 15
             # TODO 待处理工程大表导入
-            puts "xxxxxxx 待处理大表"
+            logger.info "xxxxxxx 待处理大表"
             break
           else
-            fail "工资表无法解析：#{path}"
+            fail "xxxxxxx 无法解析工资表：错误的列数 #{col_count}"
           end
 
           next if id.nil?
 
           name = name.delete(' ')
           staff = project.engineering_staffs.where(name: name).first
-          fail "未找到员工: #{name} in #{path}" if staff.nil?
+          if staff.nil?
+            logger.error "xxxxxxx 未找到员工: #{name}"
+            next
+          end
 
           if col_count == 10
             item = st.salary_items.create!(
@@ -474,7 +494,7 @@ class Seed < Thor
     end
 
     def handling_project_staff_list(file:, customer:)
-      puts "----- #{file.basename}"
+      logger.info "----- #{file.basename}"
 
       xlsx_name = file.to_s
       xlsx = Roo::Spreadsheet.open(xlsx_name)
@@ -507,7 +527,7 @@ class Seed < Thor
 
     def handling_project_info_files(dir:, customer:)
       infos = dir.entries.select{|pn| pn.to_s =~ /信息汇总/ }
-      raise "没有信息汇总" if infos.blank?
+      fail "没有信息汇总" if infos.blank?
       projects = {}
       infos.each do |info|
         stats = handling_project_info(file: dir.join(info), customer: customer)
@@ -521,7 +541,7 @@ class Seed < Thor
       staff_file = dir.entries.detect{|file| file.to_s =~ /用工/ or file.to_s =~ /明细表/ }
       return if staff_file.nil?
 
-      puts "----- #{staff_file.to_s}"
+      logger.info "----- #{staff_file.to_s}"
       path = dir.join(staff_file)
       handling_staff(path: path, project: project)
     end
@@ -530,7 +550,7 @@ class Seed < Thor
       staff_dir = dir.entries.detect{|dir| dir.to_s =~ /提供人员/ && !dir.to_s.start_with?('__')}
       return unless staff_dir.present?
 
-      puts "--- #{staff_dir}"
+      logger.info "--- #{staff_dir}"
       dir.join(staff_dir).entries.each do |list|
         next if list.to_s.start_with?('.')
 
