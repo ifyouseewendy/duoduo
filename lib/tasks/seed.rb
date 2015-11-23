@@ -86,7 +86,7 @@ class Seed < Thor
         elsif file.to_s =~ /工资/
           handling_salary_table(path: path, project: project, type: :normal)
         else
-          logger.info "xxxxx 无法解析文件: #{file}"
+          logger.error "xxxxx 无法解析文件: #{file}"
         end
       end
     end
@@ -209,7 +209,7 @@ class Seed < Thor
       begin
         Date.parse parts.join('.')
       rescue => e
-        logger.info "xxxxx 无法解析工程开始日期：#{date}"
+        logger.error "xxxxx 无法解析工程开始日期：#{date}"
         raise e
       end
     end
@@ -241,9 +241,9 @@ class Seed < Thor
           end
 
           total = {
-            project_amount: data[0],
-            admin_amount: data[1],
-            total_amount: data[2],
+            project_amount: data[0].to_f.round(2),
+            admin_amount: data[1].to_f.round(2),
+            total_amount: data[2].to_f.round(2),
           }
           total_i18n = {
             project_amount: '劳务费',
@@ -252,11 +252,12 @@ class Seed < Thor
             outcome_amount: '回款合计'
           }
           total.each do |k,v|
-            logger.info "----- 校验失败: #{total_i18n[k]} #{total[k].to_f}" unless total[k].to_f == projects.values.map(&k).map(&:to_f).sum
+            logger.error "----- 校验失败: #{total_i18n[k]} #{total[k]}" unless total[k] == projects.values.map(&k).map(&:to_f).sum.round(2)
           end
 
           outcome_amount = data[-1]
-          logger.info "----- 校验失败: #{total_i18n[:outcome_amount]} #{outcome_amount}" unless outcome_amount == projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum
+          outcome_amount = outcome_amount.to_f.round(2)
+          logger.error "----- 校验失败: #{total_i18n[:outcome_amount]} #{outcome_amount}" unless outcome_amount == projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum.round(2)
 
           break
         end
@@ -268,7 +269,8 @@ class Seed < Thor
           id, start_date, project_dates, name, project_amount, admin_amount, total_amount, income_date, income_amount, outcome_date, outcome_referee, outcome_amount, proof, remark = \
             sheet.row(row_id).map{|col| String === col ? col.strip : col}
         else
-          fail "无法解析信息汇总：错误的列数 #{col_count}"
+          logger.error "xxxxx 无法解析信息汇总：错误的列数 #{col_count}"
+          break
         end
 
         project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
@@ -304,7 +306,7 @@ class Seed < Thor
           end
         end
 
-        logger.info "xxx 校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i}" if project.total_amount != total_amount.to_f
+        logger.error "xxx 校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i}" if project.total_amount != total_amount.to_f
 
         projects[id.to_i] = project
       end
@@ -431,7 +433,7 @@ class Seed < Thor
             }
 
             total.each do |k,v|
-              logger.info "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f}" \
+              logger.error "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f}" \
                 unless total[k].to_f == items.values.map(&k).map(&:to_f).sum
             end
 
