@@ -15,6 +15,6 @@ class EngineeringSalaryItemPolicy < EngineeringPolicy
 
     def pass_audition
       audition = record.salary_table.audition
-      audition.nil? or audition.init? or audition.history?
+      audition.nil? or !audition.already_audit
     end
 end
