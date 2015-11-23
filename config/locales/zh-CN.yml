@@ -54,6 +54,7 @@ zh-CN:
       engineering_outcome_item: '回款记录'
       admin_user: '用户'
       audition_item: '复核记录'
+      comment: '备注'
     attributes:
       normal_corporation:
         id: '编号'
@@ -606,3 +607,16 @@ zh-CN:
           history: '历史数据'
         created_at: "创建时间"
         updated_at: "更新时间"
+      active_admin/comment:
+        id: '编号'
+        namespace: '命名空间'
+        body: '内容'
+        resource_id: '资源编号'
+        resource_type: '资源类型'
+        resource: '资源'
+        author: '用户'
+        author_id: '用户编号'
+        author_type: '用户类型'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+

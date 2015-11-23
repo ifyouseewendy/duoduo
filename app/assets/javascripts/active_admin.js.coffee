@@ -376,6 +376,10 @@ $(document).on 'ready', ->
 
   $('.admin_users .download_links').hide();
   $('.audition_items .download_links').hide();
+  $('.comments .download_links').hide();
+
+  # Comments
+  $('.comments .table_tools').hide();
 
   # Admin User delete
   $('.admin_users .admin_user_delete').on 'click', (e) ->
