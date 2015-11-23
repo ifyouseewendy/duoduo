@@ -3,6 +3,19 @@ require 'thor'
 class Seed < Thor
   attr_reader :logger
 
+  class << self
+    # Use class instance variable to share betwen import and engineer
+    attr_reader :current_path
+
+    def init_current_path(path)
+      @current_path = [path]
+    end
+
+    def join_current_path
+      File.join(*current_path)
+    end
+  end
+
   desc "base", ''
   def base
     load_rails
@@ -570,11 +583,23 @@ class Seed < Thor
     end
 
     def skip_files
-      @_skip_files ||= %w(. __)
+      @_skip_files ||= %w(. __ ~)
     end
 
     def init_logger
       @logger = ActiveSupport::Logger.new('log/import.log')
+    end
+
+    def init_current_path(path)
+      self.class.init_current_path(path)
+    end
+
+    def join_current_path
+      self.class.join_current_path
+    end
+
+    def current_path
+      self.class.current_path
     end
 end
 
