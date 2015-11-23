@@ -12,7 +12,7 @@ class Seed < Thor
     end
 
     def join_current_path
-      File.join(*current_path)
+      " | #{File.join(*current_path)}"
     end
   end
 
