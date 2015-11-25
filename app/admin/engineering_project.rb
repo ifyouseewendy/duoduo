@@ -159,20 +159,32 @@ ActiveAdmin.register EngineeringProject do
       end
     end
 
-    panel "工程合同（劳务派遣协议）" do
-      render partial: 'shared/contract_engineering', locals: { contract_files: resource.contract_files.normal, engineering_project: resource, role: :normal }
-    end
-    panel "代发协议" do
-      render partial: 'shared/contract_engineering_list', locals: { contract_files: resource.contract_files.proxy }
+    panel "劳务派遣协议" do
+      render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.normal, engineering_project: resource, role: :normal }
       tabs do
         tab '自动生成' do
-          render partial: "shared/contract_engineering_generate_form", locals: {engineering_project_id: resource.id, sub_company: "四平吉易人力资源服务有限公司", engineering_corp: engineering_project.engineering_corp.try(:name)}
+          render partial: "engineering_projects/contract_generate", \
+            locals: {
+              project: resource,
+              role: :normal
+            }
         end
         tab '手动上传' do
-          render partial: "shared/contract_engineering_upload_form", locals: {engineering_project_id: resource.id, role: :proxy}
+          render partial: "engineering_projects/contract_upload", locals: {engineering_project_id: resource.id, role: :proxy}
         end
       end
     end
+    # panel "代发协议" do
+    #   render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.proxy }
+    #   tabs do
+    #     tab '自动生成' do
+    #       render partial: "engineering_projects/contract_generate", locals: {engineering_project_id: resource.id, sub_company: "四平吉易人力资源服务有限公司", engineering_corp: engineering_project.engineering_corp.try(:name)}
+    #     end
+    #     tab '手动上传' do
+    #       render partial: "engineering_projects/contract_upload", locals: {engineering_project_id: resource.id, role: :proxy}
+    #     end
+    #   end
+    # end
     active_admin_comments
   end
 
