@@ -69,7 +69,7 @@ ActiveAdmin.register SubCompany do
       end
 
       if resource.has_engineering_relation
-        panel "工程项目劳务派遣协议" do
+        panel "工程项目 - 劳务派遣协议" do
           render partial: "sub_companies/engi_template_display",\
             locals: {
               company: sub_company,
@@ -79,6 +79,19 @@ ActiveAdmin.register SubCompany do
             locals: {
               company: sub_company,
               field: :engi_contract_template,
+              override: true
+            }
+        end
+        panel "工程项目 - 代发劳务费协议" do
+          render partial: "sub_companies/engi_template_display",\
+            locals: {
+              company: sub_company,
+              field: :engi_protocol_template
+            }
+          render partial: "sub_companies/engi_template_upload",\
+            locals: {
+              company: sub_company,
+              field: :engi_protocol_template,
               override: true
             }
         end
