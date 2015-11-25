@@ -162,15 +162,15 @@ ActiveAdmin.register EngineeringProject do
     panel "劳务派遣协议" do
       render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.normal, engineering_project: resource, role: :normal }
       tabs do
-        tab '自动生成' do
-          render partial: "engineering_projects/contract_generate_contract", \
+        tab '手动上传' do
+          render partial: "engineering_projects/contract_upload", \
             locals: {
               project: resource,
               role: :normal
             }
         end
-        tab '手动上传' do
-          render partial: "engineering_projects/contract_upload", \
+        tab '自动生成' do
+          render partial: "engineering_projects/contract_generate_contract", \
             locals: {
               project: resource,
               role: :normal
@@ -181,15 +181,15 @@ ActiveAdmin.register EngineeringProject do
     panel "代发劳务费协议" do
       render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.proxy, engineering_project: resource, role: :proxy }
       tabs do
-        tab '自动生成' do
-          render partial: "engineering_projects/contract_generate_protocol", \
+        tab '手动上传' do
+          render partial: "engineering_projects/contract_upload", \
             locals: {
               project: resource,
               role: :proxy
             }
         end
-        tab '手动上传' do
-          render partial: "engineering_projects/contract_upload", \
+        tab '自动生成' do
+          render partial: "engineering_projects/contract_generate_protocol", \
             locals: {
               project: resource,
               role: :proxy
