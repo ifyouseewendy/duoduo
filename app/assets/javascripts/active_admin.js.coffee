@@ -405,11 +405,6 @@ $(document).on 'ready', ->
   # Import Introduction
   $('.normal_corporation .import_guide ol').append('<li>3. 字段"管理费收取方式"的有效值为：每人固定比例（应发工资），每人固定比例（应发工资+单位缴费），每人固定金额</li>')
 
-  # Engineering File upload
-  $('.contract_file_upload_panel a').on 'click', (e) ->
-    e.stopPropagation()
-    e.preventDefault()
-
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
