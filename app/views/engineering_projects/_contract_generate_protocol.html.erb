@@ -16,6 +16,7 @@
       <li>
         <%= label_tag '回款金额' %>
         <%= text_field_tag :amount, project.project_amount %>
+        <%= content_tag(:p, '默认为平均分配金额，如需为每个人指定回款款金额，请以空格分开', class:"inline-hints") %>
       </li>
       <li>
         <%= label_tag '回款人' %>
