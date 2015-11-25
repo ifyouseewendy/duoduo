@@ -75,6 +75,12 @@ ActiveAdmin.register SubCompany do
               company: sub_company,
               field: :engi_contract_template
             }
+          render partial: "sub_companies/engi_template_upload",\
+            locals: {
+              company: sub_company,
+              field: :engi_contract_template,
+              override: true
+            }
         end
       end
     end
@@ -129,4 +135,29 @@ ActiveAdmin.register SubCompany do
       redirect_to sub_company_path(sub_company), alert: "删除失败：#{e.message}"
     end
   end
+
+  member_action :add_template, method: :post do
+    sub_company = SubCompany.find params.require(:id)
+
+    begin
+      field = params[:field]
+      raise "指定了错误的 field: #{field}"\
+        unless %i(engi_contract_template engi_protocol_template).include?(field.to_sym)
+
+      file = params[:file]
+      raise "添加失败：未找到文件" if file.nil?
+
+      path = Pathname(file.path)
+      to = path.dirname.join(file.original_filename)
+      path.rename(to)
+
+      sub_company.public_send("#{field}=", File.open(to))
+      sub_company.save!
+
+      redirect_to sub_company_path(sub_company), notice: "成功添加模板： #{to.basename}"
+    rescue => e
+      redirect_to sub_company_path(sub_company), alert: "添加失败：#{e.message}"
+    end
+  end
+
 end
