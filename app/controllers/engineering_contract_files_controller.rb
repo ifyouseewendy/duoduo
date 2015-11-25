@@ -17,23 +17,18 @@ class EngineeringContractFilesController < ApplicationController
 
   def generate_and_download
     begin
-      project = EngineeringProject.find contract_file_params[:engineering_project_id]
-      template = EngineeringContractFile.template.first
+      project = EngineeringProject.find params[:engineering_project_id]
+      sub_company = SubCompany.find params[:sub_company_id]
 
-      content = {
-        amount: project.total_amount.to_s,
-        money: RMB.new(project.total_amount.to_i).convert,
-        refund_person: project.outcome_referee.to_s,
-        refund_bank: project.outcome_bank.to_s,
-        refund_account: project.outcome_amount.to_s,
-      }
-      contract =  DocGenerator.generate_docx \
-        gsub: content.merge(contract_file_params),
-        file_path: template.contract.path
+      project.generate_contract_file(
+        role: params[:role],
+        sub_company: sub_company,
+        content: params.select{|k,_| %i(corp_name name start_date end_date range need_count salary admin_rate).include?(k.to_sym) }
+      )
 
-      send_file contract
+      redirect_to :back, notice: "成功生成合同文件"
     rescue => e
-      logger.error e.message
+      redirect_to :back, alert: e.message
     end
   end
 
