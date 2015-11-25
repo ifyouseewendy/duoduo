@@ -1,0 +1,34 @@
+<%= form_tag generate_and_download_engineering_contract_files_path, class: 'form_tag' do |f| %>
+  <%= hidden_field_tag :engineering_project_id, project.id %>
+  <%= hidden_field_tag :role, role %>
+
+  <%= field_set_tag nil, class: 'inputs' do %>
+    <ol>
+      <li>
+        <%= label_tag '吉易子公司' %>
+        <%= select_tag :sub_company_id, options_for_select(SubCompany.hr_options) %>
+      </li>
+      <li>
+        <%= label_tag '合作单位名称' %>
+        <%= text_field_tag :corp_name, project.engineering_corp.try(:name) %>
+      </li>
+      <li>
+        <%= label_tag '金额' %>
+        <%= text_field_tag :amount, project.project_amount %>
+      </li>
+      <li>
+        <%= label_tag '银行名称' %>
+        <%= text_field_tag :bank, '' %>
+      </li>
+      <li>
+        <%= label_tag '银行卡号' %>
+        <%= text_field_tag :account, '' %>
+      </li>
+      <li>
+        <%= label_tag '开户地址' %>
+        <%= text_field_tag :address, '' %>
+      </li>
+    </ol>
+  <% end %>
+  <%= button_tag "生成" %>
+<% end %>
