@@ -1,9 +1,10 @@
 <% outcome_item ||= nil %>
+<% object = outcome_item || project %>
 
 <%= form_for EngineeringContractFile.new, url: engineering_contract_files_path, class: 'form_tag' do |f| %>
   <%= f.file_field :contract %>
-  <%= f.hidden_field :engineering_project_id, value: project.id %>
-  <%= f.hidden_field :outcome_item_id, value: outcome_item.try(:id) %>
+  <%= f.hidden_field :engi_contract_id, value: object.id %>
+  <%= f.hidden_field :engi_contract_type, value: object.class.to_s %>
   <%= f.hidden_field :role, value: role %>
   <%= link_to "上传",  "#", :onclick=>"$(this).closest('form').submit()" %>
 <% end %>
