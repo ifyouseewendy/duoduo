@@ -19,19 +19,19 @@
       </li>
       <li>
         <%= label_tag '回款人' %>
-        <%= text_field_tag :persons, outcome_item.persons.join(', ') %>
+        <%= text_field_tag :persons, outcome_item.persons.join(' ') %>
       </li>
       <li>
         <%= label_tag '银行名称' %>
-        <%= text_field_tag :bank, outcome_item.bank.join(', ') %>
+        <%= text_field_tag :bank, outcome_item.bank.join(' ') %>
       </li>
       <li>
         <%= label_tag '银行卡号' %>
-        <%= text_field_tag :account, outcome_item.account.join(', ') %>
+        <%= text_field_tag :account, outcome_item.account.join(' ') %>
       </li>
       <li>
         <%= label_tag '开户地址' %>
-        <%= text_field_tag :address, outcome_item.address.join(', ') %>
+        <%= text_field_tag :address, outcome_item.address.join(' ') %>
       </li>
     </ol>
   <% end %>

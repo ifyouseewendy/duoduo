@@ -333,9 +333,9 @@ class EngineeringProject < ActiveRecord::Base
       outcome_item = EngineeringOutcomeItem.find(outcome_item_id)
 
       amount = outcome_item.allocate(money: content[:amount].to_f)
-      bank = content[:bank].split(',').map(&:strip)
-      account = content[:account].split(',').map(&:strip)
-      address = content[:address].split(',').map(&:strip)
+      bank = content[:bank].split(' ').map(&:strip)
+      account = content[:account].split(' ').map(&:strip)
+      address = content[:address].split(' ').map(&:strip)
 
       outcome_item.persons.each_with_index do |person, idx|
         contract =  DocGenerator.generate_docx \

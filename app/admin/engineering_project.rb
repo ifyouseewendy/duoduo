@@ -206,16 +206,16 @@ ActiveAdmin.register EngineeringProject do
               row :date
               row :amount
               row :persons do |obj|
-                obj.persons.join(', ')
+                obj.persons.join(' ')
               end
               row :bank do |obj|
-                obj.bank.join(', ')
+                obj.bank.join(' ')
               end
               row :account do |obj|
-                obj.account.join(', ')
+                obj.account.join(' ')
               end
               row :address do |obj|
-                obj.address.join(', ')
+                obj.address.join(' ')
               end
             end
           end
