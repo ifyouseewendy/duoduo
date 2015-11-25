@@ -219,27 +219,29 @@ ActiveAdmin.register EngineeringProject do
               end
             end
           end
-        end
-
-        panel "代发劳务费协议" do
-          render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.proxy, engineering_project: resource, role: :proxy }
-          tabs do
-            tab '手动上传' do
-              render partial: "engineering_projects/contract_upload", \
-                locals: {
-                  project: resource,
-                  role: :proxy
-                }
-            end
-            tab '自动生成' do
-              render partial: "engineering_projects/contract_generate_protocol", \
-                locals: {
-                  project: resource,
-                  role: :proxy
-                }
+          panel "代发劳务费协议" do
+            render partial: 'engineering_projects/contract_list', locals: { contract_files: oi.contract_files  }
+            tabs do
+              tab '手动上传' do
+                render partial: "engineering_projects/contract_upload", \
+                  locals: {
+                    project: resource,
+                    role: :proxy,
+                    outcome_item: oi,
+                  }
+              end
+              tab '自动生成' do
+                render partial: "engineering_projects/contract_generate_protocol", \
+                  locals: {
+                    project: resource,
+                    role: :proxy,
+                    outcome_item: oi
+                  }
+              end
             end
           end
         end
+
       end
     end
 
