@@ -12,4 +12,22 @@ class EngineeringOutcomeItem < ActiveRecord::Base
       EngineeringPolicy
     end
   end
+
+  def add_contract_file(path:, role: :normal)
+    self.contract_files.create!(
+      contract: File.open(path),
+    )
+  end
+
+  def allocate(money: )
+    count = persons.count
+
+    fraction = money - money.floor
+    avg = money.to_i / count
+    mod = money.to_i % count
+
+    res = [avg]*count
+    res[0] += (mod + fraction).round(2)
+    res
+  end
 end
