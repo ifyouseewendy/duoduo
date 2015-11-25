@@ -306,4 +306,43 @@ class EngineeringProject < ActiveRecord::Base
   def outcome_amount
     outcome_items.map(&:amount).map(&:to_s)
   end
+
+  def generate_contract_file(role:, sub_company:, content: {})
+    role = role.to_sym
+    raise "错误的参数，role: #{params[:rold]}" unless %i(normal proxy).include?(role)
+
+    if role == :normal
+      template = sub_company.engi_contract_template
+      raise "未找到模板文件，请到 /sub_companies/#{sub_company.id} 页面上传模板"\
+        if template.file.nil?
+
+      contract =  DocGenerator.generate_docx \
+        gsub: content,
+        file_path: template.path
+
+      ext = contract.basename.to_s.split('.')[-1]
+      to = contract.dirname.join("劳务派遣协议.#{ext}")
+      contract.rename(to)
+
+      add_contract_file(path: to, role: :normal)
+    else
+      template = sub_company.engi_protocol_template
+      raise "未找到模板文件，请到 /sub_companies/#{sub_company.id} 页面上传模板"\
+        if template.file.nil?
+
+      content = {
+        amount: project.total_amount.to_s,
+        money: RMB.new(project.total_amount.to_i).convert,
+        refund_person: project.outcome_referee.to_s,
+        refund_bank: project.outcome_bank.to_s,
+        refund_account: project.outcome_amount.to_s,
+      }
+      contract =  DocGenerator.generate_docx \
+        gsub: content.merge(contract_file_params),
+        file_path: template.contract.path
+
+    end
+
+
+  end
 end
