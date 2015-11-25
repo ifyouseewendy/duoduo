@@ -15,7 +15,7 @@ class DocGenerator
       data = File.read("word/document.xml")
 
       # Substitution
-      gsub.each {|k, v| data.gsub!(k.to_s, v) }
+      gsub.each {|k, v| data.gsub!(k.to_s, v.to_s) }
 
       # Write content
       File.open("word/document.xml", 'w'){|wf| wf.write data}
