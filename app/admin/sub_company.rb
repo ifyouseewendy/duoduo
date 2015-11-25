@@ -63,8 +63,20 @@ ActiveAdmin.register SubCompany do
       end
     end
 
-    panel "业务代理合同模板" do
-      render partial: "shared/contract_template", locals: {sub_company: sub_company}
+    panel "模板" do
+      panel "业务代理合同" do
+        render partial: "shared/contract_template", locals: {sub_company: sub_company}
+      end
+
+      if resource.has_engineering_relation
+        panel "工程项目劳务派遣协议" do
+          render partial: "sub_companies/engi_template_display",\
+            locals: {
+              company: sub_company,
+              field: :engi_contract_template
+            }
+        end
+      end
     end
 
     active_admin_comments
@@ -98,6 +110,23 @@ ActiveAdmin.register SubCompany do
       redirect_to sub_company_path(sub_company), notice: "成功添加业务合同模板： #{to.basename}"
     rescue => e
       redirect_to sub_company_path(sub_company), alert: "添加失败：#{e.message}"
+    end
+  end
+
+  member_action :remove_template, method: :delete do
+    sub_company = SubCompany.find params.require(:id)
+
+    begin
+      field = params[:field]
+      raise "指定了错误的 field: #{field}"\
+        unless %i(engi_contract_template engi_protocol_template).include?(field.to_sym)
+
+      sub_company.public_send("remove_#{field}!")
+      sub_company.save!
+
+      redirect_to sub_company_path(sub_company), notice: "成功删除模板"
+    rescue => e
+      redirect_to sub_company_path(sub_company), alert: "删除失败：#{e.message}"
     end
   end
 end
