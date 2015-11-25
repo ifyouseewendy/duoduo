@@ -5,6 +5,8 @@ class EngineeringContractFile < ActiveRecord::Base
 
   enum role: [:normal, :proxy, :template]
 
+  default_scope { order(created_at: :asc) }
+
   class << self
     def policy_class
       EngineeringPolicy

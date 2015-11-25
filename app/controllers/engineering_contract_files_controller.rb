@@ -20,13 +20,21 @@ class EngineeringContractFilesController < ApplicationController
       project = EngineeringProject.find params[:engineering_project_id]
       sub_company = SubCompany.find params[:sub_company_id]
 
+      valid_keys = \
+        case params[:role].to_sym
+        when :normal
+          %i(corp_name name start_date end_date range need_count salary admin_rate)
+        when :proxy
+          %i(corp_name amount bank account address)
+        end
+
       project.generate_contract_file(
         role: params[:role],
         sub_company: sub_company,
-        content: params.select{|k,_| %i(corp_name name start_date end_date range need_count salary admin_rate).include?(k.to_sym) }
+        content: params.select{|k,_| valid_keys.include?(k.to_sym) }
       )
 
-      redirect_to :back, notice: "成功生成合同文件"
+      redirect_to :back, notice: "成功生成文件"
     rescue => e
       redirect_to :back, alert: e.message
     end
