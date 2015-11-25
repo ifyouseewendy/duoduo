@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151125152512) do
+ActiveRecord::Schema.define(version: 20151125152722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,9 +126,13 @@ ActiveRecord::Schema.define(version: 20151125152512) do
   create_table "engineering_contract_files", force: :cascade do |t|
     t.integer  "role"
     t.text     "contract"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.integer  "engi_contract_id"
+    t.string   "engi_contract_type"
   end
+
+  add_index "engineering_contract_files", ["engi_contract_type", "engi_contract_id"], name: "idx_engi_contract_id_and_type", using: :btree
 
   create_table "engineering_corps", force: :cascade do |t|
     t.text     "name"

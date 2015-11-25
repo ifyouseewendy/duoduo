@@ -1,5 +1,5 @@
 class EngineeringContractFile < ActiveRecord::Base
-  belongs_to :engineering_project
+  belongs_to :engi_contract, polymorphic: true
 
   mount_uploader :contract, ContractUploader
 

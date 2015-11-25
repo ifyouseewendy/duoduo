@@ -5,7 +5,7 @@ class EngineeringProject < ActiveRecord::Base
 
   has_many :engineering_salary_tables, dependent: :destroy
 
-  has_many :contract_files, class: EngineeringContractFile, dependent: :destroy
+  has_many :contract_files, class: EngineeringContractFile, dependent: :destroy, as: :engi_contract
 
   has_many :income_items, class: EngineeringIncomeItem, dependent: :destroy, after_add: :set_fields
   accepts_nested_attributes_for :income_items, allow_destroy: true
