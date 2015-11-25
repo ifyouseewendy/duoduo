@@ -170,7 +170,11 @@ ActiveAdmin.register EngineeringProject do
             }
         end
         tab '手动上传' do
-          render partial: "engineering_projects/contract_upload", locals: {engineering_project_id: resource.id, role: :proxy}
+          render partial: "engineering_projects/contract_upload", \
+            locals: {
+              project: resource,
+              role: :normal
+            }
         end
       end
     end
