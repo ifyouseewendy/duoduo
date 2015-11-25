@@ -120,96 +120,125 @@ ActiveAdmin.register EngineeringProject do
   end
 
   show do
-    attributes_table do
-      row :id
-      row :name
-      row :engineering_staffs do |obj|
-        link_to "员工列表", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
-      end
-      row :engineering_customer do |obj|
-        link_to obj.engineering_customer.name, engineering_customer_path(obj.engineering_customer)
-      end
-      row :engineering_corp do |obj|
-        if obj.engineering_corp.nil?
-          link_to '', '#'
-        else
-          link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
-        end
-      end
-
-      boolean_columns = EngineeringProject.columns_of(:boolean)
-      (EngineeringProject.ordered_columns(without_foreign_keys: true) - [:id, :name]).map(&:to_sym).map do |field|
-        if boolean_columns.include? field
-          row(field) { status_tag resource.send(field).to_s }
-        elsif resource_class.nest_fields.include? field
-          row field do |obj|
-            data = obj.send(field)
-            if data.count > 1
-              options = data.zip( data.count.downto(1) ).reduce([]){|ar, (e,i)| ar << ["第#{i}批 - #{e}", i] }
-              select_tag(nil, options_for_select(options) )
+    tabs do
+      tab "基本信息" do
+        attributes_table do
+          row :id
+          row :name
+          row :engineering_staffs do |obj|
+            link_to "员工列表", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+          end
+          row :engineering_customer do |obj|
+            link_to obj.engineering_customer.name, engineering_customer_path(obj.engineering_customer)
+          end
+          row :engineering_corp do |obj|
+            if obj.engineering_corp.nil?
+              link_to '', '#'
             else
-              data[0]
+              link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
             end
           end
-        elsif field == :status
-          row field do |obj|
-            status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+
+          boolean_columns = EngineeringProject.columns_of(:boolean)
+          (
+            EngineeringProject.ordered_columns(without_foreign_keys: true) \
+            - [:id, :name, :income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
+          ).map(&:to_sym).map do |field|
+            if boolean_columns.include? field
+              row(field) { status_tag resource.send(field).to_s }
+            elsif resource_class.nest_fields.include? field
+              row field do |obj|
+                data = obj.send(field)
+                if data.count > 1
+                  options = data.zip( data.count.downto(1) ).reduce([]){|ar, (e,i)| ar << ["第#{i}批 - #{e}", i] }
+                  select_tag(nil, options_for_select(options) )
+                else
+                  data[0]
+                end
+              end
+            elsif field == :status
+              row field do |obj|
+                status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+              end
+            else
+              row field
+            end
           end
-        else
-          row field
+        end
+        panel "劳务派遣协议" do
+          render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.normal, engineering_project: resource, role: :normal }
+          tabs do
+            tab '手动上传' do
+              render partial: "engineering_projects/contract_upload", \
+                locals: {
+                  project: resource,
+                  role: :normal
+                }
+            end
+            tab '自动生成' do
+              render partial: "engineering_projects/contract_generate_contract", \
+                locals: {
+                  project: resource,
+                  role: :normal
+                }
+            end
+          end
+        end
+
+      end
+
+      tab "来款记录" do
+        resource.income_items.each_with_index do |oi, idx|
+          panel "第#{idx+1}次来款" do
+            attributes_table_for oi do
+              row :date
+              row :amount
+            end
+          end
+        end
+      end
+
+      tab "回款记录" do
+        resource.outcome_items.each_with_index do |oi, idx|
+          panel "第#{idx+1}次来款" do
+            attributes_table_for oi do
+              row :date
+              row :amount
+              row :persons do |obj|
+                obj.persons.join(', ')
+              end
+              row :bank do |obj|
+                obj.bank.join(', ')
+              end
+              row :address do |obj|
+                obj.address.join(', ')
+              end
+            end
+          end
+        end
+
+        panel "代发劳务费协议" do
+          render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.proxy, engineering_project: resource, role: :proxy }
+          tabs do
+            tab '手动上传' do
+              render partial: "engineering_projects/contract_upload", \
+                locals: {
+                  project: resource,
+                  role: :proxy
+                }
+            end
+            tab '自动生成' do
+              render partial: "engineering_projects/contract_generate_protocol", \
+                locals: {
+                  project: resource,
+                  role: :proxy
+                }
+            end
+          end
         end
       end
     end
 
-    panel "劳务派遣协议" do
-      render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.normal, engineering_project: resource, role: :normal }
-      tabs do
-        tab '手动上传' do
-          render partial: "engineering_projects/contract_upload", \
-            locals: {
-              project: resource,
-              role: :normal
-            }
-        end
-        tab '自动生成' do
-          render partial: "engineering_projects/contract_generate_contract", \
-            locals: {
-              project: resource,
-              role: :normal
-            }
-        end
-      end
-    end
-    panel "代发劳务费协议" do
-      render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.proxy, engineering_project: resource, role: :proxy }
-      tabs do
-        tab '手动上传' do
-          render partial: "engineering_projects/contract_upload", \
-            locals: {
-              project: resource,
-              role: :proxy
-            }
-        end
-        tab '自动生成' do
-          render partial: "engineering_projects/contract_generate_protocol", \
-            locals: {
-              project: resource,
-              role: :proxy
-            }
-        end
-      end
-    end
-    # panel "代发协议" do
-    #   render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.proxy }
-    #   tabs do
-    #     tab '自动生成' do
-    #       render partial: "engineering_projects/contract_generate", locals: {engineering_project_id: resource.id, sub_company: "四平吉易人力资源服务有限公司", engineering_corp: engineering_project.engineering_corp.try(:name)}
-    #     end
-    #     tab '手动上传' do
-    #       render partial: "engineering_projects/contract_upload", locals: {engineering_project_id: resource.id, role: :proxy}
-    #     end
-    #   end
-    # end
     active_admin_comments
   end
 
