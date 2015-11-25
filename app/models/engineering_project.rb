@@ -313,7 +313,7 @@ class EngineeringProject < ActiveRecord::Base
 
     if role == :normal
       template = sub_company.engi_contract_template
-      raise "未找到模板文件，请到 /sub_companies/#{sub_company.id} 页面上传模板"\
+      raise "操作失败：未找到模板文件，请到 /sub_companies/#{sub_company.id} 页面上传模板"\
         if template.file.nil?
 
       contract =  DocGenerator.generate_docx \
@@ -327,12 +327,22 @@ class EngineeringProject < ActiveRecord::Base
       add_contract_file(path: to, role: role)
     else
       template = sub_company.engi_protocol_template
-      raise "未找到模板文件，请到 /sub_companies/#{sub_company.id} 页面上传模板"\
+      raise "操作失败：未找到模板文件，请到 /sub_companies/#{sub_company.id} 页面上传模板"\
         if template.file.nil?
 
       outcome_item = EngineeringOutcomeItem.find(outcome_item_id)
 
-      amount = outcome_item.allocate(money: content[:amount].to_f)
+      set_amount = content[:amount].split(' ').map(&:to_f)
+      amount = \
+        if set_amount.count == 1
+          outcome_item.allocate(money: set_amount[0])
+        else
+          set_amount
+        end
+
+      raise "操作失败：自定义回款金额之和（#{amount.sum.round(2)}）不等于当前回款记录中的回款金额（#{outcome_item.amount.to_f.round(2)}）" \
+        unless outcome_item.amount.to_f.round(2) == amount.sum.round(2)
+
       bank = content[:bank].split(' ').map(&:strip)
       account = content[:account].split(' ').map(&:strip)
       address = content[:address].split(' ').map(&:strip)

@@ -105,14 +105,16 @@ ActiveAdmin.register EngineeringProject do
         end
       end
       tab "回款记录" do
-        f.has_many :outcome_items, heading: '回款记录', allow_destroy: true, new_record: true do |a|
-          a.input :date, as: :datepicker
-          a.input :amount, as: :number
-          a.input :persons, as: :string, hint: '姓名需要以空格分隔，例如：张三 李四'
-          a.input :bank, as: :string, hint: '与姓名对应，以空格分隔'
-          a.input :account, as: :string, hint: '与姓名对应，以空格分隔'
-          a.input :address, as: :string, hint: '与姓名对应，以空格分隔'
-          a.input :remark, as: :string
+        f.inputs do
+          f.has_many :outcome_items, heading: '回款记录', allow_destroy: true, new_record: true do |a|
+            a.input :date, as: :datepicker
+            a.input :amount, as: :number
+            a.input :persons, as: :string, hint: '姓名需要以空格分隔，例如：张三 李四'
+            a.input :bank, as: :string, hint: '与姓名对应，以空格分隔'
+            a.input :account, as: :string, hint: '与姓名对应，以空格分隔'
+            a.input :address, as: :string, hint: '与姓名对应，以空格分隔'
+            a.input :remark, as: :string
+          end
         end
       end
     end
