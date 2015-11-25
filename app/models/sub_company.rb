@@ -8,6 +8,9 @@ class SubCompany < ActiveRecord::Base
   has_many :labor_contracts
   has_many :normal_staffs
 
+  mount_uploader :engi_contract_template, ContractTemplateUploader
+  mount_uploader :engi_protocol_template, ContractTemplateUploader
+
   validates_uniqueness_of :name
 
   scope :query_name, ->(name){ where("name LIKE '%#{name}%'") }
