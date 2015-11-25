@@ -71,7 +71,7 @@ ActiveAdmin.register EngineeringProject do
 
   permit_params *(
     EngineeringProject.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
-    + [{ income_items_attributes: [:id, :date, :amount, :remark, :_destroy], outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [] ] }]
+    + [{ income_items_attributes: [:id, :date, :amount, :remark, :_destroy], outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [], bank: [], address: [] ] }]
   )
 
   form do |f|
@@ -109,6 +109,8 @@ ActiveAdmin.register EngineeringProject do
           a.input :date, as: :datepicker
           a.input :amount, as: :number
           a.input :persons, as: :string, hint: '姓名需要以空格分隔，例如：张三 李四'
+          a.input :bank, as: :string, hint: '与姓名对应，以空格分隔'
+          a.input :address, as: :string, hint: '与姓名对应，以空格分隔'
           a.input :remark, as: :string
         end
       end
@@ -329,6 +331,8 @@ ActiveAdmin.register EngineeringProject do
 
         params[:engineering_project][:outcome_items_attributes].each do |k, v|
           v[:persons] = v[:persons].split.map(&:strip)
+          v[:bank] = v[:bank].split.map(&:strip)
+          v[:address] = v[:address].split.map(&:strip)
         end
       end
   end
