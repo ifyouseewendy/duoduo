@@ -307,7 +307,7 @@ class EngineeringProject < ActiveRecord::Base
     outcome_items.map(&:amount).map(&:to_s)
   end
 
-  def generate_contract_file(role:, sub_company:, content: {})
+  def generate_contract_file(sub_company:, role:, outcome_item_id:, content: {})
     role = role.to_sym
     raise "错误的参数，role: #{params[:rold]}" unless %i(normal proxy).include?(role)
 
@@ -330,16 +330,33 @@ class EngineeringProject < ActiveRecord::Base
       raise "未找到模板文件，请到 /sub_companies/#{sub_company.id} 页面上传模板"\
         if template.file.nil?
 
-      content[:money] = RMB.new(content[:amount].to_f).convert
-      contract =  DocGenerator.generate_docx \
-        gsub: content,
-        file_path: template.path
+      outcome_item = EngineeringOutcomeItem.find(outcome_item_id)
 
-      ext = contract.basename.to_s.split('.')[-1]
-      to = contract.dirname.join("代发劳务费协议_#{Time.stamp}.#{ext}")
-      contract.rename(to)
+      amount = outcome_item.allocate(money: content[:amount].to_f)
+      bank = content[:bank].split(',').map(&:strip)
+      account = content[:account].split(',').map(&:strip)
+      address = content[:address].split(',').map(&:strip)
 
-      add_contract_file(path: to, role: role)
+      outcome_item.persons.each_with_index do |person, idx|
+        contract =  DocGenerator.generate_docx \
+          gsub: {
+            corp_name: content[:corp_name],
+            person: person,
+            amount: amount[idx].to_s,
+            money: RMB.new(amount[idx]).convert,
+            bank: bank[idx],
+            account: account[idx],
+            address: address[idx]
+          },
+          file_path: template.path
+
+
+        ext = contract.basename.to_s.split('.')[-1]
+        to = contract.dirname.join("代发劳务费协议_#{person}_#{Time.stamp}.#{ext}")
+        contract.rename(to)
+
+        outcome_item.add_contract_file(path: to)
+      end
 
     end
 
