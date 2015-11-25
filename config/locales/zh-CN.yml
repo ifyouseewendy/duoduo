@@ -575,6 +575,7 @@ zh-CN:
         persons: '回款人'
         bank: '银行名称'
         address: '开户地址'
+        account: '银行账号'
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
