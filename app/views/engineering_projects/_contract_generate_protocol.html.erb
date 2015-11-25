@@ -1,5 +1,6 @@
 <%= form_tag generate_and_download_engineering_contract_files_path, class: 'form_tag' do |f| %>
   <%= hidden_field_tag :engineering_project_id, project.id %>
+  <%= hidden_field_tag :outcome_item_id, outcome_item.id %>
   <%= hidden_field_tag :role, role %>
 
   <%= field_set_tag nil, class: 'inputs' do %>
@@ -13,20 +14,24 @@
         <%= text_field_tag :corp_name, project.engineering_corp.try(:name) %>
       </li>
       <li>
-        <%= label_tag '金额' %>
+        <%= label_tag '回款金额' %>
         <%= text_field_tag :amount, project.project_amount %>
       </li>
       <li>
+        <%= label_tag '回款人' %>
+        <%= text_field_tag :persons, outcome_item.persons.join(', ') %>
+      </li>
+      <li>
         <%= label_tag '银行名称' %>
-        <%= text_field_tag :bank, '' %>
+        <%= text_field_tag :bank, outcome_item.bank.join(', ') %>
       </li>
       <li>
         <%= label_tag '银行卡号' %>
-        <%= text_field_tag :account, '' %>
+        <%= text_field_tag :account, outcome_item.account.join(', ') %>
       </li>
       <li>
         <%= label_tag '开户地址' %>
-        <%= text_field_tag :address, '' %>
+        <%= text_field_tag :address, outcome_item.address.join(', ') %>
       </li>
     </ol>
   <% end %>
