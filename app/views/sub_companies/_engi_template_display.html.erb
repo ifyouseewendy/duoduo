@@ -1,0 +1,19 @@
+<% files = Array.wrap(company.send(field)) %>
+
+<div class='template_file_upload_panel'>
+  <ul>
+    <% Array.wrap(files).each do |file| %>
+      <% next unless company.public_send("#{field}?") %>
+      <li>
+        <span><%= company.public_send("#{field}_identifier") %></span>
+        <span>( <%= link_to '下载', file.url %>
+          <%= form_tag(remove_template_sub_company_path(company), method: :delete, class: 'form_tag') do %>
+            <%= hidden_field_tag :field, field %>
+            <%= link_to "删除",  "#", :onclick=>"$(this).closest('form').submit()" %>
+          <% end %>
+           )
+        </span>
+      </li>
+    <% end %>
+  </ul>
+</div>
