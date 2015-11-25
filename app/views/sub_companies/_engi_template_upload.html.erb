@@ -1,0 +1,12 @@
+<% override ||= false %>
+
+<div class='engi_template_file_upload_panel'>
+  <%= form_tag add_template_sub_company_path(company), class: 'form_tag', multipart: true do |f| %>
+    <%= hidden_field_tag :field, field %>
+    <%= file_field_tag :file %>
+    <%= link_to "上传",  "#", :onclick=>"$(this).closest('form').submit()" %>
+    <% if override %>
+      <%= label_tag "（注：上传操作会覆盖已有文件）" %>
+    <% end %>
+  <% end %>
+</div>
