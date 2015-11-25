@@ -14,7 +14,7 @@ class SubCompany < ActiveRecord::Base
   validates_uniqueness_of :name
 
   scope :query_name, ->(name){ where("name LIKE '%#{name}%'") }
-  scope :hr, ->{ where("name LIKE '%人力%'") }
+  scope :hr, ->{ where(has_engineering_relation: true) }
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
