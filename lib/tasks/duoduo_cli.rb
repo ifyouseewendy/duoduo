@@ -25,10 +25,11 @@ class DuoduoCli < Thor
     def clean_db(types)
       puts "==> Cleaning DB data"
 
+      types = Array.wrap(types)
       collection = []
 
       if types.include? :business
-        collection << [
+        collection += [
           LaborContract,
           SalaryItem, Invoice, SalaryTable,
           GuardSalaryItem, GuardSalaryTable,
@@ -40,7 +41,7 @@ class DuoduoCli < Thor
       end
 
       if types.include? :engineer
-        collection << [
+        collection += [
           EngineeringSalaryTable,
           EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
           EngineeringCompanySocialInsuranceAmount, EngineeringCompanyMedicalInsuranceAmount
