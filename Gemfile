@@ -86,6 +86,10 @@ group :development do
 
   # Targeting N+1
   gem "bullet"
+
+  # Open Pry session when exception happens
+  gem 'pry-rescue'
+  gem 'pry-stack_explorer'
 end
 
 group :development, :test do
