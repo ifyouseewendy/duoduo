@@ -3,6 +3,9 @@ class SalaryTable < ActiveRecord::Base
   has_many :salary_items, dependent: :destroy
   has_many :invoices, dependent: :destroy, as: :invoicable
 
+  mount_uploader :lai_table, Attachment
+  mount_uploader :daka_table, Attachment
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
