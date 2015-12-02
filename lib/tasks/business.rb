@@ -20,6 +20,7 @@ class Business < DuoduoCli
   option :from, required: true
   def salary
     load_rails
+    clean_db(:business)
     init_logger
 
     set_file load_from(options[:from])
@@ -36,7 +37,7 @@ class Business < DuoduoCli
         create_table(name: info[:gai][:name])
 
         info.each do |type, ha|
-          process_table(type: type, sheet: ha[:file])
+          process_table(type: type, name: ha[:name], sheet: ha[:sheet])
         end
       end
     end
@@ -45,9 +46,9 @@ class Business < DuoduoCli
     #
     #   {
     #     "201412" => {
-    #       lai: { name: "201412来", file: <#Roo::Excel:1774733573436374> },
-    #       gai: { name: "201412改（12月工资1月保险）", file: <#Roo::Excel:1774733573436374> },
-    #       daka: { name: "201412打卡", file: <#Roo::Excel:1774733573436374> }
+    #       lai: { name: "201412来", sheet: <#Roo::Excel:1774733573436374> },
+    #       gai: { name: "201412改（12月工资1月保险）", sheet: <#Roo::Excel:1774733573436374> },
+    #       daka: { name: "201412打卡", sheet: <#Roo::Excel:1774733573436374> }
     #     },
     #     "201501" => { ... },
     #     ...
@@ -58,7 +59,8 @@ class Business < DuoduoCli
         ha[key] ||= {}
 
         type  = parse_type(name: name)
-        ha[key][type] = { name: name, file: xlsx.sheet(idx) }
+        # puts "#{key} - #{type} - #{xlsx.sheet(idx).to_a[0].join(',')}"
+        ha[key][type] = { name: name, sheet: xlsx.sheet(idx).to_a }
 
         ha
       end
@@ -78,29 +80,46 @@ class Business < DuoduoCli
     end
 
     def create_table(name:)
-      @table = corporation.salary_tables.find_or_create_by!(name: month)
+      @table = corporation.salary_tables.find_or_create_by!(name: name)
     end
 
-    def process_table(type:, sheet:)
+    def process_table(type:, name:, sheet:)
       case type
       when :lai
-        process_table_lai(sheet: sheet)
+        process_table_lai(name: name, sheet: sheet)
       when :gai
-        process_table_gai(sheet: sheet)
+        process_table_gai(name: name, sheet: sheet)
       when :daka
-        process_table_daka(sheet: sheet)
+        process_table_daka(name: name, sheet: sheet)
       else
         fail "无法解析工资表类型：#{type}"
       end
     end
 
-    def process_table_lai(sheet:)
+    def process_table_lai(name:, sheet:)
+      filepath = Rails.root.join("tmp").join("#{name}.xlsx")
+
+      begin
+        Axlsx::Package.new do |pkg|
+          pkg.workbook.add_worksheet do |sht|
+            sheet.each do |row|
+              sht.add_row row
+            end
+          end
+          pkg.serialize(filepath.to_s)
+        end
+
+        table.lai_table = File.open(filepath)
+        table.save!
+      ensure
+        filepath.unlink
+      end
     end
 
-    def process_table_gai(sheet:)
+    def process_table_gai(name:, sheet:)
     end
 
-    def process_table_daka(sheet:)
+    def process_table_daka(name:, sheet:)
     end
 
     def parse_type(name:)
