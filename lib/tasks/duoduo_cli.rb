@@ -10,7 +10,14 @@ class DuoduoCli < Thor
 
   private
 
+    def load_from(from)
+      fail "Invalid <from> file position: #{from}" unless File.exist?(from)
+      Pathname(from)
+    end
+
     def load_rails
+      return if defined? Rails
+
       puts "==> Loading Rails"
       require File.expand_path('config/environment.rb')
     end
@@ -44,7 +51,7 @@ class DuoduoCli < Thor
     end
 
     def init_logger
-      @logger = ActiveSupport::Logger.new('log/import.log')
+      @logger ||= ActiveSupport::Logger.new('log/import.log')
     end
 
 end
