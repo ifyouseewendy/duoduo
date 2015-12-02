@@ -32,8 +32,35 @@ class Business < DuoduoCli
     def parse_file
       set_xlsx
 
-      xlsx.sheets.each_with_index do |name, idx|
-        generate_table(name: name, sheet: xlsx.sheet(idx))
+      preprocess_xlsx.each do |_, info|
+        create_table(name: info[:gai][:name])
+
+        info.each do |type, ha|
+          process_table(type: type, sheet: ha[:file])
+        end
+      end
+    end
+
+    # Preprocess to a Hash, like
+    #
+    #   {
+    #     "201412" => {
+    #       lai: { name: "201412来", file: <#Roo::Excel:1774733573436374> },
+    #       gai: { name: "201412改（12月工资1月保险）", file: <#Roo::Excel:1774733573436374> },
+    #       daka: { name: "201412打卡", file: <#Roo::Excel:1774733573436374> }
+    #     },
+    #     "201501" => { ... },
+    #     ...
+    #   }
+    def preprocess_xlsx
+      xlsx.sheets.each_with_index.reduce({}) do |ha, (name, idx)|
+        key = name.strip.match(/^\d+/).to_s
+        ha[key] ||= {}
+
+        type  = parse_type(name: name)
+        ha[key][type] = { name: name, file: xlsx.sheet(idx) }
+
+        ha
       end
     end
 
@@ -50,18 +77,8 @@ class Business < DuoduoCli
       @xlsx = Roo::Spreadsheet.open(file.to_s)
     end
 
-    def generate_table(name:, sheet:)
-      parts = name.split(/(^\d+)/)[1,2]
-      month = parts[0].to_sym
-      type  = parse_table_type(name: parts[1])
-
-      create_table(name: month)
-
-      process_table(type: type, sheet: sheet)
-    end
-
-    def set_table(name:)
-      @table = corporation.salary_tables.create!(name: month)
+    def create_table(name:)
+      @table = corporation.salary_tables.find_or_create_by!(name: month)
     end
 
     def process_table(type:, sheet:)
@@ -86,7 +103,7 @@ class Business < DuoduoCli
     def process_table_daka(sheet:)
     end
 
-    def parse_table_type(name:)
+    def parse_type(name:)
       case name
       when /来/ then :lai
       when /改/ then :gai
