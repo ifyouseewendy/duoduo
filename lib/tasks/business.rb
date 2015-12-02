@@ -149,6 +149,43 @@ class Business < DuoduoCli
       end
     end
 
+    FIELD = {
+      '序号'             => :id,
+      '卡号'             => :bank_account,
+      '姓名'             => :name,
+      '应发工资'         => :salary_deserve,
+      '养老保险个人'     => :pension_personal,
+      '失业保险个人'     => :unemployment_personal,
+      '医疗保险个人'     => :medical_personal,
+      '公积金个人'       => :house_accumulation_personal,
+      '养老保险差额个人' => :pension_margin_personal,
+      '失业保险差额个人' => :unemployment_margin_personal,
+      '医疗保险差额个人' => :medical_margin_personal,
+      '大额'             => :big_amount_personal,
+      '医保卡'           => :medical_scan_addition,
+      '工资卡'           => :salary_card_addition,
+      '个税'             => :income_tax,
+      '年终奖'           => :annual_reward,
+      '体检费'           => :physical_exam_addition,
+      '个人缴费合计'     => :total_personal,
+      '实发工资'         => :salary_in_fact,
+      '养老保险单位'     => :pension_company,
+      '失业保险单位'     => :unemployment_company,
+      '医疗保险单位'     => :medical_company,
+      '工伤保险单位'     => :injury_company,
+      '生育保险单位'     => :birth_company,
+      '公积金单位'       => :house_accumulation_company,
+      '养老保险差额单位' => :pension_margin_company,
+      '失业保险差额单位' => :unemployment_margin_company,
+      '医疗保险差额单位' => :medical_margin_company,
+      '工伤保险差额单位' => :injury_margin_company,
+      '生育保险差额单位' => :birth_margin_company,
+      '单位缴费合计'     => :total_company,
+      '意外险'           => :accident_company,
+      '管理费'           => :admin_amount,
+      '劳务费用合计'     => :total_sum_with_admin_amount,
+      '备注'             => :remark,
+    }
 end
 
 Business.start(ARGV)
