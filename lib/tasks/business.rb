@@ -72,6 +72,7 @@ class Business < DuoduoCli
 
     def set_corporation
       name = file.basename.to_s.split('.')[0]
+      # TODO
       @corporation = NormalCorporation.find_or_create_by!(name: name)
     end
 
@@ -117,6 +118,58 @@ class Business < DuoduoCli
     end
 
     def process_table_gai(name:, sheet:)
+      header_row = 2
+      start_row = header_row + 1
+      end_row = nil
+      items = []
+
+      fields = sheet[header_row].map{|col| FIELD[col.delete(' ')]}
+
+      sheet[start_row..-1].each_with_index do |data, idx|
+        if data[0].to_i == 0
+          end_row = start_row + idx
+          break
+        end
+
+        stats = Hash[fields.zip(data)]
+        name = stats[:name]
+
+        item = table.salary_items.new \
+          stats.reject{|k| %i(id bank_account name).include? k}
+
+        # TODO
+        #
+        #   Import NormalStaff first
+        item.normal_staff = ( SalaryItem.find_staff(salary_table: table, name: name) \
+          rescue NormalStaff.create(normal_corporation: corporation, name: name, identity_card: SecureRandom.hex(9)) )
+
+        item.save!
+
+        items << item
+      end
+
+      if sheet[end_row][0].to_s.delete(' ') == '合计'
+        summary = Hash[ fields.zip(sheet[end_row]) ].reject{|k| %i(id bank_account name).include? k}
+        summary.each do |k, v|
+          sum = items.map{|it| it.send(k).to_f }.sum.round(2)
+          if sum != v.to_f.round(2)
+            puts "合计金额不等，#{FIELD[k]}: #{sum}"
+          end
+        end
+      end
+
+      if remark_start_row = (end_row..(sheet.count-1)).detect{|row| sheet[row][0].to_s.delete(' ') == "备注"}
+        remarks = sheet[(remark_start_row+1)..-1].reduce([]) do |remark, data|
+          if data.all?(&:blank?)
+            remark
+          else
+            remark << data.join
+          end
+        end
+
+        table.update_attribute(:remark, remarks.join('；'))
+      end
+
     end
 
     def process_table_daka(name:, sheet:)
