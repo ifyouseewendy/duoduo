@@ -9,8 +9,14 @@ ActiveAdmin.register SalaryTable do
 
   index do
     selectable_column
-    SalaryTable.ordered_columns(without_foreign_keys: true).map(&:to_sym).map do |field|
-      column field
+    (SalaryTable.ordered_columns(without_foreign_keys: true) - [:remark]).map(&:to_sym).map do |field|
+      if %i(lai_table daka_table).include? field
+        column field do |obj|
+          link_to obj.send("#{field}_identifier"), obj.send(field).url
+        end
+      else
+        column field
+      end
     end
     column :corporation, sortable: ->(obj){ obj.corporation.name }
 

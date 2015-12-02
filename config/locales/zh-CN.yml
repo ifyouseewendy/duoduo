@@ -194,6 +194,8 @@ zh-CN:
         invoices: '发票'
         created_at: "创建时间"
         updated_at: "更新时间"
+        lai_table: '来表'
+        daka_table: '打卡表'
       salary_item:
         id: '序号'
         identity_card: '身份证号'
