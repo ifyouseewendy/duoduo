@@ -23,9 +23,36 @@ class Business < DuoduoCli
     clean_db(:business)
     init_logger
 
-    set_file load_from(options[:from])
-    set_corporation
-    parse_file
+    logger.info "[#{Time.now}] Import start"
+
+    path = load_from(options[:from])
+    if path.directory?
+      # 电力
+      #   - 伊通电力
+      #     - 2015年伊通电力工资表.xls
+      #     - __2015年伊通电力工资表.xls
+      #   - 供电维修
+      #     - 2015年供电维修工资表.xls
+      #     - __2015年供电维修工资表.xls
+      sub_folders = path.entries.reject{|en| en.to_s.start_with?('.')}
+      files = sub_folders.flat_map do |sf|
+        path.join(sf).entries
+          .reject{|pa| pa.to_s.start_with?('.') or pa.to_s.start_with?('__')}
+          .flat_map{|pa| path.join(sf).join(pa)}
+      end
+    else
+      files = Array.wrap(path)
+    end
+
+    files.each do |f|
+      logger.info "--> Processing #{f.basename}"
+
+      set_file(f)
+      set_corporation
+      parse_file
+    end
+
+    logger.info "[#{Time.now}] Import end"
   end
 
   private
