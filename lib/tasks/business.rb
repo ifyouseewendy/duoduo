@@ -120,6 +120,23 @@ class Business < DuoduoCli
     end
 
     def process_table_daka(name:, sheet:)
+      filepath = Rails.root.join("tmp").join("#{name}.xlsx")
+
+      begin
+        Axlsx::Package.new do |pkg|
+          pkg.workbook.add_worksheet do |sht|
+            sheet.each do |row|
+              sht.add_row row
+            end
+          end
+          pkg.serialize(filepath.to_s)
+        end
+
+        table.daka_table = File.open(filepath)
+        table.save!
+      ensure
+        filepath.unlink
+      end
     end
 
     def parse_type(name:)
