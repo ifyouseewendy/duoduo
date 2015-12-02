@@ -93,7 +93,7 @@ class Business < DuoduoCli
       when :daka
         process_table_daka(name: name, sheet: sheet)
       else
-        fail "无法解析工资表类型：#{type}"
+        logger.error "无法解析工资表类型：#{type}"
       end
     end
 
@@ -123,7 +123,9 @@ class Business < DuoduoCli
       end_row = nil
       items = []
 
-      fields = sheet[header_row].map{|col| FIELD[col.delete(' ')]}
+      fields = sheet[header_row].compact.map do |col|
+        FIELD[col.delete(' ')].tap{|fd| logger.warn "无法判断的列名：#{col} from #{name}" if fd.blank? }
+      end
 
       sheet[start_row..-1].each_with_index do |data, idx|
         if data[0].to_i == 0
@@ -153,7 +155,7 @@ class Business < DuoduoCli
         summary.each do |k, v|
           sum = items.map{|it| it.send(k).to_f }.sum.round(2)
           if sum != v.to_f.round(2)
-            puts "合计金额不等，#{FIELD[k]}: #{sum}"
+            logger.warn "合计金额不等，#{FIELD[k]}: #{sum} from #{name}"
           end
         end
       end
@@ -198,13 +200,14 @@ class Business < DuoduoCli
       when /改/ then :gai
       when /打卡/ then :daka
       else
-        fail "无法根据工资表名称判断类型：#{name}"
+        logger.error "无法根据工资表名称判断类型：#{name}"
       end
     end
 
     FIELD = {
       '序号'             => :id,
       '卡号'             => :bank_account,
+      '工资卡号'         => :bank_account,
       '姓名'             => :name,
       '应发工资'         => :salary_deserve,
       '养老保险个人'     => :pension_personal,
