@@ -92,14 +92,18 @@ class BusinessStaff < DuoduoCli
       in_service = true
       contract_type = :normal_contract
 
-      # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 年龄, 性别, 民族, 学历, 家庭住址, 联系电话, 社保参加工作时间, 本单位社保参保时间, 本单位医保参保时间, 到本单位时间, 四平东方合同起止时间, 通讯合同起止时间, 社保个人编号, 医保个人编号, 医保卡号, 备案时间, 备案地, 工作地点, 工种, 备注, 公主岭合同起止时间, 公主岭社保个人编号, 公主岭医保个人编号
+      # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 年龄, 性别, 民族, 学历, 家庭住址, 联系电话, 社保参加工作时间, 本单位社保参保时间, 本单位医保参保时间, 到本单位时间, 四平东方合同起止时间, 通讯合同起止时间, 社保个人编号, 医保个人编号, 医保卡号, 备案时间, 备案地, 工作地点, 工种, 备注, 公主岭合同起止时间, 公主岭社保个人编号, 公主岭医保个人编号, 百奕续签合同起止时间(option)
 
       last_row = sheet.last_row
+      return if last_row.nil?
+
       (2..last_row).each do |row_id|
         puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
 
-        nest_index, name, _corporation_id, corporation_name, identity_card, age, gender, nation, grade, address, telephone, social_insurance_start_date, current_social_insurance_start_date, current_medical_insurance_start_date, arrive_current_company_at, dongfang_siping_contract_dates, current_contract_dates, social_insurance_serial, medical_insurance_serial, medical_insurance_card, backup_date, backup_place, work_place, work_type, remark, dongfang_gongzhuling_contract_dates, dongfang_gongzhuling_social_insurance_serial, dongfang_gongzhuling_medical_insurance_serial = \
+        nest_index, name, _corporation_id, corporation_name, identity_card, age, gender, nation, grade, address, telephone, social_insurance_start_date, current_social_insurance_start_date, current_medical_insurance_start_date, arrive_current_company_at, dongfang_siping_contract_dates, current_contract_dates, social_insurance_serial, medical_insurance_serial, medical_insurance_card, backup_date, backup_place, work_place, work_type, remark, dongfang_gongzhuling_contract_dates, dongfang_gongzhuling_social_insurance_serial, dongfang_gongzhuling_medical_insurance_serial, baiyi_once_contract_dates = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
+
+        next if nest_index.nil?
 
         begin
           normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
@@ -195,6 +199,16 @@ class BusinessStaff < DuoduoCli
             })
             LaborContract.create!(contract_attrs_gongzhuling)
           end
+
+          if baiyi_once_contract_dates.present?
+            contract_start_date, contract_end_date = baiyi_once_contract_dates.split('-').map{|d| parse_date(d)}
+            contract_attrs_gongzhuling = contract_attrs.merge({
+              in_contract: false,
+              contract_start_date: contract_start_date,
+              contract_end_date: contract_end_date,
+            })
+            LaborContract.create!(contract_attrs_gongzhuling)
+          end
         rescue => e
           failed[sheet_id] << sheet.row(row_id) + [e.message, e.backtrace]
         end
@@ -213,11 +227,15 @@ class BusinessStaff < DuoduoCli
       # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 年龄, 性别, 民族, 学历, 家庭住址, 联系电话, 社保参加工作时间, 本单位社保参保时间, 本单位医保参保时间, 到本单位时间, 四平东方合同起止时间, 通讯合同起止时间 , 社保个人编号, 医保个人编号, 医保卡号, 备案时间, 备案地, 工作地点, 工种, 备注, 公主岭合同起止时间, 公主岭社保个人编号, 公主岭医保个人编号, 办理解除时间, 社保解除时间, 医保解除时间
 
       last_row = sheet.last_row
+      return if last_row.nil?
+
       (2..last_row).each do |row_id|
         puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
 
         nest_index, name, _corporation_id, corporation_name, identity_card, age, gender, nation, grade, address, telephone, social_insurance_start_date, current_social_insurance_start_date, current_medical_insurance_start_date, arrive_current_company_at, dongfang_siping_contract_dates, current_contract_dates, social_insurance_serial, medical_insurance_serial, medical_insurance_card, backup_date, backup_place, work_place, work_type, remark, dongfang_gongzhuling_contract_dates, dongfang_gongzhuling_social_insurance_serial, dongfang_gongzhuling_medical_insurance_serial, release_date, social_insurance_release_date, medical_insurance_release_date = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
+
+        next if nest_index.nil?
 
         begin
           normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
@@ -326,6 +344,8 @@ class BusinessStaff < DuoduoCli
       # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 性别, 年龄, 家庭住址, 联系电话, 到本单位时间, 签订合同时间, 工作地点, 工种, 协议类型
 
       last_row = sheet.last_row
+      return if last_row.nil?
+
       (2..last_row).each do |row_id|
         puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
 
@@ -333,6 +353,8 @@ class BusinessStaff < DuoduoCli
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
 
         nation, grade, social_insurance_start_date, remark = [nil] * 4
+
+        next if nest_index.nil?
 
         begin
           normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
@@ -422,6 +444,8 @@ class BusinessStaff < DuoduoCli
       # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 性别, 年龄, 家庭住址, 联系电话, 到本单位时间, 签订合同时间, 工作地点, 工种, 协议类型
 
       last_row = sheet.last_row
+      return if last_row.nil?
+
       (2..last_row).each do |row_id|
         puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
 
@@ -429,6 +453,8 @@ class BusinessStaff < DuoduoCli
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
 
         nation, grade, social_insurance_start_date, remark = [nil] * 4
+
+        next if nest_index.nil?
 
         begin
           normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
@@ -517,6 +543,7 @@ class BusinessStaff < DuoduoCli
         Axlsx::Package.new do |p|
           failed.each_with_index do |failed_sheet, i|
             p.workbook.add_worksheet(name: xlsx.sheets[i]) do |sheet|
+              next if failed_sheet.blank?
               sheet.add_row xlsx.sheet(i).row(1)
               failed_sheet.each{|stat| sheet.add_row stat}
             end
