@@ -1,22 +1,20 @@
-require 'thor'
-require 'roo'
-require 'roo-xls'
-require 'axlsx'
+require_relative 'duoduo_cli'
 
-class Import < Thor
+class BusinessStaff < DuoduoCli
 
-  desc "hello NAME", "say hello to NAME"
-  def hello(name)
-    puts "Hello #{name}"
-  end
-
-  desc "import staff_and_contract", "导入信息到员工档案和劳务合同"
+  desc "start", "导入信息到员工档案和劳务合同"
   long_desc <<-LONG_DESC
-    ruby lib/tasks/import.rb staff_and_contract --from=tmp/import/staff_and_contract/吉易通讯公司.xls
+    Example
+
+      ruby lib/tasks/business_staff.rb start --from=tmp/import/staff_and_contract/吉易通讯公司.xls
+
+    Dependency
+
+      seed_sub_companies
   LONG_DESC
   option :from, required: true # 文件名为子公司名称
   option :sub_company_name     # 如果 from 文件名称不是子公司名称时，需要提供此参数
-  def staff_and_contract
+  def start
     raise "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
     file = Pathname(options[:from])
 
@@ -500,4 +498,4 @@ class Import < Thor
     end
 end
 
-Import.start(ARGV)
+BusinessStaff.start(ARGV)
