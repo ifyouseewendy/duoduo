@@ -55,6 +55,22 @@ class DuoduoCli < Thor
       @logger ||= ActiveSupport::Logger.new('log/import.log')
     end
 
+    def seed_sub_companies
+      puts "==> Preparing SubCompany"
+      Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
+        has_engineering_relation = (name =~ /人力/ ? true : false)
+        sc = SubCompany.create!(name: name, has_engineering_relation: has_engineering_relation)
+        (1..2).each_with_object([]) do |idx, ar|
+          if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
+            contract = "tmp/#{name}.合同#{idx}.txt"
+            sc.contract_files.create(contract: File.open(contract) )
+            sc.add_file(contract, template: true)
+          end
+        end
+
+        companies << sc
+      end
+    end
 end
 
 
