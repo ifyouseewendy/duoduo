@@ -1,6 +1,6 @@
 require_relative 'duoduo_cli'
 
-class Business < DuoduoCli
+class BusinessSalary < DuoduoCli
   attr_reader :file, :corporation, :xlsx, :table
 
   desc "test", ''
@@ -15,10 +15,10 @@ class Business < DuoduoCli
   long_desc <<-LONGDESC
     Examples:
 
-      ruby lib/tasks/business.rb salary --from=/Users/wendi/Downloads/电力/伊通电力/2015年伊通电力工资表.xls
+      ruby lib/tasks/business_salary.rb start --from=/Users/wendi/Downloads/电力/伊通电力/2015年伊通电力工资表.xls
   LONGDESC
   option :from, required: true
-  def salary
+  def start
     load_rails
     clean_db(:business)
     init_logger
@@ -271,4 +271,4 @@ class Business < DuoduoCli
     }
 end
 
-Business.start(ARGV)
+BusinessSalary.start(ARGV)
