@@ -28,6 +28,14 @@ class DuoduoCli < Thor
       types = Array.wrap(types)
       collection = []
 
+      if types.include? :base
+        collection += [
+          AdminUser,
+          SubCompany, ContractFile,
+          InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
+        ]
+      end
+
       if types.include? :business
         collection += [
           LaborContract,
@@ -35,8 +43,21 @@ class DuoduoCli < Thor
           GuardSalaryItem, GuardSalaryTable,
           NonFullDaySalaryItem, NonFullDaySalaryTable,
           NormalStaff, NormalCorporation,
-          ContractFile, SubCompany,
-          InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
+        ]
+      end
+
+      if types.include? :business_staff
+        collection += [
+          LaborContract,
+          NormalStaff, NormalCorporation,
+        ]
+      end
+
+      if types.include? :business_salary
+        collection += [
+          SalaryItem, Invoice, SalaryTable,
+          GuardSalaryItem, GuardSalaryTable,
+          NonFullDaySalaryItem, NonFullDaySalaryTable,
         ]
       end
 
