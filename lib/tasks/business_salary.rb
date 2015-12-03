@@ -162,15 +162,17 @@ class BusinessSalary < DuoduoCli
 
         stats = Hash[fields.zip(data)]
         name = stats[:name]
+        account = stats[:bank_account]
 
         item = table.salary_items.new \
           stats.reject{|k| %i(id bank_account name).include? k}
 
         # TODO
         #
-        #   Import NormalStaff first
+        #   + Import NormalStaff first
+        #   + Confirm on account field when conflict with imported info
         item.normal_staff = ( SalaryItem.find_staff(salary_table: table, name: name) \
-          rescue NormalStaff.create(normal_corporation: corporation, name: name, identity_card: SecureRandom.hex(9)) )
+          rescue NormalStaff.create(normal_corporation: corporation, name: name, account: account, identity_card: SecureRandom.hex(9)) )
 
         item.save!
 
