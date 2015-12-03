@@ -20,7 +20,7 @@ class BusinessSalary < DuoduoCli
   option :from, required: true
   def start
     load_rails
-    clean_db(:business)
+    clean_db(:business_salary)
     init_logger
 
     logger.info "[#{Time.now}] Import start"

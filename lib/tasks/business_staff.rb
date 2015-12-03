@@ -10,15 +10,16 @@ class BusinessStaff < DuoduoCli
 
     Dependency
 
-      seed_sub_companies
+      SubCompany, NormalCorporation
+
   LONG_DESC
   option :from, required: true # 文件名为子公司名称
   option :sub_company_name     # 如果 from 文件名称不是子公司名称时，需要提供此参数
   def start
-    raise "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
-    file = Pathname(options[:from])
-
     load_rails
+    clean_db(:business_staff)
+
+    file = load_from(options[:from])
 
     sub_company_name = options[:sub_company_name]\
                         || file.basename.to_s.split('.')[0]
