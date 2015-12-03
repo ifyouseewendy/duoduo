@@ -23,9 +23,20 @@ class BusinessStaff < DuoduoCli
 
     logger.info "[#{Time.now}] Import start"
 
-    set_file load_from(options[:from])
-    set_sub_company
-    parse_file
+    path = load_from(options[:from])
+    if path.directory?
+      files = path.entries.reject{|en| en.to_s.start_with?('.')}.map{|en| path.join(en)}
+    else
+      files = Array.wrap(path)
+    end
+
+    files.each do |f|
+      logger.info "==> Processing #{f.basename}"
+
+      set_file(f)
+      set_sub_company
+      parse_file
+    end
 
     logger.info "[#{Time.now}] Import end"
   end
@@ -87,7 +98,7 @@ class BusinessStaff < DuoduoCli
     def process_first_sheet
       sheet_id = 0
       sheet = xlsx.sheet(sheet_id)
-      puts "--> Start processing Sheet #{sheet_id}"
+      logger.info "--> Start processing Sheet #{sheet_id}"
 
       in_service = true
       contract_type = :normal_contract
@@ -98,7 +109,7 @@ class BusinessStaff < DuoduoCli
       return if last_row.nil?
 
       (2..last_row).each do |row_id|
-        puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
+        logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
         nest_index, name, _corporation_id, corporation_name, identity_card, age, gender, nation, grade, address, telephone, social_insurance_start_date, current_social_insurance_start_date, current_medical_insurance_start_date, arrive_current_company_at, dongfang_siping_contract_dates, current_contract_dates, social_insurance_serial, medical_insurance_serial, medical_insurance_card, backup_date, backup_place, work_place, work_type, remark, dongfang_gongzhuling_contract_dates, dongfang_gongzhuling_social_insurance_serial, dongfang_gongzhuling_medical_insurance_serial, baiyi_once_contract_dates = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
@@ -219,7 +230,7 @@ class BusinessStaff < DuoduoCli
     def process_second_sheet
       sheet_id = 1
       sheet = xlsx.sheet(sheet_id)
-      puts "--> Start processing Sheet #{sheet_id}"
+      logger.info "--> Start processing Sheet #{sheet_id}"
 
       in_service = false
       contract_type = :normal_contract
@@ -230,7 +241,7 @@ class BusinessStaff < DuoduoCli
       return if last_row.nil?
 
       (2..last_row).each do |row_id|
-        puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
+        logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
         nest_index, name, _corporation_id, corporation_name, identity_card, age, gender, nation, grade, address, telephone, social_insurance_start_date, current_social_insurance_start_date, current_medical_insurance_start_date, arrive_current_company_at, dongfang_siping_contract_dates, current_contract_dates, social_insurance_serial, medical_insurance_serial, medical_insurance_card, backup_date, backup_place, work_place, work_type, remark, dongfang_gongzhuling_contract_dates, dongfang_gongzhuling_social_insurance_serial, dongfang_gongzhuling_medical_insurance_serial, release_date, social_insurance_release_date, medical_insurance_release_date = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
@@ -337,7 +348,7 @@ class BusinessStaff < DuoduoCli
     def process_third_sheet
       sheet_id = 2
       sheet = xlsx.sheet(sheet_id)
-      puts "--> Start processing Sheet #{sheet_id}"
+      logger.info "--> Start processing Sheet #{sheet_id}"
 
       in_service = true
 
@@ -347,7 +358,7 @@ class BusinessStaff < DuoduoCli
       return if last_row.nil?
 
       (2..last_row).each do |row_id|
-        puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
+        logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
         nest_index, name, _corporation_id, corporation_name, identity_card, gender, age, address, telephone, arrive_current_company_at, current_contract_dates, work_place, work_type, contract_type = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
@@ -437,7 +448,7 @@ class BusinessStaff < DuoduoCli
     def process_fourth_sheet
       sheet_id = 3
       sheet = xlsx.sheet(sheet_id)
-      puts "--> Start processing Sheet #{sheet_id}"
+      logger.info "--> Start processing Sheet #{sheet_id}"
 
       in_service = true
 
@@ -447,7 +458,7 @@ class BusinessStaff < DuoduoCli
       return if last_row.nil?
 
       (2..last_row).each do |row_id|
-        puts "... Processing #{row_id}/#{last_row}" if row_id % 50 == 0
+        logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
         nest_index, name, _corporation_id, corporation_name, identity_card, gender, age, address, telephone, arrive_current_company_at, current_contract_dates, work_place, work_type, contract_type = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
@@ -551,10 +562,10 @@ class BusinessStaff < DuoduoCli
           p.serialize(filepath.to_s)
         end
 
-        puts "--> Generate failed file: #{filepath.expand_path}"
-        `open #{filepath.expand_path}`
+        logger.info "*** Generate failed file: #{filepath.expand_path}"
+        # `open #{filepath.expand_path}`
       else
-        puts "--> Bravo, Succeed!"
+        logger.info "*** Bravo, Succeed!"
       end
     end
 end
