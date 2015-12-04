@@ -156,7 +156,7 @@ ActiveAdmin.register SalaryItem do
 
       sortable_columns = %w(id staff_identity_card staff_account staff_category staff_company normal_staff salary_table)
       (columns - sortable_columns).each{|col| column col.to_sym}
-    else
+    elsif params[:view] == 'whole'
       column :id
       column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card }
       column :staff_account, sortable: ->(obj){ obj.staff_account }
@@ -209,6 +209,80 @@ ActiveAdmin.register SalaryItem do
       column :created_at
       column :updated_at
       column :remark
+    else
+      keys = [
+        :id,
+        :staff_identity_card,
+        :staff_account,
+        :staff_category,
+        :staff_company,
+        :normal_staff,
+        :salary_table,
+        :salary_deserve,
+        :annual_reward,
+        :pension_personal,
+        :pension_margin_personal,
+        :unemployment_personal,
+        :unemployment_margin_personal,
+        :medical_personal,
+        :medical_margin_personal,
+        :house_accumulation_personal,
+        :big_amount_personal,
+        :income_tax,
+        :salary_card_addition,
+        :medical_scan_addition,
+        :salary_pre_deduct_addition,
+        :insurance_pre_deduct_addition,
+        :physical_exam_addition,
+        :total_personal,
+        :salary_in_fact,
+        :pension_company,
+        :pension_margin_company,
+        :unemployment_company,
+        :unemployment_margin_company,
+        :medical_company,
+        :medical_margin_company,
+        :injury_company,
+        :injury_margin_company,
+        :birth_company,
+        :birth_margin_company,
+        :accident_company,
+        :house_accumulation_company,
+        :total_company,
+        :social_insurance_to_pre_deduct,
+        :medical_insurance_to_pre_deduct,
+        :house_accumulation_to_pre_deduct,
+        :social_insurance_to_salary_deserve,
+        :medical_insurance_to_salary_deserve,
+        :house_accumulation_to_salary_deserve,
+        :transfer_fund_to_person,
+        :transfer_fund_to_account,
+        :admin_amount,
+        :total_sum,
+        :total_sum_with_admin_amount,
+        :created_at,
+        :updated_at,
+        :remark,
+      ]
+      valid_keys = keys.select{|key| collection.map{|obj| obj.send(key)}.any?(&:present?)}
+      valid_keys.each do |key|
+        case key
+        when :staff_identity_card
+          column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card }
+        when :staff_account
+          column :staff_account, sortable: ->(obj){ obj.staff_account }
+        when :staff_category
+          column :staff_category, sortable: ->(obj){ obj.staff_category }
+        when :staff_company
+          column :staff_company, sortable: -> (obj){ obj.staff_company.id }
+        when :normal_staff
+          column :normal_staff, sortable: :normal_staff_id
+        when :salary_table
+          column :salary_table, sortable: :salary_table_id
+        else
+          column key
+        end
+      end
     end
 
     actions
