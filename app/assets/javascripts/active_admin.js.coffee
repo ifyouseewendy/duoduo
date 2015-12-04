@@ -311,7 +311,8 @@ $(document).on 'ready', ->
                 <li><a href='#{current_path}'>普通工资表</a></li>
                 <li><a href='#{current_path}?view=proof'>凭证工资表（帐用）</a></li>
                 <li><a href='#{current_path}?view=card'>打卡表</a></li>
-                <li class='custom'><a href='#{current_path}?view=custom'>自定义</a></li>
+                <li><a href='#{current_path}?view=whole'>显示全部字段</a></li>
+                <li class='custom'><a href='#{current_path}?view=custom'>自定义显示</a></li>
               </ul>
             </div>
           </div>
