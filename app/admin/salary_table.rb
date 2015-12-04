@@ -12,7 +12,12 @@ ActiveAdmin.register SalaryTable do
     (SalaryTable.ordered_columns(without_foreign_keys: true) - [:remark]).map(&:to_sym).map do |field|
       if %i(lai_table daka_table).include? field
         column field do |obj|
-          link_to obj.send("#{field}_identifier"), obj.send(field).url
+          name = obj.send("#{field}_identifier")
+          if name.present?
+            link_to name, obj.send(field).url
+          else
+            ''
+          end
         end
       else
         column field
