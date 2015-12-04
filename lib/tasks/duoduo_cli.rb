@@ -87,10 +87,10 @@ class DuoduoCli < Thor
 
     def seed_admin_user
       puts "==> Preparing AdminUser"
-      if AdminUser.where(email: 'admin').first.nil?
-        au = AdminUser.new(email: 'admin', password: '123123', password_confirmation: '123123')
-        au.save(validate: false)
-      end
+
+      AdminUser.delete_all
+      au = AdminUser.new(name: 'admin', password: '123123', password_confirmation: '123123')
+      au.save(validate: false)
     end
 
     def seed_sub_companies
