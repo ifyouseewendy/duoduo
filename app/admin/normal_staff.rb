@@ -11,22 +11,24 @@ ActiveAdmin.register NormalStaff do
 
   index do
     selectable_column
-    NormalStaff.ordered_columns.map(&:to_sym).map do |field|
+
+    column :id
+    column :name
+    column :sub_company, sortable: :sub_company_id
+    column :normal_corporation, sortable: :normal_corporation_id
+
+    (NormalStaff.ordered_columns.map(&:to_sym) - [:id, :name, :sub_company, :normal_corporation]).map do |field|
       if field == :gender
         # enum
         column :gender do |obj|
           obj.gender_i18n
         end
-      elsif field == :normal_corporation_id
-        column :normal_corporation, sortable: :normal_corporation_id
-      elsif field == :sub_company_id
-        column :sub_company, sortable: :sub_company_id
       else
         column field
       end
     end
     actions do |obj|
-      a link_to "查看劳务合同", normal_staff_labor_contracts_path(obj)
+      a link_to "查看劳务合同", normal_staff_labor_contracts_path(obj), class: "expand_table_action_width"
     end
   end
 
@@ -80,7 +82,9 @@ ActiveAdmin.register NormalStaff do
   sidebar '劳务合同', only: [:show] do
     ul do
       lc = normal_staff.labor_contracts.active.first
-      li link_to lc.name, normal_staff_labor_contract_path(normal_staff, lc), class: 'current_contract'
+      if lc.present?
+        li link_to lc.name, normal_staff_labor_contract_path(normal_staff, lc), class: 'current_contract'
+      end
 
       li link_to "全部合同", normal_staff_labor_contracts_path(normal_staff)
     end
