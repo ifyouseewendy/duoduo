@@ -32,6 +32,12 @@ ActiveAdmin.register NormalStaff do
     end
   end
 
+  preserve_default_filters!
+  remove_filter :salary_items
+  remove_filter :guard_salary_items
+  remove_filter :non_full_day_salary_items
+  remove_filter :labor_contracts
+
   form do |f|
     f.semantic_errors *f.object.errors.keys
 
