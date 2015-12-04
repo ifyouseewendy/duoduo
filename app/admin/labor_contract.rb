@@ -14,17 +14,16 @@ ActiveAdmin.register LaborContract do
   index do
     selectable_column
 
-    LaborContract.ordered_columns.map(&:to_sym).map do |field|
+    column :id
+    column :normal_staff, sortable: :normal_staff_id
+    column :sub_company, sortable: :sub_company_id
+    column :normal_corporation, sortable: :normal_corporation_id
+
+    (LaborContract.ordered_columns.map(&:to_sym) - [:id, :normal_staff_id, :normal_corporation_id, :sub_company_id]).map do |field|
       if field == :contract_type
         column :contract_type do |obj|
           obj.contract_type_i18n
         end
-      elsif field == :normal_corporation_id
-        column :normal_corporation, sortable: :normal_corporation_id
-      elsif field == :normal_staff_id
-        column :normal_staff, sortable: :normal_staff_id
-      elsif field == :sub_company_id
-        column :sub_company, sortable: :sub_company_id
       else
         column field
       end
