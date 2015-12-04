@@ -60,6 +60,10 @@ ActiveAdmin.register NormalCorporation do
   remove_filter :labor_contracts
   remove_filter :salary_tables
   remove_filter :salary_items
+  remove_filter :guard_salary_tables
+  remove_filter :guard_salary_items
+  remove_filter :non_full_day_salary_tables
+  remove_filter :non_full_day_salary_items
 
   form do |f|
     f.semantic_errors *f.object.errors.keys
