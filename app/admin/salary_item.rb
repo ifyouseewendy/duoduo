@@ -288,6 +288,10 @@ ActiveAdmin.register SalaryItem do
     actions
   end
 
+  preserve_default_filters!
+  remove_filter :salary_tables
+  # remove_filter :normal_staffs
+
   # Edit
   permit_params :staff_name, :salary_deserve, :salary_table_id, :staff_identity_card
 
