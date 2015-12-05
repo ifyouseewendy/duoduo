@@ -1,6 +1,6 @@
-require 'thor'
+require_relative 'duoduo_cli'
 
-class Seed < Thor
+class Engineer < DuoduoCli
   attr_reader :logger
 
   class << self
@@ -27,9 +27,9 @@ class Seed < Thor
     seed_sub_companies
   end
 
-  desc "import", ''
+  desc "batch_start", ''
   option :from, required: true
-  def import
+  def batch_start
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
     # load_rails
@@ -41,20 +41,20 @@ class Seed < Thor
     dir.entries.sort.each do |customer|
       next if skip_files.any?{|f| customer.to_s.start_with?(f)}
 
-      self.class.new.invoke('engineering', [], from: dir.join(customer) )
+      self.class.new.invoke('start', [], from: dir.join(customer) )
     end
 
     logger.info "[#{Time.now}] Import end"
   end
 
-  desc "engineering", "Import engineering data"
+  desc "start", "Import engineering data"
   long_desc <<-LONGDESC
     Examples:
 
-      ruby lib/tasks/seed.rb engineering --from=
+      ruby lib/tasks/engineer.rb start --from=
   LONGDESC
   option :from, required: true
-  def engineering
+  def start
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
     load_rails unless defined? Rails
@@ -636,4 +636,4 @@ class Seed < Thor
     end
 end
 
-Seed.start(ARGV)
+Engineer.start(ARGV)

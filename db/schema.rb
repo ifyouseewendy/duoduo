@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151202081817) do
+ActiveRecord::Schema.define(version: 20151205030101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -621,6 +621,21 @@ ActiveRecord::Schema.define(version: 20151202081817) do
 
   add_index "salary_tables", ["name"], name: "index_salary_tables_on_name", using: :btree
   add_index "salary_tables", ["normal_corporation_id"], name: "index_salary_tables_on_normal_corporation_id", using: :btree
+
+  create_table "seal_items", force: :cascade do |t|
+    t.integer  "nest_index"
+    t.text     "name"
+    t.text     "remark"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "seal_tables", force: :cascade do |t|
+    t.text     "name"
+    t.text     "remark"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "sub_companies", force: :cascade do |t|
     t.string   "name"
