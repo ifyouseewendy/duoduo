@@ -55,6 +55,8 @@ zh-CN:
       admin_user: '用户'
       audition_item: '复核记录'
       comment: '备注'
+      seal_table: '刻章表'
+      seal_item: '刻章条目'
     attributes:
       normal_corporation:
         id: '编号'
@@ -624,4 +626,18 @@ zh-CN:
         author_type: '用户类型'
         created_at: "创建时间"
         updated_at: "更新时间"
+      seal_table:
+        id: '编号'
+        name: '表名'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      seal_item:
+        id: '编号'
+        nest_index: '序号'
+        name: '姓名'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
+
 
