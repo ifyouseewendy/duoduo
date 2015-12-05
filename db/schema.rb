@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151205030101) do
+ActiveRecord::Schema.define(version: 20151205030229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -626,9 +626,12 @@ ActiveRecord::Schema.define(version: 20151205030101) do
     t.integer  "nest_index"
     t.text     "name"
     t.text     "remark"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "seal_table_id"
   end
+
+  add_index "seal_items", ["seal_table_id"], name: "index_seal_items_on_seal_table_id", using: :btree
 
   create_table "seal_tables", force: :cascade do |t|
     t.text     "name"
@@ -691,4 +694,5 @@ ActiveRecord::Schema.define(version: 20151205030101) do
   add_foreign_key "salary_items", "normal_staffs"
   add_foreign_key "salary_items", "salary_tables"
   add_foreign_key "salary_tables", "normal_corporations"
+  add_foreign_key "seal_items", "seal_tables"
 end
