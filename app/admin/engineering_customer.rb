@@ -13,8 +13,15 @@ ActiveAdmin.register EngineeringCustomer do
     column :engineering_projects, sortable: :id do |obj|
       link_to "项目列表", engineering_customer_engineering_projects_path(obj)
     end
-    column :engineering_projects, sortable: :id do |obj|
+    column :engineering_staffs, sortable: :id do |obj|
       link_to "员工列表", engineering_customer_engineering_staffs_path(obj)
+    end
+    column :sub_companies, sortable: :id do |obj|
+      ul do
+        obj.sub_companies.map do |sc|
+          li link_to(sc.name, sub_company_path(sc))
+        end
+      end
     end
     (EngineeringCustomer.ordered_columns - [:id, :name]).each do |field|
       column field
@@ -55,7 +62,13 @@ ActiveAdmin.register EngineeringCustomer do
       row :engineering_projects do |obj|
         link_to "员工列表", engineering_customer_engineering_staffs_path(obj)
       end
-
+      row :sub_companies, sortable: :id do |obj|
+        ul do
+          obj.sub_companies.map do |sc|
+            li link_to(sc.name, sub_company_path(sc))
+          end
+        end
+      end
       (EngineeringCustomer.ordered_columns(without_foreign_keys: true) - [:id, :name]).map(&:to_sym).map do |field|
         row field
       end
