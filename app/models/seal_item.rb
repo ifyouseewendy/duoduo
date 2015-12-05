@@ -10,6 +10,11 @@ class SealItem < ActiveRecord::Base
 
       names
     end
+
+    def query_user(name:)
+      where(name: name.strip).first.try(:seal_table).try(:name)
+    end
+
   end
 
 end
