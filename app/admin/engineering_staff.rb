@@ -29,6 +29,11 @@ ActiveAdmin.register EngineeringStaff do
         column field
       end
     end
+
+    column :seal_index, sortable: :id do |obj|
+      obj.seal_index
+    end
+
     actions do |obj|
       text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       item "加入项目", "#", class: "add_projects_link expand_table_action_width"
@@ -112,6 +117,11 @@ ActiveAdmin.register EngineeringStaff do
           end
         end
       end
+
+      row :seal_index do |obj|
+        obj.seal_index
+      end
+
     end
   end
 

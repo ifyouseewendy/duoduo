@@ -7,7 +7,7 @@ ActiveAdmin.register NormalStaff do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 3
 
-  permit_params *NormalStaff.ordered_columns(without_base_keys: true, without_foreign_keys: true)
+  permit_params(*NormalStaff.ordered_columns(without_base_keys: true, without_foreign_keys: true))
 
   index do
     selectable_column
@@ -39,7 +39,7 @@ ActiveAdmin.register NormalStaff do
   remove_filter :labor_contracts
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :nest_index, as: :number

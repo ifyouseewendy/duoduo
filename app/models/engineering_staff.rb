@@ -122,4 +122,8 @@ class EngineeringStaff < ActiveRecord::Base
 
     Date.today.year - birth.year
   end
+
+  def seal_index
+    SealItem.query_user(name: name)
+  end
 end

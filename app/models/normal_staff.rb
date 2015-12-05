@@ -75,7 +75,6 @@ class NormalStaff < ActiveRecord::Base
     }
   end
 
-
   private
 
     def check_contracts_status
