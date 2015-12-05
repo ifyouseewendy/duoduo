@@ -442,6 +442,8 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
         engineering_projects: '工程项目'
+        engineering_staffs: '工程员工'
+        sub_companies: '吉易子公司'
       engineering_project:
         id: '编号'
         name: '工程名称'
@@ -469,6 +471,7 @@ zh-CN:
         updated_at: "更新时间"
         engineering_customer: '工程客户'
         engineering_corp: '工程单位'
+        sub_companies: '吉易子公司'
         engineering_customer_id: '工程客户'
         engineering_corp_id: '工程单位'
         engineering_staffs: '工程员工'
@@ -477,6 +480,7 @@ zh-CN:
         outcome_items_date: '回款日期'
         outcome_items_amount: '回款金额'
         outcome_items_persons: '回款人'
+        sub_company_in: '吉易子公司'
       engineering_corp:
         id: '编号'
         name: '单位名称'

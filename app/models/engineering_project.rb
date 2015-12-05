@@ -369,7 +369,15 @@ class EngineeringProject < ActiveRecord::Base
       end
 
     end
-
-
   end
+
+  ransacker :sub_company, formatter: ->(qid) {
+    # ids = User.search_in_all_translated(search).map(&:id)
+    # ids = ids.any? ? ids : nil
+    sub_company = SubCompany.find(qid)
+    sub_company.engineering_customers.select(:id).flat_map{|ec| ec.engineering_projects.pluck(:id)}
+  } do |parent|
+      parent.table[:id]
+  end
+
 end

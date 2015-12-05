@@ -25,6 +25,13 @@ ActiveAdmin.register EngineeringProject do
         link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
       end
     end
+    column :sub_companies, sortable: :id do |obj|
+      ul do
+        obj.engineering_customer.sub_companies.map do |sc|
+          li (link_to sc.name, sub_company_path(sc))
+        end
+      end
+    end
     (EngineeringProject.ordered_columns(without_foreign_keys: true) - [:id, :name]).each do |field|
       if resource_class.nest_fields.include? field
         column field do |obj|
@@ -58,6 +65,7 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
+  filter :sub_company_in, as: :select, collection: SubCompany.hr.pluck(:name, :id)
   filter :status, as: :check_boxes, collection: EngineeringProject.statuses_option
   filter :income_items_date, as: :date_range
   filter :income_items_amount, as: :numeric
@@ -68,6 +76,8 @@ ActiveAdmin.register EngineeringProject do
   remove_filter :engineering_staffs
   remove_filter :engineering_salary_tables
   remove_filter :contract_files
+  remove_filter :income_items
+  remove_filter :outcome_items
 
   permit_params *(
     EngineeringProject.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
