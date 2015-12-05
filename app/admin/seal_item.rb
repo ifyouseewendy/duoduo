@@ -15,4 +15,18 @@ ActiveAdmin.register SealItem do
 
   preserve_default_filters!
   remove_filter :seal_table
+
+  permit_params SealItem.column_names
+
+  form do |f|
+    f.semantic_errors(*f.object.errors.keys)
+
+    f.inputs do
+      f.input :nest_index, as: :number
+      f.input :name, as: :string
+      f.input :remark, as: :text
+    end
+
+    f.actions
+  end
 end

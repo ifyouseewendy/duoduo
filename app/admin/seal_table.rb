@@ -21,5 +21,16 @@ ActiveAdmin.register SealTable do
   remove_filter :seal_items
   filter :seal_items_name, as: :string
 
+  permit_params SealTable.column_names
 
+  form do |f|
+    f.semantic_errors(*f.object.errors.keys)
+
+    f.inputs do
+      f.input :name, as: :string
+      f.input :remark, as: :text
+    end
+
+    f.actions
+  end
 end

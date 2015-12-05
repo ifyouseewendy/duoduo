@@ -639,6 +639,7 @@ zh-CN:
         nest_index: '序号'
         name: '姓名'
         remark: '备注'
+        seal_table: '所属刻章表'
         created_at: "创建时间"
         updated_at: "更新时间"
 
