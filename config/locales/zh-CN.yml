@@ -630,6 +630,8 @@ zh-CN:
         id: '编号'
         name: '表名'
         remark: '备注'
+        seal_items: '人员列表'
+        seal_items_name: '员工姓名'
         created_at: "创建时间"
         updated_at: "更新时间"
       seal_item:
