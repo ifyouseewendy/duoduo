@@ -640,6 +640,7 @@ zh-CN:
         name: '姓名'
         remark: '备注'
         seal_table: '所属刻章表'
+        seal_table_id: '所属刻章表'
         created_at: "创建时间"
         updated_at: "更新时间"
 
