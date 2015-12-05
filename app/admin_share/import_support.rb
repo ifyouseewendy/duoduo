@@ -6,7 +6,9 @@ module ImportSupport
         model = controller_name.classify.constantize
 
         filename = I18n.t("activerecord.models.#{model.to_s.underscore}") + " - " + I18n.t("misc.import_demo.name") + '.xlsx'
-        filepath = Pathname("tmp/#{filename}")
+        dir = Pathname("tmp/import_demo")
+        dir.mkdir unless dir.exist?
+        filepath = dir.join(filename)
 
         Axlsx::Package.new do |p|
           p.workbook.add_worksheet do |sheet|
@@ -24,6 +26,8 @@ module ImportSupport
           link_to "导入#{collection.model_name.human}", send("import_new_guard_salary_table_#{collection.name.underscore.pluralize}_path")
         elsif collection.model.name == 'NonFullDaySalaryItem'
           link_to "导入#{collection.model_name.human}", send("import_new_non_full_day_salary_table_#{collection.name.underscore.pluralize}_path")
+        elsif collection.model.name == 'SealItem'
+          link_to "导入#{collection.model_name.human}", send("import_new_seal_table_#{collection.name.underscore.pluralize}_path")
         else
           link_to "导入#{collection.model_name.human}", send("import_new_#{collection.name.underscore.pluralize}_path")
         end

@@ -1,7 +1,7 @@
 <%= semantic_form_for collection.new, url: {action: :import_do}, html: {multipart: true} do |f| %>
   <%= f.inputs "说明", class: 'inputs import_guide' do %>
     <li>1. 上传文件需为 xls(x) 格式</li>
-    <li>2. 请参考 <a href=<%= "/#{active_admin_config.resource_class.table_name}/import_demo" %>>示例文件</a> 中的字段顺序</li>
+    <li>2. 请参考 <a href=<%= "#{request.path.split('/')[0..-2].push('import_demo').join('/')}" %>>示例文件</a> 中的字段顺序</li>
   <% end %>
 
   <%= f.inputs do %>
