@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyText
-  remark: MyText
+  id: 1
+  name: 'first table'
 
 two:
-  name: MyText
-  remark: MyText
+  id: 2
+  name: 'second table'
