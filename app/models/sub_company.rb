@@ -35,27 +35,16 @@ class SubCompany < ActiveRecord::Base
     end
   end
 
-  def remove_contract_template_at(id)
-    templates = self.contract_templates
-    templates.delete_at(id)
-    self.contract_templates = templates
-
-    self.save!
-  end
-
   def add_contract_template(filename)
-    add_file(filename, template: true)
+    self.contract_templates.create(contract: File.open(filename))
   end
 
-  def add_file(filename, override: false, template: false)
-    field = template ? :contract_templates : :contracts
-    if override
-      self.send "#{field}=", [File.open(filename)]
+  def add_file(filename, template: false)
+    if template
+      self.contract_templates.create!(contract: File.open(filename))
     else
-      self.send "#{field}=", self.send(field) + [File.open(filename)]
+      self.contract_files.create!(contract: File.open(filename))
     end
-
-    self.save!
   end
 
 end
