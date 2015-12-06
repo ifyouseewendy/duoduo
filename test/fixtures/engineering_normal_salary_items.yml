@@ -1,17 +1,10 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  salary_deserve: 9.99
-  social_insurance: 9.99
-  medical_insurance: 9.99
-  total_insurance: 9.99
-  salary_in_fact: 9.99
+  salary_deserve: 100
+  social_insurance: 10
+  medical_insurance: 10
+  total_insurance: 20
+  salary_in_fact: 120
   remark: MyText
 
-two:
-  salary_deserve: 9.99
-  social_insurance: 9.99
-  medical_insurance: 9.99
-  total_insurance: 9.99
-  salary_in_fact: 9.99
-  remark: MyText

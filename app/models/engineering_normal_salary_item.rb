@@ -96,11 +96,11 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
   end
 
   def revise_fields
-    if (changed && [:social_insurance, :medical_insurance]).present?
+    if (changed & ['social_insurance', 'medical_insurance']).present?
       self.total_insurance = [self.social_insurance, self.medical_insurance].map(&:to_f).sum
     end
-    if (changed && [:salary_in_fact]).present?
-      self.salary_deserve = self.salary_in_fact - self.total_insurance
+    if (changed & ['salary_in_fact']).present?
+      self.salary_deserve = self.salary_in_fact.to_f - self.total_insurance.to_f
     end
   end
 end
