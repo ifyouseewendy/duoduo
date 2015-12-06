@@ -54,7 +54,6 @@ ActiveAdmin.register SubCompany do
     boolean_columns = SubCompany.columns_of(:boolean)
     attributes_table do
       SubCompany.ordered_columns.map(&:to_sym).map do |field|
-        next if field == :contract_templates
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
         else
@@ -65,7 +64,11 @@ ActiveAdmin.register SubCompany do
 
     panel "模板" do
       panel "业务代理合同" do
-        render partial: "sub_companies/contract_template", locals: {sub_company: sub_company}
+        render partial: "sub_companies/contract_template", \
+          locals: {
+            company: sub_company,
+            templates: sub_company.contract_templates,
+          }
       end
 
       if resource.has_engineering_relation

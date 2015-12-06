@@ -1,8 +1,10 @@
 class NormalCorporation < ActiveRecord::Base
   has_and_belongs_to_many :sub_companies
   has_many :contract_files, through: :sub_companies
+
   has_many :labor_contracts
   has_many :normal_staffs
+
   has_many :salary_tables
   has_many :salary_items, through: :salary_tables
   has_many :guard_salary_tables

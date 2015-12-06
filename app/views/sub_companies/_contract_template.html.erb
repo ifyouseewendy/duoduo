@@ -1,11 +1,9 @@
-<% identifiers = sub_company.contract_templates_identifiers %>
 <ul>
-  <% sub_company.contract_templates.each_with_index do |ct, idx| %>
+  <% templates.each do |template| %>
     <li>
-      <span><%= identifiers[idx] %></span>
-      <span>( <%= link_to '下载', ct.url %>
-        <%= form_tag(remove_contract_template_sub_company_path(sub_company), method: :delete, class: 'form_tag') do %>
-          <%= hidden_field_tag 'contract_template_id', idx %>
+      <span><%= template.contract_identifier %></span>
+      <span>( <%= link_to '下载', template.contract.url %>
+        <%= form_tag(contract_template_path(template), method: :delete, class: 'form_tag') do %>
           <%= link_to "删除",  "#", :onclick=>"$(this).closest('form').submit()" %>
         <% end %>
          )
@@ -14,8 +12,9 @@
   <% end %>
 </ul>
 
-<%= form_for SubCompany.new, url: add_contract_template_sub_company_path(sub_company), class: 'form_tag' do |f| %>
-  <%= f.file_field :contract_template %>
+<%= form_for ContractTemplate.new, url: contract_templates_path, class: 'form_tag' do |f| %>
+  <%= f.file_field :contract %>
+  <%= f.hidden_field :sub_company_id, value: company.id %>
+
   <%= link_to "上传",  "#", :onclick=>"$(this).closest('form').submit()" %>
 <% end %>
-
