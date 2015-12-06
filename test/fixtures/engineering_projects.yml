@@ -16,7 +16,6 @@ one:
   outcome_referee: MyText
   outcome_amount: 9.99
   proof: MyText
-  already_get_contract: false
   already_sign_dispatch: false
   remark: MyText
   engineering_customer: one
@@ -37,7 +36,6 @@ two:
   outcome_referee: MyText
   outcome_amount: 9.99
   proof: MyText
-  already_get_contract: false
   already_sign_dispatch: false
   remark: MyText
   engineering_customer: one
@@ -58,7 +56,6 @@ three:
   outcome_referee: MyText
   outcome_amount: 9.99
   proof: MyText
-  already_get_contract: false
   already_sign_dispatch: false
   remark: MyText
   engineering_customer: one
