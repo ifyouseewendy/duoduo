@@ -111,6 +111,7 @@ ActiveAdmin.register NormalCorporation do
       tabs do
         resource.sub_companies.each do |comp|
           tab comp.name do
+            # TODO need to refact
             render partial: "shared/contract", locals: {sub_company: comp, corporation: resource}
           end
         end

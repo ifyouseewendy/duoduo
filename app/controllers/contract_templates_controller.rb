@@ -14,18 +14,22 @@ class ContractTemplatesController < ApplicationController
   end
 
   def generate_and_download
-    begin
-      sub_company = SubCompany.find params.require(:sub_company_id)
-      template = sub_company.contract_templates[params.require(:template).to_i]
-
-      contract = DocGenerator.generate_docx \
-        gsub: {company_name: 'wendi'},
-        file_path: template.current_path
-
-      send_file contract
-    rescue => e
-      logger.error e.message
-    end
+    # TODO
+    #
+    #   need to confirm
+    #
+    # begin
+    #   sub_company = SubCompany.find params.require(:sub_company_id)
+    #   template = sub_company.contract_templates[params.require(:template).to_i]
+    #
+    #   contract = DocGenerator.generate_docx \
+    #     gsub: {company_name: 'wendi'},
+    #     file_path: template.current_path
+    #
+    #   send_file contract
+    # rescue => e
+    #   logger.error e.message
+    # end
   end
 
   private
