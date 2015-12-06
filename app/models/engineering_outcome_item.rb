@@ -16,6 +16,7 @@ class EngineeringOutcomeItem < ActiveRecord::Base
   def add_contract_file(path:, role: :normal)
     self.contract_files.create!(
       contract: File.open(path),
+      role: role
     )
   end
 
