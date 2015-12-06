@@ -1,5 +1,9 @@
 class EngineeringStaff < ActiveRecord::Base
   belongs_to :engineering_customer
+  # TODO
+  #
+  #   Temp comment out check_schedule on importing stage
+  #   Remember to check test/models/engineering_staff_test.rb:21
   has_and_belongs_to_many :engineering_projects #, before_add: :check_schedule
 
   has_many :engineering_normal_salary_items
