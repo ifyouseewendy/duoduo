@@ -3,11 +3,4 @@
 one:
   date: 2015-11-18
   amount: 9.99
-  person: MyText
-  remark: MyText
-
-two:
-  date: 2015-11-18
-  amount: 9.99
-  person: MyText
-  remark: MyText
+  persons: ['wendi', 'larry', 'dapian']
