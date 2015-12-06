@@ -101,7 +101,7 @@ class EngineeringProject < ActiveRecord::Base
   end
 
   def revise_fields
-    if (changed && [:project_start_date, :project_end_date]).present?
+    if (changed & ['project_start_date', 'project_end_date']).present?
       self.project_range = -> {
         month, day = calc_range
 
@@ -112,7 +112,7 @@ class EngineeringProject < ActiveRecord::Base
       }.call
     end
 
-    if (changed && [:project_amount, :admin_amount]).present?
+    if (changed & ['project_amount', 'admin_amount']).present?
       self.total_amount = project_amount + admin_amount
     end
   end

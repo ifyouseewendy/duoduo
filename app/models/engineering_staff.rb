@@ -109,7 +109,7 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def revise_fields
-    if (changed && [:identity_card]).present?
+    if (changed & ['identity_card']).present?
       id_card = self.identity_card
       if id_card.length == 18
         self.birth = Date.parse(id_card[6,8]) rescue nil

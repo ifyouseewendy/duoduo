@@ -158,7 +158,7 @@ class SalaryItem < ActiveRecord::Base
 
     self.admin_amount = attributes[:admin_amount] if attributes.has_key?(:admin_amount)
 
-    if self.changed && [:admin_amount]
+    if self.changed & ['admin_amount']
       set_total_sum_with_admin_amount
     end
 
