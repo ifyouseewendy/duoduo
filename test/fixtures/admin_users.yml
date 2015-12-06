@@ -1,13 +1,15 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+super_admin:
+  role: 0 # 'is_super_admin'
 
-# This model initially had no columns defined.  If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-alpha:
-  id: 1
-  role: 0
-  email: alpha@example.com
-#
-# two: {}
-#  column: value
+finance_admin:
+  role: 1 # 'is_finance_admin'
+
+finance_senior:
+  role: 2 # 'is_finance_senior'
+
+finance_junior:
+  role: 3 # 'is_finance_junior'
+
+business_admin:
+  role: 4 # 'is_business_admin'
+
