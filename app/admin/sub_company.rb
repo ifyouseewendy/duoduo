@@ -104,37 +104,6 @@ ActiveAdmin.register SubCompany do
     active_admin_comments
   end
 
-  member_action :remove_contract_template, method: :delete do
-    sub_company = SubCompany.find params.require(:id)
-
-    begin
-      sub_company.remove_contract_template_at params.require(:contract_template_id).to_i
-
-      redirect_to sub_company_path(sub_company), notice: "成功删除业务合同模板"
-    rescue => e
-      redirect_to sub_company_path(sub_company), alert: "删除失败：#{e.message}"
-    end
-  end
-
-  member_action :add_contract_template, method: :post do
-    sub_company = SubCompany.find params.require(:id)
-
-    begin
-      file = params.require(:sub_company).require(:contract_template)
-      raise "添加失败：未找到文件" if file.nil?
-
-      path = Pathname(file.path)
-      to = path.dirname.join(file.original_filename)
-      path.rename(to)
-
-      sub_company.add_contract_template to
-
-      redirect_to sub_company_path(sub_company), notice: "成功添加业务合同模板： #{to.basename}"
-    rescue => e
-      redirect_to sub_company_path(sub_company), alert: "添加失败：#{e.message}"
-    end
-  end
-
   member_action :remove_template, method: :delete do
     sub_company = SubCompany.find params.require(:id)
 
