@@ -37,12 +37,12 @@ class DocGenerator
         temp_path = generate_temp_path
 
         Dir.chdir(temp_path)
-        puts "--> Change dir to temp path: #{temp_path}"
+        # puts "--> Change dir to temp path: #{temp_path}"
 
         yield temp_path
       ensure
         Dir.chdir(Rails.root)
-        puts "--> Change back to: #{Rails.root}"
+        # puts "--> Change back to: #{Rails.root}"
 
         temp_path.rmtree
       end
