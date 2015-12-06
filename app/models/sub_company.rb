@@ -3,6 +3,7 @@ class SubCompany < ActiveRecord::Base
   has_and_belongs_to_many :engineering_customers
 
   has_many :contract_files, dependent: :destroy
+  has_many :contract_templates, dependent: :destroy
 
   has_many :labor_contracts
   has_many :normal_staffs

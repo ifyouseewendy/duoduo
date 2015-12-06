@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151206131609) do
+ActiveRecord::Schema.define(version: 20151206132300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,15 @@ ActiveRecord::Schema.define(version: 20151206131609) do
 
   add_index "contract_files", ["engineering_corp_id"], name: "index_contract_files_on_engineering_corp_id", using: :btree
   add_index "contract_files", ["sub_company_id"], name: "index_contract_files_on_sub_company_id", using: :btree
+
+  create_table "contract_templates", force: :cascade do |t|
+    t.text     "contract"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "sub_company_id"
+  end
+
+  add_index "contract_templates", ["sub_company_id"], name: "index_contract_templates_on_sub_company_id", using: :btree
 
   create_table "engineering_big_table_salary_items", force: :cascade do |t|
     t.decimal  "salary_deserve",              precision: 8, scale: 2
@@ -663,6 +672,7 @@ ActiveRecord::Schema.define(version: 20151206131609) do
 
   add_foreign_key "contract_files", "engineering_corps"
   add_foreign_key "contract_files", "sub_companies"
+  add_foreign_key "contract_templates", "sub_companies"
   add_foreign_key "engineering_big_table_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_big_table_salary_items", "engineering_staffs"
   add_foreign_key "engineering_big_table_salary_table_references", "engineering_salary_tables"
