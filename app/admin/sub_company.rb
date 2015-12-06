@@ -65,7 +65,7 @@ ActiveAdmin.register SubCompany do
 
     panel "模板" do
       panel "业务代理合同" do
-        render partial: "shared/contract_template", locals: {sub_company: sub_company}
+        render partial: "sub_companies/contract_template", locals: {sub_company: sub_company}
       end
 
       if resource.has_engineering_relation
