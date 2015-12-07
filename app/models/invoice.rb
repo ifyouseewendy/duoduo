@@ -5,6 +5,12 @@ class Invoice < ActiveRecord::Base
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 
+      # Fields added by later migration
+      polyfill = [:refund_bank, :refund_account]
+      names -= polyfill
+      idx = names.index(:refund_person) + 1
+      names.insert(idx, *polyfill)
+
       names -= %i(id created_at updated_at) if without_base_keys
       names -= %i(invoicable_id invoicable_type) if without_foreign_keys
 

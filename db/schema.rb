@@ -290,7 +290,6 @@ ActiveRecord::Schema.define(version: 20151206132300) do
   add_index "engineering_salary_tables", ["engineering_project_id"], name: "index_engineering_salary_tables_on_engineering_project_id", using: :btree
 
   create_table "engineering_staffs", force: :cascade do |t|
-    t.integer  "nest_index"
     t.text     "name"
     t.text     "identity_card"
     t.date     "birth"
@@ -302,6 +301,7 @@ ActiveRecord::Schema.define(version: 20151206132300) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.integer  "engineering_customer_id"
+    t.integer  "nest_index"
   end
 
   add_index "engineering_staffs", ["address"], name: "index_engineering_staffs_on_address", using: :btree
@@ -386,13 +386,13 @@ ActiveRecord::Schema.define(version: 20151206132300) do
     t.decimal  "total_amount",    precision: 8, scale: 2
     t.text     "contact_person"
     t.text     "refund_person"
-    t.text     "refund_bank"
-    t.text     "refund_account"
     t.date     "income_date"
     t.date     "refund_date"
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
     t.text     "remark"
+    t.text     "refund_bank"
+    t.text     "refund_account"
     t.integer  "invoicable_id"
     t.string   "invoicable_type"
   end
@@ -407,7 +407,6 @@ ActiveRecord::Schema.define(version: 20151206132300) do
     t.date     "arrive_current_company_at"
     t.boolean  "has_social_insurance"
     t.boolean  "has_medical_insurance"
-    t.boolean  "has_accident_insurance"
     t.date     "current_social_insurance_start_date"
     t.date     "current_medical_insurance_start_date"
     t.decimal  "social_insurance_base",                precision: 8, scale: 2
@@ -429,6 +428,7 @@ ActiveRecord::Schema.define(version: 20151206132300) do
     t.integer  "normal_staff_id"
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
+    t.boolean  "has_accident_insurance"
   end
 
   add_index "labor_contracts", ["normal_corporation_id"], name: "index_labor_contracts_on_normal_corporation_id", using: :btree
@@ -597,21 +597,21 @@ ActiveRecord::Schema.define(version: 20151206132300) do
     t.decimal  "house_accumulation_company",           precision: 8, scale: 2
     t.decimal  "total_company",                        precision: 8, scale: 2
     t.decimal  "social_insurance_to_salary_deserve",   precision: 8, scale: 2
-    t.decimal  "medical_insurance_to_salary_deserve",  precision: 8, scale: 2
-    t.decimal  "house_accumulation_to_salary_deserve", precision: 8, scale: 2
     t.decimal  "social_insurance_to_pre_deduct",       precision: 8, scale: 2
+    t.decimal  "medical_insurance_to_salary_deserve",  precision: 8, scale: 2
     t.decimal  "medical_insurance_to_pre_deduct",      precision: 8, scale: 2
+    t.decimal  "house_accumulation_to_salary_deserve", precision: 8, scale: 2
     t.decimal  "house_accumulation_to_pre_deduct",     precision: 8, scale: 2
-    t.text     "transfer_fund_to_person"
-    t.text     "transfer_fund_to_account"
     t.decimal  "admin_amount",                         precision: 8, scale: 2
     t.decimal  "total_sum",                            precision: 8, scale: 2
-    t.decimal  "total_sum_with_admin_amount",          precision: 8, scale: 2
     t.text     "remark"
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
     t.integer  "salary_table_id"
     t.integer  "normal_staff_id"
+    t.decimal  "total_sum_with_admin_amount",          precision: 8, scale: 2
+    t.text     "transfer_fund_to_person"
+    t.text     "transfer_fund_to_account"
   end
 
   add_index "salary_items", ["normal_staff_id"], name: "index_salary_items_on_normal_staff_id", using: :btree
