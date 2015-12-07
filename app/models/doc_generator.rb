@@ -54,7 +54,11 @@ class DocGenerator
       end
 
       def base
-        @_base ||= Rails.root.join("tmp").join("docx")
+        @_base ||= ->{
+          temp_dir = Rails.root.join("tmp").join("docx")
+          temp_dir.mkdir unless temp_dir.exist?
+          temp_dir
+        }.call
       end
     end
   end
