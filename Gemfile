@@ -74,6 +74,9 @@ gem 'goldiloader'
 # RMB
 gem 'rmb_chinese_yuan'
 
+# Activity tracking for models
+gem 'public_activity'
+
 group :development do
   gem 'quiet_assets'
 
