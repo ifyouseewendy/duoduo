@@ -94,6 +94,10 @@ class EngineeringProject < ActiveRecord::Base
     def nest_fields
       [:income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
     end
+
+    def id_name_option
+      self.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}
+    end
   end
 
   def status_i18n

@@ -5,11 +5,11 @@ ActiveAdmin.register NonFullDaySalaryTable do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 6
 
-  permit_params *NonFullDaySalaryTable.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
   index do
     selectable_column
-    NonFullDaySalaryTable.ordered_columns(without_foreign_keys: true).map(&:to_sym).map do |field|
+    resource_class.ordered_columns(without_foreign_keys: true).map(&:to_sym).map do |field|
       column field
     end
     column :corporation, sortable: ->(obj){ obj.corporation.name }
@@ -22,7 +22,7 @@ ActiveAdmin.register NonFullDaySalaryTable do
   end
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :normal_corporation, as: :select
@@ -35,7 +35,7 @@ ActiveAdmin.register NonFullDaySalaryTable do
 
   show do
     attributes_table do
-      NonFullDaySalaryTable.ordered_columns(without_foreign_keys: true).map(&:to_sym).map do |field|
+      resource.class.ordered_columns(without_foreign_keys: true).map(&:to_sym).map do |field|
         row field
       end
       row :corporation

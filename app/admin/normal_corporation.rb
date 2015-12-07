@@ -5,7 +5,7 @@ ActiveAdmin.register NormalCorporation do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 1
 
-  permit_params *NormalCorporation.ordered_columns(without_base_keys: true, without_foreign_keys: true)
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
   scope "最近10条更新" do |record|
     record.updated_latest_10
@@ -17,7 +17,7 @@ ActiveAdmin.register NormalCorporation do
     column :id
     column :name
 
-    columns = NormalCorporation.ordered_columns(without_foreign_keys: true) - %i(id name)
+    columns = resource_class.ordered_columns(without_foreign_keys: true) - %i(id name)
 
     column :sub_companies_display, sortable: :id
 
@@ -66,7 +66,7 @@ ActiveAdmin.register NormalCorporation do
   remove_filter :non_full_day_salary_items
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :sub_companies, as: :check_boxes
@@ -82,7 +82,7 @@ ActiveAdmin.register NormalCorporation do
       f.input :telephone, as: :phone
       f.input :contract_due_time, as: :datepicker
       f.input :contract_amount, as: :number
-      f.input :admin_charge_type, as: :radio, collection: NormalCorporation.admin_charge_types_option
+      f.input :admin_charge_type, as: :radio, collection: ->{ NormalCorporation.admin_charge_types_option }
       f.input :admin_charge_amount, as: :number
       f.input :expense_date, as: :datepicker
       f.input :remark, as: :text
@@ -93,7 +93,7 @@ ActiveAdmin.register NormalCorporation do
 
   show do
     attributes_table do
-      NormalCorporation.ordered_columns(without_foreign_keys: true).map do|field|
+      resource.class.ordered_columns(without_foreign_keys: true).map do|field|
         if field == :admin_charge_type
           row :admin_charge_type do |obj|
             obj.admin_charge_type_i18n
@@ -129,7 +129,7 @@ ActiveAdmin.register NormalCorporation do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: NormalCorporation.batch_form_fields do |ids|
+  batch_action :batch_edit, form: ->{ NormalCorporation.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|

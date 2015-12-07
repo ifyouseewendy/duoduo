@@ -9,7 +9,7 @@ ActiveAdmin.register IndividualIncomeTax do
   config.sort_order = 'grade_asc'
 
   index download_links: false do
-    IndividualIncomeTax.ordered_columns(without_base_keys: true, without_foreign_keys: true).map do |field|
+    resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true).map do |field|
       column field
     end
     actions defaults: false do |iit|

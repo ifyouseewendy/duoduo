@@ -30,7 +30,7 @@ ActiveAdmin.register NonFullDaySalaryItem do
     column :normal_staff, sortable: :normal_staff_id
     column :non_full_day_salary_table, sortable: :non_full_day_salary_table_id
 
-    (NonFullDaySalaryItem.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
+    (resource_class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
       column field
     end
 
@@ -38,7 +38,7 @@ ActiveAdmin.register NonFullDaySalaryItem do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: NonFullDaySalaryItem.batch_form_fields do |ids|
+  batch_action :batch_edit, form: ->{ NonFullDaySalaryItem.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|

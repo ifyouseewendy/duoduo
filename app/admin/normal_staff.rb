@@ -7,7 +7,7 @@ ActiveAdmin.register NormalStaff do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 3
 
-  permit_params(*NormalStaff.ordered_columns(without_base_keys: true, without_foreign_keys: true))
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
   index do
     selectable_column
@@ -17,7 +17,7 @@ ActiveAdmin.register NormalStaff do
     column :sub_company, sortable: :sub_company_id
     column :normal_corporation, sortable: :normal_corporation_id
 
-    (NormalStaff.ordered_columns.map(&:to_sym) - [:id, :name, :sub_company, :normal_corporation]).map do |field|
+    (resource_class.ordered_columns.map(&:to_sym) - [:id, :name, :sub_company, :normal_corporation]).map do |field|
       if field == :gender
         # enum
         column :gender do |obj|
@@ -49,7 +49,7 @@ ActiveAdmin.register NormalStaff do
       f.input :identity_card, as: :string
       f.input :birth, as: :datepicker
       f.input :age, as: :number
-      f.input :gender, as: :radio, collection: NormalStaff.genders_option
+      f.input :gender, as: :radio, collection: ->{ NormalStaff.genders_option }
       f.input :nation, as: :string
       f.input :grade, as: :string
       f.input :address, as: :string
@@ -64,8 +64,8 @@ ActiveAdmin.register NormalStaff do
 
   show do
     attributes_table do
-      boolean_columns = NormalStaff.columns_of(:boolean)
-      NormalStaff.ordered_columns.map(&:to_sym).map do |field|
+      boolean_columns = resource.class.columns_of(:boolean)
+      resource.class.ordered_columns.map(&:to_sym).map do |field|
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
         else
@@ -97,7 +97,7 @@ ActiveAdmin.register NormalStaff do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: NormalStaff.batch_form_fields do |ids|
+  batch_action :batch_edit, form: ->{ NormalStaff.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|

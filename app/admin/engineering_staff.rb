@@ -19,7 +19,7 @@ ActiveAdmin.register EngineeringStaff do
       link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
 
-    (EngineeringStaff.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
+    (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
       if field == :gender
         # enum
         column :gender do |obj|
@@ -49,20 +49,20 @@ ActiveAdmin.register EngineeringStaff do
   remove_filter :engineering_big_table_salary_items
   remove_filter :engineering_dong_fang_salary_items
 
-  permit_params *( EngineeringStaff.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []] )
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []] }
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :engineering_customer, collection: EngineeringCustomer.all
+      f.input :engineering_customer, collection: ->{ EngineeringCustomer.all }
       # f.input :engineering_projects, as: :select, collection: EngineeringProject.all
       f.input :nest_index, as: :number
       f.input :name, as: :string
       f.input :identity_card, as: :string
       f.input :birth, as: :datepicker
       f.input :age, as: :number
-      f.input :gender, as: :radio, collection: EngineeringStaff.genders_option
+      f.input :gender, as: :radio, collection: ->{ EngineeringStaff.genders_option }
       f.input :nation, as: :string
       f.input :address, as: :string
       f.input :remark, as: :text
@@ -103,8 +103,8 @@ ActiveAdmin.register EngineeringStaff do
         link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
       end
 
-      boolean_columns = EngineeringStaff.columns_of(:boolean)
-      (EngineeringStaff.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
+      boolean_columns = resource.class.columns_of(:boolean)
+      (resource.class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
         else
@@ -126,7 +126,7 @@ ActiveAdmin.register EngineeringStaff do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: EngineeringStaff.batch_form_fields do |ids|
+  batch_action :batch_edit, form: ->{ EngineeringStaff.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|
@@ -136,9 +136,8 @@ ActiveAdmin.register EngineeringStaff do
     redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
   end
 
-  batch_action :assign_project, \
-    form: {
-      'engineering_project_id_工程项目' => EngineeringProject.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}
+  batch_action :assign_project, form: ->{
+      {'engineering_project_id_工程项目' => EngineeringProject.id_name_option}
     } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
     project = EngineeringProject.find(inputs[:engineering_project_id])

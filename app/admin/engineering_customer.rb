@@ -23,7 +23,7 @@ ActiveAdmin.register EngineeringCustomer do
         end
       end
     end
-    (EngineeringCustomer.ordered_columns - [:id, :name]).each do |field|
+    (resource_class.ordered_columns - [:id, :name]).each do |field|
       column field
     end
 
@@ -34,10 +34,10 @@ ActiveAdmin.register EngineeringCustomer do
   remove_filter :engineering_projects
   remove_filter :engineering_staffs
 
-  permit_params *EngineeringCustomer.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :name, as: :string
@@ -76,7 +76,7 @@ ActiveAdmin.register EngineeringCustomer do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: EngineeringCustomer.batch_form_fields do |ids|
+  batch_action :batch_edit, form: ->{ EngineeringCustomer.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|

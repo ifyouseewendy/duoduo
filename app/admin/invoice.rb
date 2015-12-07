@@ -8,7 +8,7 @@ ActiveAdmin.register Invoice do
   index do
     selectable_column
 
-    Invoice.ordered_columns(without_foreign_keys: true).each do |field|
+    resource_class.ordered_columns(without_foreign_keys: true).each do |field|
       column field
     end
 
@@ -16,7 +16,7 @@ ActiveAdmin.register Invoice do
   end
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :release_date, as: :datepicker

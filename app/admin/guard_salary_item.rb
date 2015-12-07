@@ -30,7 +30,7 @@ ActiveAdmin.register GuardSalaryItem do
     column :normal_staff, sortable: :normal_staff_id
     column :guard_salary_table, sortable: :guard_salary_table_id
 
-    (GuardSalaryItem.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
+    (resource_class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
       column field
     end
 
@@ -38,7 +38,7 @@ ActiveAdmin.register GuardSalaryItem do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: GuardSalaryItem.batch_form_fields do |ids|
+  batch_action :batch_edit, form: ->{ GuardSalaryItem.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|

@@ -32,7 +32,7 @@ ActiveAdmin.register EngineeringProject do
         end
       end
     end
-    (EngineeringProject.ordered_columns(without_foreign_keys: true) - [:id, :name]).each do |field|
+    (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :name]).each do |field|
       if resource_class.nest_fields.include? field
         column field do |obj|
           data = obj.send(field)
@@ -65,8 +65,8 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
-  filter :sub_company_in, as: :select, collection: SubCompany.hr.pluck(:name, :id)
-  filter :status, as: :check_boxes, collection: EngineeringProject.statuses_option
+  filter :sub_company_in, as: :select, collection: ->{ SubCompany.hr.pluck(:name, :id) }
+  filter :status, as: :check_boxes, collection: ->{ EngineeringProject.statuses_option }
   filter :income_items_date, as: :date_range
   filter :income_items_amount, as: :numeric
   filter :outcome_items_date, as: :date_range
@@ -79,19 +79,19 @@ ActiveAdmin.register EngineeringProject do
   remove_filter :income_items
   remove_filter :outcome_items
 
-  permit_params *(
-    EngineeringProject.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
+  permit_params ->{
+    @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
     + [{ income_items_attributes: [:id, :date, :amount, :remark, :_destroy], outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [], bank: [], address: [], account: [] ] }]
-  )
+  }
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     tabs do
       tab "基本信息" do
         f.inputs do
-          f.input :engineering_customer, collection: EngineeringCustomer.all
-          f.input :engineering_corp, collection: EngineeringCorp.all
+          f.input :engineering_customer, collection: ->{ EngineeringCustomer.all }
+          f.input :engineering_corp, collection: ->{ EngineeringCorp.all }
           f.input :name, as: :string
           f.input :start_date, as: :datepicker
           f.input :project_start_date, as: :datepicker
@@ -101,7 +101,7 @@ ActiveAdmin.register EngineeringProject do
           f.input :admin_amount, as: :number
           f.input :proof, as: :string
           f.input :already_sign_dispatch, as: :boolean
-          f.input :status, as: :radio, collection: EngineeringProject.statuses_option
+          f.input :status, as: :radio, collection: ->{ EngineeringProject.statuses_option }
           f.input :remark, as: :text
         end
       end
@@ -152,9 +152,9 @@ ActiveAdmin.register EngineeringProject do
             end
           end
 
-          boolean_columns = EngineeringProject.columns_of(:boolean)
+          boolean_columns = resource.class.columns_of(:boolean)
           (
-            EngineeringProject.ordered_columns(without_foreign_keys: true) \
+            resource.class.ordered_columns(without_foreign_keys: true) \
             - [:id, :name, :income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
           ).map(&:to_sym).map do |field|
             if boolean_columns.include? field
@@ -261,7 +261,7 @@ ActiveAdmin.register EngineeringProject do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: EngineeringProject.batch_form_fields do |ids|
+  batch_action :batch_edit, form: ->{ EngineeringProject.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|

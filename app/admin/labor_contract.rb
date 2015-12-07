@@ -9,7 +9,7 @@ ActiveAdmin.register LaborContract do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 2
 
-  permit_params *LaborContract.ordered_columns(without_base_keys: true, without_foreign_keys: true)
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
   index do
     selectable_column
@@ -19,7 +19,7 @@ ActiveAdmin.register LaborContract do
     column :sub_company, sortable: :sub_company_id
     column :normal_corporation, sortable: :normal_corporation_id
 
-    (LaborContract.ordered_columns.map(&:to_sym) - [:id, :normal_staff_id, :normal_corporation_id, :sub_company_id]).map do |field|
+    (resource_class.ordered_columns.map(&:to_sym) - [:id, :normal_staff_id, :normal_corporation_id, :sub_company_id]).map do |field|
       if field == :contract_type
         column :contract_type do |obj|
           obj.contract_type_i18n
@@ -33,11 +33,11 @@ ActiveAdmin.register LaborContract do
   end
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :in_contract, as: :boolean
-      f.input :contract_type, as: :radio, collection: LaborContract.contract_types_option
+      f.input :contract_type, as: :radio, collection: ->{ LaborContract.contract_types_option }
       f.input :contract_start_date, as: :datepicker
       f.input :contract_end_date, as: :datepicker
       f.input :arrive_current_company_at, as: :datepicker
@@ -69,8 +69,8 @@ ActiveAdmin.register LaborContract do
 
   show do
     attributes_table do
-      boolean_columns = LaborContract.columns_of(:boolean)
-      LaborContract.ordered_columns.map(&:to_sym).map do |field|
+      boolean_columns = resource.class.columns_of(:boolean)
+      resource.class.ordered_columns.map(&:to_sym).map do |field|
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
         else

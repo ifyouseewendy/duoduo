@@ -37,10 +37,10 @@ ActiveAdmin.register SubCompany do
     end
   end
 
-  permit_params *SubCompany.ordered_columns(without_base_keys: true, without_foreign_keys: true)
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :name, as: :string
@@ -51,9 +51,9 @@ ActiveAdmin.register SubCompany do
   end
 
   show do
-    boolean_columns = SubCompany.columns_of(:boolean)
+    boolean_columns = resource.class.columns_of(:boolean)
     attributes_table do
-      SubCompany.ordered_columns.map(&:to_sym).map do |field|
+      resource.class.ordered_columns.map(&:to_sym).map do |field|
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
         else

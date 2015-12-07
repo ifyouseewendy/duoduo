@@ -5,7 +5,7 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
 
   breadcrumb do
     if params['q'].present?
-      st = EngineeringSalaryTable.find(params['q']['salary_table_id_eq'])
+      st = ->{ EngineeringSalaryTable.find(params['q']['salary_table_id_eq']) }.call
       [
         link_to(st.engineering_project.name, engineering_project_path(st.engineering_project) ),
         link_to(st.name, engineering_salary_table_path(st) )
@@ -23,7 +23,7 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
       staff = obj.engineering_staff
       link_to staff.name, engineering_staff_path(staff)
     end
-    (EngineeringNormalSalaryItem.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
+    (resource_class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
       column field
     end
 
@@ -33,10 +33,10 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   preserve_default_filters!
   remove_filter :engineering_staff
 
-  permit_params *EngineeringNormalSalaryItem.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :social_insurance, as: :number
@@ -63,7 +63,7 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
         pr = obj.salary_table.engineering_project
         link_to pr.name, engineering_project_path(pr)
       end
-      (EngineeringNormalSalaryItem.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
+      (resource.class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
         row field
       end
     end
@@ -71,7 +71,7 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: EngineeringNormalSalaryItem.batch_form_fields do |ids|
+  batch_action :batch_edit, form: ->{ EngineeringNormalSalaryItem.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     batch_action_collection.find(ids).each do |obj|

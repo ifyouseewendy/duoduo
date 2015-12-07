@@ -27,7 +27,7 @@ ActiveAdmin.register Project do
 
   index do
     selectable_column
-    Project.ordered_columns.map{|field| column field}
+    resource_class.ordered_columns.map{|field| column field}
     actions
   end
 

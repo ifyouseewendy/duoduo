@@ -8,7 +8,7 @@ ActiveAdmin.register EngineeringCompanyMedicalInsuranceAmount do
   config.filters = false
   config.sort_order = 'id_asc'
 
-  permit_params -> { @resource.ordered_columns }
+  permit_params ->{ @resource.ordered_columns }
 
   index download_links: false do
     resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true).map do |field|

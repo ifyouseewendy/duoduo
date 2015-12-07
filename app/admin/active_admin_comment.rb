@@ -1,5 +1,5 @@
 ActiveAdmin.register ActiveAdmin::Comment, :as => "Comment" do
-  permit_params *ActiveAdmin::Comment.column_names
+  permit_params ->{ @resource.column_names }
 
   config.per_page = 30
 

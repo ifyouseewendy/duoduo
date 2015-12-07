@@ -59,16 +59,16 @@ ActiveAdmin.register EngineeringSalaryTable do
   preserve_default_filters!
   remove_filter :reference
 
-  permit_params *EngineeringSalaryTable.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :engineering_project, collection: EngineeringProject.all
+      f.input :engineering_project, collection: ->{ EngineeringProject.all }
       f.input :name, as: :string
       if request.url.split('/')[-1] == 'new'
-        f.input :type, as: :radio, collection: EngineeringSalaryTable.types.map{|k| [k.model_name.human, k.to_s]}
+        f.input :type, as: :radio, collection: ->{ EngineeringSalaryTable.types.map{|k| [k.model_name.human, k.to_s]} }
       end
       if resource.type == 'EngineeringBigTableSalaryTable'
         f.input :url, as: :string
