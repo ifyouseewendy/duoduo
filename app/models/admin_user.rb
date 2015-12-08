@@ -13,6 +13,7 @@ class AdminUser < ActiveRecord::Base
   ]
   enum status: [:active, :locked]
 
+  scope :super_admin, -> { where(role: 'is_super_admin') }
   scope :finance, -> { where(role: finance_enum_ids) }
   scope :business, -> { where(role: business_enum_ids) }
 

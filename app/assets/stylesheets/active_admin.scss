@@ -66,3 +66,11 @@
     border-top-left-radius: 10px;
   }
 }
+
+.pa-content {
+  box-sizing: border-box;
+  padding: 10px;
+  border-bottom: solid 1px #cdcdcd;
+  height: 50px;
+  line-height: 30px;
+}

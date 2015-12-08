@@ -1,4 +1,8 @@
 zh-CN:
+  activity:
+    create: '创建了'
+    update: '更新了'
+    destroy: '删除了'
   misc:
     import_demo:
       name: "导入文件示例"

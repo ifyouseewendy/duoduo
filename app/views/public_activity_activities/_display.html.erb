@@ -1,0 +1,24 @@
+<section class='pa-content'>
+  <% owner = activity.owner %>
+  <% if activity.trackable %>
+    <% object = activity.trackable %>
+    <% opt = activity.key.split('.').last %>
+    <div>
+      <% if opt == 'create' %>
+        <%= fa_icon "plus fw" %>
+      <% else %>
+        <%= fa_icon "pencil fw" %>
+      <% end %>
+      <strong><%= link_to(owner.name, admin_user_path(owner)) %></strong>
+      <%= t("activity.#{opt}") %>
+      <%= link_to(object.name, '#') %>
+    </div>
+  <% else %>
+    <% opt = :destroy %>
+    <%= fa_icon "trash fw" %>
+    <strong><%= link_to(owner.name, admin_user_path(owner)) %></strong>
+    <%= t("activity.#{opt}") %>
+    <%= link_to('未知', '#') %>
+
+  <% end %>
+</section>
