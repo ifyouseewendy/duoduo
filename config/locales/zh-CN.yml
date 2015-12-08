@@ -61,6 +61,7 @@ zh-CN:
       comment: '备注'
       seal_table: '刻章表'
       seal_item: '刻章条目'
+      public_activity/activity: '操作历史'
     attributes:
       normal_corporation:
         id: '编号'
