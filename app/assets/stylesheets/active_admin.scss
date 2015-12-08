@@ -72,5 +72,11 @@
   padding: 10px;
   border-bottom: solid 1px #cdcdcd;
   height: 50px;
+  width: 60%;
   line-height: 30px;
+
+  .time-ago {
+    font-size: 80%;
+    font-style: italic;
+  }
 }
