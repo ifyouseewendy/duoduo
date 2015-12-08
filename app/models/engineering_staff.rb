@@ -15,6 +15,8 @@ class EngineeringStaff < ActiveRecord::Base
 
   before_save :revise_fields
 
+  validates_uniqueness_of :identity_card
+
   class << self
     def policy_class
       EngineeringPolicy
