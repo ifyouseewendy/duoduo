@@ -653,5 +653,10 @@ zh-CN:
         seal_table_id: '所属刻章表'
         created_at: "创建时间"
         updated_at: "更新时间"
-
+      public_activity/activity:
+        id: '编号'
+        owner_id: '操作人'
+        trackable_type: '操作对象类型'
+        key_cont: '操作'
+        created_at: "发生时间"
 
