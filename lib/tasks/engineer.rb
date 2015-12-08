@@ -141,20 +141,24 @@ class Engineer < DuoduoCli
 
         next if _id.nil?
 
-        gender_map = {'男' => :male, '女' => :female}
+        gender_map = {'男' => 0, '女' => 1}
 
-        staff = customer.engineering_staffs.where(name: name).first
-        next if staff.present? && staff.identity_card.present? && remark.blank?
+        begin
+          staff = customer.engineering_staffs.where(name: name).first
+          next if staff.present? && staff.identity_card.present? && remark.blank?
 
-        staff ||= EngineeringStaff.create!(
-          engineering_customer: customer,
-          name: name,
-          gender: gender_map[gender],
-          identity_card: identity_card
-        )
-        staff.identity_card = identity_card if staff.identity_card.blank?
-        staff.remark = remark
-        staff.save!
+          staff ||= EngineeringStaff.create!(
+            engineering_customer: customer,
+            name: name,
+            gender: gender_map[gender],
+            identity_card: identity_card
+          )
+          staff.identity_card = identity_card if staff.identity_card.blank?
+          staff.remark = remark
+          staff.save!
+        rescue => e
+          logger.info "----- #{e.message} #{name}"
+        end
       end
     end
 
@@ -416,14 +420,18 @@ class Engineer < DuoduoCli
         _id, name, gender, identity_card = data.map{|col| String === col ? col.strip : col}
         next if _id.nil?
 
-        gender_map = {'男' => :male, '女' => :female}
-        staff = EngineeringStaff.find_or_create_by!(
-          engineering_customer: project.engineering_customer,
-          name: name.delete(' '),
-          gender: gender_map[gender],
-          identity_card: identity_card
-        )
-        staff.engineering_projects << project
+        begin
+          gender_map = {'男' => 0, '女' => 1}
+          staff = EngineeringStaff.find_or_create_by!(
+            engineering_customer: project.engineering_customer,
+            name: name.delete(' '),
+            gender: gender_map[gender],
+            identity_card: identity_card
+          )
+          staff.engineering_projects << project
+        rescue => e
+          logger.info "----- #{e.message} #{name}"
+        end
       end
     end
 
