@@ -122,6 +122,7 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     devise-i18n (0.12.1)
+    doc_ripper (0.0.5)
     dotenv (2.0.2)
     dotenv-rails (2.0.2)
       dotenv (= 2.0.2)
@@ -359,6 +360,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   devise
   devise-i18n
+  doc_ripper
   dotenv-rails
   draper
   font-awesome-rails

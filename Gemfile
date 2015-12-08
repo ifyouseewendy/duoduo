@@ -108,6 +108,9 @@ group :development, :test do
   gem 'spring'
 
   gem "pry-byebug"
+
+  # Read .doc when importing
+  gem 'doc_ripper'
 end
 
 group :production do
