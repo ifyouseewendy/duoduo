@@ -361,6 +361,7 @@ DEPENDENCIES
   devise-i18n
   dotenv-rails
   draper
+  font-awesome-rails
   goldiloader
   jbuilder (~> 2.0)
   jia
