@@ -1,39 +1,16 @@
 require_relative 'duoduo_cli'
 
 class Engineer < DuoduoCli
-  attr_reader :logger
-
-  class << self
-    # Use class instance variable to share betwen import and engineer
-    attr_reader :current_path
-
-    def init_current_path(path)
-      @current_path = [path]
-    end
-
-    def join_current_path
-      " | #{File.join(*current_path)}"
-    end
-  end
-
-  desc "base", ''
-  def base
-    load_rails
-    init_logger
-
-    clean_db
-
-    seed_admin_user
-    seed_sub_companies
-  end
+  attr_reader :logger, :customer_dir, :customer, :project_info, :project_info_xlsx, :projects
 
   desc "batch_start", ''
   option :from, required: true
   def batch_start
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
-    # load_rails
-    base
+    load_rails
+    init_logger
+    clean_db(:engineer)
 
     logger.info "[#{Time.now}] Import start"
 
@@ -55,76 +32,30 @@ class Engineer < DuoduoCli
   LONGDESC
   option :from, required: true
   def start
-    fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
-
-    load_rails unless defined? Rails
-
+    load_rails
+    clean_db(:engineer)
     init_logger
-    logger.level = Logger::ERROR
-    customer_dir = Pathname(options[:from])
+    logger.level = Logger::DEBUG
+
+    logger.info "[#{Time.now}] Import start"
+
+    set_customer_dir load_from(options[:from])
     logger.info "- #{customer_dir.basename}"
 
-    init_current_path customer_dir
-    logger.error "--> #{customer_dir.basename}"
-
-    # 客户
-    customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
-
     # 信息汇总
-    projects = handling_project_info_files(dir: customer_dir, customer: customer)
+    set_projects process_project_infos
 
     # 项目
-    customer_dir.entries.sort.each do |pn|
-      next if skip_files.any?{|f| pn.to_s.start_with?(f)} \
-        or special_files.any?{|f| pn.to_s =~ /#{f}/}
-
-      logger.info "--- #{pn}"
-      current_path.push(pn)
-
-      id, _name = pn.to_s.split('、')
-      project = projects[id.to_i]
-
-      if project.nil?
-        logger.info "----- 特例跳过"
-        current_path.pop
-        next
-      end
-
-      # 用工明细
-      handling_project_staff(dir: customer_dir.join(pn), project: project)
-
-      # 合同、协议、工资表
-      customer_dir.join(pn).entries.each do |file|
-        next if skip_files.any?{|f| file.to_s.start_with?(f)} or file.to_s =~ /用工/ or file.to_s =~ /明细表/
-        logger.info "----- #{file.to_s}"
-
-        current_path.push file
-
-        path = customer_dir.join(pn).join(file)
-
-        if file.to_s =~ /合同/
-          project.add_contract_file(path: path, role: :normal)
-        elsif file.to_s =~ /协议/
-          project.add_contract_file(path: path, role: :proxy)
-        elsif file.to_s =~ /工资/
-          handling_salary_table(path: path, project: project, type: :normal)
-        else
-          logger.error "xxxxx 无法解析文件: #{join_current_path}"
-        end
-
-        current_path.pop
-      end
-
-      current_path.pop
-    end
+    iterate_projects
 
     # 提供人员
-    handling_staff_dirs(dir: customer_dir, customer: customer)
+    process_provide_staff_dir
   end
 
   private
 
-    def get_sub_company_by(name:)
+    def find_sub_company_by(name:)
+      name = name.to_s
       if name.index('东方')
         SubCompany.query_name('东方').first
       elsif name.index('人力分')
@@ -132,65 +63,17 @@ class Engineer < DuoduoCli
       elsif name.index('人力')
         SubCompany.where(name: '吉易人力资源').first
       else
-        logger.error "xxx 无法解析子公司名称: #{name} #{join_current_path}"
+        logger.debug "xxx 无法解析子公司名称: #{name}"
         nil
       end
     end
 
-    def load_rails
-      puts "==> Loading Rails"
-      require File.expand_path('config/environment.rb')
-    end
-
-    def clean_db
-      puts "==> Cleaning DB data"
-      [
-        LaborContract,
-        SalaryItem, Invoice, SalaryTable,
-        GuardSalaryItem, GuardSalaryTable,
-        NonFullDaySalaryItem, NonFullDaySalaryTable,
-        NormalStaff, NormalCorporation,
-        ContractFile, SubCompany,
-        InsuranceFundRate, IndividualIncomeTaxBase, IndividualIncomeTax,
-        EngineeringSalaryTable,
-        EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
-        EngineeringCompanySocialInsuranceAmount, EngineeringCompanyMedicalInsuranceAmount
-      ].each(&:destroy_all)
-    end
-
-    def seed_admin_user
-      if AdminUser.where(email: 'admin').first.nil?
-        au = AdminUser.new(email: 'admin', password: '123123', password_confirmation: '123123')
-        au.save(validate: false)
-      end
-    end
-
-    def seed_sub_companies
-      puts "==> Preparing SubCompany"
-      Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
-        has_engineering_relation = (name =~ /人力/ ? true : false)
-        sc = SubCompany.create(name: name, has_engineering_relation: has_engineering_relation)
-
-        # TODO
-        #   - Set contract and template files
-        # (1..2).each_with_object([]) do |idx, ar|
-        #   if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
-        #     contract = "tmp/#{name}.合同#{idx}.txt"
-        #     sc.contract_files.create(contract: File.open(contract) )
-        #     sc.add_file(contract, template: true)
-        #   end
-        # end
-
-        companies << sc
-      end
-    end
-
     def parse_project_dates(str)
-      fail "xxxxx 无法解析工程日期: #{str} #{join_current_path}" if str.split('-').count > 2
+      fail "xxxxx 无法解析工程日期: #{str} #{project_info}" if str.split('-').count > 2
 
       start_date, end_date = str.split('-')
 
-      start_date = revise_date start_date
+      start_date = revise_project_date start_date
 
       if end_date.nil?
         end_date = start_date.end_of_month
@@ -219,7 +102,7 @@ class Engineer < DuoduoCli
           parts.unshift year
           parts.push '1'
         else
-          fail "xxxxx 无法解析工程结束日期：#{end_date} #{join_current_path}"
+          fail "xxxxx 无法解析工程结束日期：#{end_date} #{project_info}"
         end
 
         end_date = Date.parse parts.join('.')
@@ -230,83 +113,161 @@ class Engineer < DuoduoCli
     end
 
     # 2015.4
-    def revise_date(date)
+    def revise_project_date(date)
       parts = date.split('.')
       parts << '1' if parts.count == 2
 
       begin
         Date.parse parts.join('.')
       rescue => e
-        logger.error "xxxxx 无法解析工程开始日期：#{date} #{join_current_path}"
+        logger.debug "xxxxx 无法解析工程开始日期：#{date} #{project_info}"
         raise e
       end
     end
 
-    # 处理信息汇总
-    def handling_project_info(file:, customer:)
-      logger.info "--- #{file.basename}"
+    def split_by_comma(string)
+      string.to_s.split(',').map(&:strip)
+    end
 
-      sc = get_sub_company_by(name: file.basename.to_s)
+    def process_provide_staff_file(file)
+      logger.info "----- #{file.basename}"
+
+      xlsx = Roo::Spreadsheet.open(file.to_s)
+      sheet = xlsx.sheet(0).to_a
+
+      sheet[2..-1].each do |data|
+        _id, name, gender, identity_card, remark = \
+          data.map{|col| String === col ? col.strip : col}
+
+        next if _id.nil?
+
+        gender_map = {'男' => :male, '女' => :female}
+
+        staff = customer.engineering_staffs.where(name: name).first
+        next if staff.present? && staff.identity_card.present? && remark.blank?
+
+        staff ||= EngineeringStaff.create!(
+          engineering_customer: customer,
+          name: name,
+          gender: gender_map[gender],
+          identity_card: identity_card
+        )
+        staff.identity_card = identity_card if staff.identity_card.blank?
+        staff.remark = remark
+        staff.save!
+      end
+    end
+
+    def process_provide_staff_dir
+      staff_dir = customer_dir.entries.detect{|dir| dir.to_s =~ /提供人员/ && !dir.to_s.start_with?('__')}
+      return if staff_dir.blank?
+      logger.info "--- #{staff_dir}"
+
+      staff_dir = customer_dir.join(staff_dir)
+      staff_dir.entries.each do |list|
+        next if list.to_s.start_with?('.')
+
+        process_provide_staff_file(staff_dir.join(list))
+      end
+    end
+
+    def special_files
+      @_special_files ||= %w(信息汇总 提供人员)
+    end
+
+    def skip_files
+      @_skip_files ||= %w(. __ ~)
+    end
+
+    def init_current_path(path)
+      self.class.init_current_path(path)
+    end
+
+    def current_path
+      self.class.current_path
+    end
+
+    def set_customer_dir(path)
+      @customer_dir = path
+      set_customer
+    end
+
+    def set_customer
+      @customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
+    end
+
+    def process_project_infos
+      files = get_project_info_files
+
+      logger.debug "xxx 没有信息汇总 #{customer_dir}" and return \
+        if files.blank?
+
+      files.reduce({}) do |ha, file|
+        set_project_info(file)
+        stats = process_project_info
+        ha.merge!(stats)
+      end
+    end
+
+    def set_project_info(file)
+      @project_info = file
+    end
+
+    def get_project_info_files
+      customer_dir.entries
+        .select{|pn| pn.to_s =~ /信息汇总/ }
+        .map{|pn| customer_dir.join(pn)}
+    end
+
+    def process_project_info
+      logger.info "--- #{project_info.basename}"
+
+      sc = find_sub_company_by(name: project_info.basename.to_s)
       return if sc.nil?
 
+      add_sub_company_to_customer(sc)
+
+      set_project_info_xlsx
+      process_project_info_xlsx
+    end
+
+    def add_sub_company_to_customer(sc)
       customer.sub_companies << sc
+    end
 
-      xlsx_name = file.to_s
-      xlsx = Roo::Spreadsheet.open(xlsx_name)
-      sheet_id = 0
-      sheet = xlsx.sheet(sheet_id)
+    def set_project_info_xlsx
+      @project_info_xlsx = Roo::Spreadsheet.open(project_info.to_s)
+    end
 
-      last_row = sheet.last_row
-      col_count = sheet.row(2).compact.count
+    def process_project_info_xlsx
+      sheet = project_info_xlsx.sheet(0).to_a
+
+      column_count = sheet[1].compact.count
+
       projects = {}
-      (3..last_row).each do |row_id|
-        data = sheet.row(row_id)
+      sheet[2..-1].each do |data|
         next if data[0].nil?
+
         if data[0] == '合计'
-          data = data.compact
-          if col_count == 16
-            data = data[3..-1]
-          elsif col_count == 14
-            data = data[1..-1]
-          end
-
-          total = {
-            project_amount: data[0].to_f.round(2),
-            admin_amount: data[1].to_f.round(2),
-            total_amount: data[2].to_f.round(2),
-          }
-          total_i18n = {
-            project_amount: '劳务费',
-            admin_amount: '管理费',
-            total_amount: '费用合计',
-            outcome_amount: '回款合计'
-          }
-          total.each do |k,v|
-            logger.error "xxxxx 校验失败: #{total_i18n[k]} #{total[k]} #{join_current_path}" unless total[k] == projects.values.map(&k).map(&:to_f).sum.round(2)
-          end
-
-          outcome_amount = data[-1]
-          outcome_amount = outcome_amount.to_f.round(2)
-          logger.error "xxxxx 校验失败: #{total_i18n[:outcome_amount]} #{outcome_amount} #{join_current_path}" unless outcome_amount == projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum.to_f.round(2)
-
+          parse_project_info_summary(projects, data, column_count)
           break
         end
 
-        if col_count == 16
+        if column_count == 16
           id, start_date, project_dates, name, _project_amount, _admin_amount, project_amount, admin_amount, total_amount, income_date, income_amount, outcome_date, outcome_referee, outcome_amount, proof, remark = \
-            sheet.row(row_id).map{|col| String === col ? col.strip : col}
-        elsif col_count == 14
+            data.map{|col| String === col ? col.strip : col}
+        elsif column_count == 14
           id, start_date, project_dates, name, project_amount, admin_amount, total_amount, income_date, income_amount, outcome_date, outcome_referee, outcome_amount, proof, remark = \
-            sheet.row(row_id).map{|col| String === col ? col.strip : col}
+            data.map{|col| String === col ? col.strip : col}
         else
-          logger.error "xxxxx 无法解析信息汇总：错误的列数 #{col_count} #{join_current_path}"
+          logger.debug "无法解析信息汇总：错误的列数 #{column_count} #{project_info}"
           break
         end
 
         begin
           project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
-        rescue => e
-          logger.error e.message
+        rescue => _
+          logger.debug "无法解析工程起止日期：#{project_dates} #{project_info}"
           next
         end
 
@@ -342,7 +303,8 @@ class Engineer < DuoduoCli
           end
         end
 
-        logger.error "xxx 校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i} #{join_current_path}" if project.total_amount.to_f.round(2) != total_amount.to_f.round(2)
+        logger.debug "校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i} #{project_info}"\
+          unless equal_value?(project.total_amount, total_amount)
 
         projects[id.to_i] = project
       end
@@ -350,16 +312,108 @@ class Engineer < DuoduoCli
       projects
     end
 
-    def handling_staff(path: , project:)
-      xlsx_name = path.to_s
-      xlsx = Roo::Spreadsheet.open(xlsx_name)
-      sheet_id = 0
-      sheet = xlsx.sheet(sheet_id)
+    def parse_project_info_summary(projects, data, column_count)
+      data = data.compact
+      if column_count == 16
+        data = data[3..-1]
+      elsif column_count == 14
+        data = data[1..-1]
+      end
 
-      last_row = sheet.last_row
+      total = {
+        project_amount: data[0],
+        admin_amount: data[1],
+        total_amount: data[2],
+        outcome_amount: data[-1]
+      }
+      total_i18n = {
+        project_amount: '劳务费',
+        admin_amount: '管理费',
+        total_amount: '费用合计',
+        outcome_amount: '回款合计'
+      }
+      total.each do |k,v|
+        if k == :outcome_amount
+          logger.debug "xxxxx 校验失败: #{total_i18n[k]} #{v} #{project_info}" \
+            unless equal_value?(v, projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum)
+        else
+          logger.debug "xxxxx 校验失败: #{total_i18n[k]} #{v} #{project_info}" \
+            unless equal_value?(v, projects.values.map(&k).map(&:to_f).sum)
+        end
+      end
+    end
 
-      (3..last_row).each do |row_id|
-        _id, name, gender, identity_card = sheet.row(row_id).map{|col| String === col ? col.strip : col}
+    def equal_value?(a,b)
+      a.to_f.round(2) == b.to_f.round(2)
+    end
+
+    def skip_file?(pn)
+      skip_files.any?{|f| pn.to_s.start_with?(f)}
+    end
+    def special_file?(pn)
+      special_files.any?{|f| pn.to_s =~ /#{f}/}
+    end
+
+    def set_projects(ary)
+      @projects = ary
+    end
+
+    def iterate_projects
+      customer_dir.entries.sort.each do |pn|
+        next if skip_file?(pn) or special_file?(pn)
+
+        logger.info "--- #{pn}"
+
+        id, _name = pn.to_s.split('、')
+        project = projects[id.to_i]
+
+        logger.info "----- 特例跳过" and next if project.blank?
+
+        dir = customer_dir.join(pn)
+
+        staff_files    = find_in_project_dir(dir: dir, type: :staff)
+        contract_files = find_in_project_dir(dir: dir, type: :contract)
+        proxy_files    = find_in_project_dir(dir: dir, type: :proxy)
+        salary_files   = find_in_project_dir(dir: dir, type: :salary)
+
+        process_staff_files(staff_files, project)
+        process_contract_files(contract_files, project)
+        process_proxy_files(proxy_files, project)
+        process_salary_files(salary_files, project)
+      end
+    end
+
+    def find_in_project_dir(dir:, type:)
+      files = \
+        case type.to_sym
+        when :staff
+          dir.entries.select{|file| file.to_s =~ /用工/ or file.to_s =~ /明细表/ }
+        when :contract
+          dir.entries.select{|file| file.to_s =~ /合同/}
+        when :proxy
+          dir.entries.select{|file| file.to_s =~ /协议/}
+        when :salary
+          dir.entries.select{|file| file.to_s =~ /工资/}
+        else
+          logger.debug "xxxxx 无法解析文件: #{dir}"
+          return
+        end
+      files.map{|f| dir.join(f)}
+    end
+
+    def process_staff_files(files, project)
+      files.each do |file|
+        logger.info "----- #{file.basename}"
+        process_staff_file(file, project)
+      end
+    end
+
+    def process_staff_file(file, project)
+      xlsx = Roo::Spreadsheet.open(file.to_s)
+      sheet = xlsx.sheet(0).to_a
+
+      sheet[2..-1].each do |data|
+        _id, name, gender, identity_card = data.map{|col| String === col ? col.strip : col}
         next if _id.nil?
 
         gender_map = {'男' => :male, '女' => :female}
@@ -373,7 +427,28 @@ class Engineer < DuoduoCli
       end
     end
 
-    def handling_salary_table(path:, project:, type:)
+    def process_contract_files(files, project)
+      files.each do |file|
+        logger.info "----- #{file.basename}"
+        project.add_contract_file(path: file, role: :normal)
+      end
+    end
+
+    def process_proxy_files(files, project)
+      files.each do |file|
+        logger.info "----- #{file.basename}"
+        project.add_contract_file(path: file, role: :proxy)
+      end
+    end
+
+    def process_salary_files(files, project)
+      files.each do |file|
+        logger.info "----- #{file.basename}"
+        process_salary_file(path: file, project: project, type: :normal)
+      end
+    end
+
+    def process_salary_file(path:, project:, type:)
       type = case type
              when :with_tax
                'EngineeringNormalWithTaxSalaryTable'
@@ -396,19 +471,19 @@ class Engineer < DuoduoCli
         parts << '1' if parts.count == 2
 
         if parts.count != 3
-          logger.error "xxxxxxx 无法解析工资表表单名：#{sheet_name} #{join_current_path}"
+          logger.debug "xxxxxxx 无法解析工资表表单名：#{sheet_name} #{path}"
           next
         end
 
         begin
           date = Date.parse parts.join('.')
         rescue => _
-          logger.error "xxxxxxx 无法解析工资表表单名：#{sheet_name} #{join_current_path}"
+          logger.debug "xxxxxxx 无法解析工资表表单名：#{sheet_name} #{path}"
           next
         end
         name = "#{date.year}年#{date.month}月"
 
-        logger.error "xxxxxxx 工资表日期不在工程日期内: #{sheet_name} #{join_current_path}" \
+        logger.debug "xxxxxxx 工资表日期不在工程日期内: #{sheet_name} #{path}" \
           unless date >= project.range[0].beginning_of_month && date <= project.range[1].end_of_month
 
         if sheet.row(3).compact.count == 1
@@ -418,7 +493,7 @@ class Engineer < DuoduoCli
         elsif sheet.row(1).compact.count == 1
           start_row = 3
         else
-          logger.error "xxxxxxx 无法解析工资表：#{sheet_name} #{join_current_path}"
+          logger.debug "xxxxxxx 无法解析工资表：#{sheet_name} #{path}"
           next
         end
 
@@ -462,7 +537,7 @@ class Engineer < DuoduoCli
             elsif col_count >= 15
               # TODO 待处理工程大表导入
             else
-              logger.error "xxxxxxx 无法解析工资表，错误的列数 #{col_count}： #{join_current_path}"
+              logger.debug "xxxxxxx 无法解析工资表，错误的列数 #{col_count}： #{path}"
               next
             end
 
@@ -473,7 +548,7 @@ class Engineer < DuoduoCli
             }
 
             total.each do |k,v|
-              logger.error "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f} #{join_current_path}" \
+              logger.debug "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f} #{path}" \
                 unless total[k].to_f.round(2) == items.values.map(&k).map(&:to_f).sum.round(2)
             end
 
@@ -495,7 +570,7 @@ class Engineer < DuoduoCli
             logger.info "xxxxxxx 待处理大表"
             break
           else
-            logger.error "xxxxxxx 无法解析工资表，错误的列数 #{col_count}: #{sheet_name} #{join_current_path}"
+            logger.debug "xxxxxxx 无法解析工资表，错误的列数 #{col_count}: #{sheet_name} #{path}"
             next
           end
 
@@ -504,7 +579,7 @@ class Engineer < DuoduoCli
           name = name.delete(' ')
           staff = project.engineering_staffs.where(name: name).first
           if staff.nil?
-            logger.error "xxxxxxx 未找到员工: #{name} #{join_current_path}"
+            logger.debug "xxxxxxx 未找到员工: #{name} #{path}"
             next
           end
 
@@ -530,109 +605,6 @@ class Engineer < DuoduoCli
           items[id.to_i] = item
         end
       end
-    end
-
-    def split_by_comma(string)
-      string.to_s.split(',').map(&:strip)
-    end
-
-    def handling_project_staff_list(file:, customer:)
-      logger.info "----- #{file.basename}"
-
-      xlsx_name = file.to_s
-      xlsx = Roo::Spreadsheet.open(xlsx_name)
-      sheet_id = 0
-      sheet = xlsx.sheet(sheet_id)
-
-      last_row = sheet.last_row
-      (3..last_row).each do |row_id|
-        _id, name, gender, identity_card, remark = \
-          sheet.row(row_id).map{|col| String === col ? col.strip : col}
-
-        next if _id.nil?
-
-        gender_map = {'男' => :male, '女' => :female}
-
-        staff = customer.engineering_staffs.where(name: name).first
-        next if staff.present? && staff.identity_card.present? && remark.blank?
-
-        staff ||= EngineeringStaff.create!(
-          engineering_customer: customer,
-          name: name,
-          gender: gender_map[gender],
-          identity_card: identity_card
-        )
-        staff.identity_card = identity_card if staff.identity_card.blank?
-        staff.remark = remark
-        staff.save!
-      end
-    end
-
-    def handling_project_info_files(dir:, customer:)
-      infos = dir.entries.select{|pn| pn.to_s =~ /信息汇总/ }
-      if infos.blank?
-        logger.error "xxx 没有信息汇总 #{join_current_path}"
-        return
-      end
-
-      projects = {}
-      infos.each do |info|
-        current_path.push info
-
-        stats = handling_project_info(file: dir.join(info), customer: customer)
-        projects.merge!(stats)
-
-        current_path.pop
-      end
-
-      projects
-    end
-
-    def handling_project_staff(dir:, project:)
-      staff_file = dir.entries.detect{|file| file.to_s =~ /用工/ or file.to_s =~ /明细表/ }
-      return if staff_file.nil?
-
-      logger.info "----- #{staff_file.to_s}"
-
-      current_path.push(staff_file)
-      handling_staff(path: dir.join(staff_file), project: project)
-      current_path.pop
-    end
-
-    def handling_staff_dirs(dir:, customer:)
-      staff_dir = dir.entries.detect{|dir| dir.to_s =~ /提供人员/ && !dir.to_s.start_with?('__')}
-      return unless staff_dir.present?
-
-      logger.info "--- #{staff_dir}"
-      dir.join(staff_dir).entries.each do |list|
-        next if list.to_s.start_with?('.')
-
-        handling_project_staff_list(file: dir.join(staff_dir).join(list), customer: customer)
-      end
-    end
-
-    def special_files
-      @_special_files ||= %w(信息汇总 提供人员)
-    end
-
-    def skip_files
-      @_skip_files ||= %w(. __ ~)
-    end
-
-    def init_logger
-      @logger = ActiveSupport::Logger.new('log/import.log')
-    end
-
-    def init_current_path(path)
-      self.class.init_current_path(path)
-    end
-
-    def join_current_path
-      self.class.join_current_path
-    end
-
-    def current_path
-      self.class.current_path
     end
 end
 
