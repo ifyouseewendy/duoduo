@@ -1,6 +1,10 @@
 class Project < ActiveRecord::Base
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller.try(:current_admin_user) || AdminUser.super_admin.first }
+  tracked \
+    owner: ->(controller, model) { controller.try(:current_admin_user) || AdminUser.super_admin.first },
+    params: {
+      name: ->(controller, model) { model.try(:name) },
+    }
 
   has_many :tickets
   has_many :milestones
