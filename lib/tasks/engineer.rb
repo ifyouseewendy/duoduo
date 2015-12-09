@@ -48,11 +48,11 @@ class Engineer < DuoduoCli
     # 信息汇总
     set_projects process_project_infos
 
-    # 项目
-    iterate_projects
-
     # 提供人员
     process_provide_staff_dir
+
+    # 项目
+    iterate_projects
   end
 
   private
