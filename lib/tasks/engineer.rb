@@ -424,13 +424,23 @@ class Engineer < DuoduoCli
         next if _id.nil?
 
         begin
-          gender_map = {'男' => 0, '女' => 1}
-          staff = EngineeringStaff.find_or_create_by!(
-            engineering_customer: project.engineering_customer,
-            name: name.delete(' '),
-            gender: gender_map[gender],
-            identity_card: identity_card
-          )
+          staff = EngineeringStaff.where(identity_card: identity_card).first
+
+          if staff.present?
+            if staff.name != name.delete(' ')
+              logger.debug "----- 已找到员工（#{staff.name} - #{identity_card}），与文件中提供的名字（#{name.delete(' ')}）不符 #{file}"
+            elsif staff.engineering_customer.id != project.engineering_customer.id
+              logger.debug "----- 已找到员工（#{staff.name} - #{identity_card} - #{staff.engineering_customer.name}），又出现在客户（#{project.engineering_customer.name}）中 #{file}"
+            end
+          else
+            gender_map = {'男' => 0, '女' => 1}
+            staff = EngineeringStaff.create!(
+              engineering_customer: project.engineering_customer,
+              name: name.delete(' '),
+              gender: gender_map[gender],
+              identity_card: identity_card
+            )
+          end
           staff.engineering_projects << project
         rescue => e
           logger.info "----- #{e.message} #{name}"
