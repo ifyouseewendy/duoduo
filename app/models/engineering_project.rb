@@ -188,7 +188,9 @@ class EngineeringProject < ActiveRecord::Base
 
       st = EngineeringNormalSalaryTable.create!(
         engineering_project: self,
-        name: "#{start_date} ~ #{month_end_date}"
+        name: "#{start_date} ~ #{month_end_date}",
+        start_date: start_date,
+        end_date: end_date
       )
 
       staffs.each do |staff|
@@ -265,7 +267,9 @@ class EngineeringProject < ActiveRecord::Base
 
     st = EngineeringNormalWithTaxSalaryTable.create!(
       engineering_project: self,
-      name: "#{range.join(' ~ ')}"
+      name: "#{range.join(' ~ ')}",
+      start_date: start_date,
+      end_date: end_date
     )
 
     stats.each do |stat|
@@ -280,6 +284,8 @@ class EngineeringProject < ActiveRecord::Base
     EngineeringBigTableSalaryTable.create!(
       engineering_project: self,
       name: "#{range.join(' ~ ')}",
+      start_date: start_date,
+      end_date: end_date,
       reference: EngineeringBigTableSalaryTableReference.create!(url: url)
     )
   end
