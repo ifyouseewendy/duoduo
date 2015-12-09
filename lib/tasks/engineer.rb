@@ -438,8 +438,40 @@ class Engineer < DuoduoCli
     def process_contract_files(files, project)
       files.each do |file|
         logger.info "----- #{file.basename}"
+        set_project_date_range(project: project, path: file)
         project.add_contract_file(path: file, role: :normal)
       end
+    end
+
+    def set_project_date_range(project:, path:)
+      DocGenerator::TempPath.execute do |temp_path|
+        FileUtils.cp path, temp_path
+        file = temp_path.join( Pathname.new(path).basename )
+
+        DocRipper::rip(file.to_s) # Generate a file named #{file.basename}.txt
+        txt_file = file.basename.to_s.split('.')[0...-1].push('txt').join('.')
+
+        data = File.read txt_file
+        line = data.delete(' ').split.detect{|str| str =~ /劳动期间/ }
+        parts = line.split(/[自|至|止]/)
+
+        start_date = convert_chinese_date(parts[1])
+        logger.error "----- 无法通过合同判断起始日期：#{start_date} #{path}" if start_date.blank?
+        end_date = convert_chinese_date(parts[2])
+        logger.error "----- 无法通过合同判断终止日期：#{end_date} #{path}" if end_date.blank?
+
+        if project.range != [start_date, end_date]
+          logger.info "----- 解析合同文件，并更新项目起止日期。合同：#{project.range.map(&:to_s).join(' ~ ')}，汇总：#{[start_date, end_date].map(&:to_s).join(' ~ ')}"
+        end
+        project.update_attributes(project_start_date: start_date, project_end_date: end_date)
+      end
+    end
+
+    def convert_chinese_date(date)
+      words = date.split(/[年|月|日]/)
+      return nil unless Date.valid_date?(*words.map(&:to_i))
+
+      Date.parse words.join('.')
     end
 
     def process_proxy_files(files, project)
