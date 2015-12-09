@@ -15,10 +15,10 @@ class Engineer < DuoduoCli
     logger.info "[#{Time.now}] Import start"
 
     dir = Pathname(options[:from])
-    dir.entries.sort.each do |customer|
-      next if skip_files.any?{|f| customer.to_s.start_with?(f)}
+    dir.entries.sort.each do |entry|
+      next if skip_file?(entry)
 
-      self.class.new.invoke('start', [], from: dir.join(customer) )
+      self.class.new.invoke('start', [], from: dir.join(entry), batch: true )
     end
 
     logger.info "[#{Time.now}] Import end"
@@ -31,12 +31,15 @@ class Engineer < DuoduoCli
       ruby lib/tasks/engineer.rb start --from=
   LONGDESC
   option :from, required: true
+  option :batch
   def start
-    load_rails
-    clean_db(:engineer)
+    unless options[:batch]
+      load_rails
+      clean_db(:engineer)
+    end
+
     init_logger
     logger.level = Logger::DEBUG
-
     logger.info "[#{Time.now}] Import start"
 
     set_customer_dir load_from(options[:from])
@@ -449,10 +452,10 @@ class Engineer < DuoduoCli
         file = temp_path.join( Pathname.new(path).basename )
 
         DocRipper::rip(file.to_s) # Generate a file named #{file.basename}.txt
-        txt_file = file.basename.to_s.split('.')[0...-1].push('txt').join('.')
+        txt_file = file.basename.to_s.split('.')[0,1].push('txt').join('.')
 
         data = File.read txt_file
-        line = data.delete(' ').split.detect{|str| str =~ /劳动期间/ }
+        line = data.delete(' ').split.detect{|str| str =~ /[劳动|派遣]期间/  }
         parts = line.split(/[自|至|止]/)
 
         start_date = convert_chinese_date(parts[1])
