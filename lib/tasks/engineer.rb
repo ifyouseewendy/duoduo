@@ -506,6 +506,8 @@ class Engineer < DuoduoCli
       xlsx_name = path.to_s
       xlsx = Roo::Spreadsheet.open(xlsx_name)
 
+      ranges = project.split_range(xlsx.sheets.count)
+
       xlsx.sheets.each_with_index do |sheet_name, sheet_id|
         logger.info "------- Sheet #{sheet_id+1}"
         sheet = xlsx.sheet(sheet_id)
@@ -526,7 +528,7 @@ class Engineer < DuoduoCli
           type = 'EngineeringNormalWithTaxSalaryTable'
         end
 
-        start_date, end_date = project.split_range[sheet_id]
+        start_date, end_date = ranges[sheet_id]
 
         st = EngineeringSalaryTable.create!(
           engineering_project: project,
