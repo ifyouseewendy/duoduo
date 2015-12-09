@@ -39,7 +39,7 @@ class Engineer < DuoduoCli
     end
 
     init_logger
-    logger.level = Logger::DEBUG
+    logger.level = Logger::ERROR
     logger.info "[#{Time.now}] Import start"
 
     set_customer_dir load_from(options[:from])
@@ -66,7 +66,7 @@ class Engineer < DuoduoCli
       elsif name.index('人力')
         SubCompany.where(name: '吉易人力资源').first
       else
-        logger.debug "xxx 无法解析子公司名称: #{name}"
+        logger.error "xxx 无法解析子公司名称: #{name}"
         nil
       end
     end
@@ -123,7 +123,7 @@ class Engineer < DuoduoCli
       begin
         Date.parse parts.join('.')
       rescue => e
-        logger.debug "xxxxx 无法解析工程开始日期：#{date} #{project_info}"
+        logger.error "xxxxx 无法解析工程开始日期：#{date} ; #{project_info}"
         raise e
       end
     end
@@ -151,7 +151,7 @@ class Engineer < DuoduoCli
 
           if staff.present?
             if staff.engineering_customer.id != customer.id
-              logger.debug "----- 员工（#{staff.name} - #{identity_card}）属于客户（#{staff.engineering_customer.name}），又出现在客户（#{customer.name}）的提供人员中 #{file}"
+              logger.error "----- 员工（#{staff.name} - #{identity_card}）属于客户（#{staff.engineering_customer.name}），又出现在客户（#{customer.name}）的提供人员中 ; #{file}"
             end
           else
             staff = EngineeringStaff.create!(
@@ -210,7 +210,7 @@ class Engineer < DuoduoCli
     def process_project_infos
       files = get_project_info_files
 
-      logger.debug "xxx 没有信息汇总 #{customer_dir}" and return \
+      logger.error "xxx 没有信息汇总 ; #{customer_dir}" and return \
         if files.blank?
 
       files.reduce({}) do |ha, file|
@@ -271,14 +271,14 @@ class Engineer < DuoduoCli
           id, start_date, project_dates, name, project_amount, admin_amount, total_amount, income_date, income_amount, outcome_date, outcome_referee, outcome_amount, proof, remark = \
             data.map{|col| String === col ? col.strip : col}
         else
-          logger.debug "无法解析信息汇总：错误的列数 #{column_count} #{project_info}"
+          logger.error "无法解析信息汇总：错误的列数 #{column_count} ; #{project_info}"
           break
         end
 
         begin
           project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
         rescue => _
-          logger.debug "无法解析工程起止日期：#{project_dates} #{project_info}"
+          logger.error "无法解析工程起止日期：#{project_dates} ; #{project_info}"
           next
         end
 
@@ -314,7 +314,7 @@ class Engineer < DuoduoCli
           end
         end
 
-        logger.debug "校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i} #{project_info}"\
+        logger.error "校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i} ; #{project_info}"\
           unless equal_value?(project.total_amount, total_amount)
 
         projects[id.to_i] = project
@@ -345,10 +345,10 @@ class Engineer < DuoduoCli
       }
       total.each do |k,v|
         if k == :outcome_amount
-          logger.debug "xxxxx 校验失败: #{total_i18n[k]} #{v} #{project_info}" \
+          logger.error "xxxxx 校验失败: #{total_i18n[k]} #{v} ; #{project_info}" \
             unless equal_value?(v, projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum)
         else
-          logger.debug "xxxxx 校验失败: #{total_i18n[k]} #{v} #{project_info}" \
+          logger.error "xxxxx 校验失败: #{total_i18n[k]} #{v} ; #{project_info}" \
             unless equal_value?(v, projects.values.map(&k).map(&:to_f).sum)
         end
       end
@@ -406,7 +406,7 @@ class Engineer < DuoduoCli
         when :salary
           dir.entries.select{|file| file.to_s =~ /工资/}
         else
-          logger.debug "xxxxx 无法解析文件: #{dir}"
+          logger.error "xxxxx 无法解析项目内文件 ; #{dir}"
           return
         end
       files.map{|f| dir.join(f)}
@@ -432,15 +432,15 @@ class Engineer < DuoduoCli
 
           if staff.present?
             if staff.name != name.delete(' ')
-              logger.debug "----- 已找到员工（#{staff.name} - #{identity_card}），用工明细中显示为其他姓名（#{name.delete(' ')}） #{file}"
+              logger.error "----- 已找到员工（#{staff.name} - #{identity_card}），用工明细中显示为其他姓名（#{name.delete(' ')}）;  #{file}"
             end
           else
-            logger.debug "----- 员工（#{name.delete(' ')} - #{identity_card}）未在客户（#{customer.name}）的提供人员中出现 #{file}"
+            logger.error "----- 员工（#{name.delete(' ')} - #{identity_card}）未在客户（#{customer.name}）的提供人员中出现 ; #{file}"
 
             staff2 = EngineeringStaff.where(identity_card: identity_card).first
 
             if staff2.present?
-              logger.debug "----- 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}） #{file}"
+              logger.error "----- 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}） ; #{file}"
             else
               gender_map = {'男' => 0, '女' => 1}
               staff = EngineeringStaff.create!(
@@ -479,9 +479,9 @@ class Engineer < DuoduoCli
         parts = line.split(/[自|至|止]/)
 
         start_date = convert_chinese_date(parts[1])
-        logger.error "----- 无法通过合同判断起始日期：#{start_date} #{path}" if start_date.blank?
+        logger.error "----- 无法通过合同判断起始日期：#{start_date} ; #{path}" if start_date.blank?
         end_date = convert_chinese_date(parts[2])
-        logger.error "----- 无法通过合同判断终止日期：#{end_date} #{path}" if end_date.blank?
+        logger.error "----- 无法通过合同判断终止日期：#{end_date} ; #{path}" if end_date.blank?
 
         if project.range != [start_date, end_date]
           logger.info "----- 解析合同文件，并更新项目起止日期。合同：#{project.range.map(&:to_s).join(' ~ ')}，汇总：#{[start_date, end_date].map(&:to_s).join(' ~ ')}"
@@ -539,7 +539,7 @@ class Engineer < DuoduoCli
         elsif sheet.row(1).compact.count == 1
           start_row = 3
         else
-          logger.debug "xxxxxxx 无法解析工资表：#{sheet_name} #{path}"
+          logger.error "xxxxxxx 无法解析工资表：#{sheet_name} ; #{path}"
           next
         end
 
@@ -587,7 +587,7 @@ class Engineer < DuoduoCli
             elsif col_count >= 15
               # TODO 待处理工程大表导入
             else
-              logger.debug "xxxxxxx 无法解析工资表，错误的列数 #{col_count}： #{path}"
+              logger.error "xxxxxxx 无法解析工资表，错误的列数 #{col_count} ; #{path}"
               next
             end
 
@@ -598,7 +598,7 @@ class Engineer < DuoduoCli
             }
 
             total.each do |k,v|
-              logger.debug "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f} #{path}" \
+              logger.error "xxxxxxx 校验失败：#{total_i18n[k]} #{v.to_f} ; #{path}" \
                 unless total[k].to_f.round(2) == items.values.map(&k).map(&:to_f).sum.round(2)
             end
 
@@ -620,7 +620,7 @@ class Engineer < DuoduoCli
             logger.info "xxxxxxx 待处理大表"
             break
           else
-            logger.debug "xxxxxxx 无法解析工资表，错误的列数 #{col_count}: #{sheet_name} #{path}"
+            logger.error "xxxxxxx 无法解析工资表，错误的列数 #{col_count}: #{sheet_name} ; #{path}"
             next
           end
 
@@ -629,7 +629,7 @@ class Engineer < DuoduoCli
           name = name.delete(' ')
           staff = project.engineering_staffs.where(name: name).first
           if staff.nil?
-            logger.debug "xxxxxxx 未找到员工: #{name} #{path}"
+            logger.error "xxxxxxx 未找到员工: #{name} ; #{path}"
             next
           end
 
