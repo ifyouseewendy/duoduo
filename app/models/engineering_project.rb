@@ -381,14 +381,32 @@ class EngineeringProject < ActiveRecord::Base
     end
   end
 
-  def split_range
+  def split_range(count = nil)
     start_date, end_date = range
     ret = []
 
-    while (tmp_date = start_date + 1.month - 1.day) <= end_date
-      ret << [start_date, tmp_date]
+    if count.nil?
+      while (tmp_date = start_date + 1.month - 1.day) <= end_date
+        ret << [start_date, tmp_date]
 
-      start_date += 1.month
+        start_date += 1.month
+      end
+    else
+      count.downto(1).each do |idx|
+        if idx == 1
+          tmp_date = end_date
+        else
+          tmp_date = start_date + 1.month - 1.day
+          if tmp_date >= end_date
+            tmp_date = end_date
+          end
+        end
+
+        ret << [start_date, tmp_date]
+
+        break if tmp_date == end_date
+        start_date += 1.month
+      end
     end
 
     ret
