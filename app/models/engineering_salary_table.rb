@@ -5,6 +5,8 @@ class EngineeringSalaryTable < ActiveRecord::Base
 
   has_one :audition, as: :auditable, class_name: AuditionItem, dependent: :destroy
 
+  validates_presence_of :start_date, :end_date
+
   class << self
     def policy_class
       EngineeringSalaryTablePolicy
