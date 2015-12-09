@@ -35,4 +35,8 @@ class EngineeringSalaryTable < ActiveRecord::Base
   def audition_status
     audition.nil? ? nil : audition.status_i18n
   end
+
+  def range
+    [start_date, end_date]
+  end
 end

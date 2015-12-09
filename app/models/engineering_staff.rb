@@ -103,7 +103,12 @@ class EngineeringStaff < ActiveRecord::Base
 
   # Returns an Array of ranges, which range is represented by an Array of start_date and end_date
   def busy_range
-    engineering_projects.select(:project_start_date, :project_end_date).map{|ep| [ ep.project_start_date, ep.project_end_date ]}.sort
+    [
+      engineering_normal_salary_items,
+      engineering_normal_with_tax_salary_items,
+      engineering_big_table_salary_items,
+      engineering_dong_fang_salary_items
+    ].flat_map{|items| items.map{|item| item.salary_table.range} }.sort
   end
 
   def check_schedule(project)
