@@ -381,6 +381,19 @@ class EngineeringProject < ActiveRecord::Base
     end
   end
 
+  def split_range
+    start_date, end_date = range
+    ret = []
+
+    while (tmp_date = start_date + 1.month - 1.day) <= end_date
+      ret << [start_date, tmp_date]
+
+      start_date += 1.month
+    end
+
+    ret
+  end
+
   ransacker :sub_company, formatter: ->(qid) {
     # ids = User.search_in_all_translated(search).map(&:id)
     # ids = ids.any? ? ids : nil
