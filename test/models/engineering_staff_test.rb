@@ -8,15 +8,16 @@ class EngineeringStaffTest < ActiveSupport::TestCase
   end
 
   def test_busy_range
-    assert_equal [['2015-09-01', '2015-09-30']], @staff.busy_range.map{|ar| ar.map(&:to_s)}
+    assert_equal [['2015-01-01', '2015-01-31'], ['2015-02-01', '2015-02-28']], @staff.busy_range.map{|ar| ar.map(&:to_s)}
   end
 
   def test_check_schedule_when_appending_new_project
+    # Dont change busy_range when appending new project,
+    # only change by setting salary_table
     assert_silent do
       @staff.engineering_projects << @project_two
     end
     assert_equal 2, @staff.busy_range.count
-    assert_equal ['2015-10-01', '2015-10-15'], @staff.busy_range.last.map(&:to_s)
 
     # TODO
     #
