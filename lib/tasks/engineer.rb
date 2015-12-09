@@ -510,25 +510,6 @@ class Engineer < DuoduoCli
         logger.info "------- Sheet #{sheet_id+1}"
         sheet = xlsx.sheet(sheet_id)
 
-        parts = sheet_name.split('.').map(&:strip)
-        parts << '1' if parts.count == 2
-
-        if parts.count != 3
-          logger.debug "xxxxxxx 无法解析工资表表单名：#{sheet_name} #{path}"
-          next
-        end
-
-        begin
-          date = Date.parse parts.join('.')
-        rescue => _
-          logger.debug "xxxxxxx 无法解析工资表表单名：#{sheet_name} #{path}"
-          next
-        end
-        name = "#{date.year}年#{date.month}月"
-
-        logger.debug "xxxxxxx 工资表日期不在工程日期内: #{sheet_name} #{path}" \
-          unless date >= project.range[0].beginning_of_month && date <= project.range[1].end_of_month
-
         if sheet.row(3).compact.count == 1
           start_row = 5
         elsif sheet.row(2).compact.count == 1
@@ -545,9 +526,13 @@ class Engineer < DuoduoCli
           type = 'EngineeringNormalWithTaxSalaryTable'
         end
 
+        start_date, end_date = project.split_range[sheet_id]
+
         st = EngineeringSalaryTable.create!(
           engineering_project: project,
-          name: name,
+          name: [start_date, end_date].join(' ~ '),
+          start_date: start_date,
+          end_date: end_date,
           type: type
         )
 
