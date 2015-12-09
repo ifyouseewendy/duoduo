@@ -147,18 +147,22 @@ class Engineer < DuoduoCli
         gender_map = {'男' => 0, '女' => 1}
 
         begin
-          staff = customer.engineering_staffs.where(name: name).first
-          next if staff.present? && staff.identity_card.present? && remark.blank?
+          staff = EngineeringStaff.where(identity_card: identity_card).first
 
-          staff ||= EngineeringStaff.create!(
-            engineering_customer: customer,
-            name: name,
-            gender: gender_map[gender],
-            identity_card: identity_card
-          )
-          staff.identity_card = identity_card if staff.identity_card.blank?
-          staff.remark = remark
-          staff.save!
+          if staff.present?
+            if staff.engineering_customer.id != customer.id
+              logger.debug "----- 员工（#{staff.name} - #{identity_card}）属于客户（#{staff.engineering_customer.name}），又出现在客户（#{customer.name}）的提供人员中 #{file}"
+            end
+          else
+            staff = EngineeringStaff.create!(
+              engineering_customer: customer,
+              name: name,
+              gender: gender_map[gender],
+              identity_card: identity_card,
+              remark: remark
+            )
+          end
+
         rescue => e
           logger.info "----- #{e.message} #{name}"
         end
