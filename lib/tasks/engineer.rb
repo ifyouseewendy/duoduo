@@ -67,7 +67,7 @@ class Engineer < DuoduoCli
       elsif name.index('人力')
         SubCompany.where(name: '吉易人力资源').first
       else
-        logger.error "项目汇总 ; 无法解析子公司名称: #{name}"
+        logger.error "项目汇总 ; 无法解析子公司名称: #{name} ; #{project_info}"
         nil
       end
     end
@@ -283,16 +283,20 @@ class Engineer < DuoduoCli
           next
         end
 
-        project = customer.engineering_projects.create!(
-          name: "#{id.to_i}、#{name}",
-          start_date: start_date,
-          project_start_date: project_start_date,
-          project_end_date: project_end_date,
-          project_amount: project_amount,
-          admin_amount: admin_amount,
-          proof: proof,
-          remark: remark
-        )
+        begin
+          project = customer.engineering_projects.create!(
+            name: "#{id.to_i}、#{name}",
+            start_date: start_date,
+            project_start_date: project_start_date,
+            project_end_date: project_end_date,
+            project_amount: project_amount,
+            admin_amount: admin_amount,
+            proof: proof,
+            remark: remark
+          )
+        rescue => e
+          logger.error "项目汇总 ; 创建项目失败: #{e.message} ; #{project_info}"
+        end
 
         income_date, income_amount, outcome_amount, outcome_date, outcome_referee = \
           split_by_comma(income_date),
@@ -303,15 +307,23 @@ class Engineer < DuoduoCli
 
         unless income_date.blank?
           income_date.zip(income_amount).each do |date, amount|
-            project.income_items.create!(date: date, amount: amount)
+            begin
+              project.income_items.create!(date: date, amount: amount)
+            rescue => e
+              logger.error "项目汇总 ; #{e.message} : #{project_info}"
+            end
           end
         end
 
         unless outcome_referee.blank?
           outcome_referee.each_with_index do |referee, idx|
-            date = outcome_date[idx]
-            amount = outcome_amount[idx]
-            project.outcome_items.create!(date: date, amount: amount, persons: referee.to_s.split(' ').map(&:strip))
+            begin
+              date = outcome_date[idx]
+              amount = outcome_amount[idx]
+              project.outcome_items.create!(date: date, amount: amount, persons: referee.to_s.split(' ').map(&:strip))
+            rescue => e
+              logger.error "项目汇总 ; #{e.message} : #{project_info}"
+            end
           end
         end
 
@@ -554,13 +566,19 @@ class Engineer < DuoduoCli
 
         start_date, end_date = ranges[sheet_id]
 
-        st = EngineeringSalaryTable.create!(
-          engineering_project: project,
-          name: [start_date, end_date].join(' ~ '),
-          start_date: start_date,
-          end_date: end_date,
-          type: type
-        )
+        begin
+          st = EngineeringSalaryTable.create!(
+            engineering_project: project,
+            name: [start_date, end_date].join(' ~ '),
+            start_date: start_date,
+            end_date: end_date,
+            type: type
+          )
+        rescue => e
+          logger.error "工资表 ; #{sheet_name}: #{e.message} ; #{path}"
+          next
+        end
+
 
         last_row = sheet.last_row
         items = {}
@@ -639,29 +657,34 @@ class Engineer < DuoduoCli
             next
           end
 
-          if col_count == 10
-            item = st.salary_items.create!(
-              engineering_staff: staff,
-              salary_deserve: salary_deserve,
-              social_insurance: social_insurance,
-              medical_insurance: medical_insurance,
-              salary_in_fact: salary_in_fact,
-              tax: tax.to_f
-            )
-          else
-            item = st.salary_items.create!(
-              engineering_staff: staff,
-              salary_deserve: salary_deserve,
-              social_insurance: social_insurance,
-              medical_insurance: medical_insurance,
-              salary_in_fact: salary_in_fact
-            )
+          begin
+            if col_count == 10
+              item = st.salary_items.create!(
+                engineering_staff: staff,
+                salary_deserve: salary_deserve,
+                social_insurance: social_insurance,
+                medical_insurance: medical_insurance,
+                salary_in_fact: salary_in_fact,
+                tax: tax.to_f
+              )
+            else
+              item = st.salary_items.create!(
+                engineering_staff: staff,
+                salary_deserve: salary_deserve,
+                social_insurance: social_insurance,
+                medical_insurance: medical_insurance,
+                salary_in_fact: salary_in_fact
+              )
+            end
+          rescue => e
+            logger.error "工资表 ; 创建工资条: #{e.message} ; #{path}"
           end
 
           items[id.to_i] = item
         end
       end
     end
+
 end
 
 Engineer.start(ARGV)
