@@ -452,7 +452,7 @@ class Engineer < DuoduoCli
 
           if staff.present?
             if staff.name != name.delete(' ')
-              logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 已找到员工（#{staff.name} - #{identity_card}），用工明细中显示为其他姓名（#{name.delete(' ')}）"
+              logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff.name} - #{identity_card}）在用工明细中显示为其他姓名（#{name.delete(' ')}）"
             end
           else
             logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{name.delete(' ')} - #{identity_card}）未在客户（#{customer.name}）的提供人员中出现"
@@ -620,7 +620,7 @@ class Engineer < DuoduoCli
               # TODO 待处理工程大表导入
             else
               logger.error "#{better_path path} ; 工资表 ; 无法解析工资表，错误的列数 #{col_count}"
-              next
+              break
             end
 
             total_i18n = {
@@ -655,7 +655,7 @@ class Engineer < DuoduoCli
             break
           else
             logger.error "#{better_path path} ; 工资表 ; 无法解析工资表，错误的列数 #{col_count}: #{sheet_name}"
-            next
+            break
           end
 
           next if id.nil?
