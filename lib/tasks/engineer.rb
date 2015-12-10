@@ -457,6 +457,7 @@ class Engineer < DuoduoCli
 
             if staff2.present?
               logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}）"
+              staff = staff2
             else
               gender_map = {'男' => 0, '女' => 1}
               staff = EngineeringStaff.create!(
