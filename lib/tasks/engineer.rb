@@ -491,12 +491,16 @@ class Engineer < DuoduoCli
         txt_file = file.basename.to_s.split('.')[0,1].push('txt').join('.')
 
         data = File.read txt_file
-        line = data.delete(' ').split.detect{|str| str =~ /[劳动|派遣]期间/  }
-        parts = line.split(/[自|至|止]/)
+        line = data.delete(' ').split.detect{|str| str =~ /\d{4}年\d+月\d+日/  }
+        words = line.match(/(\d{4}年\d+月\d+日).*(\d{4}年\d+月\d+日)/)
+        parts = words[1,2]
+        if parts.any?(&:blank?)
+          require'pry';binding.pry
+        end
 
-        start_date = convert_chinese_date(parts[1])
+        start_date = convert_chinese_date(parts[0])
         logger.error "合同文件 ; 无法通过合同判断起始日期：#{start_date} ; #{path}" if start_date.blank?
-        end_date = convert_chinese_date(parts[2])
+        end_date = convert_chinese_date(parts[1])
         logger.error "合同文件 ; 无法通过合同判断终止日期：#{end_date} ; #{path}" if end_date.blank?
 
         if project.range != [start_date, end_date]
