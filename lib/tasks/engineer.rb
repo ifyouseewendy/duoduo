@@ -549,10 +549,12 @@ class Engineer < DuoduoCli
       xlsx_name = path.to_s
       xlsx = Roo::Spreadsheet.open(xlsx_name)
 
-      ranges = project.split_range(xlsx.sheets.count)
+      ranges = project.split_range xlsx.sheets.reject{|name| name == 'SWDXMTKP' }.count
 
       xlsx.sheets.each_with_index do |sheet_name, sheet_id|
-        logger.info "------- Sheet #{sheet_id+1}"
+        next if sheet_name == 'SWDXMTKP' # Werid MS addtional sheet
+
+        logger.info "------- Sheet-#{sheet_id+1}: #{sheet_name}"
         sheet = xlsx.sheet(sheet_id)
 
         if sheet.row(3).compact.count == 1
