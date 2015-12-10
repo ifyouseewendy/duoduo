@@ -9,9 +9,9 @@ class Engineer < DuoduoCli
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
     load_rails
+    clean_db(:engineer)
     clean_logger
     init_logger
-    clean_db(:engineer)
 
     logger.info "[#{Time.now}] Import start"
 
@@ -37,6 +37,7 @@ class Engineer < DuoduoCli
     unless options[:batch]
       load_rails
       clean_db(:engineer)
+      clean_logger
     end
 
     init_logger
