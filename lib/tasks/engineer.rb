@@ -169,7 +169,7 @@ class Engineer < DuoduoCli
           end
 
         rescue => e
-          logger.info "#{better_path file} ; 提供人员 ; 未知错误: #{name} #{e.message}"
+          logger.error "#{better_path file} ; 提供人员 ; 未知错误: #{name} #{e.message} ; #{e.backtrace}"
         end
       end
     end
@@ -400,7 +400,7 @@ class Engineer < DuoduoCli
 
         dir = customer_dir.join(pn)
 
-        logger.info "#{better_path dir} ; 扫描项目文件夹 ; 未在项目汇总中找到该项目" and next if project.blank?
+        logger.error "#{better_path dir} ; 扫描项目文件夹 ; 未在项目汇总中找到该项目" and next if project.blank?
 
         staff_files    = find_in_project_dir(dir: dir, type: :staff)
         contract_files = find_in_project_dir(dir: dir, type: :contract)
@@ -474,7 +474,7 @@ class Engineer < DuoduoCli
           end
           staff.engineering_projects << project
         rescue => e
-          logger.error "#{better_path file} ; 用工明细 ; 未知错误: #{name} #{e.message}"
+          logger.error "#{better_path file} ; 用工明细 ; 未知错误: #{name} #{e.message} ; #{e.backtrace}"
         end
       end
     end
