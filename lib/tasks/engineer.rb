@@ -165,7 +165,7 @@ class Engineer < DuoduoCli
           end
 
         rescue => e
-          logger.info "----- #{e.message} #{name}"
+          logger.info "#{better_path file} ; 提供人员 ; 未知错误: #{name} #{e.message}"
         end
       end
     end
@@ -394,9 +394,9 @@ class Engineer < DuoduoCli
         id, _name = pn.to_s.split('、')
         project = projects[id.to_i]
 
-        logger.info "----- 特例跳过" and next if project.blank?
-
         dir = customer_dir.join(pn)
+
+        logger.info "#{better_path dir} ; 扫描项目文件夹 ; 未在项目汇总中找到该项目" and next if project.blank?
 
         staff_files    = find_in_project_dir(dir: dir, type: :staff)
         contract_files = find_in_project_dir(dir: dir, type: :contract)
@@ -469,7 +469,7 @@ class Engineer < DuoduoCli
           end
           staff.engineering_projects << project
         rescue => e
-          logger.info "----- #{e.message} #{name}"
+          logger.error "#{better_path file} ; 用工明细 ; 未知错误: #{name} #{e.message}"
         end
       end
     end
@@ -643,7 +643,7 @@ class Engineer < DuoduoCli
               sheet.row(row_id).map{|col| String === col ? col.strip : col}
           elsif col_count >= 15
             # TODO 待处理工程大表导入
-            logger.info "工资表 ; 待处理大表"
+            logger.error "#{better_path path} ; 工资表 ; 待处理大表"
             break
           else
             logger.error "#{better_path path} ; 工资表 ; 无法解析工资表，错误的列数 #{col_count}: #{sheet_name}"
@@ -688,7 +688,7 @@ class Engineer < DuoduoCli
     end
 
     def better_path(file)
-      [customer.name, file.to_s[(customer_dir.to_s.length+2)..-1 ]].join('/')
+      [customer.name, file.to_s[(customer_dir.to_s.length+1)..-1 ]].join('/')
     end
 end
 
