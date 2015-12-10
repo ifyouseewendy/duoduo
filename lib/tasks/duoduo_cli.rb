@@ -1,4 +1,5 @@
 require 'thor'
+require_relative 'distinct_file_logger'
 
 class DuoduoCli < Thor
   attr_reader :logger
@@ -84,7 +85,7 @@ class DuoduoCli < Thor
     end
 
     def init_logger
-      @logger ||= ActiveSupport::Logger.new(LOGGER_PATH)
+      @logger ||= DistinctFileLogger.new(LOGGER_PATH)
     end
 
     def clean_logger

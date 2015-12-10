@@ -10,6 +10,7 @@ class Engineer < DuoduoCli
 
     load_rails
     clean_db(:engineer)
+
     clean_logger
     init_logger
 
@@ -41,7 +42,9 @@ class Engineer < DuoduoCli
     end
 
     init_logger
-    logger.level = Logger::ERROR
+    # logger.level = Logger::ERROR
+    logger.set_info_path(STDOUT)
+
     logger.info "[#{Time.now}] Import start"
 
     set_customer_dir load_from(options[:from])
