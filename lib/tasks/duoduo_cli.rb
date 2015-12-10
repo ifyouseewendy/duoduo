@@ -3,6 +3,8 @@ require 'thor'
 class DuoduoCli < Thor
   attr_reader :logger
 
+  LOGGER_PATH = 'log/import.csv'
+
   desc "hello NAME", "say hello to NAME"
   def hello(name)
     puts "Hello #{name}"
@@ -82,7 +84,11 @@ class DuoduoCli < Thor
     end
 
     def init_logger
-      @logger ||= ActiveSupport::Logger.new('log/import.csv')
+      @logger ||= ActiveSupport::Logger.new(LOGGER_PATH)
+    end
+
+    def clean_logger
+      File.unlink(LOGGER_PATH) if File.exist?(LOGGER_PATH)
     end
 
     def seed_admin_user

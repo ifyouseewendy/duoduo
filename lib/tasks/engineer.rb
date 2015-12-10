@@ -9,6 +9,7 @@ class Engineer < DuoduoCli
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
     load_rails
+    clean_logger
     init_logger
     clean_db(:engineer)
 
