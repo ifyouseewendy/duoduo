@@ -82,7 +82,7 @@ class DuoduoCli < Thor
     end
 
     def init_logger
-      @logger ||= ActiveSupport::Logger.new('log/import.log')
+      @logger ||= ActiveSupport::Logger.new('log/import.csv')
     end
 
     def seed_admin_user
