@@ -589,11 +589,14 @@ class Engineer < DuoduoCli
 
         last_row = sheet.last_row
         items = {}
+        skip_total_check = false
         (start_row..last_row).each do |row_id|
           data = sheet.row(row_id)
           next if data[0].nil?
 
           if data[0] == '合计' or data[0] == '小计'
+            break if skip_total_check
+
             data = data.compact
             if col_count == 6 or col_count == 5
               total = {
@@ -661,6 +664,7 @@ class Engineer < DuoduoCli
           staff = project.engineering_staffs.where(name: name).first
           if staff.nil?
             logger.error "#{better_path path} ; 工资表 ; 员工信息校验 ; 未找到员工: #{name}"
+            skip_total_check = true
             next
           end
 
