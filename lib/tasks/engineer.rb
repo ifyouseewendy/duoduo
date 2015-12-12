@@ -169,7 +169,7 @@ class Engineer < DuoduoCli
           end
 
         rescue => e
-          logger.error "#{better_path file} ; 提供人员 ; 未知错误: #{name} #{e.message} ; #{e.backtrace}"
+          logger.error "#{better_path file} ; 提供人员 ; 提供人员 ; #{name} #{e.message} ; #{e.backtrace[0]}"
         end
       end
     end
@@ -474,7 +474,7 @@ class Engineer < DuoduoCli
           end
           staff.engineering_projects << project
         rescue => e
-          logger.error "#{better_path file} ; 用工明细 ; 未知错误: #{name} #{e.message} ; #{e.backtrace}"
+          logger.error "#{better_path file} ; 用工明细 ; 用工明细 ; #{name} #{e.message} ; #{e.backtrace[0]}"
         end
       end
     end
