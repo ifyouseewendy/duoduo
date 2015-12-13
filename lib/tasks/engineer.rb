@@ -26,6 +26,33 @@ class Engineer < DuoduoCli
     logger.info "[#{Time.now}] Import end"
   end
 
+  desc 'validate_staff', ''
+  option :from, required: true
+  def validate_staff
+    fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
+
+    load_rails
+    clean_db(:engineer)
+
+    clean_logger
+    init_logger
+
+    logger.info "[#{Time.now}] Import start"
+
+    dir = Pathname(options[:from])
+    dir.entries.sort.each do |entry|
+      next if skip_file?(entry)
+
+      set_customer_dir load_from(dir.join(entry))
+      logger.info "- #{customer_dir.basename}"
+
+      process_provide_staff_dir
+    end
+    prcoess_duplicate_between_customers
+
+    logger.info "[#{Time.now}] Import end"
+  end
+
   desc "start", "Import engineering data"
   long_desc <<-LONGDESC
     Examples:
@@ -143,6 +170,8 @@ class Engineer < DuoduoCli
       xlsx = Roo::Spreadsheet.open(file.to_s)
       sheet = xlsx.sheet(0).to_a
 
+      return if sheet[2..-1].blank?
+
       sheet[2..-1].each do |data|
         _id, name, gender, identity_card, remark = \
           data.map{|col| String === col ? col.strip : col}
@@ -152,21 +181,26 @@ class Engineer < DuoduoCli
         gender_map = {'男' => 0, '女' => 1}
 
         begin
-          staff = EngineeringStaff.where(identity_card: identity_card).first
+          staff = customer.engineering_staffs.where(identity_card: identity_card).first
+          next if staff.present? && staff.name == name.try(:strip)
 
-          if staff.present?
-            if staff.engineering_customer.id != customer.id
-              logger.error "#{better_path file} ; 提供人员 ; 员工信息校验 ; 员工（#{staff.name} - #{identity_card}）属于客户（#{staff.engineering_customer.name}），又出现在客户（#{customer.name}）的提供人员中"
-            end
-          else
-            staff = EngineeringStaff.create!(
-              engineering_customer: customer,
-              name: name,
-              gender: gender_map[gender],
-              identity_card: identity_card,
-              remark: remark
-            )
-          end
+          # staff = EngineeringStaff.where(identity_card: identity_card).first
+
+          # if staff.present?
+          #   if staff.engineering_customer.id != customer.id
+          #     logger.error "#{better_path file} ; 提供人员 ; 员工信息校验 ; 员工（#{staff.name} - #{identity_card}）属于客户（#{staff.engineering_customer.name}），又出现在客户（#{customer.name}）的提供人员中"
+          #   end
+          # else
+
+          staff = EngineeringStaff.create!(
+            engineering_customer: customer,
+            name: name.try(:delete, ' '),
+            gender: gender_map[gender],
+            identity_card: identity_card,
+            remark: remark
+          )
+
+          # end
 
         rescue => e
           logger.error "#{better_path file} ; 提供人员 ; 提供人员 ; #{name} #{e.message} ; #{e.backtrace[0]}"
@@ -701,6 +735,48 @@ class Engineer < DuoduoCli
     def better_path(file)
       [customer.name, file.to_s[(customer_dir.to_s.length+1)..-1 ]].join('/')
     end
+
+    def prcoess_duplicate_between_customers
+      uniq_ids = EngineeringStaff.pluck(:identity_card).uniq
+      duplicated_ids = uniq_ids.reduce([]) do |ar, id|
+        if EngineeringStaff.where(identity_card: id).count > 1
+          ar << id
+        else
+          ar
+        end
+      end
+
+      filepath = Rails.root.join("tmp").join("import_result").join("客户间提供人员校验结果_#{Time.stamp}.xlsx")
+
+      Axlsx::Package.new do |pkg|
+        pkg.workbook.add_worksheet(name: '客户间重复员工') do |sheet|
+          duplicated_ids.each do |id|
+            next if id.blank?
+
+            sheet.add_row ["'#{id}"]
+
+            flag = EngineeringStaff.where(identity_card: id).pluck(:name).uniq.count > 1
+            EngineeringStaff.where(identity_card: id).each do |es|
+              stats = [nil, es.engineering_customer.name]
+              stats << es.name if flag
+              sheet.add_row stats
+            end
+            sheet.add_row [nil, nil, '员工姓名不一致'] if flag
+          end
+        end
+
+        pkg.workbook.add_worksheet(name: '未找到身份证') do |sheet|
+          EngineeringStaff.where(identity_card: nil).each do |es|
+            sheet.add_row [es.name, es.engineering_customer.name]
+          end
+        end
+
+        pkg.serialize(filepath.to_s)
+      end
+
+      puts "--> Generate: #{filepath}"
+    end
+
 end
 
 Engineer.start(ARGV)
