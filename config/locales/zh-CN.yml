@@ -75,7 +75,8 @@ zh-CN:
         account_bank: '单位开户行'
         contact: '单位联系人'
         telephone: '单位联系电话'
-        contract_due_time: '合同签订期限'
+        contract_start_date: '合同开始日期'
+        contract_end_date: '合同截止日期'
         contract_amount: '合同金额'
         admin_charge_type: '管理费收取方式'
         admin_charge_types:

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151216075840) do
+ActiveRecord::Schema.define(version: 20151216080019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -510,6 +510,8 @@ ActiveRecord::Schema.define(version: 20151216075840) do
     t.text     "remark"
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
+    t.date     "contract_start_date"
+    t.date     "contract_end_date"
   end
 
   add_index "normal_corporations", ["account"], name: "index_normal_corporations_on_account", using: :btree
