@@ -102,7 +102,10 @@ class DuoduoCli < Thor
 
     def seed_sub_companies
       puts "==> Preparing SubCompany"
-      Rails.application.secrets.sub_company_names.each_with_object([]) do |name, companies|
+      names = Rails.application.secrets.sub_company_names
+      return if SubCompany.pluck(:name).to_set == names.to_set
+
+      names.each_with_object([]) do |name, companies|
         has_engineering_relation = (name =~ /人力/ ? true : false)
         sc = SubCompany.create!(name: name, has_engineering_relation: has_engineering_relation)
         (1..2).each_with_object([]) do |idx, ar|

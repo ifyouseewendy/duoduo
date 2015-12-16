@@ -11,7 +11,7 @@ class BusinessSalary < DuoduoCli
     logger.info "Test from Business thor"
   end
 
-  desc "salary", ''
+  desc "start", ''
   long_desc <<-LONGDESC
     Examples:
 
