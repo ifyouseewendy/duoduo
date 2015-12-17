@@ -117,7 +117,8 @@ class BusinessStaff < DuoduoCli
         next if nest_index.nil?
 
         begin
-          normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
+          normal_corporation_id = NormalCorporation.where(name: corporation_name).first
+          # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
           raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
 
           # Need to confirm
@@ -249,7 +250,8 @@ class BusinessStaff < DuoduoCli
         next if nest_index.nil?
 
         begin
-          normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
+          normal_corporation_id = NormalCorporation.where(name: corporation_name).first
+          # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
           raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
 
           # Need to confirm
@@ -368,7 +370,8 @@ class BusinessStaff < DuoduoCli
         next if nest_index.nil?
 
         begin
-          normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
+          normal_corporation_id = NormalCorporation.where(name: corporation_name).first
+          # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
           raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
 
           # Need to confirm
@@ -468,7 +471,8 @@ class BusinessStaff < DuoduoCli
         next if nest_index.nil?
 
         begin
-          normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
+          normal_corporation_id = NormalCorporation.where(name: corporation_name).first
+          # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
           raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
 
           # Need to confirm
