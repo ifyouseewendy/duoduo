@@ -99,8 +99,8 @@ class BusinessSalary < DuoduoCli
 
     def set_corporation
       name = file.basename.to_s.split('.')[0]
-      # TODO
-      @corporation = NormalCorporation.find_or_create_by!(name: name)
+      @corporation = NormalCorporation.where(name: name).first
+      raise "未找到合作单位名称：#{name}" if @corporation.nil?
     end
 
     def set_xlsx
