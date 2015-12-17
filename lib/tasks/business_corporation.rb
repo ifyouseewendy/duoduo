@@ -1,7 +1,7 @@
 require_relative 'duoduo_cli'
 
 class BusinessCorporation < DuoduoCli
-  attr_reader :file, :xlsx
+  attr_reader :file, :mapping_file, :xlsx, :mapping_xlsx
 
   desc "test", ''
   def test
@@ -18,6 +18,7 @@ class BusinessCorporation < DuoduoCli
       ruby lib/tasks/business_corporation.rb start --from=
   LONGDESC
   option :from, required: true
+  option :mapping_from, required: true
   def start
     load_rails
     clean_db(:business)
@@ -29,6 +30,9 @@ class BusinessCorporation < DuoduoCli
     set_file load_from(options[:from])
     parse_file
 
+    set_mapping_file load_from(options[:mapping_from])
+    parse_mapping_file
+
     logger.info "[#{Time.now}] Import end"
   end
 
@@ -38,8 +42,16 @@ class BusinessCorporation < DuoduoCli
       @file = path
     end
 
+    def set_mapping_file(path)
+      @mapping_file = path
+    end
+
     def set_xlsx
       @xlsx = Roo::Spreadsheet.open(file.to_s)
+    end
+
+    def set_mapping_xlsx
+      @mapping_xlsx = Roo::Spreadsheet.open(mapping_file.to_s)
     end
 
     def parse_file
@@ -49,13 +61,15 @@ class BusinessCorporation < DuoduoCli
         next if idx == 0 or idx == 1
 
         # 单位名称  营业执照号  纳税人识别号  组织代码证号  法人  单位地址  单位账号  单位开户行  单位联系人 单位联系电话  合同签订期限  合同金额  管理费收取方式  管理费收取比例/金额 单位开支日期  备注  吉易子公司
-        name, license, taxpayer_serial, organization_serial, corporate_name, address, account, account_bank, contact, telephone, contract_dates, contract_amount, admin_charge_type, admin_charge_amount, expense_date, remark, sub_company_name = row.map{|col| String === col ? col.strip : col}
+        full_name, license, taxpayer_serial, organization_serial, corporate_name, address, account, account_bank, contact, telephone, contract_dates, contract_amount, admin_charge_type, admin_charge_amount, expense_date, remark, sub_company_name = row.map{|col| String === col ? col.strip : col}
+
+        next if full_name.blank?
 
         contract_start_date, contract_end_date = *(parse_dates contract_dates)
         sub_company = SubCompany.find_by_name(sub_company_name)
 
-        nc = NormalCorporation.create!(
-          name: name,
+        nc = NormalCorporation.new(
+          full_name: full_name,
           license: license,
           taxpayer_serial: taxpayer_serial,
           organization_serial: organization_serial,
@@ -73,6 +87,7 @@ class BusinessCorporation < DuoduoCli
           expense_date: parse_chinese_date(expense_date),
           remark: remark,
         )
+        nc.save(validate: false)
         nc.sub_companies << sub_company
       end
     end
@@ -87,6 +102,25 @@ class BusinessCorporation < DuoduoCli
 
     def parse_chinese_date(str)
       Date.parse str.split(/年|月|日/).join('.') rescue nil
+    end
+
+    def parse_mapping_file
+      set_mapping_xlsx
+
+      mapping_xlsx.sheet(0).to_a.each_with_index do |row, idx|
+        next if idx == 0
+
+        # 合作单位名称 合同中全称
+        name, full_name = row.map{|col| String === col ? col.strip : col}
+
+        next if name.blank?
+
+        nc = NormalCorporation.where(full_name: full_name).first
+        raise "无法找到合作单位全称：#{full_name}" if nc.nil?
+
+        nc.name = name
+        nc.save!
+      end
     end
 end
 
