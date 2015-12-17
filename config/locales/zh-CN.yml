@@ -66,6 +66,7 @@ zh-CN:
       normal_corporation:
         id: '编号'
         name: '单位名称'
+        full_name: '全称'
         license: '营业执照号'
         taxpayer_serial: '纳税人识别号'
         organization_serial: '组织代码证号'
