@@ -487,30 +487,26 @@ class Engineer < DuoduoCli
         next if _id.nil?
 
         begin
-          staff = customer.engineering_staffs.where(identity_card: identity_card).first
+          staff = EngineeringStaff.where(identity_card: identity_card).first
 
           if staff.present?
+            # logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}）"
+
             if staff.name != name.delete(' ')
-              logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff.name} - #{identity_card}）在用工明细中显示为其他姓名（#{name.delete(' ')}）"
+              logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name.delete(' ')} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
             end
           else
-            logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{name.delete(' ')} - #{identity_card}）未在客户（#{customer.name}）的提供人员中出现"
+            logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name.delete(' ')} - #{identity_card}）未在任何客户中找到"
 
-            staff2 = EngineeringStaff.where(identity_card: identity_card).first
-
-            if staff2.present?
-              logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}）"
-              staff = staff2
-            else
-              gender_map = {'男' => 0, '女' => 1}
-              staff = EngineeringStaff.create!(
-                engineering_customer: project.engineering_customer,
-                name: name.delete(' '),
-                gender: gender_map[gender],
-                identity_card: identity_card
-              )
-            end
+            gender_map = {'男' => 0, '女' => 1}
+            staff = EngineeringStaff.create!(
+              engineering_customer: project.engineering_customer,
+              name: name.delete(' '),
+              gender: gender_map[gender],
+              identity_card: identity_card
+            )
           end
+
           staff.engineering_projects << project
         rescue => e
           logger.error "#{better_path file} ; 用工明细 ; 用工明细 ; #{name} #{e.message} ; #{e.backtrace[0]}"
