@@ -167,6 +167,8 @@ class Engineer < DuoduoCli
     def process_provide_staff_file(file)
       logger.info "----- #{file.basename}"
 
+      enable = parse_staff_enable(file)
+
       xlsx = Roo::Spreadsheet.open(file.to_s)
       sheet = xlsx.sheet(0).to_a
 
@@ -197,6 +199,7 @@ class Engineer < DuoduoCli
             name: name.try(:delete, ' '),
             gender: gender_map[gender],
             identity_card: identity_card,
+            enable: enable,
             remark: remark
           )
 
@@ -775,6 +778,10 @@ class Engineer < DuoduoCli
       end
 
       puts "--> Generate: #{filepath}"
+    end
+
+    def parse_staff_enable(path)
+      path.basename.to_s.index('不可') ? false : true
     end
 
 end
