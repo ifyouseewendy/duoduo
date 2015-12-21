@@ -8,6 +8,7 @@ class Engineer < DuoduoCli
   option :skip_clean, type: :boolean
   option :only_staff, type: :boolean
   option :only_salary, type: :boolean
+  option :only_project, type: :boolean
   def batch_start
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
@@ -27,7 +28,8 @@ class Engineer < DuoduoCli
         from: dir.join(entry),
         batch: true,
         only_staff: options[:only_staff],
-        only_salary: options[:only_salary]
+        only_salary: options[:only_salary],
+        only_project: options[:only_project],
        )
     end
 
@@ -44,6 +46,7 @@ class Engineer < DuoduoCli
   option :batch
   option :only_staff, type: :boolean
   option :only_salary, type: :boolean
+  option :only_project, type: :boolean
   def start
     unless options[:batch]
       load_rails
@@ -61,9 +64,10 @@ class Engineer < DuoduoCli
 
     # 信息汇总
     set_projects process_project_infos
+    return if options[:only_project]
 
-    # 提供人员
-    process_provide_staff_dir
+    # 提供人员 Use validate_staff instead
+    # process_provide_staff_dir
 
     # 项目
     iterate_projects(options)
@@ -514,7 +518,7 @@ class Engineer < DuoduoCli
           if staff.present?
             # logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}）"
 
-            if staff.name != name.delete(' ')
+            if staff.name != name.try(:delete, ' ')
               logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name.delete(' ')} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
             end
           else
