@@ -432,7 +432,7 @@ class Engineer < DuoduoCli
 
         logger.info "--- #{pn}"
 
-        id, _name = pn.to_s.split('、')
+        id, _name = pn.to_s.split(/[.|、]/)
         project = projects[id.to_i]
 
         dir = customer_dir.join(pn)
