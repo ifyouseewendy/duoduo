@@ -5,11 +5,12 @@ class Engineer < DuoduoCli
 
   desc "batch_start", ''
   option :from, required: true
+  option :skip_clean, type: :boolean
   def batch_start
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
     load_rails
-    clean_db(:engineer)
+    clean_db(:engineer) unless options[:skip_clean]
 
     clean_logger
     init_logger
@@ -36,6 +37,7 @@ class Engineer < DuoduoCli
 
     clean_logger
     init_logger
+    logger.set_info_path(STDOUT)
 
     logger.info "[#{Time.now}] Import start"
 
@@ -699,7 +701,7 @@ class Engineer < DuoduoCli
 
           next if id.nil?
 
-          name = name.delete(' ')
+          name = name.try(:delete, ' ')
           staff = project.engineering_staffs.where(name: name).first
           if staff.nil?
             logger.error "#{better_path path} ; 工资表 ; 员工信息校验 ; 未找到员工: #{name}"
