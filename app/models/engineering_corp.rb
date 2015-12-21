@@ -1,4 +1,6 @@
 class EngineeringCorp < ActiveRecord::Base
+  has_and_belongs_to_many :sub_companies
+
   has_many :contract_files
   has_many :engineering_projects
 

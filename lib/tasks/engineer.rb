@@ -275,7 +275,7 @@ class Engineer < DuoduoCli
 
       files.reduce({}) do |ha, file|
         set_project_info(file)
-        stats = process_project_info
+        stats = process_project_info || {}
         ha.merge!(stats)
       end
     end
