@@ -6,6 +6,8 @@ class Engineer < DuoduoCli
   desc "batch_start", ''
   option :from, required: true
   option :skip_clean, type: :boolean
+  option :only_staff, type: :boolean
+  option :only_salary, type: :boolean
   def batch_start
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
@@ -21,7 +23,12 @@ class Engineer < DuoduoCli
     dir.entries.sort.each do |entry|
       next if skip_file?(entry)
 
-      self.class.new.invoke('start', [], from: dir.join(entry), batch: true )
+      self.class.new.invoke('start', [],
+        from: dir.join(entry),
+        batch: true,
+        only_staff: options[:only_staff],
+        only_salary: options[:only_salary]
+       )
     end
 
     logger.info "[#{Time.now}] Import end"
@@ -35,6 +42,8 @@ class Engineer < DuoduoCli
   LONGDESC
   option :from, required: true
   option :batch
+  option :only_staff, type: :boolean
+  option :only_salary, type: :boolean
   def start
     unless options[:batch]
       load_rails
@@ -43,7 +52,6 @@ class Engineer < DuoduoCli
     end
 
     init_logger
-    # logger.level = Logger::ERROR
     logger.set_info_path(STDOUT)
 
     logger.info "[#{Time.now}] Import start"
@@ -58,7 +66,7 @@ class Engineer < DuoduoCli
     process_provide_staff_dir
 
     # 项目
-    iterate_projects
+    iterate_projects(options)
   end
 
   desc 'validate_staff', ''
@@ -428,7 +436,7 @@ class Engineer < DuoduoCli
       @projects = ary
     end
 
-    def iterate_projects
+    def iterate_projects(option)
       customer_dir.entries.sort.each do |pn|
         next if skip_file?(pn) or special_file?(pn)
 
@@ -441,14 +449,28 @@ class Engineer < DuoduoCli
 
         logger.error "#{better_path dir} ; 扫描项目文件夹 ; 未在项目汇总中找到该项目" and next if project.blank?
 
-        staff_files    = find_in_project_dir(dir: dir, type: :staff)
-        contract_files = find_in_project_dir(dir: dir, type: :contract)
-        proxy_files    = find_in_project_dir(dir: dir, type: :proxy)
-        salary_files   = find_in_project_dir(dir: dir, type: :salary)
+        if option[:only_staff]
+          staff_files    = find_in_project_dir(dir: dir, type: :staff)
+          process_staff_files(staff_files, project)
+          next
+        end
 
+        if option[:only_salary]
+          salary_files   = find_in_project_dir(dir: dir, type: :salary)
+          process_salary_files(salary_files, project)
+          next
+        end
+
+        staff_files    = find_in_project_dir(dir: dir, type: :staff)
         process_staff_files(staff_files, project)
+
+        contract_files = find_in_project_dir(dir: dir, type: :contract)
         process_contract_files(contract_files, project)
+
+        proxy_files    = find_in_project_dir(dir: dir, type: :proxy)
         process_proxy_files(proxy_files, project)
+
+        salary_files   = find_in_project_dir(dir: dir, type: :salary)
         process_salary_files(salary_files, project)
       end
     end
