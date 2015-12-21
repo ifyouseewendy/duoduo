@@ -511,22 +511,24 @@ class Engineer < DuoduoCli
         _id, name, gender, identity_card = data.map{|col| String === col ? col.strip : col}
         next if _id.nil?
 
+        name = name.try(:delete, ' ')
+
         begin
           staff = EngineeringStaff.where(identity_card: identity_card).first
 
           if staff.present?
             # logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}）"
 
-            if staff.name != name.try(:delete, ' ')
-              logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name.delete(' ')} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
+            if staff.name != name
+              logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
             end
           else
-            logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name.delete(' ')} - #{identity_card}）未在任何客户中找到"
+            logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）未在任何客户中找到"
 
             gender_map = {'男' => 0, '女' => 1}
             staff = EngineeringStaff.create!(
               engineering_customer: project.engineering_customer,
-              name: name.delete(' '),
+              name: name,
               gender: gender_map[gender],
               identity_card: identity_card
             )
