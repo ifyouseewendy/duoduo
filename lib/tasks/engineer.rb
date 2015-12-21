@@ -27,34 +27,6 @@ class Engineer < DuoduoCli
     logger.info "[#{Time.now}] Import end"
   end
 
-  desc 'validate_staff', ''
-  option :from, required: true
-  def validate_staff
-    fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
-
-    load_rails
-    clean_db(:engineer)
-
-    clean_logger
-    init_logger
-    logger.set_info_path(STDOUT)
-
-    logger.info "[#{Time.now}] Import start"
-
-    dir = Pathname(options[:from])
-    dir.entries.sort.each do |entry|
-      next if skip_file?(entry)
-
-      set_customer_dir load_from(dir.join(entry))
-      logger.info "- #{customer_dir.basename}"
-
-      process_provide_staff_dir
-    end
-    prcoess_duplicate_between_customers
-
-    logger.info "[#{Time.now}] Import end"
-  end
-
   desc "start", "Import engineering data"
   long_desc <<-LONGDESC
     Examples:
@@ -87,6 +59,34 @@ class Engineer < DuoduoCli
 
     # 项目
     iterate_projects
+  end
+
+  desc 'validate_staff', ''
+  option :from, required: true
+  def validate_staff
+    fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
+
+    load_rails
+    clean_db(:engineer)
+
+    clean_logger
+    init_logger
+    logger.set_info_path(STDOUT)
+
+    logger.info "[#{Time.now}] Import start"
+
+    dir = Pathname(options[:from])
+    dir.entries.sort.each do |entry|
+      next if skip_file?(entry)
+
+      set_customer_dir load_from(dir.join(entry))
+      logger.info "- #{customer_dir.basename}"
+
+      process_provide_staff_dir
+    end
+    prcoess_duplicate_between_customers
+
+    logger.info "[#{Time.now}] Import end"
   end
 
   private
