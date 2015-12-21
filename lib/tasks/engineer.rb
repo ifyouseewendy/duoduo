@@ -21,9 +21,8 @@ class Engineer < DuoduoCli
     logger.info "[#{Time.now}] Import start"
 
     dir = Pathname(options[:from])
-    dir.entries.sort.each do |entry|
-      next if skip_file?(entry)
-
+    entries = dir.entries.reject{|en| skip_file?(en)}.sort_by{|en| en.basename.to_s.split('、')[0].to_i }
+    entries.each do |entry|
       self.class.new.invoke('start', [],
         from: dir.join(entry),
         batch: true,
