@@ -56,6 +56,9 @@ class Engineer < DuoduoCli
     init_logger
     logger.set_info_path(STDOUT)
 
+    warn_result  = Rails.root.join("tmp").join("import_result").join("用工明细员工校验结果.csv")
+    logger.set_warn_path warn_result
+
     logger.info "[#{Time.now}] Import start"
 
     set_customer_dir load_from(options[:from])
@@ -70,6 +73,8 @@ class Engineer < DuoduoCli
 
     # 项目
     iterate_projects(options)
+
+    logger.info warn_result.to_s
   end
 
   desc 'validate_staff', ''
@@ -520,10 +525,10 @@ class Engineer < DuoduoCli
             # logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}）"
 
             if staff.name != name
-              logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
+              logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
             end
           else
-            logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）未在任何客户中找到"
+            logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）未在任何客户中找到"
 
             gender_map = {'男' => 0, '女' => 1}
             staff = EngineeringStaff.create!(
@@ -536,7 +541,7 @@ class Engineer < DuoduoCli
 
           staff.engineering_projects << project
         rescue => e
-          logger.error "#{better_path file} ; 用工明细 ; 用工明细 ; #{name} #{e.message} ; #{e.backtrace[0]}"
+          logger.warn "#{better_path file} ; 用工明细 ; 用工明细 ; #{name} #{e.message} ; #{e.backtrace[0]}"
         end
       end
     end
