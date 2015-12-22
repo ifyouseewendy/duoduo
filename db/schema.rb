@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151221125746) do
+ActiveRecord::Schema.define(version: 20151222053724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -166,7 +166,10 @@ ActiveRecord::Schema.define(version: 20151221125746) do
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.text     "outcome_bank"
+    t.integer  "sub_company_id"
   end
+
+  add_index "engineering_corps", ["sub_company_id"], name: "index_engineering_corps_on_sub_company_id", using: :btree
 
   create_table "engineering_customers", force: :cascade do |t|
     t.text     "name"
@@ -697,6 +700,7 @@ ActiveRecord::Schema.define(version: 20151221125746) do
   add_foreign_key "engineering_big_table_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_big_table_salary_items", "engineering_staffs"
   add_foreign_key "engineering_big_table_salary_table_references", "engineering_salary_tables"
+  add_foreign_key "engineering_corps", "sub_companies"
   add_foreign_key "engineering_dong_fang_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_dong_fang_salary_items", "engineering_staffs"
   add_foreign_key "engineering_income_items", "engineering_projects"
