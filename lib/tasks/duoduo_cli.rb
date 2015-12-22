@@ -68,7 +68,7 @@ class DuoduoCli < Thor
       if types.include? :engineer
         collection += [
           EngineeringSalaryTable,
-          EngineeringStaff, EngineeringProject, EngineeringCorp, EngineeringCustomer,
+          EngineeringStaff, EngineeringProject, EngineeringCustomer,
           EngineeringCompanySocialInsuranceAmount, EngineeringCompanyMedicalInsuranceAmount
         ]
       end

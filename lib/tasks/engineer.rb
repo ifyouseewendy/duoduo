@@ -659,14 +659,15 @@ class Engineer < DuoduoCli
         line = data.delete(' ').split.detect{|str| str.start_with?('乙方') }
 
         if line.blank?
-          logger.error "#{better_path path} ; 合同文件 ; 无法解析乙方名称"
+          logger.error "#{better_path path} ; 合同文件 ; 无法解析到乙方名称"
         else
           corp_name = line.delete(" ").split(/[:|：]/)[-1]
           ec = EngineeringCorp.where(name: corp_name).first
 
           if ec.blank?
-            logger.error "#{better_path path} ; 合同文件 ; 未找到乙方大协议"
+            logger.error "#{better_path path} ; 合同文件 ; 未找到乙方大协议：#{corp_name}"
           else
+            logger.info "找到乙方大协议：#{corp_name}"
             ec.engineering_projects << project
           end
         end
