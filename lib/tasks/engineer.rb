@@ -678,7 +678,8 @@ class Engineer < DuoduoCli
           ec = EngineeringCorp.where(name: corp_name).first
 
           if ec.blank?
-            logger.error "#{better_path path} ; 合同文件 ; 未找到乙方大协议：#{corp_name}"
+            ll = data.delete(' ').split.detect{|str| str.start_with?('甲方')}
+            logger.error "#{better_path path} ; 合同文件 ; 未找到乙方大协议：#{corp_name} ; #{ll}"
           else
             ec.engineering_projects << project
           end
