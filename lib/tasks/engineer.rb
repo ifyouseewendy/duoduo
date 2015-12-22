@@ -604,6 +604,7 @@ class Engineer < DuoduoCli
       files.each do |file|
         logger.info "----- #{file.basename}"
         set_project_date_range(project: project, path: file)
+        set_engineering_corp(project: project, path: file)
         project.add_contract_file(path: file, role: :normal)
       end
     end
@@ -630,6 +631,32 @@ class Engineer < DuoduoCli
           logger.info "----- 解析合同文件，并更新项目起止日期。合同：#{project.range.map(&:to_s).join(' ~ ')}，汇总：#{[start_date, end_date].map(&:to_s).join(' ~ ')}"
         end
         project.update_attributes(project_start_date: start_date, project_end_date: end_date)
+      end
+    end
+
+    def set_engineering_corp(project:, path:)
+      DocGenerator::TempPath.execute do |temp_path|
+        FileUtils.cp path, temp_path
+        file = temp_path.join( Pathname.new(path).basename )
+
+        DocRipper::rip(file.to_s) # Generate a file named #{file.basename}.txt
+        txt_file = file.basename.to_s.split('.')[0,1].push('txt').join('.')
+
+        data = File.read txt_file
+        line = data.delete(' ').split.detect{|str| str.start_with?('乙方') }
+
+        if line.blank?
+          logger.error "#{better_path path} ; 合同文件 ; 无法解析乙方名称"
+        else
+          corp_name = line.delete(" ").split(/[:|：]/)[-1]
+          ec = EngineeringCorp.where(name: corp_name).first
+
+          if ec.blank?
+            logger.error "#{better_path path} ; 合同文件 ; 未找到乙方大协议"
+          else
+            ec.engineering_projects << project
+          end
+        end
       end
     end
 
