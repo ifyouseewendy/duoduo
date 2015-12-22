@@ -105,6 +105,38 @@ class Engineer < DuoduoCli
     logger.info "[#{Time.now}] Import end"
   end
 
+  desc 'add_contract_to_corporation', ''
+  option :from, required: true
+  def add_contract_to_corporation
+    fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
+
+    load_rails
+
+    init_logger
+    logger.set_info_path(STDOUT)
+
+    logger.info "[#{Time.now}] Import start"
+
+    dir = Pathname(options[:from])
+    dir.entries.sort.each do |entry|
+      next if skip_file?(entry)
+
+      parts = entry.basename.to_s.split('.')[0].split.map(&:strip)
+
+      _, company_name, corp_name, dates = parts
+      sub_company = find_sub_company_by(name: company_name)
+      contract_start_date, contract_end_date = dates.split('-').map{|d| Date.parse(d)}
+      EngineeringCorp.create!(
+        name: corp_name,
+        sub_company: sub_company,
+        contract_start_date: contract_start_date,
+        contract_end_date: contract_end_date
+      )
+    end
+
+    logger.info "[#{Time.now}] Import end"
+  end
+
   private
 
     def find_sub_company_by(name:)
