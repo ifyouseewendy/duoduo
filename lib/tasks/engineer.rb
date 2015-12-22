@@ -115,6 +115,8 @@ class Engineer < DuoduoCli
         SubCompany.query_name('公主岭').first
       elsif name.index('人力')
         SubCompany.where(name: '吉易人力资源').first
+      elsif name.index('百奕')
+        SubCompany.query_name('百奕').first
       else
         logger.error "#{better_path(project_info)} ; 项目汇总 ; 无法解析子公司名称: #{name}"
         nil
