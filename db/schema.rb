@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151221130651) do
+ActiveRecord::Schema.define(version: 20151221125746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,14 +167,6 @@ ActiveRecord::Schema.define(version: 20151221130651) do
     t.datetime "updated_at",          null: false
     t.text     "outcome_bank"
   end
-
-  create_table "engineering_corps_sub_companies", id: false, force: :cascade do |t|
-    t.integer "engineering_corp_id", null: false
-    t.integer "sub_company_id",      null: false
-  end
-
-  add_index "engineering_corps_sub_companies", ["engineering_corp_id", "sub_company_id"], name: "idx_on_engineering_corp_id_and_sub_company_id", using: :btree
-  add_index "engineering_corps_sub_companies", ["sub_company_id", "engineering_corp_id"], name: "idx_sub_company_id_and_engineering_corp_id", using: :btree
 
   create_table "engineering_customers", force: :cascade do |t|
     t.text     "name"
