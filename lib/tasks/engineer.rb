@@ -9,6 +9,7 @@ class Engineer < DuoduoCli
   option :only_staff, type: :boolean
   option :only_salary, type: :boolean
   option :only_project, type: :boolean
+  option :only_contract, type: :boolean
   def batch_start
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
@@ -29,6 +30,7 @@ class Engineer < DuoduoCli
         only_staff: options[:only_staff],
         only_salary: options[:only_salary],
         only_project: options[:only_project],
+        only_contract: options[:only_contract],
        )
     end
 
@@ -46,6 +48,7 @@ class Engineer < DuoduoCli
   option :only_staff, type: :boolean
   option :only_salary, type: :boolean
   option :only_project, type: :boolean
+  option :only_contract, type: :boolean
   def start
     unless options[:batch]
       load_rails
@@ -511,6 +514,12 @@ class Engineer < DuoduoCli
         if option[:only_salary]
           salary_files   = find_in_project_dir(dir: dir, type: :salary)
           process_salary_files(salary_files, project)
+          next
+        end
+
+        if option[:only_contract]
+          contract_files = find_in_project_dir(dir: dir, type: :contract)
+          process_contract_files(contract_files, project)
           next
         end
 
