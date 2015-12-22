@@ -73,6 +73,12 @@ class DuoduoCli < Thor
         ]
       end
 
+      if types.include? :engineer_corp
+        collection += [
+          EngineeringCorp
+        ]
+      end
+
       if types.include? :base
         collection += [
           AdminUser,
