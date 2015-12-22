@@ -124,8 +124,9 @@ class Engineer < DuoduoCli
     def parse_project_dates(str)
       fail "项目汇总 ; 无法解析工程日期: #{str} ; #{project_info}" if str.split('-').count > 2
 
-      start_date, end_date = str.split('-')
+      start_date, end_date = str.gsub("。", '.').split('-').map(&:strip)
 
+      start_parts = start_date.split('.')
       start_date = revise_project_date start_date
 
       if end_date.nil?
@@ -152,13 +153,19 @@ class Engineer < DuoduoCli
             end
           end
         elsif parts.count == 1
-          parts.unshift year
-          parts.push '1'
+          if start_parts.count == 2
+            parts.unshift year
+            parts.push '1'
+          elsif start_parts.count == 3
+            month = start_date.month
+            parts.unshift month
+            parts.unshift year
+          end
         else
           fail "项目汇总 ; 无法解析工程结束日期：#{end_date} #{project_info}"
         end
 
-        end_date = Date.parse parts.join('.')
+        end_date = Date.parse parts.map(&:to_s).join('.')
         end_date = end_date.end_of_month if end_date.day == 1
       end
 
@@ -336,7 +343,11 @@ class Engineer < DuoduoCli
         end
 
         begin
-          project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
+          if project_dates.blank?
+            project_start_date, project_end_date = nil, nil
+          else
+            project_start_date, project_end_date = parse_project_dates(project_dates.to_s)
+          end
         rescue => _
           logger.error "#{better_path project_info} ; 项目汇总 ; 无法解析工程起止日期：#{project_dates}"
           next
