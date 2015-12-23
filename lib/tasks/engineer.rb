@@ -598,6 +598,7 @@ class Engineer < DuoduoCli
 
             if staff.name != name
               logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
+              staff.update_attribute(:alias_name, name)
             end
           else
             logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）未在任何客户中找到"
@@ -851,6 +852,7 @@ class Engineer < DuoduoCli
 
           name = name.try(:delete, ' ')
           staff = project.engineering_staffs.where(name: name).first
+          staff = project.engineering_staffs.where(alias_name: name).first if staff.nil?
           if staff.nil?
             logger.error "#{better_path path} ; 工资表 ; 员工信息校验 ; 未找到员工: #{name}"
             skip_total_check = true
