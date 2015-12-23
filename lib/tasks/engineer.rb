@@ -3,6 +3,8 @@ require_relative 'duoduo_cli'
 class Engineer < DuoduoCli
   attr_reader :logger, :customer_dir, :customer, :project_info, :project_info_xlsx, :projects
 
+  $PERHAPS = Set.new
+
   desc "batch_start", ''
   option :from, required: true
   option :skip_clean, type: :boolean
@@ -35,6 +37,10 @@ class Engineer < DuoduoCli
     end
 
     logger.info "[#{Time.now}] Import end"
+
+    fatal_result = Rails.root.join("log").join("添加到各客户提供人员不可用.csv")
+    logger.set_fatal_path fatal_result
+    $PERHAPS.each{|perhap| logger.fatal perhap}
   end
 
   desc "start", "Import engineering data"
@@ -62,7 +68,6 @@ class Engineer < DuoduoCli
     warn_result  = Rails.root.join("log").join("用工明细员工校验结果.csv")
     logger.set_warn_path warn_result
 
-    $PERHAPS = []
     logger.info "[#{Time.now}] Import start"
 
     set_customer_dir load_from(options[:from])
@@ -79,10 +84,6 @@ class Engineer < DuoduoCli
     iterate_projects(options)
 
     logger.info warn_result.to_s
-
-    fatal_result = Rails.root.join("log").join("添加到各客户提供人员不可用.csv")
-    logger.set_fatal_path fatal_result
-    $PERHAPS.each{|perhap| logger.fatal perhap}
   end
 
   desc 'validate_staff', ''
