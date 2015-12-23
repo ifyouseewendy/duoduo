@@ -62,6 +62,7 @@ class Engineer < DuoduoCli
     warn_result  = Rails.root.join("log").join("用工明细员工校验结果.csv")
     logger.set_warn_path warn_result
 
+    $PERHAPS = []
     logger.info "[#{Time.now}] Import start"
 
     set_customer_dir load_from(options[:from])
@@ -78,6 +79,10 @@ class Engineer < DuoduoCli
     iterate_projects(options)
 
     logger.info warn_result.to_s
+
+    fatal_result = Rails.root.join("log").join("添加到各客户提供人员不可用.csv")
+    logger.set_fatal_path fatal_result
+    $PERHAPS.each{|perhap| logger.fatal perhap}
   end
 
   desc 'validate_staff', ''
@@ -507,7 +512,8 @@ class Engineer < DuoduoCli
     end
 
     def iterate_projects(option)
-      customer_dir.entries.sort.each do |pn|
+      entries = customer_dir.entries.reject{|en| skip_file?(en)}.sort_by{|en| en.basename.to_s.split(/[、|.]/)[0].to_i }
+      entries.each do |pn|
         next if skip_file?(pn) or special_file?(pn)
 
         logger.info "--- #{pn}"
@@ -600,19 +606,37 @@ class Engineer < DuoduoCli
               logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
               staff.update_attribute(:alias_name, name)
             end
+            staff.engineering_projects << project
           else
-            logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）未在任何客户中找到"
+            perhaps = []
+            perhaps = EngineeringStaff.where(name: name).to_a
 
-            gender_map = {'男' => 0, '女' => 1}
-            staff = EngineeringStaff.create!(
-              engineering_customer: project.engineering_customer,
-              name: name,
-              gender: gender_map[gender],
-              identity_card: identity_card
-            )
+            if perhaps.blank?
+              # 附加到该客户的提供人员（不可用）中
+
+              $PERHAPS << [project.engineering_customer.name, name, "'#{identity_card}"].join(';')
+
+              # gender_map = {'男' => 0, '女' => 1}
+              # staff = EngineeringStaff.create!(
+              #   engineering_customer: project.engineering_customer,
+              #   name: name,
+              #   gender: gender_map[gender],
+              #   identity_card: identity_card,
+              #   enable: false
+              # )
+              # staff.engineering_projects << project
+            else
+              if perhaps.count == 1 && (perhaps[0].engineering_customer.id == project.engineering_customer.id)
+                staff = perhaps[0]
+                staff.engineering_projects << project
+              else
+                perhaps_output = perhaps.map{|st| [st.name, st.identity_card, st.engineering_customer.name].join(';')}.join(';')
+                logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）未在任何客户中找到 ; #{perhaps_output}"
+              end
+            end
           end
 
-          staff.engineering_projects << project
+          # staff.engineering_projects << project
         rescue => e
           logger.warn "#{better_path file} ; 用工明细 ; 用工明细 ; #{name} #{e.message} ; #{e.backtrace[0]}"
         end
