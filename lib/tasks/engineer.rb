@@ -731,6 +731,10 @@ class Engineer < DuoduoCli
 
       ranges = project.split_range xlsx.sheets.reject{|name| name == 'SWDXMTKP' }.count
 
+      custom_range = xlsx.sheets.all?{|name| name.start_with?('!') or name.start_with?("！") }
+      ranges = xlsx.sheets.map{|name| name.strip.delete('!！补')}.map{|date| Date.parse(date+'.1')}.map{|date| [date, date.end_of_month]} \
+        if custom_range
+
       xlsx.sheets.each_with_index do |sheet_name, sheet_id|
         next if sheet_name == 'SWDXMTKP' # Werid MS addtional sheet
 
