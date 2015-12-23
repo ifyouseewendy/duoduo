@@ -59,7 +59,7 @@ class Engineer < DuoduoCli
     init_logger
     logger.set_info_path(STDOUT)
 
-    warn_result  = Rails.root.join("tmp").join("import_result").join("用工明细员工校验结果.csv")
+    warn_result  = Rails.root.join("log").join("用工明细员工校验结果.csv")
     logger.set_warn_path warn_result
 
     logger.info "[#{Time.now}] Import start"
@@ -327,8 +327,8 @@ class Engineer < DuoduoCli
     def process_project_infos
       files = get_project_info_files
 
-      logger.error "#{better_path customer_dir} ; 项目汇总 ; 没有信息汇总" and return \
-        if files.blank?
+      # logger.error "#{better_path customer_dir} ; 项目汇总 ; 没有信息汇总" and return if files.blank?
+      return if files.blank?
 
       files.reduce({}) do |ha, file|
         set_project_info(file)
@@ -403,9 +403,10 @@ class Engineer < DuoduoCli
           next
         end
 
+        id = id.to_i if Float === id
         begin
           project = customer.engineering_projects.create!(
-            name: "#{id.to_i}、#{name}",
+            name: "#{id}、#{name}",
             start_date: start_date,
             project_start_date: project_start_date,
             project_end_date: project_end_date,
@@ -447,10 +448,10 @@ class Engineer < DuoduoCli
           end
         end
 
-        logger.error "#{better_path project_info} ; 项目汇总 ; 校验失败：劳务费加管理费不等于费用合计，id: #{id.to_i}"\
+        logger.error "#{better_path project_info} ; 项目汇总 ; 校验失败：劳务费加管理费不等于费用合计，id: #{id}"\
           unless equal_value?(project.total_amount, total_amount)
 
-        projects[id.to_i] = project
+        projects[id.to_s] = project
       end
 
       projects
@@ -479,7 +480,7 @@ class Engineer < DuoduoCli
       total.each do |k,v|
         value_in_file = v.to_f.round(2)
         if k == :outcome_amount
-          value_calc = projects.values.map{|pr| pr.outcome_items.map(&:amount).sum }.sum.to_f.round(2)
+          value_calc = projects.values.map{|pr| pr.outcome_items.map(&:amount).map(&:to_f).sum }.sum.to_f.round(2)
           logger.error "#{better_path project_info} ; 项目汇总 ; 校验失败: #{total_i18n[k]} ; 文件中合计 #{value_in_file} - 累加合计 #{value_calc}" \
             unless equal_value?(value_in_file, value_calc)
         else
@@ -512,7 +513,7 @@ class Engineer < DuoduoCli
         logger.info "--- #{pn}"
 
         id, _name = pn.to_s.split(/[.|、]/)
-        project = projects[id.to_i]
+        project = projects[id.strip]
 
         dir = customer_dir.join(pn)
 
