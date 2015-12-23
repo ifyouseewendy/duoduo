@@ -534,6 +534,10 @@ class Engineer < DuoduoCli
         if option[:only_contract]
           contract_files = find_in_project_dir(dir: dir, type: :contract)
           process_contract_files(contract_files, project)
+
+          proxy_files    = find_in_project_dir(dir: dir, type: :proxy)
+          process_proxy_files(proxy_files, project)
+
           next
         end
 
