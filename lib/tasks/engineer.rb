@@ -760,9 +760,12 @@ class Engineer < DuoduoCli
         start_date, end_date = ranges[sheet_id]
 
         begin
+          name = [start_date, end_date].join(' ~ ')
+          name << ' 补' if sheet_name.index('补')
+
           st = EngineeringSalaryTable.create!(
             engineering_project: project,
-            name: [start_date, end_date].join(' ~ '),
+            name: name,
             start_date: start_date,
             end_date: end_date,
             type: type
