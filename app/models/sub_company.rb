@@ -1,4 +1,5 @@
 class SubCompany < ActiveRecord::Base
+  has_many :normal_corporations
   has_and_belongs_to_many :engineering_customers
   has_many :engineering_corps
 

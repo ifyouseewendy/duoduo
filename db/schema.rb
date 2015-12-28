@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151228062636) do
+ActiveRecord::Schema.define(version: 20151228063015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -518,6 +518,7 @@ ActiveRecord::Schema.define(version: 20151228062636) do
     t.date     "contract_start_date"
     t.date     "contract_end_date"
     t.text     "full_name"
+    t.integer  "sub_company_id"
   end
 
   add_index "normal_corporations", ["account"], name: "index_normal_corporations_on_account", using: :btree
@@ -532,6 +533,7 @@ ActiveRecord::Schema.define(version: 20151228062636) do
   add_index "normal_corporations", ["license"], name: "index_normal_corporations_on_license", using: :btree
   add_index "normal_corporations", ["name"], name: "index_normal_corporations_on_name", using: :btree
   add_index "normal_corporations", ["organization_serial"], name: "index_normal_corporations_on_organization_serial", using: :btree
+  add_index "normal_corporations", ["sub_company_id"], name: "index_normal_corporations_on_sub_company_id", using: :btree
   add_index "normal_corporations", ["taxpayer_serial"], name: "index_normal_corporations_on_taxpayer_serial", using: :btree
   add_index "normal_corporations", ["telephone"], name: "index_normal_corporations_on_telephone", using: :btree
 
@@ -715,6 +717,7 @@ ActiveRecord::Schema.define(version: 20151228062636) do
   add_foreign_key "non_full_day_salary_items", "non_full_day_salary_tables"
   add_foreign_key "non_full_day_salary_items", "normal_staffs"
   add_foreign_key "non_full_day_salary_tables", "normal_corporations"
+  add_foreign_key "normal_corporations", "sub_companies"
   add_foreign_key "normal_staffs", "normal_corporations"
   add_foreign_key "normal_staffs", "sub_companies"
   add_foreign_key "salary_items", "normal_staffs"
