@@ -33,6 +33,8 @@ class BusinessCorporation < DuoduoCli
     set_mapping_file load_from(options[:mapping_from])
     parse_mapping_file
 
+    seed_internal_corporation
+
     logger.info "[#{Time.now}] Import end"
   end
 
@@ -144,6 +146,12 @@ class BusinessCorporation < DuoduoCli
       special_full_names.each do |full_name|
         NormalCorporation.where(full_name: full_name, name: nil).first.delete
       end
+    end
+
+    def seed_internal_corporation
+      NormalCorporation.create!(
+        name: '内部'
+      )
     end
 end
 
