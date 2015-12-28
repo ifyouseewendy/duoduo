@@ -19,6 +19,7 @@ class BusinessStaff < DuoduoCli
   def start
     load_rails
     clean_db(:business_staff)
+    clean_logger
     init_logger
 
     logger.info "[#{Time.now}] Import start"
@@ -31,7 +32,7 @@ class BusinessStaff < DuoduoCli
     end
 
     files.each do |f|
-      logger.info "==> Processing #{f.basename}"
+      logger.info "#{f.basename}"
 
       set_file(f)
       set_sub_company
@@ -95,10 +96,60 @@ class BusinessStaff < DuoduoCli
       @failed = [ [], [], [], [] ]
     end
 
+    def get_right_corporation_name(name, work_type = nil)
+      return '内部' if name.index '内部'
+
+      if sub_company.name == '吉易通讯公司'
+        if name == '铁通'
+          '铁通（通讯）'
+        elsif name.index('联通') && work_type.present?
+          if work_type =~ /线务/
+            name.gsub('联通', '') + '线务'
+          elsif work_type =~ /话务/
+            name.gsub('联通', '') + '话务'
+          elsif work_type =~ /营业/
+            name.gsub('联通', '') + '营业'
+          else
+            name
+          end
+        else
+          name
+        end
+      elsif sub_company.name == '吉易人力资源'
+        if name == '铁通'
+          '铁通（人力）'
+        elsif name == '铁东地税'
+          '铁东地税（人力）'
+        elsif name == '铁西地税'
+          '铁西地税（人力）'
+        else
+          name
+        end
+      elsif sub_company.name == '吉易企业管理'
+        if name == '铁塔公司'
+          '铁塔公司（企业管理）'
+        else
+          name
+        end
+      elsif sub_company.name == '吉易物业公司'
+        if name == '铁通'
+          '铁通（物业）'
+        elsif name == '铁塔公司'
+          '铁塔公司（物业）'
+        elsif name == '铁西地税'
+          '铁西地税（物业）'
+        elsif name == '铁东地税'
+          '铁东地税（物业）'
+        else
+          name
+        end
+      end
+    end
+
     def process_first_sheet
       sheet_id = 0
       sheet = xlsx.sheet(sheet_id)
-      logger.info "--> Start processing Sheet #{sheet_id}"
+      # logger.info "--> Start processing Sheet #{sheet_id}"
 
       in_service = true
       contract_type = :normal_contract
@@ -109,17 +160,18 @@ class BusinessStaff < DuoduoCli
       return if last_row.nil?
 
       (2..last_row).each do |row_id|
-        logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
+        # logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
-        nest_index, name, _corporation_id, corporation_name, identity_card, age, gender, nation, grade, address, telephone, social_insurance_start_date, current_social_insurance_start_date, current_medical_insurance_start_date, arrive_current_company_at, dongfang_siping_contract_dates, current_contract_dates, social_insurance_serial, medical_insurance_serial, medical_insurance_card, backup_date, backup_place, work_place, work_type, remark, dongfang_gongzhuling_contract_dates, dongfang_gongzhuling_social_insurance_serial, dongfang_gongzhuling_medical_insurance_serial, baiyi_once_contract_dates = \
+        nest_index, name, _corporation_id, corporation_name, identity_card, age, gender, nation, grade, address, telephone, social_insurance_start_date, current_social_insurance_start_date, current_medical_insurance_start_date, arrive_current_company_at, dongfang_siping_contract_dates, current_contract_dates, current_contract_dates_cont, social_insurance_serial, medical_insurance_serial, medical_insurance_card, backup_date, backup_place, work_place, work_type, remark, dongfang_gongzhuling_contract_dates, dongfang_gongzhuling_social_insurance_serial, dongfang_gongzhuling_medical_insurance_serial, baiyi_once_contract_dates = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
 
         next if nest_index.nil?
 
         begin
-          normal_corporation_id = NormalCorporation.where(name: corporation_name).first
+          corp_name = get_right_corporation_name(corporation_name, work_type)
+          normal_corporation_id = NormalCorporation.where(name: corp_name).first.try(:id)
           # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
-          raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
+          logger.error "#{sub_company.name} ; #{xlsx.sheets[sheet_id]} ; #{name} ; 未找到合作单位 ; #{corporation_name}" if normal_corporation_id.nil?
 
           # Need to confirm
           #
@@ -155,9 +207,10 @@ class BusinessStaff < DuoduoCli
           #   :release_date
           #   :social_insurance_release_date
           #   :medical_insurance_release_date
+          in_contract = current_contract_dates_cont.blank?
           contract_attrs = {
             contract_type: contract_type,
-            in_contract: true,
+            in_contract: in_contract,
             contract_start_date: parse_date(current_contract_dates.split('-')[0]),
             contract_end_date: parse_date(current_contract_dates.split('-')[1]),
             arrive_current_company_at: parse_date(arrive_current_company_at),
@@ -187,6 +240,11 @@ class BusinessStaff < DuoduoCli
 
           # Create current contract
           LaborContract.create!(contract_attrs)
+
+          # Add a cont contract
+          if current_contract_dates_cont.present?
+            LaborContract.create!(contract_attrs.merge({in_contract: true}))
+          end
 
           # Create dongfang siping contract
           if dongfang_siping_contract_dates.present?
@@ -231,7 +289,7 @@ class BusinessStaff < DuoduoCli
     def process_second_sheet
       sheet_id = 1
       sheet = xlsx.sheet(sheet_id)
-      logger.info "--> Start processing Sheet #{sheet_id}"
+      # logger.info "--> Start processing Sheet #{sheet_id}"
 
       in_service = false
       contract_type = :normal_contract
@@ -242,7 +300,7 @@ class BusinessStaff < DuoduoCli
       return if last_row.nil?
 
       (2..last_row).each do |row_id|
-        logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
+        # logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
         nest_index, name, _corporation_id, corporation_name, identity_card, age, gender, nation, grade, address, telephone, social_insurance_start_date, current_social_insurance_start_date, current_medical_insurance_start_date, arrive_current_company_at, dongfang_siping_contract_dates, current_contract_dates, social_insurance_serial, medical_insurance_serial, medical_insurance_card, backup_date, backup_place, work_place, work_type, remark, dongfang_gongzhuling_contract_dates, dongfang_gongzhuling_social_insurance_serial, dongfang_gongzhuling_medical_insurance_serial, release_date, social_insurance_release_date, medical_insurance_release_date = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
@@ -250,9 +308,10 @@ class BusinessStaff < DuoduoCli
         next if nest_index.nil?
 
         begin
-          normal_corporation_id = NormalCorporation.where(name: corporation_name).first
+          corp_name = get_right_corporation_name(corporation_name, work_type)
+          normal_corporation_id = NormalCorporation.where(name: corp_name).first.try(:id)
           # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
-          raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
+          logger.error "#{sub_company.name} ; #{xlsx.sheets[sheet_id]} ; #{name} ; 未找到合作单位 ; #{corporation_name}" if normal_corporation_id.nil?
 
           # Need to confirm
           #
@@ -350,7 +409,7 @@ class BusinessStaff < DuoduoCli
     def process_third_sheet
       sheet_id = 2
       sheet = xlsx.sheet(sheet_id)
-      logger.info "--> Start processing Sheet #{sheet_id}"
+      # logger.info "--> Start processing Sheet #{sheet_id}"
 
       in_service = true
 
@@ -360,7 +419,7 @@ class BusinessStaff < DuoduoCli
       return if last_row.nil?
 
       (2..last_row).each do |row_id|
-        logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
+        # logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
         nest_index, name, _corporation_id, corporation_name, identity_card, gender, age, address, telephone, arrive_current_company_at, current_contract_dates, work_place, work_type, contract_type = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
@@ -370,9 +429,10 @@ class BusinessStaff < DuoduoCli
         next if nest_index.nil?
 
         begin
-          normal_corporation_id = NormalCorporation.where(name: corporation_name).first
+          corp_name = get_right_corporation_name(corporation_name, work_type)
+          normal_corporation_id = NormalCorporation.where(name: corp_name).first.try(:id)
           # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
-          raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
+          logger.error "#{sub_company.name} ; #{xlsx.sheets[sheet_id]} ; #{name} ; 未找到合作单位 ; #{corporation_name}" if normal_corporation_id.nil?
 
           # Need to confirm
           #
@@ -451,7 +511,7 @@ class BusinessStaff < DuoduoCli
     def process_fourth_sheet
       sheet_id = 3
       sheet = xlsx.sheet(sheet_id)
-      logger.info "--> Start processing Sheet #{sheet_id}"
+      # logger.info "--> Start processing Sheet #{sheet_id}"
 
       in_service = true
 
@@ -471,9 +531,10 @@ class BusinessStaff < DuoduoCli
         next if nest_index.nil?
 
         begin
-          normal_corporation_id = NormalCorporation.where(name: corporation_name).first
+          corp_name = get_right_corporation_name(corporation_name, work_type)
+          normal_corporation_id = NormalCorporation.where(name: corp_name).first.try(:id)
           # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
-          raise "未找到合作单位(名称: #{corporation_name})" if normal_corporation_id.nil?
+          logger.error "#{sub_company.name} ; #{xlsx.sheets[sheet_id]} ; #{name} ; 未找到合作单位 ; #{corporation_name}" if normal_corporation_id.nil?
 
           # Need to confirm
           #
