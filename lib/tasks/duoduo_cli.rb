@@ -52,8 +52,7 @@ class DuoduoCli < Thor
 
       if types.include? :business_staff
         collection += [
-          LaborContract,
-          NormalStaff, NormalCorporation,
+          LaborContract, NormalStaff
         ]
       end
 
