@@ -598,6 +598,8 @@ class Engineer < DuoduoCli
         name = name.try(:delete, ' ')
         next if name == '姓名'
 
+        identity_card = identity_card.try(:delete, " ") # This is a ghost space from xls, which bytes is [194, 160]
+
         begin
           staff = EngineeringStaff.where(identity_card: identity_card).first
 
