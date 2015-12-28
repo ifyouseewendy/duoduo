@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151223063246) do
+ActiveRecord::Schema.define(version: 20151228062636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -534,14 +534,6 @@ ActiveRecord::Schema.define(version: 20151223063246) do
   add_index "normal_corporations", ["organization_serial"], name: "index_normal_corporations_on_organization_serial", using: :btree
   add_index "normal_corporations", ["taxpayer_serial"], name: "index_normal_corporations_on_taxpayer_serial", using: :btree
   add_index "normal_corporations", ["telephone"], name: "index_normal_corporations_on_telephone", using: :btree
-
-  create_table "normal_corporations_sub_companies", id: false, force: :cascade do |t|
-    t.integer "normal_corporation_id", null: false
-    t.integer "sub_company_id",        null: false
-  end
-
-  add_index "normal_corporations_sub_companies", ["normal_corporation_id", "sub_company_id"], name: "idx_on_normal_corporation_id_and_sub_company_id", using: :btree
-  add_index "normal_corporations_sub_companies", ["sub_company_id", "normal_corporation_id"], name: "idx_sub_company_id_and_normal_corporation_id", using: :btree
 
   create_table "normal_staffs", force: :cascade do |t|
     t.text     "name"
