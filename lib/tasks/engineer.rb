@@ -596,6 +596,7 @@ class Engineer < DuoduoCli
         next if _id.nil?
 
         name = name.try(:delete, ' ')
+        next if name == '姓名'
 
         begin
           staff = EngineeringStaff.where(identity_card: identity_card).first
@@ -877,9 +878,18 @@ class Engineer < DuoduoCli
 
           name = name.try(:delete, ' ')
           staff = project.engineering_staffs.where(name: name).first
+
+          # Check alias name
           staff = project.engineering_staffs.where(alias_name: name).first if staff.nil?
+
+          # Check customer's provide list
           if staff.nil?
-            logger.error "#{better_path path} ; 工资表 ; 员工信息校验 ; 未找到员工: #{name}"
+            staff = project.engineering_customer.engineering_staffs.where(name: name).first
+            staff.engineering_projects << project if staff.present?
+          end
+
+          if staff.nil?
+            logger.error "#{better_path path} ; 工资表 ; 员工信息校验 ; 未找到员工: #{name} ; 请加入到客户提供人员（不可用中）"
             skip_total_check = true
             next
           end
