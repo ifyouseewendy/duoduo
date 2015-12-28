@@ -15,7 +15,7 @@ class BusinessCorporation < DuoduoCli
   long_desc <<-LONGDESC
     Examples:
 
-      ruby lib/tasks/business_corporation.rb start --from=
+      ruby lib/tasks/business_corporation.rb start --from= --mapping-from=
   LONGDESC
   option :from, required: true
   option :mapping_from, required: true
@@ -69,6 +69,7 @@ class BusinessCorporation < DuoduoCli
         sub_company = SubCompany.find_by_name(sub_company_name)
 
         nc = NormalCorporation.new(
+          sub_company: sub_company,
           full_name: full_name,
           license: license,
           taxpayer_serial: taxpayer_serial,
@@ -88,7 +89,6 @@ class BusinessCorporation < DuoduoCli
           remark: remark,
         )
         nc.save(validate: false)
-        nc.sub_companies << sub_company
       end
     end
 
@@ -107,19 +107,42 @@ class BusinessCorporation < DuoduoCli
     def parse_mapping_file
       set_mapping_xlsx
 
+      special_full_names = ['四平电力设备制造安装有限公司（电力设备）', '中国邮政集团公司四平市分公司']
+
       mapping_xlsx.sheet(0).to_a.each_with_index do |row, idx|
         next if idx == 0
 
         # 合作单位名称 合同中全称
-        name, full_name = row.map{|col| String === col ? col.strip : col}
-
+        company_name, name, _, full_name = row.map{|col| String === col ? col.strip.delete("\n") : col}
         next if name.blank?
 
-        nc = NormalCorporation.where(full_name: full_name).first
-        raise "无法找到合作单位全称：#{full_name}" if nc.nil?
+        sub_company = SubCompany.find_by_name(company_name)
+        raise "无法找到吉易子公司：#{company_name}" if sub_company.nil?
 
-        nc.name = name
-        nc.save!
+        if full_name.blank?
+          NormalCorporation.create!(
+            sub_company: sub_company,
+            name: name
+          )
+        else
+          # Ungly patch
+          if special_full_names.include?(full_name)
+            nc = NormalCorporation.where(full_name: full_name).first
+            NormalCorporation.create!(
+              nc.attributes.reject{|k| k.to_s == 'id'}.merge({name: name})
+            )
+          else
+            nc = NormalCorporation.where(full_name: full_name).first
+            raise "无法找到合作单位全称：#{full_name}" if nc.nil?
+
+            nc.name = name
+            nc.save!
+          end
+        end
+      end
+
+      special_full_names.each do |full_name|
+        NormalCorporation.where(full_name: full_name, name: nil).first.delete
       end
     end
 end
