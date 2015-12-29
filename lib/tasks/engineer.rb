@@ -868,6 +868,15 @@ class Engineer < DuoduoCli
           elsif col_count == 10
             id, name, salary_deserve, social_insurance, medical_insurance, _total_insurance, _total_amount, tax, salary_in_fact, _ = \
               sheet.row(row_id).map{|col| String === col ? col.strip : col}
+            remark = nil
+
+            if customer.name.split('、')[0].to_i == 76 # Special
+              id, name, salary_deserve, social_insurance, medical_insurance, _total_insurance, salary_in_fact, admin_fee, _total_amount, _ = \
+                sheet.row(row_id).map{|col| String === col ? col.strip : col}
+              remark = "管理费：#{admin_fee}"
+              tax = 0
+              skip_total_check = true
+            end
           elsif col_count >= 15
             # TODO 待处理工程大表导入
             logger.error "#{better_path path} ; 工资表 ; 待处理大表"
@@ -905,7 +914,8 @@ class Engineer < DuoduoCli
                 social_insurance: social_insurance,
                 medical_insurance: medical_insurance,
                 salary_in_fact: salary_in_fact,
-                tax: tax.to_f
+                tax: tax.to_f,
+                remark: remark
               )
             else
               item = st.salary_items.create!(
