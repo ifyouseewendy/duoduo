@@ -563,16 +563,17 @@ class Engineer < DuoduoCli
     end
 
     def find_in_project_dir(dir:, type:)
+      entries = dir.entries.reject{|en| skip_file?(en)}
       files = \
         case type.to_sym
         when :staff
-          dir.entries.select{|file| file.to_s =~ /用工/ or file.to_s =~ /明细表/ }
+          entries.select{|file| file.to_s =~ /用工/ or file.to_s =~ /明细表/ }
         when :contract
-          dir.entries.select{|file| file.to_s =~ /合同/}
+          entries.select{|file| file.to_s =~ /合同/}
         when :proxy
-          dir.entries.select{|file| file.to_s =~ /协议/}
+          entries.select{|file| file.to_s =~ /协议/}
         when :salary
-          dir.entries.select{|file| file.to_s =~ /工资/}
+          entries.select{|file| file.to_s =~ /工资/}
         else
           logger.error "#{better_path dir} ; 项目文件夹 ; 无法解析项目内文件"
           return
