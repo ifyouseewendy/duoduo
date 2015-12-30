@@ -177,7 +177,8 @@ class BusinessStaff < DuoduoCli
           #
           #   :account
           #   :account_bank
-          ns = NormalStaff.create!(
+          ns = NormalStaff.where(identity_card: identity_card.to_s.strip).first
+          ns ||= NormalStaff.create!(
             nest_index: nest_index.to_i,
             name: name,
             account: nil,
@@ -317,7 +318,8 @@ class BusinessStaff < DuoduoCli
           #
           #   :account
           #   :account_bank
-          ns = NormalStaff.create!(
+          ns = NormalStaff.where(identity_card: identity_card.to_s.strip).first
+          ns ||= NormalStaff.create!(
             nest_index: nest_index.to_i,
             name: name,
             account: nil,
@@ -438,7 +440,8 @@ class BusinessStaff < DuoduoCli
           #
           #   :account
           #   :account_bank
-          ns = NormalStaff.create!(
+          ns = NormalStaff.where(identity_card: identity_card.to_s.strip).first
+          ns ||= NormalStaff.create!(
             nest_index: nest_index.to_i,
             name: name,
             account: nil,
@@ -540,7 +543,8 @@ class BusinessStaff < DuoduoCli
           #
           #   :account
           #   :account_bank
-          ns = NormalStaff.create!(
+          ns = NormalStaff.where(identity_card: identity_card.to_s.strip).first
+          ns ||= NormalStaff.create!(
             nest_index: nest_index.to_i,
             name: name,
             account: nil,
