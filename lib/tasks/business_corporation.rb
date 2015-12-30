@@ -135,7 +135,8 @@ class BusinessCorporation < DuoduoCli
             )
           else
             nc = NormalCorporation.where(full_name: full_name).first
-            raise "无法找到合作单位全称：#{full_name}" if nc.nil?
+            nc = NormalCorporation.new(full_name: full_name) if nc.nil?
+            # raise "无法找到合作单位全称：#{full_name}" if nc.nil?
 
             nc.name = name
             nc.save!

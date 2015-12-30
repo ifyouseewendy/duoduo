@@ -260,7 +260,7 @@ class BusinessStaff < DuoduoCli
 
           # Create dongfang gongzhuling contract
           if dongfang_gongzhuling_contract_dates.present?
-            contract_start_date, contract_end_date = dongfang_gongzhuling_contract_dates.split('-').map{|d| parse_date(d)}
+            contract_start_date, contract_end_date = dongfang_gongzhuling_contract_dates.split('-').map{|d| parse_date(d)} rescue nil
             contract_attrs_gongzhuling = contract_attrs.merge({
               in_contract: false,
               contract_start_date: contract_start_date,
@@ -627,7 +627,7 @@ class BusinessStaff < DuoduoCli
             p.workbook.add_worksheet(name: xlsx.sheets[i]) do |sheet|
               next if failed_sheet.blank?
               sheet.add_row xlsx.sheet(i).row(1)
-              failed_sheet.each{|stat| sheet.add_row stat}
+              failed_sheet.each{|stat| stat[4] = "\"#{stat[4]}\""; sheet.add_row(stat) }
             end
           end
           p.serialize(filepath.to_s)
