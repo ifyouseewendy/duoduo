@@ -292,7 +292,8 @@ class BusinessStaff < DuoduoCli
       sheet = xlsx.sheet(sheet_id)
       # logger.info "--> Start processing Sheet #{sheet_id}"
 
-      in_service = false
+      in_service = true
+      in_contract = false
       contract_type = :normal_contract
 
       # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 年龄, 性别, 民族, 学历, 家庭住址, 联系电话, 社保参加工作时间, 本单位社保参保时间, 本单位医保参保时间, 到本单位时间, 四平东方合同起止时间, 通讯合同起止时间 , 社保个人编号, 医保个人编号, 医保卡号, 备案时间, 备案地, 工作地点, 工种, 备注, 公主岭合同起止时间, 公主岭社保个人编号, 公主岭医保个人编号, 办理解除时间, 社保解除时间, 医保解除时间
@@ -349,7 +350,7 @@ class BusinessStaff < DuoduoCli
           #   :release_date
           contract_attrs = {
             contract_type: contract_type,
-            in_contract: false,
+            in_contract: in_contract,
             contract_start_date: parse_date(current_contract_dates.try(:split, '-').try(:[], 0)),
             contract_end_date: parse_date(current_contract_dates.try(:split, '-').try(:[], 1)),
             arrive_current_company_at: parse_date(arrive_current_company_at),
@@ -564,7 +565,8 @@ class BusinessStaff < DuoduoCli
             sub_company_id: sub_company.id
           )
 
-          contract_type = :none_contract
+          # contract_type = :none_contract
+          contract_type = parse_contract_type(contract_type)
           social_insurance_base = 1861.15
           medical_insurance_base = 3102
           house_accumulation_base = 0
@@ -577,7 +579,7 @@ class BusinessStaff < DuoduoCli
           #   :medical_insurance_release_date
           contract_attrs = {
             contract_type: contract_type,
-            in_contract: true,
+            in_contract: false,
             contract_start_date: parse_date(current_contract_dates.try(:split, '-').try(:[], 0)),
             contract_end_date: parse_date(current_contract_dates.try(:split, '-').try(:[], 1)),
             arrive_current_company_at: parse_date(arrive_current_company_at),
