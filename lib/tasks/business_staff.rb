@@ -416,7 +416,7 @@ class BusinessStaff < DuoduoCli
 
       in_service = true
 
-      # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 性别, 年龄, 家庭住址, 联系电话, 到本单位时间, 签订合同时间, 工作地点, 工种, 协议类型
+      # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 性别, 年龄, 家庭住址, 联系电话, 到本单位时间, 签订合同时间, 工作地点, 工种, 协议类型, 备注
 
       last_row = sheet.last_row
       return if last_row.nil?
@@ -424,10 +424,10 @@ class BusinessStaff < DuoduoCli
       (2..last_row).each do |row_id|
         # logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
-        nest_index, name, _corporation_id, corporation_name, identity_card, gender, age, address, telephone, arrive_current_company_at, current_contract_dates, work_place, work_type, contract_type = \
+        nest_index, name, _corporation_id, corporation_name, identity_card, gender, age, address, telephone, arrive_current_company_at, current_contract_dates, work_place, work_type, contract_type, remark = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
 
-        nation, grade, social_insurance_start_date, remark = [nil] * 4
+        nation, grade, social_insurance_start_date = [nil] * 3
 
         next if nest_index.nil?
 
@@ -519,7 +519,7 @@ class BusinessStaff < DuoduoCli
 
       in_service = true
 
-      # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 性别, 年龄, 家庭住址, 联系电话, 到本单位时间, 签订合同时间, 工作地点, 工种, 协议类型
+      # 档案编号, 姓名, 单位编号, 公司名称, 身份证号, 性别, 年龄, 家庭住址, 联系电话, 到本单位时间, 签订合同时间, 工作地点, 工种, 协议类型, 备注
 
       last_row = sheet.last_row
       return if last_row.nil?
@@ -527,10 +527,10 @@ class BusinessStaff < DuoduoCli
       (2..last_row).each do |row_id|
         logger.info "... Processing #{row_id}/#{last_row}" if row_id % 100 == 0
 
-        nest_index, name, _corporation_id, corporation_name, identity_card, gender, age, address, telephone, arrive_current_company_at, current_contract_dates, work_place, work_type, contract_type = \
+        nest_index, name, _corporation_id, corporation_name, identity_card, gender, age, address, telephone, arrive_current_company_at, current_contract_dates, work_place, work_type, contract_type, remark = \
           sheet.row(row_id).map{|col| String === col ? col.strip : col}
 
-        nation, grade, social_insurance_start_date, remark = [nil] * 4
+        nation, grade, social_insurance_start_date = [nil] * 3
 
         next if nest_index.nil?
 
