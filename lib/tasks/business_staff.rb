@@ -31,6 +31,7 @@ class BusinessStaff < DuoduoCli
       files = Array.wrap(path)
     end
 
+    $NULL_ID = 111111111111111111
     files.each do |f|
       logger.info "#{f.basename}"
 
@@ -173,17 +174,23 @@ class BusinessStaff < DuoduoCli
           # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
           logger.error "#{sub_company.name} ; #{xlsx.sheets[sheet_id]} ; #{name} ; 未找到合作单位 ; #{corporation_name}" if normal_corporation_id.nil?
 
+          identity_card = identity_card.to_s.strip
+          if identity_card.to_s == '111111111111111111'
+            $NULL_ID += 1
+            identity_card = $NULL_ID.to_s
+          end
+
           # Need to confirm
           #
           #   :account
           #   :account_bank
-          ns = NormalStaff.where(identity_card: identity_card.to_s.strip).first
+          ns = NormalStaff.where(identity_card: identity_card).first
           ns ||= NormalStaff.create!(
             nest_index: nest_index.to_i,
             name: name,
             account: nil,
             account_bank: nil,
-            identity_card: identity_card.to_s,
+            identity_card: identity_card,
             birth: identity_card[6,8],
             age: age,
             gender: {'男' => 'male', '女' => 'female'}[gender],
@@ -315,17 +322,23 @@ class BusinessStaff < DuoduoCli
           # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
           logger.error "#{sub_company.name} ; #{xlsx.sheets[sheet_id]} ; #{name} ; 未找到合作单位 ; #{corporation_name}" if normal_corporation_id.nil?
 
+          identity_card = identity_card.to_s.strip
+          if identity_card.to_s == '111111111111111111'
+            $NULL_ID += 1
+            identity_card = $NULL_ID.to_s
+          end
+
           # Need to confirm
           #
           #   :account
           #   :account_bank
-          ns = NormalStaff.where(identity_card: identity_card.to_s.strip).first
+          ns = NormalStaff.where(identity_card: identity_card).first
           ns ||= NormalStaff.create!(
             nest_index: nest_index.to_i,
             name: name,
             account: nil,
             account_bank: nil,
-            identity_card: identity_card.to_s,
+            identity_card: identity_card,
             birth: identity_card[6,8],
             age: age,
             gender: {'男' => 'male', '女' => 'female'}[gender],
@@ -437,17 +450,23 @@ class BusinessStaff < DuoduoCli
           # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
           logger.error "#{sub_company.name} ; #{xlsx.sheets[sheet_id]} ; #{name} ; 未找到合作单位 ; #{corporation_name}" if normal_corporation_id.nil?
 
+          identity_card = identity_card.to_s.strip
+          if identity_card.to_s == '111111111111111111'
+            $NULL_ID += 1
+            identity_card = $NULL_ID.to_s
+          end
+
           # Need to confirm
           #
           #   :account
           #   :account_bank
-          ns = NormalStaff.where(identity_card: identity_card.to_s.strip).first
+          ns = NormalStaff.where(identity_card: identity_card).first
           ns ||= NormalStaff.create!(
             nest_index: nest_index.to_i,
             name: name,
             account: nil,
             account_bank: nil,
-            identity_card: identity_card.to_s,
+            identity_card: identity_card,
             birth: identity_card[6,8],
             age: age,
             gender: {'男' => 'male', '女' => 'female'}[gender],
@@ -540,17 +559,23 @@ class BusinessStaff < DuoduoCli
           # normal_corporation_id = sub_company.normal_corporations.find_or_create_by!(name: corporation_name).id
           logger.error "#{sub_company.name} ; #{xlsx.sheets[sheet_id]} ; #{name} ; 未找到合作单位 ; #{corporation_name}" if normal_corporation_id.nil?
 
+          identity_card = identity_card.to_s.strip
+          if identity_card.to_s == '111111111111111111'
+            $NULL_ID += 1
+            identity_card = $NULL_ID.to_s
+          end
+
           # Need to confirm
           #
           #   :account
           #   :account_bank
-          ns = NormalStaff.where(identity_card: identity_card.to_s.strip).first
+          ns = NormalStaff.where(identity_card: identity_card).first
           ns ||= NormalStaff.create!(
             nest_index: nest_index.to_i,
             name: name,
             account: nil,
             account_bank: nil,
-            identity_card: identity_card.to_s,
+            identity_card: identity_card,
             birth: identity_card[6,8],
             age: age,
             gender: {'男' => 'male', '女' => 'female'}[gender],
