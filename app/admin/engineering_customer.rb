@@ -1,10 +1,10 @@
 ActiveAdmin.register EngineeringCustomer do
-  # include ImportSupport
-
+  # Config
   menu \
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 1
 
+  # Index
   config.sort_order = 'nest_index_desc'
 
   index do
@@ -32,16 +32,19 @@ ActiveAdmin.register EngineeringCustomer do
     actions
   end
 
+  filter :nest_index
   preserve_default_filters!
   remove_filter :projects
   remove_filter :staffs
 
+  # New and Edit
   permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
+      f.input :nest_index, as: :number, input_html: { :value => resource.nest_index || EngineeringCustomer.available_nest_index }
       f.input :name, as: :string
       f.input :telephone, as: :string
       f.input :identity_card, as: :string

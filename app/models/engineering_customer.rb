@@ -60,8 +60,8 @@ class EngineeringCustomer < ActiveRecord::Base
       end
     end
 
-    def next_nest_index
-      self.nest_index + 1
+    def available_nest_index
+      self.first.nest_index + 1
     end
   end
 
