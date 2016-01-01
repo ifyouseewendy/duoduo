@@ -6,7 +6,7 @@ ActiveAdmin.register EngineeringCorp do
     priority: 3
 
   preserve_default_filters!
-  remove_filter :engineering_projects
+  remove_filter :projects
   remove_filter :contract_files
 
   show do

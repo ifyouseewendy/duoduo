@@ -1,8 +1,8 @@
 class EngineeringProject < ActiveRecord::Base
   belongs_to :sub_company
   belongs_to :customer, class: EngineeringCustomer, foreign_key: :engineering_customer_id
+  belongs_to :corporation, class: EngineeringCorp, foreign_key: :engineering_corp_id
 
-  belongs_to :engineering_corp
   has_and_belongs_to_many :engineering_staffs
 
   has_many :engineering_salary_tables, dependent: :destroy
@@ -88,7 +88,7 @@ class EngineeringProject < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        %i(id name engineering_customer engineering_corp) \
+        %i(id name customer corporation) \
           + (ordered_columns(without_foreign_keys: true) - %i(id name))
       end
     end
