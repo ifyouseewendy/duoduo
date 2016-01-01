@@ -7,7 +7,6 @@ class SubCompany < ActiveRecord::Base
   has_many :contract_templates, dependent: :destroy
 
   # Engineer
-  has_many :engineering_corps
   mount_uploader :engi_contract_template, ContractTemplateUploader
   mount_uploader :engi_protocol_template, ContractTemplateUploader
 

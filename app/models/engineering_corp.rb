@@ -1,6 +1,4 @@
 class EngineeringCorp < ActiveRecord::Base
-  belongs_to :sub_company
-
   has_many :contract_files, dependent: :destroy
   has_many :engineering_projects
 
