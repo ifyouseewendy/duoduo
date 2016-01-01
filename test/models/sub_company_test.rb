@@ -17,6 +17,10 @@ class SubCompanyTest < ActiveSupport::TestCase
     assert_equal [engineering_customers(:one).id], @one.customers.pluck(:id)
   end
 
+  def test_ref_with_big_contracts
+    assert_equal 2, @one.big_contracts.count
+  end
+
   def test_add_file
     assert_empty @one.contract_files
     assert_empty @one.contract_templates

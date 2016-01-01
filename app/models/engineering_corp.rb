@@ -1,5 +1,6 @@
 class EngineeringCorp < ActiveRecord::Base
   has_many :projects, class: EngineeringProject
+  has_many :big_contracts, dependent: :destroy
   has_many :contract_files, dependent: :destroy
 
   class << self

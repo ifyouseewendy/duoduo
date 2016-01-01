@@ -17,4 +17,7 @@ class EngineeringCorpTest < ActiveSupport::TestCase
     assert_equal [engineering_customers(:one).id], @one.customers.pluck(:id)
   end
 
+  def test_ref_with_big_contracts
+    assert_equal 1, @one.big_contracts.count
+  end
 end

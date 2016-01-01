@@ -8,6 +8,7 @@ class SubCompany < ActiveRecord::Base
 
   # Engineer
   has_many :projects, class: EngineeringProject
+  has_many :big_contracts
   mount_uploader :engi_contract_template, ContractTemplateUploader
   mount_uploader :engi_protocol_template, ContractTemplateUploader
 
