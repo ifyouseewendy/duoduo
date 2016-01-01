@@ -111,6 +111,8 @@ group :development, :test do
 
   # Read .doc when importing
   gem 'doc_ripper'
+
+  gem 'minitest-focus'
 end
 
 group :production do
