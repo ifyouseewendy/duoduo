@@ -5,7 +5,7 @@ ActiveAdmin.register EngineeringProject do
 
   menu \
     parent: I18n.t("activerecord.models.engineering_business"),
-    priority: 2
+    priority: 3
 
   index do
     selectable_column

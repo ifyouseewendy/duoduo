@@ -18,13 +18,13 @@ zh-CN:
     models:
       corporation: "合作单位"
       normal_corporation: "普通合作单位"
-      normal_business: "普通业务"
+      normal_business: "业务"
       engineering_corporation: "工程合作单位"
       project: "测试项目"
       sub_company: "吉易子公司"
       staff: "员工信息"
       normal_staff: "普通员工信息"
-      engineering_staff: "工程员工"
+      engineering_staff: "员工档案"
       salary_table: "普通工资表"
       salary_table_entrance: '工资表'
       guard_salary_table: "保安工资表"
@@ -39,11 +39,11 @@ zh-CN:
       labor_contract: '劳务合同'
       sub_company: '吉易子公司'
       invoice: '发票'
-      engineering_business: '工程业务'
-      engineering_customer: '工程客户'
-      engineering_project: '工程项目'
-      engineering_corp: '工程单位'
-      engineering_salary_table: '工程工资表'
+      engineering_business: '工程'
+      engineering_customer: '客户'
+      engineering_project: '项目'
+      engineering_corp: '合作单位'
+      engineering_salary_table: '工资表'
       engineering_normal_salary_table: '基础工资表'
       engineering_normal_with_tax_salary_table: '基础（带个税）工资表'
       engineering_big_table_salary_table: '大表工资表'
@@ -187,9 +187,9 @@ zh-CN:
         nation: '民族'
         address: '家庭住址'
         remark: '备注'
-        engineering_customer: '所属客户'
+        customer: '所属客户'
         engineering_customer_id: '所属客户'
-        engineering_projects: '所属项目'
+        projects: '所属项目'
         created_at: "创建时间"
         updated_at: "更新时间"
         seal_index: '刻章'
@@ -342,7 +342,7 @@ zh-CN:
         link: '链接'
         has_engineering_relation: '是否与工程单位合作'
         normal_corporations: '普通合作单位'
-        engineering_corporations: '工程合作单位'
+        corporations: '工程合作单位'
         contract_templates: '合同模板'
         created_at: "创建时间"
         updated_at: "更新时间"
@@ -449,15 +449,15 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        engineering_projects: '工程项目'
-        engineering_staffs: '工程员工'
+        projects: '项目列表'
+        staffs: '员工列表'
         sub_companies: '吉易子公司'
       engineering_project:
         id: '编号'
-        name: '工程名称'
+        name: '名称'
         start_date: '开具日期'
-        project_start_date: '工程开始日期'
-        project_end_date: '工程结束日期'
+        project_start_date: '开始日期'
+        project_end_date: '结束日期'
         project_range: '工作量'
         project_amount: '劳务费'
         admin_amount: '管理费'
@@ -477,12 +477,12 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        engineering_customer: '工程客户'
-        engineering_corp: '工程单位'
+        customer: '客户'
+        corporation: '合作单位'
         sub_companies: '吉易子公司'
-        engineering_customer_id: '工程客户'
-        engineering_corp_id: '工程单位'
-        engineering_staffs: '工程员工'
+        engineering_customer_id: '客户'
+        engineering_corp_id: '单位'
+        staffs: '员工'
         income_items_date: '来款日期'
         income_items_amount: '来款金额'
         outcome_items_date: '回款日期'
@@ -507,7 +507,7 @@ zh-CN:
         audition_status: '复核状态'
         created_at: "创建时间"
         updated_at: "更新时间"
-        engineering_project: '工程项目'
+        project: '项目'
       engineering_normal_salary_item:
         id: '编号'
         name: '姓名'
@@ -519,9 +519,9 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        engineering_project: '工程项目'
-        engineering_staff_id: '工程员工'
-        engineering_staff: '工程员工'
+        project: '项目'
+        engineering_staff_id: '员工'
+        staff: '员工'
         salary_table: '工资表'
       engineering_normal_with_tax_salary_item:
         id: '编号'
@@ -536,9 +536,9 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        engineering_project: '工程项目'
-        engineering_staff_id: '工程员工'
-        engineering_staff: '工程员工'
+        project: '项目'
+        engineering_staff_id: '员工'
+        staff: '员工'
         salary_table: '工资表'
       engineering_big_table_salary_item:
         id: '编号'
