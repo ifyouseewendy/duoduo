@@ -3,7 +3,9 @@ class EngineeringProject < ActiveRecord::Base
   belongs_to :customer, class: EngineeringCustomer, foreign_key: :engineering_customer_id
   belongs_to :corporation, class: EngineeringCorp, foreign_key: :engineering_corp_id
 
-  has_and_belongs_to_many :engineering_staffs
+  has_and_belongs_to_many :staffs, \
+    class_name: EngineeringStaff, \
+    join_table: 'engineering_projects_staffs'
 
   has_many :engineering_salary_tables, dependent: :destroy
 

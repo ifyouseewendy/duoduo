@@ -12,6 +12,10 @@ class EngineeringStaffTest < ActiveSupport::TestCase
     assert_equal engineering_customers(:one).id, @staff.customer.id
   end
 
+  def test_ref_with_projects
+    assert_equal [engineering_projects(:one).id], @staff.projects.pluck(:id)
+  end
+
   def test_busy_range
     assert_equal [['2015-01-01', '2015-01-31'], ['2015-02-01', '2015-02-28']], @staff.busy_range.map{|ar| ar.map(&:to_s)}
   end

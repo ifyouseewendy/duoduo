@@ -1,0 +1,27 @@
+one:
+  engineering_staff_id: 1
+  engineering_project_id: 1
+
+two:
+  engineering_staff_id: 2
+  engineering_project_id: 1
+
+three:
+  engineering_staff_id: 3
+  engineering_project_id: 1
+
+four:
+  engineering_staff_id: 4
+  engineering_project_id: 2
+
+five:
+  engineering_staff_id: 5
+  engineering_project_id: 2
+
+six:
+  engineering_staff_id: 6
+  engineering_project_id: 2
+
+seven:
+  engineering_staff_id: 7
+  engineering_project_id: 3

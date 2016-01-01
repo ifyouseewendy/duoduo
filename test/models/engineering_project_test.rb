@@ -20,6 +20,10 @@ class EngineeringProjectTest < ActiveSupport::TestCase
     assert_equal engineering_corps(:one).id, @project_one.corporation.id
   end
 
+  def test_ref_with_staffs
+    assert_equal 3, @project_one.staffs.count
+  end
+
   def test_gennerate_random_salary
     amount = 100000
     ar = @project.gennerate_random_salary(amount: amount, count: 33)
