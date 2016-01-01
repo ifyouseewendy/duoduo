@@ -144,7 +144,7 @@ class Engineer < DuoduoCli
         sub_company: sub_company,
         start_date: contract_start_date,
         end_date: contract_end_date,
-        file: File.open(entry)
+        contract: File.open(entry)
       )
     end
 
