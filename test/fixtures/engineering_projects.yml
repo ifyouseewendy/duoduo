@@ -20,7 +20,8 @@ one:
   already_sign_dispatch: false
   remark: MyText
   engineering_customer_id: 1
-  sub_company: one
+  engineering_corp_id: 1
+  sub_company_id: 1
 
 two:
   id: 2
@@ -42,7 +43,8 @@ two:
   already_sign_dispatch: false
   remark: MyText
   engineering_customer_id: 1
-  sub_company: one
+  engineering_corp_id: 1
+  sub_company_id: 1
 
 three:
   id: 3
@@ -64,4 +66,5 @@ three:
   already_sign_dispatch: false
   remark: MyText
   engineering_customer_id: 2
-  sub_company: two
+  engineering_corp_id: 2
+  sub_company_id: 2
