@@ -1,7 +1,7 @@
 class EngineeringProject < ActiveRecord::Base
   belongs_to :sub_company
+  belongs_to :customer, class: EngineeringCustomer, foreign_key: :engineering_customer_id
 
-  belongs_to :engineering_customer
   belongs_to :engineering_corp
   has_and_belongs_to_many :engineering_staffs
 
@@ -173,7 +173,7 @@ class EngineeringProject < ActiveRecord::Base
       new_count = need_count - own_staffs.count
 
       if new_count > 0
-        new_staffs = engineering_customer.free_staffs( *(range << new_count) )
+        new_staffs = customer.free_staffs( *(range << new_count) )
 
         new_staffs.each do |staff|
           self.engineering_staffs << staff
@@ -258,7 +258,7 @@ class EngineeringProject < ActiveRecord::Base
 
       staff = engineering_staffs.where(name: name).first
       if staff.nil?
-        staff = engineering_customer.engineering_staffs.where(name: name).first
+        staff = customer.engineering_staffs.where(name: name).first
         self.engineering_staffs << staff if staff.present?
       end
 

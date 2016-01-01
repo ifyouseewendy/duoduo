@@ -1,5 +1,5 @@
 class EngineeringCustomer < ActiveRecord::Base
-  has_many :engineering_projects, dependent: :destroy
+  has_many :projects, class: EngineeringProject, dependent: :destroy
   has_many :engineering_staffs, dependent: :destroy
 
   class << self
