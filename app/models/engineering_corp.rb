@@ -1,6 +1,7 @@
 class EngineeringCorp < ActiveRecord::Base
   has_many :projects, class: EngineeringProject
-  has_many :big_contracts, dependent: :destroy
+  has_many :big_contracts, ->{ order(enable: :desc) }, dependent: :destroy
+
   has_many :contract_files, dependent: :destroy # USEFUL?
 
   class << self
@@ -9,7 +10,7 @@ class EngineeringCorp < ActiveRecord::Base
     end
 
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
-      names = column_names.map(&:to_sym)
+      names = column_names.map(&:to_sym) + [:contract_start_date, :contract_end_date]
 
       names -= %i(id created_at updated_at) if without_base_keys
       names -= %i() if without_foreign_keys
@@ -48,7 +49,7 @@ class EngineeringCorp < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        ordered_columns(without_foreign_keys: true)
+        ordered_columns(without_base_keys: true, without_foreign_keys: true)
       end
     end
   end
@@ -61,5 +62,19 @@ class EngineeringCorp < ActiveRecord::Base
   def sub_companies
     ids = projects.pluck(:sub_company_id)
     SubCompany.where(id: ids)
+  end
+
+  def contract_start_date
+    contract = big_contracts.enable.first
+    return if contract.nil?
+
+    contract.start_date
+  end
+
+  def contract_end_date
+    contract = big_contracts.enable.first
+    return if contract.nil?
+
+    contract.end_date
   end
 end

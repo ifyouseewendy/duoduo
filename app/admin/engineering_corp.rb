@@ -1,13 +1,35 @@
 ActiveAdmin.register EngineeringCorp do
-  # include ImportSupport
-
   menu \
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 2
 
+  index do
+    selectable_column
+    column :name
+    column :contract_start_date
+    column :contract_end_date
+    column :remark
+    column :created_at
+    column :updated_at
+    actions
+  end
+
   preserve_default_filters!
   remove_filter :projects
-  remove_filter :contract_files
+  remove_filter :big_contracts
+
+  permit_params :name
+
+  form do |f|
+    f.semantic_errors(*f.object.errors.keys)
+
+    f.inputs do
+      f.input :name, as: :string
+      f.input :remark, as: :string
+    end
+
+    f.actions
+  end
 
   show do
     attributes_table do
