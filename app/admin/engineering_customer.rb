@@ -5,10 +5,12 @@ ActiveAdmin.register EngineeringCustomer do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 1
 
+  config.sort_order = 'nest_index_desc'
+
   index do
     selectable_column
 
-    column :id
+    column :nest_index
     column :name
     column :projects, sortable: :id do |obj|
       link_to "项目列表", engineering_customer_engineering_projects_path(obj)
@@ -23,7 +25,7 @@ ActiveAdmin.register EngineeringCustomer do
         end
       end
     end
-    (resource_class.ordered_columns - [:id, :name]).each do |field|
+    (resource_class.ordered_columns - [:id, :nest_index, :name]).each do |field|
       column field
     end
 

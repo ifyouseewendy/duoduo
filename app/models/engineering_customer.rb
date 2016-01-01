@@ -2,6 +2,8 @@ class EngineeringCustomer < ActiveRecord::Base
   has_many :projects, class: EngineeringProject,  dependent: :destroy
   has_many :staffs,   class: EngineeringStaff,    dependent: :destroy
 
+  default_scope { order(nest_index: :desc) }
+
   class << self
     def policy_class
       EngineeringPolicy
@@ -10,7 +12,7 @@ class EngineeringCustomer < ActiveRecord::Base
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 
-      names -= %i(id created_at updated_at) if without_base_keys
+      names -= %i(id nest_index created_at updated_at) if without_base_keys
       names -= %i() if without_foreign_keys
 
       names
@@ -56,6 +58,10 @@ class EngineeringCustomer < ActiveRecord::Base
       else
         ordered_columns(without_foreign_keys: true)
       end
+    end
+
+    def next_nest_index
+      self.nest_index + 1
     end
   end
 
