@@ -1,19 +1,20 @@
 class SubCompany < ActiveRecord::Base
+  # Business
   has_many :normal_corporations
-  has_and_belongs_to_many :engineering_customers
-  has_many :engineering_corps
-
+  has_many :labor_contracts
+  has_many :normal_staffs
   has_many :contract_files, dependent: :destroy
   has_many :contract_templates, dependent: :destroy
 
-  has_many :labor_contracts
-  has_many :normal_staffs
-
+  # Engineer
+  has_many :engineering_corps
   mount_uploader :engi_contract_template, ContractTemplateUploader
   mount_uploader :engi_protocol_template, ContractTemplateUploader
 
+  # Validation
   validates_uniqueness_of :name
 
+  # Scope
   scope :query_name, ->(name){ where("name LIKE '%#{name}%'") }
   scope :hr, ->{ where(has_engineering_relation: true) }
 
