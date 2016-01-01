@@ -1,3 +1,5 @@
 one:
-  name: "Test"
+  name: "SubCompany One"
 
+two:
+  name: "SubCompany Two"

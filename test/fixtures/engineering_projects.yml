@@ -19,6 +19,7 @@ one:
   already_sign_dispatch: false
   remark: MyText
   engineering_customer: one
+  sub_company: one
 
 two:
   name: MyText
@@ -39,6 +40,7 @@ two:
   already_sign_dispatch: false
   remark: MyText
   engineering_customer: one
+  sub_company: one
 
 three:
   name: MyText
@@ -59,3 +61,4 @@ three:
   already_sign_dispatch: false
   remark: MyText
   engineering_customer: one
+  sub_company: two

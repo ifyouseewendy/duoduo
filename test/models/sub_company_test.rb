@@ -5,6 +5,10 @@ class SubCompanyTest < ActiveSupport::TestCase
     @one = sub_companies(:one)
   end
 
+  def test_ref_with_projects
+    assert_equal 2, @one.projects.count
+  end
+
   def test_add_file
     assert_empty @one.contract_files
     assert_empty @one.contract_templates
