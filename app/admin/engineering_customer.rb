@@ -57,14 +57,15 @@ ActiveAdmin.register EngineeringCustomer do
     f.actions
   end
 
+  # Show
   show do
     attributes_table do
-      row :id
+      row :nest_index
       row :name
       row :projects do |obj|
         link_to "项目列表", engineering_customer_engineering_projects_path(obj)
       end
-      row :projects do |obj|
+      row :staffs do |obj|
         link_to "员工列表", engineering_customer_engineering_staffs_path(obj)
       end
       row :sub_companies, sortable: :id do |obj|
@@ -74,7 +75,7 @@ ActiveAdmin.register EngineeringCustomer do
           end
         end
       end
-      (EngineeringCustomer.ordered_columns(without_foreign_keys: true) - [:id, :name]).map(&:to_sym).map do |field|
+      (EngineeringCustomer.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
         row field
       end
     end

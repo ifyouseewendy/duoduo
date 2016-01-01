@@ -12,7 +12,7 @@ class EngineeringCustomer < ActiveRecord::Base
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 
-      names -= %i(id nest_index created_at updated_at) if without_base_keys
+      names -= %i(id created_at updated_at) if without_base_keys
       names -= %i() if without_foreign_keys
 
       names
@@ -56,7 +56,8 @@ class EngineeringCustomer < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        ordered_columns(without_foreign_keys: true)
+        cols = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+        [:nest_index] + (cols - [:nest_index])
       end
     end
 
