@@ -148,6 +148,12 @@ class Engineer < DuoduoCli
       )
     end
 
+    EngineeringCorp.all.each do |ec|
+      contract = ec.big_contracts.order(end_date: :desc).first
+      next if contract.nil?
+      contract.update_attribute(:enable, true)
+    end
+
     logger.info "[#{Time.now}] Import end"
   end
 

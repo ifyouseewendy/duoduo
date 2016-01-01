@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160101132208) do
+ActiveRecord::Schema.define(version: 20160101132720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,8 +82,9 @@ ActiveRecord::Schema.define(version: 20160101132208) do
     t.integer  "sub_company_id"
     t.integer  "engineering_corp_id"
     t.text     "file"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "enable",              default: false
   end
 
   add_index "big_contracts", ["engineering_corp_id"], name: "index_big_contracts_on_engineering_corp_id", using: :btree
