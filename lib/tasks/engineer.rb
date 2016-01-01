@@ -114,9 +114,9 @@ class Engineer < DuoduoCli
     logger.info "[#{Time.now}] Import end"
   end
 
-  desc 'add_contract_to_corporation', ''
+  desc 'add_big_contract', ''
   option :from, required: true
-  def add_contract_to_corporation
+  def add_big_contract
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
     load_rails
@@ -139,21 +139,13 @@ class Engineer < DuoduoCli
       sub_company = find_sub_company_by(name: company_name)
       contract_start_date, contract_end_date = dates.split('-').map{|d| Date.parse(d)}
 
-      if flag == '续'
-        ec = EngineeringCorp.find_by_name(corp_name)
-        ec.update_attributes(
-          contract_start_date: contract_start_date,
-          contract_end_date: contract_end_date
-        )
-      else
-        ec = EngineeringCorp.create!(
-          name: corp_name,
-          sub_company: sub_company,
-          contract_start_date: contract_start_date,
-          contract_end_date: contract_end_date,
-        )
-      end
-      ec.contract_files.create!( contract: File.open(entry) )
+      ec = EngineeringCorp.find_or_create_by!(name: corp_name)
+      ec.big_contracts.create!(
+        sub_company: sub_company,
+        start_date: contract_start_date,
+        end_date: contract_end_date,
+        file: File.open(entry)
+      )
     end
 
     logger.info "[#{Time.now}] Import end"
@@ -264,7 +256,7 @@ class Engineer < DuoduoCli
         gender_map = {'男' => 0, '女' => 1}
 
         begin
-          staff = customer.engineering_staffs.where(identity_card: identity_card).first
+          staff = customer.staffs.where(identity_card: identity_card).first
           next if staff.present? && staff.name == name.try(:strip)
 
           # staff = EngineeringStaff.where(identity_card: identity_card).first
@@ -276,7 +268,7 @@ class Engineer < DuoduoCli
           # else
 
           staff = EngineeringStaff.create!(
-            engineering_customer: customer,
+            customer: customer,
             name: name.try(:delete, ' '),
             gender: gender_map[gender],
             identity_card: identity_card,
@@ -359,21 +351,19 @@ class Engineer < DuoduoCli
       sc = find_sub_company_by(name: project_info.basename.to_s)
       return if sc.nil?
 
-      add_sub_company_to_customer(sc)
-
       set_project_info_xlsx
-      process_project_info_xlsx
+      process_project_info_xlsx(sc)
     end
 
-    def add_sub_company_to_customer(sc)
-      customer.sub_companies << sc
+    def add_project_to_sub_company(project)
+      customer.projects << project
     end
 
     def set_project_info_xlsx
       @project_info_xlsx = Roo::Spreadsheet.open(project_info.to_s)
     end
 
-    def process_project_info_xlsx
+    def process_project_info_xlsx(sub_company)
       sheet = project_info_xlsx.sheet(0).to_a
 
       column_count = sheet[1].compact.count
@@ -411,7 +401,7 @@ class Engineer < DuoduoCli
 
         id = id.to_i if Float === id
         begin
-          project = customer.engineering_projects.create!(
+          project = customer.projects.create!(
             name: "#{id}、#{name}",
             start_date: start_date,
             project_start_date: project_start_date,
@@ -419,7 +409,8 @@ class Engineer < DuoduoCli
             project_amount: project_amount,
             admin_amount: admin_amount,
             proof: proof,
-            remark: remark
+            remark: remark,
+            sub_company: sub_company
           )
         rescue => e
           logger.error "#{better_path project_info} ; 项目汇总 ; 创建项目失败: #{e.message}"
@@ -608,10 +599,10 @@ class Engineer < DuoduoCli
             # logger.error "#{better_path file} ; 用工明细 ; 员工信息校验 ; 员工（#{staff2.name} - #{identity_card}）属于客户（#{staff2.engineering_customer.name}）"
 
             if staff.name != name
-              logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）在客户（#{staff.engineering_customer.name}）中存为（#{staff.name}）"
+              logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）在客户（#{staff.customer.name}）中存为（#{staff.name}）"
               staff.update_attribute(:alias_name, name)
             end
-            staff.engineering_projects << project
+            staff.projects << project
           else
             perhaps = []
             perhaps = EngineeringStaff.where(name: name).to_a
@@ -619,7 +610,7 @@ class Engineer < DuoduoCli
             if perhaps.blank?
               # 附加到该客户的提供人员（不可用）中
 
-              $PERHAPS << [project.engineering_customer.name, name, "'#{identity_card}"].join(';')
+              $PERHAPS << [project.customer.name, name, "'#{identity_card}"].join(';')
 
               # gender_map = {'男' => 0, '女' => 1}
               # staff = EngineeringStaff.create!(
@@ -631,11 +622,11 @@ class Engineer < DuoduoCli
               # )
               # staff.engineering_projects << project
             else
-              if perhaps.count == 1 && (perhaps[0].engineering_customer.id == project.engineering_customer.id)
+              if perhaps.count == 1 && (perhaps[0].customer.id == project.customer.id)
                 staff = perhaps[0]
-                staff.engineering_projects << project
+                staff.projects << project
               else
-                perhaps_output = perhaps.map{|st| [st.name, st.identity_card, st.engineering_customer.name].join(';')}.join(';')
+                perhaps_output = perhaps.map{|st| [st.name, st.identity_card, st.customer.name].join(';')}.join(';')
                 logger.warn "#{better_path file} ; 用工明细 ; 员工信息校验 ; 号工（#{name} - #{identity_card}）未在任何客户中找到 ; #{perhaps_output}"
               end
             end
@@ -716,7 +707,7 @@ class Engineer < DuoduoCli
             ll = data.delete(' ').split.detect{|str| str.start_with?('甲方')}
             logger.error "#{better_path path} ; 合同文件 ; 未找到乙方大协议：#{corp_name} ; #{ll}"
           else
-            ec.engineering_projects << project
+            ec.projects << project
           end
         end
       end
@@ -794,7 +785,7 @@ class Engineer < DuoduoCli
           name << ' 补' if sheet_name.index('补')
 
           st = EngineeringSalaryTable.create!(
-            engineering_project: project,
+            project: project,
             name: name,
             start_date: start_date,
             end_date: end_date,
@@ -889,15 +880,15 @@ class Engineer < DuoduoCli
           next if id.nil?
 
           name = name.try(:delete, ' ')
-          staff = project.engineering_staffs.where(name: name).first
+          staff = project.staffs.where(name: name).first
 
           # Check alias name
-          staff = project.engineering_staffs.where(alias_name: name).first if staff.nil?
+          staff = project.staffs.where(alias_name: name).first if staff.nil?
 
           # Check customer's provide list
           if staff.nil?
-            staff = project.engineering_customer.engineering_staffs.where(name: name).first
-            staff.engineering_projects << project if staff.present?
+            staff = project.customer.staffs.where(name: name).first
+            staff.projects << project if staff.present?
           end
 
           if staff.nil?
@@ -909,7 +900,7 @@ class Engineer < DuoduoCli
           begin
             if col_count == 10
               item = st.salary_items.create!(
-                engineering_staff: staff,
+                staff: staff,
                 salary_deserve: salary_deserve,
                 social_insurance: social_insurance,
                 medical_insurance: medical_insurance,
@@ -919,7 +910,7 @@ class Engineer < DuoduoCli
               )
             else
               item = st.salary_items.create!(
-                engineering_staff: staff,
+                staff: staff,
                 salary_deserve: salary_deserve,
                 social_insurance: social_insurance,
                 medical_insurance: medical_insurance,
@@ -960,7 +951,7 @@ class Engineer < DuoduoCli
 
             flag = EngineeringStaff.where(identity_card: id).pluck(:name).uniq.count > 1
             EngineeringStaff.where(identity_card: id).each do |es|
-              stats = [nil, es.engineering_customer.name]
+              stats = [nil, es.customer.name]
               stats << es.name if flag
               sheet.add_row stats
             end
@@ -970,7 +961,7 @@ class Engineer < DuoduoCli
 
         pkg.workbook.add_worksheet(name: '未找到身份证') do |sheet|
           EngineeringStaff.where(identity_card: nil).each do |es|
-            sheet.add_row [es.name, es.engineering_customer.name]
+            sheet.add_row [es.name, es.customer.name]
           end
         end
 

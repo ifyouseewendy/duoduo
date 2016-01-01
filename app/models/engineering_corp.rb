@@ -1,7 +1,7 @@
 class EngineeringCorp < ActiveRecord::Base
   has_many :projects, class: EngineeringProject
   has_many :big_contracts, dependent: :destroy
-  has_many :contract_files, dependent: :destroy
+  has_many :contract_files, dependent: :destroy # USEFUL?
 
   class << self
     def policy_class
