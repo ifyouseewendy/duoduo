@@ -1,4 +1,6 @@
 class EngineeringProject < ActiveRecord::Base
+  belongs_to :sub_company
+
   belongs_to :engineering_customer
   belongs_to :engineering_corp
   has_and_belongs_to_many :engineering_staffs

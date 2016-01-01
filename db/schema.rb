@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160101034125) do
+ActiveRecord::Schema.define(version: 20160101034427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -274,10 +274,12 @@ ActiveRecord::Schema.define(version: 20160101034125) do
     t.integer  "engineering_customer_id"
     t.integer  "engineering_corp_id"
     t.integer  "status",                                           default: 0
+    t.integer  "sub_company_id"
   end
 
   add_index "engineering_projects", ["engineering_corp_id"], name: "index_engineering_projects_on_engineering_corp_id", using: :btree
   add_index "engineering_projects", ["engineering_customer_id"], name: "index_engineering_projects_on_engineering_customer_id", using: :btree
+  add_index "engineering_projects", ["sub_company_id"], name: "index_engineering_projects_on_sub_company_id", using: :btree
 
   create_table "engineering_projects_staffs", id: false, force: :cascade do |t|
     t.integer "engineering_project_id", null: false
@@ -694,6 +696,7 @@ ActiveRecord::Schema.define(version: 20160101034125) do
   add_foreign_key "engineering_outcome_items", "engineering_projects"
   add_foreign_key "engineering_projects", "engineering_corps"
   add_foreign_key "engineering_projects", "engineering_customers"
+  add_foreign_key "engineering_projects", "sub_companies"
   add_foreign_key "engineering_salary_tables", "engineering_projects"
   add_foreign_key "engineering_staffs", "engineering_customers"
   add_foreign_key "guard_salary_items", "guard_salary_tables"
