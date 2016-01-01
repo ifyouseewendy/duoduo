@@ -48,9 +48,9 @@ class EngineeringProjectTest < ActiveSupport::TestCase
 
   def test_generate_salary_table_for_one_month
     @project_one.generate_salary_table(need_count: 3)
-    assert_equal 1, @project_one.engineering_salary_tables.count
+    assert_equal 1, @project_one.salary_tables.count
 
-    st = @project_one.engineering_salary_tables.first
+    st = @project_one.salary_tables.first
     assert_equal "2015-09-01 ~ 2015-09-30", st.name
 
     assert_equal 3, st.salary_items.count
@@ -58,9 +58,9 @@ class EngineeringProjectTest < ActiveSupport::TestCase
 
   def test_generate_salary_table_for_less_than_one_month
     @project_two.generate_salary_table(need_count: 3)
-    assert_equal 1, @project_two.engineering_salary_tables.count
+    assert_equal 1, @project_two.salary_tables.count
 
-    st = @project_two.engineering_salary_tables.first
+    st = @project_two.salary_tables.first
     assert_equal "2015-10-01 ~ 2015-10-15", st.name
 
     assert_equal 3, st.salary_items.count
@@ -68,9 +68,9 @@ class EngineeringProjectTest < ActiveSupport::TestCase
 
   def test_generate_salary_table_for_more_than_one_month
     @project_three.generate_salary_table(need_count: 3)
-    assert_equal 2, @project_three.engineering_salary_tables.count
+    assert_equal 2, @project_three.salary_tables.count
 
-    st_one, st_two = @project_three.engineering_salary_tables.to_a
+    st_one, st_two = @project_three.salary_tables.to_a
     assert_equal "2015-09-15 ~ 2015-10-14", st_one.name
     assert_equal "2015-10-15 ~ 2015-10-30", st_two.name
 

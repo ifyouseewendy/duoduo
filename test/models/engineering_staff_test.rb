@@ -24,7 +24,7 @@ class EngineeringStaffTest < ActiveSupport::TestCase
     # Dont change busy_range when appending new project,
     # only change by setting salary_table
     assert_silent do
-      @staff.engineering_projects << @project_two
+      @staff.projects << @project_two
     end
     assert_equal 2, @staff.busy_range.count
 
@@ -33,7 +33,7 @@ class EngineeringStaffTest < ActiveSupport::TestCase
     #   Temp comment out check_schedule on importing stage
     #
     # assert_raises RuntimeError, /时间重叠/ do
-    #   @staff.engineering_projects << @project_three
+    #   @staff.projects << @project_three
     # end
     # assert_equal 2, @staff.busy_range.count
   end

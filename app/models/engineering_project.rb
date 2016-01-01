@@ -69,7 +69,7 @@ class EngineeringProject < ActiveRecord::Base
           collection.each do |item|
              stats = \
               columns.map do |col|
-                if [:engineering_customer, :engineering_corp].include? col
+                if [:customer, :corporation].include? col
                   item.send(col).name
                 elsif booleans.include? col
                   item.send(col) ? '是' : '否'
@@ -169,7 +169,7 @@ class EngineeringProject < ActiveRecord::Base
     salaries = gennerate_random_salary(amount: project_amount, count: need_count*table_count)
     pos = 0
 
-    own_staffs = engineering_staffs.limit(need_count).to_a
+    own_staffs = staffs.limit(need_count).to_a
     new_staffs = []
     if own_staffs.count < need_count
       new_count = need_count - own_staffs.count
@@ -178,7 +178,7 @@ class EngineeringProject < ActiveRecord::Base
         new_staffs = customer.free_staffs( *(range << new_count) )
 
         new_staffs.each do |staff|
-          self.engineering_staffs << staff
+          self.staffs << staff
         end
       end
     end
@@ -191,7 +191,7 @@ class EngineeringProject < ActiveRecord::Base
       month_end_date = end_date if idx == table_count
 
       st = EngineeringNormalSalaryTable.create!(
-        engineering_project: self,
+        project: self,
         name: "#{start_date} ~ #{month_end_date}",
         start_date: start_date,
         end_date: end_date
@@ -258,10 +258,10 @@ class EngineeringProject < ActiveRecord::Base
       name, salary = sheet.row(row).to_a
       name.strip!
 
-      staff = engineering_staffs.where(name: name).first
+      staff = staffs.where(name: name).first
       if staff.nil?
-        staff = customer.engineering_staffs.where(name: name).first
-        self.engineering_staffs << staff if staff.present?
+        staff = customer.staffs.where(name: name).first
+        self.staffs << staff if staff.present?
       end
 
       raise "导入失败，未找到员工<#{name}>" if staff.nil?
@@ -270,7 +270,7 @@ class EngineeringProject < ActiveRecord::Base
     end
 
     st = EngineeringNormalWithTaxSalaryTable.create!(
-      engineering_project: self,
+      project: self,
       name: "#{range.join(' ~ ')}",
       start_date: start_date,
       end_date: end_date
@@ -286,7 +286,7 @@ class EngineeringProject < ActiveRecord::Base
     url = [uri.path, uri.query].join('?')
 
     EngineeringBigTableSalaryTable.create!(
-      engineering_project: self,
+      project: self,
       name: "#{range.join(' ~ ')}",
       start_date: start_date,
       end_date: end_date,
@@ -420,7 +420,7 @@ class EngineeringProject < ActiveRecord::Base
     # ids = User.search_in_all_translated(search).map(&:id)
     # ids = ids.any? ? ids : nil
     sub_company = SubCompany.find(qid)
-    sub_company.engineering_customers.select(:id).flat_map{|ec| ec.engineering_projects.pluck(:id)}
+    sub_company.customers.select(:id).flat_map{|ec| ec.projects.pluck(:id)}
   } do |parent|
       parent.table[:id]
   end
