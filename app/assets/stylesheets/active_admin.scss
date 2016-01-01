@@ -100,4 +100,8 @@ body.engineering_customers table.index_table thead tr {
   input[name='start_date'], input[name='end_date'] {
     width: 200px;
   }
+
+  .active_big_contract {
+    color: green;
+  }
 }
