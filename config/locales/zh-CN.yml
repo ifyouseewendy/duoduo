@@ -440,6 +440,7 @@ zh-CN:
         normal_staff_name: '员工姓名'
       engineering_customer:
         id: '编号'
+        nest_index: '编号'
         name: '名称'
         telephone: '电话'
         identity_card: '身份证号'
