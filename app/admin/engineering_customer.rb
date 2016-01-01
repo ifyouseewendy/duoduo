@@ -38,7 +38,7 @@ ActiveAdmin.register EngineeringCustomer do
   remove_filter :staffs
 
   # New and Edit
-  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
+  permit_params *@resource.ordered_columns(without_base_keys: true, without_foreign_keys: false)
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
