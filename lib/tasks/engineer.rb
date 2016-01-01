@@ -319,7 +319,10 @@ class Engineer < DuoduoCli
     end
 
     def set_customer
-      @customer = EngineeringCustomer.find_or_create_by!(name: customer_dir.basename.to_s)
+      filename = customer_dir.basename.to_s
+      nest_index, name = filename.split('、')
+      name ||= nest_index # 公司自供人员
+      @customer = EngineeringCustomer.find_or_create_by!(name: name, nest_index: nest_index.to_i)
     end
 
     def process_project_infos
