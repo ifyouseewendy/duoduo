@@ -4,7 +4,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
     foreign_key: :engineering_salary_table_id,
     inverse_of: :salary_items
 
-  belongs_to :engineering_staff
+  belongs_to :staff, class: EngineeringStaff, foreign_key: :engineering_staff_id
 
   before_save :revise_fields
 
@@ -14,11 +14,11 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
     end
 
     def create_by(table:, staff:, salary_deserve:)
-      item = self.new(salary_table: table, engineering_staff: staff)
+      item = self.new(salary_table: table, staff: staff)
 
       item.salary_deserve     = salary_deserve
 
-      project = item.salary_table.engineering_project
+      project = item.salary_table.project
 
       dates = table.name.split('~').map(&:strip)
       date = dates.count == 2 ? dates[0] : project.project_start_date
@@ -54,7 +54,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       elsif options[:salary_table_id].present?
         salary_table = EngineeringSalaryTable.find(options[:salary_table_id])
         collection = salary_table.salary_items
-        names += [salary_table.engineering_project.name, salary_table.name]
+        names += [salary_table.project.name, salary_table.name]
       end
       names << Time.stamp
 
@@ -69,7 +69,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           collection.each do |item|
              stats = \
               columns.map do |col|
-                if [:engineering_staff].include? col
+                if [:staff].include? col
                   item.send(col).name
                 else
                   item.send(col)
@@ -88,7 +88,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        %i(id engineering_staff) \
+        %i(id staff) \
           + (ordered_columns(without_foreign_keys: true) - %i(id))
       end
     end

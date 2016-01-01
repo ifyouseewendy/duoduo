@@ -1,5 +1,5 @@
 class EngineeringSalaryTable < ActiveRecord::Base
-  belongs_to :engineering_project
+  belongs_to :project, class: EngineeringProject, foreign_key: :engineering_project_id
 
   has_one :reference, class_name: EngineeringBigTableSalaryTableReference, dependent: :destroy
 

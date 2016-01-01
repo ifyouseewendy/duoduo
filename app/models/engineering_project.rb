@@ -7,7 +7,7 @@ class EngineeringProject < ActiveRecord::Base
     class_name: EngineeringStaff, \
     join_table: 'engineering_projects_staffs'
 
-  has_many :engineering_salary_tables, dependent: :destroy
+  has_many :salary_tables, class: EngineeringSalaryTable, dependent: :destroy
 
   has_many :contract_files, class: EngineeringContractFile, dependent: :destroy, as: :engi_contract
 
