@@ -16,4 +16,8 @@ class EngineeringCustomerTest < ActiveSupport::TestCase
   def test_ref_with_corporations
     assert_equal [engineering_corps(:one).id], @one.corporations.pluck(:id)
   end
+
+  def test_ref_with_staffs
+    assert_equal 9, @one.staffs.count
+  end
 end

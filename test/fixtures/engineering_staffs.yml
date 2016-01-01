@@ -11,7 +11,7 @@ one:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects: one
 
 two:
@@ -25,7 +25,7 @@ two:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects: one
 
 three:
@@ -38,7 +38,7 @@ three:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects: one
 
 four:
@@ -51,7 +51,7 @@ four:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects: two
 
 five:
@@ -64,7 +64,7 @@ five:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects: two
 
 six:
@@ -77,7 +77,7 @@ six:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects: two
 
 seven:
@@ -90,7 +90,7 @@ seven:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects: three
 
 eight:
@@ -103,7 +103,7 @@ eight:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects:
 
 nine:
@@ -116,5 +116,5 @@ nine:
   nation: MyText
   address: MyText
   remark: MyText
-  engineering_customer: one
+  engineering_customer_id: 1
   engineering_projects:

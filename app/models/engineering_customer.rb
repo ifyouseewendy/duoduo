@@ -1,6 +1,6 @@
 class EngineeringCustomer < ActiveRecord::Base
-  has_many :projects, class: EngineeringProject, dependent: :destroy
-  has_many :engineering_staffs, dependent: :destroy
+  has_many :projects, class: EngineeringProject,  dependent: :destroy
+  has_many :staffs,   class: EngineeringStaff,    dependent: :destroy
 
   class << self
     def policy_class

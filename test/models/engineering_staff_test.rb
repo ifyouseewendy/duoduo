@@ -8,6 +8,10 @@ class EngineeringStaffTest < ActiveSupport::TestCase
     @project_three = engineering_projects(:three)
   end
 
+  def test_ref_with_customer
+    assert_equal engineering_customers(:one).id, @staff.customer.id
+  end
+
   def test_busy_range
     assert_equal [['2015-01-01', '2015-01-31'], ['2015-02-01', '2015-02-28']], @staff.busy_range.map{|ar| ar.map(&:to_s)}
   end

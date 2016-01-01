@@ -1,5 +1,5 @@
 class EngineeringStaff < ActiveRecord::Base
-  belongs_to :engineering_customer
+  belongs_to :customer, class: EngineeringCustomer, foreign_key: :engineering_customer_id
   # TODO
   #
   #   Temp comment out check_schedule on importing stage
