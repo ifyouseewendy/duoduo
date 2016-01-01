@@ -9,6 +9,14 @@ class SubCompanyTest < ActiveSupport::TestCase
     assert_equal 2, @one.projects.count
   end
 
+  def test_ref_with_corporations
+    assert_equal [engineering_corps(:one).id], @one.corporations.pluck(:id)
+  end
+
+  def test_ref_with_customers
+    assert_equal [engineering_customers(:one).id], @one.customers.pluck(:id)
+  end
+
   def test_add_file
     assert_empty @one.contract_files
     assert_empty @one.contract_templates

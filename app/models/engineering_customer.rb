@@ -63,4 +63,15 @@ class EngineeringCustomer < ActiveRecord::Base
     count ||= engineering_staffs.count
     engineering_staffs.lazy.select{|es| es.accept_schedule?(start_date, end_date)}.first(count)
   end
+
+  def sub_companies
+    ids = projects.pluck(:sub_company_id)
+    SubCompany.where(id: ids)
+  end
+
+  def corporations
+    ids = projects.pluck(:engineering_corp_id)
+    EngineeringCorp.where(id: ids)
+  end
+
 end

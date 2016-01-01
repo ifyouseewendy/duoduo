@@ -52,4 +52,13 @@ class EngineeringCorp < ActiveRecord::Base
     end
   end
 
+  def customers
+    ids = projects.pluck(:engineering_customer_id)
+    EngineeringCustomer.where(id: ids)
+  end
+
+  def sub_companies
+    ids = projects.pluck(:sub_company_id)
+    SubCompany.where(id: ids)
+  end
 end
