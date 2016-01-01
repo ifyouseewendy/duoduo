@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   ActiveAdmin.routes(self)
 
+  resources :big_contracts, only: [:create, :destroy]
+
   resources :contract_files, only: [:create, :destroy] do
     collection do
       get "generate_and_download"

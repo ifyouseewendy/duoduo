@@ -1,7 +1,7 @@
 <% object ||= nil %>
 
-<%= form_tag '#', class: 'form_tag' do |f| %>
-  <%= hidden_field_tag :engineering_project_id, object.id %>
+<%= form_tag big_contracts_path, class: 'form_tag', multipart: true do |f| %>
+  <%= hidden_field_tag :engineering_corp_id, object.id %>
 
   <%= field_set_tag nil, class: 'inputs' do %>
     <ol>
