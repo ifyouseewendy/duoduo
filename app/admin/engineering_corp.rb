@@ -38,9 +38,16 @@ ActiveAdmin.register EngineeringCorp do
       end
     end
 
-    panel "业务代理合同" do
+    panel "大协议" do
+      render partial: 'engineering_corps/contract_list', \
+        locals: { contract_files: resource.big_contracts }
       tabs do
-        # TODO
+        tab '手动上传' do
+          render partial: "engineering_corps/contract_upload", \
+            locals: {
+              object: resource,
+            }
+        end
       end
     end
 

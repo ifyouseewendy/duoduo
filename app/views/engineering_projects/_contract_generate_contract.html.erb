@@ -10,7 +10,7 @@
       </li>
       <li>
         <%= label_tag '合作单位名称' %>
-        <%= text_field_tag :corp_name, project.engineering_corp.try(:name) %>
+        <%= text_field_tag :corp_name, project.corporation.try(:name) %>
       </li>
       <li>
         <%= label_tag '项目名称' %>

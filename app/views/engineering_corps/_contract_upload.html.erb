@@ -1,0 +1,27 @@
+<% object ||= nil %>
+
+<%= form_tag '#', class: 'form_tag' do |f| %>
+  <%= hidden_field_tag :engineering_project_id, object.id %>
+
+  <%= field_set_tag nil, class: 'inputs' do %>
+    <ol>
+      <li>
+        <%= label_tag '吉易子公司' %>
+        <%= select_tag :sub_company_id, options_for_select(SubCompany.hr.pluck(:name, :id)) %>
+      </li>
+      <li>
+        <%= label_tag '开始时间' %>
+        <%= date_field_tag :start_date %>
+      </li>
+      <li>
+        <%= label_tag '结束时间' %>
+        <%= date_field_tag :end_date %>
+      </li>
+      <li>
+        <%= label_tag '上传文件' %>
+        <%= file_field_tag :contract %>
+      </li>
+    </ol>
+  <% end %>
+  <%= button_tag "生成" %>
+<% end %>

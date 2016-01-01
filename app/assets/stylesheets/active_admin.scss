@@ -95,3 +95,9 @@ body.engineering_customers table.index_table thead tr {
     min-width: 140px !important;
   }
 }
+
+.engineering_corps {
+  input[name='start_date'], input[name='end_date'] {
+    width: 200px;
+  }
+}
