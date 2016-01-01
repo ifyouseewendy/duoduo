@@ -70,7 +70,7 @@ class EngineeringStaff < ActiveRecord::Base
           collection.each do |item|
              stats = \
               columns.map do |col|
-               if [:engineering_customer].include? col
+               if [:customer].include? col
                   item.send(col).name
                elsif [:gender].include? col
                   genders_i18n[ item.send(col) ]
@@ -91,7 +91,7 @@ class EngineeringStaff < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        %i(id nest_index name engineering_customer) \
+        %i(id nest_index name customer) \
           + (ordered_columns(without_foreign_keys: true) - %i(id nest_index name))
       end
     end
