@@ -7,7 +7,7 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
     if params['q'].present?
       st = ->{ EngineeringSalaryTable.find(params['q']['salary_table_id_eq']) }.call
       [
-        link_to(st.engineering_project.name, engineering_project_path(st.engineering_project) ),
+        link_to(st.project.name, engineering_project_path(st.project) ),
         link_to(st.name, engineering_salary_table_path(st) )
       ]
     else
@@ -19,8 +19,8 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
     selectable_column
 
     column :id
-    column :name, sortable: ->(obj){ obj.engineering_staff.name } do |obj|
-      staff = obj.engineering_staff
+    column :name, sortable: ->(obj){ obj.staff.name } do |obj|
+      staff = obj.staff
       link_to staff.name, engineering_staff_path(staff)
     end
     (resource_class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
@@ -31,7 +31,7 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
   end
 
   preserve_default_filters!
-  remove_filter :engineering_staff
+  remove_filter :staff
 
   permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
@@ -52,15 +52,15 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
     attributes_table do
       row :id
       row :name do |obj|
-        staff = obj.engineering_staff
+        staff = obj.staff
         link_to staff.name, engineering_staff_path(staff)
       end
       row :salary_table do |obj|
         st = obj.salary_table
         link_to st.name, engineering_salary_table_path(st)
       end
-      row :engineering_project do |obj|
-        pr = obj.salary_table.engineering_project
+      row :project do |obj|
+        pr = obj.salary_table.project
         link_to pr.name, engineering_project_path(pr)
       end
       (resource.class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|

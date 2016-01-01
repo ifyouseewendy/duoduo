@@ -10,10 +10,10 @@ ActiveAdmin.register EngineeringCustomer do
 
     column :id
     column :name
-    column :engineering_projects, sortable: :id do |obj|
+    column :projects, sortable: :id do |obj|
       link_to "项目列表", engineering_customer_engineering_projects_path(obj)
     end
-    column :engineering_staffs, sortable: :id do |obj|
+    column :staffs, sortable: :id do |obj|
       link_to "员工列表", engineering_customer_engineering_staffs_path(obj)
     end
     column :sub_companies, sortable: :id do |obj|
@@ -31,8 +31,8 @@ ActiveAdmin.register EngineeringCustomer do
   end
 
   preserve_default_filters!
-  remove_filter :engineering_projects
-  remove_filter :engineering_staffs
+  remove_filter :projects
+  remove_filter :staffs
 
   permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
@@ -56,10 +56,10 @@ ActiveAdmin.register EngineeringCustomer do
     attributes_table do
       row :id
       row :name
-      row :engineering_projects do |obj|
+      row :projects do |obj|
         link_to "项目列表", engineering_customer_engineering_projects_path(obj)
       end
-      row :engineering_projects do |obj|
+      row :projects do |obj|
         link_to "员工列表", engineering_customer_engineering_staffs_path(obj)
       end
       row :sub_companies, sortable: :id do |obj|
@@ -98,7 +98,7 @@ ActiveAdmin.register EngineeringCustomer do
 
   collection_action :other_customers do
     project = EngineeringProject.find( params[:project_id] )
-    customer = project.engineering_customer
+    customer = project.customer
 
     stats = EngineeringCustomer.where.not(id: customer.id).select(:id, :name).reduce([]) do |ar, ele|
       ar << {

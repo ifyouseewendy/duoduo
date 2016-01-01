@@ -12,22 +12,22 @@ ActiveAdmin.register EngineeringProject do
 
     column :id
     column :name
-    column :engineering_staffs, sortable: :id do |obj|
+    column :staffs, sortable: :id do |obj|
       link_to "员工列表", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
-    column :engineering_customer, sortable: :id do |obj|
-      link_to obj.engineering_customer.name, engineering_customer_path(obj.engineering_customer)
+    column :customer, sortable: :id do |obj|
+      link_to obj.customer.name, engineering_customer_path(obj.customer)
     end
-    column :engineering_corp, sortable: :id do |obj|
-      if obj.engineering_corp.nil?
+    column :corporation, sortable: :id do |obj|
+      if obj.corporation.nil?
         link_to '', '#'
       else
-        link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
+        link_to obj.corporation.name, engineering_corp_path(obj.corporation)
       end
     end
     column :sub_companies, sortable: :id do |obj|
       ul do
-        obj.engineering_customer.sub_companies.map do |sc|
+        obj.customer.sub_companies.map do |sc|
           li (link_to sc.name, sub_company_path(sc))
         end
       end
@@ -73,8 +73,8 @@ ActiveAdmin.register EngineeringProject do
   filter :outcome_items_amount, as: :numeric
   # filter :outcome_items_persons, as: :string
   preserve_default_filters!
-  remove_filter :engineering_staffs
-  remove_filter :engineering_salary_tables
+  remove_filter :staffs
+  remove_filter :salary_tables
   remove_filter :contract_files
   remove_filter :income_items
   remove_filter :outcome_items
@@ -90,8 +90,8 @@ ActiveAdmin.register EngineeringProject do
     tabs do
       tab "基本信息" do
         f.inputs do
-          f.input :engineering_customer, collection: ->{ EngineeringCustomer.all }
-          f.input :engineering_corp, collection: ->{ EngineeringCorp.all }
+          f.input :customer, collection: ->{ EngineeringCustomer.all }
+          f.input :corporation, collection: ->{ EngineeringCorp.all }
           f.input :name, as: :string
           f.input :start_date, as: :datepicker
           f.input :project_start_date, as: :datepicker
@@ -138,17 +138,17 @@ ActiveAdmin.register EngineeringProject do
         attributes_table do
           row :id
           row :name
-          row :engineering_staffs do |obj|
+          row :staffs do |obj|
             link_to "员工列表", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
           end
-          row :engineering_customer do |obj|
-            link_to obj.engineering_customer.name, engineering_customer_path(obj.engineering_customer)
+          row :customer do |obj|
+            link_to obj.customer.name, engineering_customer_path(obj.customer)
           end
-          row :engineering_corp do |obj|
-            if obj.engineering_corp.nil?
+          row :corporation do |obj|
+            if obj.corporation.nil?
               link_to '', '#'
             else
-              link_to obj.engineering_corp.name, engineering_corp_path(obj.engineering_corp)
+              link_to obj.corporation.name, engineering_corp_path(obj.corporation)
             end
           end
 
@@ -294,7 +294,7 @@ ActiveAdmin.register EngineeringProject do
   collection_action :query_staff do
     staff = EngineeringStaff.find( params[:staff_id] )
 
-    stats = staff.engineering_projects.select(:id, :name).reduce([]) do |ar, ele|
+    stats = staff.projects.select(:id, :name).reduce([]) do |ar, ele|
       ar << {
         id: ele.id,
         name: ele.name
@@ -312,7 +312,7 @@ ActiveAdmin.register EngineeringProject do
     messages = []
     staffs.each do |staff|
       begin
-        project.engineering_staffs << staff
+        project.staffs << staff
         messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
       rescue => e
         messages << "操作失败，#{e.message}"
@@ -324,13 +324,13 @@ ActiveAdmin.register EngineeringProject do
 
   member_action :remove_staffs, method: :post do
     project = EngineeringProject.find(params[:id])
-    staff_ids = project.engineering_staffs.select(:id).map(&:id) - (params[:engineering_staff_ids].reject(&:blank?).map(&:to_i) rescue [])
+    staff_ids = project.staffs.select(:id).map(&:id) - (params[:engineering_staff_ids].reject(&:blank?).map(&:to_i) rescue [])
     staffs =  staff_ids.map{|id| EngineeringStaff.where(id: id).first}.compact
 
     messages = []
     staffs.each do |staff|
       begin
-        project.engineering_staffs.delete staff
+        project.staffs.delete staff
         messages << "操作成功，员工<#{staff.name}>已离开项目<#{project.name}>"
       rescue => e
         messages << "操作失败，#{e.message}"
@@ -342,9 +342,9 @@ ActiveAdmin.register EngineeringProject do
 
   member_action :available_staff_count do
     project = EngineeringProject.find( params[:id] )
-    own_staff_count = project.engineering_staffs.count
+    own_staff_count = project.staffs.count
 
-    customer = project.engineering_customer
+    customer = project.customer
     other_staff_count = customer.free_staffs( *project.range ).count
 
     render json: { count: own_staff_count + other_staff_count  }

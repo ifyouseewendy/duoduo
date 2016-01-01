@@ -12,10 +12,10 @@ ActiveAdmin.register EngineeringStaff do
     column :id
     column :nest_index
     column :name
-    column :engineering_customer, sortable: :id do |obj|
-      link_to obj.engineering_customer.name, engineering_customer_path(obj.engineering_customer)
+    column :customer, sortable: :id do |obj|
+      link_to obj.customer.name, engineering_customer_path(obj.customer)
     end
-    column :engineering_projects, sortable: :id do |obj|
+    column :projects, sortable: :id do |obj|
       link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
 
@@ -55,8 +55,8 @@ ActiveAdmin.register EngineeringStaff do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :engineering_customer, collection: ->{ EngineeringCustomer.all }
-      # f.input :engineering_projects, as: :select, collection: EngineeringProject.all
+      f.input :customer, collection: ->{ EngineeringCustomer.all }
+      # f.input :projects, as: :select, collection: EngineeringProject.all
       f.input :nest_index, as: :number
       f.input :name, as: :string
       f.input :identity_card, as: :string
@@ -96,10 +96,10 @@ ActiveAdmin.register EngineeringStaff do
       row :id
       row :nest_index
       row :name
-      row :engineering_customer do |obj|
-        link_to obj.engineering_customer.name, engineering_customer_path(obj.engineering_customer)
+      row :customer do |obj|
+        link_to obj.customer.name, engineering_customer_path(obj.customer)
       end
-      row :engineering_projects do |obj|
+      row :projects do |obj|
         link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
       end
 
@@ -146,7 +146,7 @@ ActiveAdmin.register EngineeringStaff do
     failed = false
     batch_action_collection.find(ids).each do |obj|
       begin
-        obj.engineering_projects << project
+        obj.projects << project
         messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
       rescue => e
         failed = true
@@ -174,7 +174,7 @@ ActiveAdmin.register EngineeringStaff do
   collection_action :query_free do
     project = EngineeringProject.find( params[:project_id] )
 
-    customer = project.engineering_customer
+    customer = project.customer
     own_staffs = customer.free_staffs( *project.range )
 
     stats = {
@@ -193,7 +193,7 @@ ActiveAdmin.register EngineeringStaff do
   collection_action :query_project do
     project = EngineeringProject.find( params[:project_id] )
 
-    stats = project.engineering_staffs.select(:id, :name).reduce([]) do |ar, ele|
+    stats = project.staffs.select(:id, :name).reduce([]) do |ar, ele|
       ar << {
         id: ele.id,
         name: ele.name
@@ -211,7 +211,7 @@ ActiveAdmin.register EngineeringStaff do
     messages = []
     projects.each do |project|
       begin
-        staff.engineering_projects << project
+        staff.projects << project
         messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
       rescue => e
         messages << "操作失败，#{e.message}"
@@ -223,13 +223,13 @@ ActiveAdmin.register EngineeringStaff do
 
   member_action :remove_projects, method: :post do
     staff = EngineeringStaff.find(params[:id])
-    project_ids = staff.engineering_projects.select(:id).map(&:id) - (params[:engineering_project_ids].reject(&:blank?).map(&:to_i) rescue [])
+    project_ids = staff.projects.select(:id).map(&:id) - (params[:engineering_project_ids].reject(&:blank?).map(&:to_i) rescue [])
     projects =  project_ids.map{|id| EngineeringProject.where(id: id).first}.compact
 
     messages = []
     projects.each do |project|
       begin
-        staff.engineering_projects.delete project
+        staff.projects.delete project
         messages << "操作成功，员工<#{staff.name}>已离开项目<#{project.name}>"
       rescue => e
         messages << "操作失败，#{e.message}"

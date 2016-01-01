@@ -14,7 +14,7 @@ ActiveAdmin.register EngineeringSalaryTable do
       obj.model_name.human
     end
     column :engineering_project, sortable: :engineering_project_id do |obj|
-      link_to obj.engineering_project.name, engineering_project_path(obj.engineering_project)
+      link_to obj.project.name, engineering_project_path(obj.project)
     end
     column :remark
     column :created_at
@@ -65,7 +65,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :engineering_project, collection: ->{ EngineeringProject.all }
+      f.input :project, collection: ->{ EngineeringProject.all }
       f.input :name, as: :string
       if request.url.split('/')[-1] == 'new'
         f.input :type, as: :radio, collection: ->{ EngineeringSalaryTable.types.map{|k| [k.model_name.human, k.to_s]} }
@@ -83,8 +83,8 @@ ActiveAdmin.register EngineeringSalaryTable do
     attributes_table do
       row :id
       row :name
-      row :engineering_project do |obj|
-        link_to obj.engineering_project.name, engineering_project_path(obj.engineering_project)
+      row :project do |obj|
+        link_to obj.project.name, engineering_project_path(obj.project)
       end
       row :type do |obj|
         obj.model_name.human
