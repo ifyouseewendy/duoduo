@@ -6,12 +6,8 @@
   <%= field_set_tag nil, class: 'inputs' do %>
     <ol>
       <li>
-        <%= label_tag '吉易子公司' %>
-        <%= select_tag :sub_company_id, options_for_select(SubCompany.hr_options) %>
-      </li>
-      <li>
         <%= label_tag '合作单位名称' %>
-        <% text_field_tag :co, project.corporation.try(:name) %>
+        <%= text_field_tag :corp_name, project.corporation.try(:name) %>
       </li>
       <li>
         <%= label_tag '回款金额' %>
