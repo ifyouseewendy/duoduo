@@ -78,9 +78,9 @@ ActiveAdmin.register EngineeringProject do
     tabs do
       tab "基本信息" do
         f.inputs do
-          f.input :customer, collection: ->{ EngineeringCustomer.as_option }
-          f.input :corporation, collection: ->{ EngineeringCorp.all }
-          f.input :sub_company, collection: ->{ SubCompany.hr }
+          f.input :customer, as: :select, collection: ->{ EngineeringCustomer.as_option }.call
+          f.input :corporation
+          f.input :sub_company, as: :select, collection: -> { SubCompany.hr }.call
           f.input :nest_index, as: :number
           f.input :name, as: :string
           f.input :start_date, as: :datepicker
@@ -91,7 +91,7 @@ ActiveAdmin.register EngineeringProject do
           f.input :admin_amount, as: :number
           f.input :proof, as: :string
           f.input :already_sign_dispatch, as: :boolean
-          f.input :status, as: :radio, collection: ->{ EngineeringProject.statuses_option }
+          f.input :status, as: :radio, collection: ->{ EngineeringProject.statuses_option }.call
           f.input :remark, as: :text
         end
       end
