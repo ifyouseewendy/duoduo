@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :big_contracts, only: [:create, :destroy] do
     member do
       post 'activate'
+      post 'deactivate'
     end
   end
 

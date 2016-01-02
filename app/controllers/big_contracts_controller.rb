@@ -6,11 +6,13 @@ class BigContractsController < ApplicationController
     begin
       contract = contract_file_params[:contract]
 
+      bc = BigContract.new contract_file_params
+
       path = Pathname(contract.path)
-      to = path.dirname.join(contract.original_filename)
+      ext = contract.original_filename.split('.')[-1]
+      to = path.dirname.join("#{bc}.#{ext}")
       path.rename(to)
 
-      bc = BigContract.new contract_file_params
       bc.contract = File.open(to)
       bc.save!
 
@@ -27,6 +29,11 @@ class BigContractsController < ApplicationController
 
   def activate
     contract_file.activate!
+    redirect_to :back, notice: "成功激活合同文件"
+  end
+
+  def deactivate
+    contract_file.deactivate!
     redirect_to :back, notice: "成功激活合同文件"
   end
 

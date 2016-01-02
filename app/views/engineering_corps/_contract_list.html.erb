@@ -2,12 +2,15 @@
   <ul>
     <% contract_files.each do |cf| %>
       <li>
-        <span><%= cf.contract_identifier %></span>
+        <span><%= cf.to_s %></span>
         <span>( <%= link_to '下载', cf.contract.url %> 
           <%= form_tag(big_contract_path(cf), method: :delete, class: 'form_tag') do %>
             <%= link_to "删除",  "#", :onclick=>"$(this).closest('form').submit()" %>
           <% end %>
           <% if cf.enable %>
+            <%= form_tag(deactivate_big_contract_path(cf), method: :post, class: 'form_tag') do %>
+              <%= link_to "注销",  "#", :onclick=>"$(this).closest('form').submit()" %>
+            <% end %>
             <span class='active_big_contract'>正在使用</span>
           <% else %>
             <%= form_tag(activate_big_contract_path(cf), method: :post, class: 'form_tag') do %>

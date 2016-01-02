@@ -2,8 +2,6 @@ class EngineeringCorp < ActiveRecord::Base
   has_many :projects, class: EngineeringProject
   has_many :big_contracts, ->{ order(enable: :desc) }, dependent: :destroy
 
-  has_many :contract_files, dependent: :destroy # USEFUL?
-
   class << self
     def policy_class
       EngineeringPolicy

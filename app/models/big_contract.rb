@@ -7,7 +7,14 @@ class BigContract < ActiveRecord::Base
   scope :enable, ->{ where(enable: true) }
 
   def activate!
-    corporation.big_contracts.enable.each{|bc| bc.update_attribute(:enable, false)}
     self.update_attribute(:enable, true)
+  end
+
+  def deactivate!
+    self.update_attribute(:enable, false)
+  end
+
+  def to_s
+    [sub_company.name, corporation.name, start_date, end_date].join('-')
   end
 end
