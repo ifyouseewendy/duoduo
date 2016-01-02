@@ -45,8 +45,9 @@ class EngineeringProject < ActiveRecord::Base
     def batch_form_fields
       fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
       hash = {
-        'engineering_customer_id_工程客户' => EngineeringCustomer.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]},
-        'engineering_corp_id_工程单位' => EngineeringCorp.select(:id, :name).reduce([]){|ar, ele| ar << [ele.name, ele.id]}
+        'engineering_customer_id_工程客户' => EngineeringCustomer.pluck(:name, :id),
+        'engineering_corp_id_工程单位' => EngineeringCorp.pluck(:name, :id),
+        'sub_company_id_吉易子公司' => SubCompany.hr.pluck(:name, :id)
       }
       fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
       hash
@@ -69,10 +70,12 @@ class EngineeringProject < ActiveRecord::Base
           collection.each do |item|
              stats = \
               columns.map do |col|
-                if [:customer, :corporation].include? col
-                  item.send(col).name
+                if [:customer, :corporation, :sub_company].include? col
+                  item.send(col).try(:name)
                 elsif booleans.include? col
                   item.send(col) ? '是' : '否'
+                elsif [:status].include? col
+                  item.send(col) == 'active' ? '活动' : '存档'
                 else
                   item.send(col)
                 end
@@ -90,8 +93,8 @@ class EngineeringProject < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        %i(id name customer corporation) \
-          + (ordered_columns(without_foreign_keys: true) - %i(id name))
+        %i(nest_index name customer corporation sub_company status) \
+          + (ordered_columns(without_base_keys: true, without_foreign_keys: true) - %i(nest_index name status))
       end
     end
 

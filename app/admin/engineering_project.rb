@@ -18,7 +18,7 @@ ActiveAdmin.register EngineeringProject do
     end
     column :sub_company, sortable: :id do |obj|
       sc = obj.sub_company
-      li (link_to sc.name, sub_company_path(sc))
+      link_to sc.name, sub_company_path(sc)
     end
     column :corporation, sortable: :id do |obj|
       if obj.corporation.nil?
@@ -60,6 +60,10 @@ ActiveAdmin.register EngineeringProject do
   end
 
   filter :status, as: :check_boxes, collection: ->{ EngineeringProject.statuses_option }
+  filter :customer
+  filter :corporation
+  filter :sub_company, as: :select, collection: ->{ SubCompany.hr.pluck(:name, :id) }
+  filter :nest_index
   preserve_default_filters!
   remove_filter :staffs
   remove_filter :salary_tables
