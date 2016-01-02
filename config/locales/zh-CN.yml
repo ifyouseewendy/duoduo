@@ -503,6 +503,7 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
+        sub_company_in: '吉易子公司'
       engineering_salary_table:
         id: '编号'
         name: '名称'

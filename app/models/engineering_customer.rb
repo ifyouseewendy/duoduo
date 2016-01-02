@@ -90,10 +90,8 @@ class EngineeringCustomer < ActiveRecord::Base
   end
 
   ransacker :sub_company, formatter: ->(qid) {
-    # ids = User.search_in_all_translated(search).map(&:id)
-    # ids = ids.any? ? ids : nil
     sub_company = SubCompany.find(qid)
-    sub_company.projects.pluck(:engineering_customer_id)
+    sub_company.projects.pluck(:engineering_customer_id).compact.uniq
   } do |parent|
       parent.table[:id]
   end

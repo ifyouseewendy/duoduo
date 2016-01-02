@@ -75,4 +75,12 @@ class EngineeringCorp < ActiveRecord::Base
 
     contract.end_date
   end
+
+  ransacker :sub_company, formatter: ->(qid) {
+    sub_company = SubCompany.find(qid)
+    sub_company.projects.pluck(:engineering_corp_id).compact.uniq
+  } do |parent|
+      parent.table[:id]
+  end
+
 end

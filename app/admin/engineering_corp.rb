@@ -14,6 +14,7 @@ ActiveAdmin.register EngineeringCorp do
     actions
   end
 
+  filter :sub_company_in, as: :select, collection: ->{ SubCompany.hr.pluck(:name, :id) }
   preserve_default_filters!
   remove_filter :projects
   remove_filter :big_contracts
