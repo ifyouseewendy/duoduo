@@ -18,7 +18,6 @@ class EngineeringContractFilesController < ApplicationController
   def generate_and_download
     begin
       project = EngineeringProject.find params[:engineering_project_id]
-      sub_company = SubCompany.find params[:sub_company_id]
 
       valid_keys = \
         case params[:role].to_sym
@@ -29,7 +28,6 @@ class EngineeringContractFilesController < ApplicationController
         end
 
       project.generate_contract_file(
-        sub_company: sub_company,
         role: params[:role],
         outcome_item_id: params[:outcome_item_id],
         content: params.select{|k,_| valid_keys.include?(k.to_sym) },

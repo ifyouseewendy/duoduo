@@ -324,7 +324,7 @@ class EngineeringProject < ActiveRecord::Base
     outcome_items.map(&:amount).map(&:to_s)
   end
 
-  def generate_contract_file(sub_company:, role:, outcome_item_id:, content: {})
+  def generate_contract_file(role:, outcome_item_id:, content: {})
     role = role.to_sym
     raise "错误的参数，role: #{params[:rold]}" unless %i(normal proxy).include?(role)
 
@@ -338,7 +338,7 @@ class EngineeringProject < ActiveRecord::Base
         file_path: template.path
 
       ext = contract.basename.to_s.split('.')[-1]
-      to = contract.dirname.join("劳务派遣协议_#{Time.stamp}.#{ext}")
+      to = contract.dirname.join("#{name}_劳务派遣协议_#{Time.stamp}.#{ext}")
       contract.rename(to)
 
       add_contract_file(path: to, role: role)
@@ -379,7 +379,7 @@ class EngineeringProject < ActiveRecord::Base
 
 
         ext = contract.basename.to_s.split('.')[-1]
-        to = contract.dirname.join("代发劳务费协议_#{person}_#{Time.stamp}.#{ext}")
+        to = contract.dirname.join("#{name}_代发劳务费协议_#{person}_#{Time.stamp}.#{ext}")
         contract.rename(to)
 
         outcome_item.add_contract_file(path: to)
