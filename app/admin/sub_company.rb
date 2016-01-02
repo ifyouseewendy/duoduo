@@ -22,9 +22,20 @@ ActiveAdmin.register SubCompany do
     column :link do |obj|
       link_to "劳务合同", "/labor_contracts?utf8=✓&q%5Bsub_company_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
+
     column :link do |obj|
       if obj.has_engineering_relation
-        link_to "工程合作单位", "/normal_corporations?utf8=✓&q%5Bsub_companies_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+        link_to "工程项目", "/engineering_projects?utf8=✓&q%5Bsub_company_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      end
+    end
+    column :link do |obj|
+      if obj.has_engineering_relation
+        link_to "工程客户", "engineering_customers?utf8=✓&q%5Bsub_company_in%5D=#{obj.id}&commit=过滤&order=nest_index_desc"
+      end
+    end
+    column :link do |obj|
+      if obj.has_engineering_relation
+        link_to "工程合作单位", "/engineering_corps?utf8=✓&q%5Bsub_company_in%5D=#{obj.id}&commit=过滤&order=id_desc"
       end
     end
     column :link do |obj|
