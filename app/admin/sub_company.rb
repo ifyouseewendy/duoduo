@@ -52,8 +52,9 @@ ActiveAdmin.register SubCompany do
 
   show do
     boolean_columns = resource.class.columns_of(:boolean)
+    columns = resource.class.ordered_columns - %i(engi_contract_template engi_protocol_template)
     attributes_table do
-      resource.class.ordered_columns.map(&:to_sym).map do |field|
+      columns.map do |field|
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
         else
