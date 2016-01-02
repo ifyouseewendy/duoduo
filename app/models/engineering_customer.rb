@@ -88,4 +88,14 @@ class EngineeringCustomer < ActiveRecord::Base
   def display_name
     [nest_index, name].join('、')
   end
+
+  ransacker :sub_company, formatter: ->(qid) {
+    # ids = User.search_in_all_translated(search).map(&:id)
+    # ids = ids.any? ? ids : nil
+    sub_company = SubCompany.find(qid)
+    sub_company.projects.pluck(:engineering_customer_id)
+  } do |parent|
+      parent.table[:id]
+  end
+
 end

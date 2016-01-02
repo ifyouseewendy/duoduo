@@ -453,6 +453,7 @@ zh-CN:
         projects: '项目列表'
         staffs: '员工列表'
         sub_companies: '吉易子公司'
+        sub_company_in: '吉易子公司'
       engineering_project:
         id: '编号'
         nest_index: '编号'

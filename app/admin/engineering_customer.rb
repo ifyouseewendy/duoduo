@@ -32,6 +32,7 @@ ActiveAdmin.register EngineeringCustomer do
     actions
   end
 
+  filter :sub_company_in, as: :select, collection: ->{ SubCompany.hr.pluck(:name, :id) }
   filter :nest_index
   preserve_default_filters!
   remove_filter :projects
