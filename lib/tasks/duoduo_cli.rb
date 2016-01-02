@@ -110,18 +110,29 @@ class DuoduoCli < Thor
       names = Rails.application.secrets.sub_company_names
       return if SubCompany.pluck(:name).to_set == names.to_set
 
-      names.each_with_object([]) do |name, companies|
+      names.each do |name|
         has_engineering_relation = (name =~ /人力/ ? true : false)
-        sc = SubCompany.create!(name: name, has_engineering_relation: has_engineering_relation)
-        (1..2).each_with_object([]) do |idx, ar|
-          if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
-            contract = "tmp/#{name}.合同#{idx}.txt"
-            sc.contract_files.create(contract: File.open(contract) )
-            sc.add_file(contract, template: true)
+        sc = SubCompany.where(name: name, has_engineering_relation: has_engineering_relation).first
+
+        if has_engineering_relation
+          if name == '吉易人力资源（公主岭分）'
+            sc.engi_contract_template = File.open( Rails.root.join('db').join('template').join('人力分_工程合同模版.docx') )
+            sc.engi_protocol_template = File.open( Rails.root.join('db').join('template').join('人力分_代发协议模板.docx') )
+          elsif name == '吉易人力资源'
+            sc.engi_contract_template = File.open( Rails.root.join('db').join('template').join('人力_工程合同模版.docx') )
+            sc.engi_protocol_template = File.open( Rails.root.join('db').join('template').join('人力_代发协议模板.docx') )
           end
+        else
+          # (1..2).each_with_object([]) do |idx, ar|
+          #   if File.exist?(("tmp/#{name}.合同#{idx}.txt"))
+          #     contract = "tmp/#{name}.合同#{idx}.txt"
+          #     sc.contract_files.create(contract: File.open(contract) )
+          #     sc.add_file(contract, template: true)
+          #   end
+          # end
         end
 
-        companies << sc
+        sc.save!
       end
     end
 
