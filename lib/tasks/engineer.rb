@@ -335,7 +335,7 @@ class Engineer < DuoduoCli
       files = get_project_info_files
 
       # logger.error "#{better_path customer_dir} ; 项目汇总 ; 没有信息汇总" and return if files.blank?
-      return if files.blank?
+      return {} if files.blank?
 
       files.reduce({}) do |ha, file|
         set_project_info(file)
@@ -513,7 +513,7 @@ class Engineer < DuoduoCli
     end
 
     def iterate_projects(option)
-      entries = customer_dir.entries.reject{|en| skip_file?(en)}.sort_by{|en| en.basename.to_s.split(/[、|.]/)[0].to_i }
+      entries = customer_dir.entries.reject{|en| skip_file?(en) or en.to_s.index('提供人员')}.sort_by{|en| en.basename.to_s.split(/[、|.]/)[0].to_i }
       entries.each do |pn|
         next if skip_file?(pn) or special_file?(pn)
 
@@ -559,6 +559,10 @@ class Engineer < DuoduoCli
 
         salary_files   = find_in_project_dir(dir: dir, type: :salary)
         process_salary_files(salary_files, project)
+      end
+
+      projects.each do |_, project|
+        fix_project_nest_index_and_name(project)
       end
     end
 
@@ -984,6 +988,28 @@ class Engineer < DuoduoCli
       path.basename.to_s.index('不可') ? false : true
     end
 
+    def fix_project_nest_index_and_name(pr)
+      idx, name = pr.name.split(/[、|.]/)
+      if name.nil?
+        puts [pr.customer.nest_index, pr.customer.name, pr.name].join(' - ')
+        return
+      end
+
+      idx = idx.sub('-','.') # 40-1
+      if idx.to_i == idx.to_f # 40
+        pr.nest_index = idx.to_i
+      else # 40.1
+        pr.nest_index = idx.to_f.round(1)
+      end
+      pr.name = name
+      pr.save!
+    end
+
+    def fix_all_project_nest_index_and_name
+      EngineeringProject.all.each do |pr|
+        fix_project_nest_index_and_name(pr)
+      end
+    end
 end
 
 Engineer.start(ARGV)
