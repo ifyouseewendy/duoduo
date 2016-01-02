@@ -7,11 +7,15 @@
           <%= form_tag(big_contract_path(cf), method: :delete, class: 'form_tag') do %>
             <%= link_to "删除",  "#", :onclick=>"$(this).closest('form').submit()" %>
           <% end %>
+          <% if cf.enable %>
+            <span class='active_big_contract'>正在使用</span>
+          <% else %>
+            <%= form_tag(activate_big_contract_path(cf), method: :post, class: 'form_tag') do %>
+              <%= link_to "激活",  "#", :onclick=>"$(this).closest('form').submit()" %>
+            <% end %>
+          <% end %>
            )
         </span>
-        <% if cf.enable %>
-          <span class='active_big_contract'>正在使用</span>
-        <% end %>
       </li>
     <% end %>
   </ul>

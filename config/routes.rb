@@ -8,7 +8,11 @@ Rails.application.routes.draw do
 
   ActiveAdmin.routes(self)
 
-  resources :big_contracts, only: [:create, :destroy]
+  resources :big_contracts, only: [:create, :destroy] do
+    member do
+      post 'activate'
+    end
+  end
 
   resources :contract_files, only: [:create, :destroy] do
     collection do

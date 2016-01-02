@@ -25,6 +25,11 @@ class BigContractsController < ApplicationController
     redirect_to :back, notice: "成功删除合同文件"
   end
 
+  def activate
+    contract_file.activate!
+    redirect_to :back, notice: "成功激活合同文件"
+  end
+
   private
 
    def contract_file_params

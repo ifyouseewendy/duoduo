@@ -5,4 +5,9 @@ class BigContract < ActiveRecord::Base
   mount_uploader :contract, BigContractUploader
 
   scope :enable, ->{ where(enable: true) }
+
+  def activate!
+    corporation.big_contracts.enable.each{|bc| bc.update_attribute(:enable, false)}
+    self.update_attribute(:enable, true)
+  end
 end
