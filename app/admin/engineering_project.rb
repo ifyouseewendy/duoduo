@@ -1,8 +1,6 @@
 ActiveAdmin.register EngineeringProject do
   belongs_to :engineering_customer, optional: true
 
-  # include ImportSupport
-
   menu \
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 3
@@ -10,29 +8,29 @@ ActiveAdmin.register EngineeringProject do
   index do
     selectable_column
 
-    column :id
+    column :nest_index
     column :name
     column :staffs, sortable: :id do |obj|
-      link_to "员工列表", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      link_to "用工明细", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
     column :customer, sortable: :id do |obj|
       link_to obj.customer.name, engineering_customer_path(obj.customer)
     end
+    column :sub_company, sortable: :id do |obj|
+      sc = obj.sub_company
+      li (link_to sc.name, sub_company_path(sc))
+    end
     column :corporation, sortable: :id do |obj|
       if obj.corporation.nil?
-        link_to '', '#'
+        link_to '', '无'
       else
         link_to obj.corporation.name, engineering_corp_path(obj.corporation)
       end
     end
-    column :sub_companies, sortable: :id do |obj|
-      ul do
-        obj.customer.sub_companies.map do |sc|
-          li (link_to sc.name, sub_company_path(sc))
-        end
-      end
+    column :status do |obj|
+      status_tag obj.status_i18n, (obj.active? ? :yes : :no)
     end
-    (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :name]).each do |field|
+    (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name, :status]).each do |field|
       if resource_class.nest_fields.include? field
         column field do |obj|
           data = obj.send(field)
@@ -42,10 +40,6 @@ ActiveAdmin.register EngineeringProject do
           else
             data[0]
           end
-        end
-      elsif field == :status
-        column field do |obj|
-          status_tag obj.status_i18n, (obj.active? ? :yes : :no)
         end
       else
         column field
@@ -65,13 +59,7 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
-  filter :sub_company_in, as: :select, collection: ->{ SubCompany.hr.pluck(:name, :id) }
   filter :status, as: :check_boxes, collection: ->{ EngineeringProject.statuses_option }
-  filter :income_items_date, as: :date_range
-  filter :income_items_amount, as: :numeric
-  filter :outcome_items_date, as: :date_range
-  filter :outcome_items_amount, as: :numeric
-  # filter :outcome_items_persons, as: :string
   preserve_default_filters!
   remove_filter :staffs
   remove_filter :salary_tables
@@ -90,8 +78,10 @@ ActiveAdmin.register EngineeringProject do
     tabs do
       tab "基本信息" do
         f.inputs do
-          f.input :customer, collection: ->{ EngineeringCustomer.all }
+          f.input :customer, collection: ->{ EngineeringCustomer.as_option }
           f.input :corporation, collection: ->{ EngineeringCorp.all }
+          f.input :sub_company, collection: ->{ SubCompany.hr }
+          f.input :nest_index, as: :number
           f.input :name, as: :string
           f.input :start_date, as: :datepicker
           f.input :project_start_date, as: :datepicker
@@ -136,10 +126,10 @@ ActiveAdmin.register EngineeringProject do
     tabs do
       tab "基本信息" do
         attributes_table do
-          row :id
+          row :nest_index
           row :name
           row :staffs do |obj|
-            link_to "员工列表", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+            link_to "用工明细", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
           end
           row :customer do |obj|
             link_to obj.customer.name, engineering_customer_path(obj.customer)
@@ -155,7 +145,7 @@ ActiveAdmin.register EngineeringProject do
           boolean_columns = resource.class.columns_of(:boolean)
           (
             resource.class.ordered_columns(without_foreign_keys: true) \
-            - [:id, :name, :income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
+            - [:id, :nest_index, :name, :income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
           ).map(&:to_sym).map do |field|
             if boolean_columns.include? field
               row(field) { status_tag resource.send(field).to_s }

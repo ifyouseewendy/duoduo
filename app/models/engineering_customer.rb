@@ -64,6 +64,10 @@ class EngineeringCustomer < ActiveRecord::Base
     def available_nest_index
       self.first.nest_index + 1
     end
+
+    def as_option
+      pluck(:nest_index, :name, :id).map{|ar| [ar[0..1].join('、'), ar[-1]]}
+    end
   end
 
   def free_staffs(start_date, end_date, count = nil)
@@ -81,4 +85,7 @@ class EngineeringCustomer < ActiveRecord::Base
     EngineeringCorp.where(id: ids)
   end
 
+  def display_name
+    [nest_index, name].join('、')
+  end
 end

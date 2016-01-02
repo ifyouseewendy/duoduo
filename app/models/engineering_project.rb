@@ -29,9 +29,9 @@ class EngineeringProject < ActiveRecord::Base
       names = column_names.map(&:to_sym)
 
       names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(engineering_customer_id engineering_corp_id) if without_foreign_keys
+      names -= %i(engineering_customer_id engineering_corp_id sub_company_id) if without_foreign_keys
 
-      names
+      [:nest_index] + (names - [:nest_index])
     end
 
     def columns_of(type)

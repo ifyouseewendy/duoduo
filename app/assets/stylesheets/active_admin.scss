@@ -105,3 +105,12 @@ body.engineering_customers table.index_table thead tr {
     color: green;
   }
 }
+
+.engineering_projects {
+  th:nth-child(3) {
+    min-width: 250px !important;
+  }
+  th:nth-child(6) {
+    min-width: 80px !important;
+  }
+}
