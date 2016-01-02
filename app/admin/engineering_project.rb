@@ -71,10 +71,9 @@ ActiveAdmin.register EngineeringProject do
   remove_filter :income_items
   remove_filter :outcome_items
 
-  permit_params ->{
-    @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
-    + [{ income_items_attributes: [:id, :date, :amount, :remark, :_destroy], outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [], bank: [], address: [], account: [] ] }]
-  }
+  permit_params \
+    *(@resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
+    + [{ income_items_attributes: [:id, :date, :amount, :remark, :_destroy], outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [], bank: [], address: [], account: [] ] }])
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
@@ -82,20 +81,20 @@ ActiveAdmin.register EngineeringProject do
     tabs do
       tab "基本信息" do
         f.inputs do
+          f.input :nest_index, as: :number
+          f.input :name, as: :string
           f.input :customer, as: :select, collection: ->{ EngineeringCustomer.as_option }.call
           f.input :corporation
           f.input :sub_company, as: :select, collection: -> { SubCompany.hr }.call
-          f.input :nest_index, as: :number
-          f.input :name, as: :string
+          f.input :status, as: :radio, collection: ->{ EngineeringProject.statuses_option }.call
           f.input :start_date, as: :datepicker
           f.input :project_start_date, as: :datepicker
           f.input :project_end_date, as: :datepicker
-          f.input :project_range, as: :string
+          # f.input :project_range, as: :string
           f.input :project_amount, as: :number
           f.input :admin_amount, as: :number
           f.input :proof, as: :string
           f.input :already_sign_dispatch, as: :boolean
-          f.input :status, as: :radio, collection: ->{ EngineeringProject.statuses_option }.call
           f.input :remark, as: :text
         end
       end
@@ -145,11 +144,18 @@ ActiveAdmin.register EngineeringProject do
               link_to obj.corporation.name, engineering_corp_path(obj.corporation)
             end
           end
+          row :sub_company do |obj|
+            sc = obj.sub_company
+            link_to sc.name, sub_company_path(sc)
+          end
+          row :status do |obj|
+            status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+          end
 
           boolean_columns = resource.class.columns_of(:boolean)
           (
             resource.class.ordered_columns(without_foreign_keys: true) \
-            - [:id, :nest_index, :name, :income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
+            - [:id, :nest_index, :name, :status, :income_date, :income_amount, :outcome_date, :outcome_referee, :outcome_amount]
           ).map(&:to_sym).map do |field|
             if boolean_columns.include? field
               row(field) { status_tag resource.send(field).to_s }
@@ -163,16 +169,12 @@ ActiveAdmin.register EngineeringProject do
                   data[0]
                 end
               end
-            elsif field == :status
-              row field do |obj|
-                status_tag obj.status_i18n, (obj.active? ? :yes : :no)
-              end
             else
               row field
             end
           end
         end
-        panel "劳务派遣协议" do
+        panel "劳务派遣协议（合同）" do
           render partial: 'engineering_projects/contract_list', locals: { contract_files: resource.contract_files.normal, engineering_project: resource, role: :normal }
           tabs do
             tab '手动上传' do
