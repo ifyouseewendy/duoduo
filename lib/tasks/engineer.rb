@@ -83,6 +83,9 @@ class Engineer < DuoduoCli
     # 项目
     iterate_projects(options)
 
+    # Extract nest_index from name
+    fix_all_project_nest_index_and_name
+
     logger.info warn_result.to_s
   end
 
@@ -559,10 +562,6 @@ class Engineer < DuoduoCli
 
         salary_files   = find_in_project_dir(dir: dir, type: :salary)
         process_salary_files(salary_files, project)
-      end
-
-      projects.each do |_, project|
-        fix_project_nest_index_and_name(project)
       end
     end
 
