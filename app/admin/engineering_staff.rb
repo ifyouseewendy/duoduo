@@ -198,11 +198,14 @@ ActiveAdmin.register EngineeringStaff do
     project = EngineeringProject.find( params[:project_id] )
 
     customer = project.customer
-    own_staffs = customer.free_staffs( *project.range )
+    start_date, end_date = project.range
+    own_staffs = customer.free_staffs(start_date, end_date, exclude_project_id: project.id)
 
     stats = {
-      customer: customer.name,
-      range_output: project.range_output
+      count: own_staffs.count,
+      customer: customer.display_name,
+      range_output: project.range_output,
+      display_name: project.display_name
     }
     stats[:stat] = own_staffs.reduce([]) do |ar, ele|
       ar << {
