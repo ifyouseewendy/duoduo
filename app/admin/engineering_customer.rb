@@ -13,7 +13,7 @@ ActiveAdmin.register EngineeringCustomer do
     column :nest_index
     column :name
     column :projects, sortable: :id do |obj|
-      link_to "项目列表", engineering_customer_engineering_projects_path(obj)
+      link_to "项目汇总", engineering_customer_engineering_projects_path(obj)
     end
     column :staffs, sortable: :id do |obj|
       link_to "提供人员", engineering_customer_engineering_staffs_path(obj)
@@ -64,7 +64,7 @@ ActiveAdmin.register EngineeringCustomer do
       row :nest_index
       row :name
       row :projects do |obj|
-        link_to "项目列表", engineering_customer_engineering_projects_path(obj)
+        link_to "项目汇总", engineering_customer_engineering_projects_path(obj)
       end
       row :staffs do |obj|
         link_to "员工列表", engineering_customer_engineering_staffs_path(obj)

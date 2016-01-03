@@ -96,4 +96,12 @@ class EngineeringCustomer < ActiveRecord::Base
       parent.table[:id]
   end
 
+  # Allow nested routes for engineering_customer
+  def engineering_projects
+    projects
+  end
+  def engineering_staffs
+    staffs
+  end
+
 end

@@ -449,8 +449,8 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        projects: '项目列表'
-        staffs: '员工列表'
+        projects: '项目汇总'
+        staffs: '提供人员'
         sub_companies: '吉易子公司'
         sub_company_in: '吉易子公司'
       engineering_project:
