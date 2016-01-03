@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160103014536) do
+ActiveRecord::Schema.define(version: 20160103015530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -336,6 +336,7 @@ ActiveRecord::Schema.define(version: 20160103014536) do
   add_index "engineering_staffs", ["address"], name: "index_engineering_staffs_on_address", using: :btree
   add_index "engineering_staffs", ["age"], name: "index_engineering_staffs_on_age", using: :btree
   add_index "engineering_staffs", ["birth"], name: "index_engineering_staffs_on_birth", using: :btree
+  add_index "engineering_staffs", ["enable"], name: "index_engineering_staffs_on_enable", using: :btree
   add_index "engineering_staffs", ["engineering_customer_id"], name: "index_engineering_staffs_on_engineering_customer_id", using: :btree
   add_index "engineering_staffs", ["gender"], name: "index_engineering_staffs_on_gender", using: :btree
   add_index "engineering_staffs", ["identity_card"], name: "index_engineering_staffs_on_identity_card", using: :btree
