@@ -41,6 +41,9 @@ class Engineer < DuoduoCli
     fatal_result = Rails.root.join("log").join("添加到各客户提供人员不可用.csv")
     logger.set_fatal_path fatal_result
     $PERHAPS.each{|perhap| logger.fatal perhap}
+
+    # Extract nest_index from name
+    fix_all_project_nest_index_and_name
   end
 
   desc "start", "Import engineering data"
@@ -82,9 +85,6 @@ class Engineer < DuoduoCli
 
     # 项目
     iterate_projects(options)
-
-    # Extract nest_index from name
-    fix_all_project_nest_index_and_name
 
     logger.info warn_result.to_s
   end
