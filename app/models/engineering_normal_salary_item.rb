@@ -2,11 +2,16 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
   belongs_to :salary_table, \
     class_name: EngineeringNormalSalaryTable,
     foreign_key: :engineering_salary_table_id,
-    inverse_of: :salary_items
+    inverse_of: :salary_items,
+    required: true
 
-  belongs_to :staff, class: EngineeringStaff, foreign_key: :engineering_staff_id
+  belongs_to :staff, \
+    class: EngineeringStaff,\
+    foreign_key: :engineering_staff_id,
+    required: true
 
   before_save :revise_fields
+
 
   class << self
     def policy_class
@@ -30,13 +35,17 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
       item.save!
     end
 
-    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
-      names = column_names.map(&:to_sym)
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
+      if export
+        [:engineering_staff_id, :social_insurance, :medical_insurance, :salary_in_fact, :remark]
+      else
+        names = column_names.map(&:to_sym)
 
-      names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(engineering_salary_table_id engineering_staff_id) if without_foreign_keys
+        names -= %i(id created_at updated_at) if without_base_keys
+        names -= %i(engineering_salary_table_id engineering_staff_id) if without_foreign_keys
 
-      names
+        names
+      end
     end
 
     def batch_form_fields

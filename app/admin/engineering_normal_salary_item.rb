@@ -1,4 +1,6 @@
 ActiveAdmin.register EngineeringNormalSalaryItem do
+  include ImportSupport
+
   menu false
 
   config.per_page = 100
@@ -98,4 +100,74 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
     send_file file, filename: file.basename
   end
 
+  collection_action :import_new do
+    render 'import_template'
+  end
+
+  collection_action :import_do, method: :post do
+    file = params[collection.name.underscore].try(:[], :file)
+    redirect_to :back, alert: '导入失败（未找到文件），请选择上传文件' and return \
+      if file.nil?
+
+    redirect_to :back, alert: '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
+      unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
+
+    xls = Roo::Spreadsheet.open(file.path)
+    sheet = xls.sheet(0)
+    data = sheet.to_a
+
+    columns = collection.ordered_columns(export:true)
+
+    st_id = params[:engineering_normal_salary_item][:engineering_salary_table_id]
+    st = EngineeringSalaryTable.find(st_id)
+    project = st.project
+
+    stats = []
+    data.each_with_index do |row, id|
+      stat = {}
+      row.each_with_index do |v, idx|
+        key = columns[idx]
+        value = (String === v ? v.strip : v)
+        stat[key] = value
+      end
+
+      stats << stat
+    end
+
+    failed = []
+    stats.each_with_index do |stat, idx|
+      if idx == 0
+        failed << stat.values
+      else
+        begin
+          name = stat[:engineering_staff_id].to_s.delete(' ')
+          engineering_staff_id = project.staffs.where(name: name).first.try(:id)
+          raise "未找到员工，请确认员工出现在项目的用工明细中" if engineering_staff_id.blank?
+          collection.create!(stat.merge({
+            engineering_staff_id: engineering_staff_id,
+            engineering_salary_table_id: st.id
+          }))
+        rescue => e
+          failed << (stat.values << e.message)
+        end
+      end
+    end
+
+    if failed.count > 1
+      # generate new xls file
+
+      filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
+      filepath = Pathname("tmp/#{filename}.#{Time.stamp}.xlsx")
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet do |sht|
+          failed.each{|stat| sht.add_row stat}
+        end
+        p.serialize(filepath.to_s)
+      end
+      send_file filepath
+    else
+      redirect_to send("#{collection.name.underscore.pluralize}_path"), notice: "成功导入 #{stats.count-1} 条记录"
+    end
+
+  end
 end

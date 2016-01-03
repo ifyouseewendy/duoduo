@@ -32,7 +32,7 @@ ActiveAdmin.register EngineeringSalaryTable do
 
       ul do
         li( link_to "查看", "/#{path}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
-        li( link_to "导入", "#", class: "add_staffs_link" )
+        li( link_to "导入", "/#{path}/import_new?engineering_salary_table_id=#{obj.id}", target: '_blank' )
         li( link_to "添加", "/#{path}/new?project_id=#{project_id}&salary_table_id=#{obj.id}", target: "_blank" )
       end
     end

@@ -7,6 +7,9 @@
 
   <%= f.inputs do %>
     <%= f.input :file, as: :file, label: t('active_admin.import.file') %>
+    <% params.reject{|k| %i(controller action order).include?(k.to_sym)}.each do |k,v| %>
+      <%= f.hidden_field k, value: v %>
+    <% end %>
   <% end %>
   <%# <%= f.inputs t("active_admin_import.csv_options"), for: [:csv_options, OpenStruct.new(@active_admin_import_model.csv_options)] do |csv| %>
   <%#   <% csv.with_options input_html: {style: 'width:40px;'} do |opts| %>
