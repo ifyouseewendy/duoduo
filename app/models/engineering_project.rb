@@ -20,6 +20,8 @@ class EngineeringProject < ActiveRecord::Base
 
   enum status: [:active, :archive]
 
+  default_scope { order(engineering_customer_id: :asc).order(nest_index: :asc) }
+
   class << self
     def policy_class
       EngineeringPolicy
@@ -428,4 +430,7 @@ class EngineeringProject < ActiveRecord::Base
       parent.table[:id]
   end
 
+  def display_name
+    [nest_index, name].join('、')
+  end
 end
