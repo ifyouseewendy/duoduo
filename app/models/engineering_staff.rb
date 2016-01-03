@@ -141,7 +141,8 @@ class EngineeringStaff < ActiveRecord::Base
   def age
     return '' if birth.blank?
 
-    Date.today.year - birth.year
+    num = Date.today.year - birth.year
+    (birth + num.years >= Date.today) ? num-1 : num
   end
 
   def seal_index
