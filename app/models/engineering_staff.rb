@@ -18,8 +18,10 @@ class EngineeringStaff < ActiveRecord::Base
 
   before_save :revise_fields
 
-  # validates_uniqueness_of :identity_card
-  # validates_presence_of :identity_card
+  validates_uniqueness_of :identity_card
+  validates_presence_of :identity_card
+
+  default_scope { order(enable: :desc) }
 
   class << self
     def policy_class
@@ -74,6 +76,10 @@ class EngineeringStaff < ActiveRecord::Base
                   item.send(col).name
                elsif [:gender].include? col
                   genders_i18n[ item.send(col) ]
+               elsif [:identity_card].include? col
+                  "'#{item.send(col)}"
+               elsif [:enable].include? col
+                 item.send(col) ? '可用' : '不可用'
                else
                  item.send(col)
                end
@@ -91,8 +97,8 @@ class EngineeringStaff < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        %i(id nest_index name customer) \
-          + (ordered_columns(without_foreign_keys: true) - %i(id nest_index name))
+        %i(identity_card name enable customer) \
+          + (ordered_columns(without_base_keys: true, without_foreign_keys: true) - %i(id identity_card name enable alias_name))
       end
     end
   end

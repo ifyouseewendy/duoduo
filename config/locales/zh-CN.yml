@@ -192,7 +192,7 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
         seal_index: '刻章'
-        enable: '可用'
+        enable: '状态'
       salary_table:
         id: '编号'
         name: '名称'

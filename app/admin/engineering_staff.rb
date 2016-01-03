@@ -2,16 +2,26 @@ ActiveAdmin.register EngineeringStaff do
   belongs_to :engineering_customer, optional: true
   include ImportSupport
 
+  # Config
   menu \
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 4
 
+  # Index
+  config.sort_order = 'enable_desc'
+
   index do
     selectable_column
 
-    column :id
-    column :nest_index
+    column :identity_card
     column :name
+    column :enable, sortable: :enable do |obj|
+      if obj.enable
+        status_tag '可用', :yes
+      else
+        status_tag '不可用', :no
+      end
+    end
     column :customer, sortable: :id do |obj|
       link_to obj.customer.name, engineering_customer_path(obj.customer)
     end
@@ -19,7 +29,7 @@ ActiveAdmin.register EngineeringStaff do
       link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
 
-    (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
+    (resource_class.ordered_columns(without_foreign_keys: true) - [:identity_card, :name, :id, :enable, :alias_name]).map(&:to_sym).map do |field|
       if field == :gender
         # enum
         column :gender do |obj|
@@ -35,34 +45,37 @@ ActiveAdmin.register EngineeringStaff do
     end
 
     actions do |obj|
-      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      item "加入项目", "#", class: "add_projects_link expand_table_action_width"
-      text_node "&nbsp;&nbsp;".html_safe
-      item "离开项目", "#", class: "remove_projects_link"
+      # text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      # item "加入项目", "#", class: "add_projects_link expand_table_action_width"
+      # text_node "&nbsp;&nbsp;".html_safe
+      # item "离开项目", "#", class: "remove_projects_link"
     end
   end
 
+  filter :identity_card
+  filter :name
+  filter :enable
   preserve_default_filters!
   remove_filter :salary_items
   remove_filter :engineering_normal_salary_items
   remove_filter :engineering_normal_with_tax_salary_items
   remove_filter :engineering_big_table_salary_items
   remove_filter :engineering_dong_fang_salary_items
+  remove_filter :alias_name
 
-  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []] }
+  permit_params *( @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []] )
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :customer, collection: ->{ EngineeringCustomer.all }
-      # f.input :projects, as: :select, collection: EngineeringProject.all
-      f.input :nest_index, as: :number
-      f.input :name, as: :string
       f.input :identity_card, as: :string
+      f.input :name, as: :string
+      f.input :enable
+      f.input :customer
+      f.input :projects, as: :select, collection: ->{ EngineeringProject.includes(:customer).map{|ep| ["#{ep.customer.display_name} - #{ep.display_name}", ep.id] } }.call
       f.input :birth, as: :datepicker
-      f.input :age, as: :number
-      f.input :gender, as: :radio, collection: ->{ EngineeringStaff.genders_option }
+      f.input :gender, as: :radio, collection: ->{ EngineeringStaff.genders_option }.call
       f.input :nation, as: :string
       f.input :address, as: :string
       f.input :remark, as: :text
@@ -93,9 +106,15 @@ ActiveAdmin.register EngineeringStaff do
 
   show do
     attributes_table do
-      row :id
-      row :nest_index
+      row :identity_card
       row :name
+      row :enable, sortable: :enable do |obj|
+        if obj.enable
+          status_tag '可用', :yes
+        else
+          status_tag '不可用', :no
+        end
+      end
       row :customer do |obj|
         link_to obj.customer.name, engineering_customer_path(obj.customer)
       end
@@ -104,7 +123,7 @@ ActiveAdmin.register EngineeringStaff do
       end
 
       boolean_columns = resource.class.columns_of(:boolean)
-      (resource.class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
+      (resource.class.ordered_columns(without_foreign_keys: true) - [:id, :identity_card, :name, :enable, :alias_name]).map(&:to_sym).map do |field|
         if boolean_columns.include? field
           row(field) { status_tag resource.send(field).to_s }
         else
