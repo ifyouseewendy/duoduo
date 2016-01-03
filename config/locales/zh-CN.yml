@@ -493,6 +493,7 @@ zh-CN:
         sub_company_in: '吉易子公司'
         sub_company_id: '吉易子公司'
         sub_company: '吉易子公司'
+        staff_detail: '用工明细'
       engineering_corp:
         id: '编号'
         name: '单位名称'

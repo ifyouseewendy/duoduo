@@ -116,6 +116,14 @@ body.engineering_customers table.index_table thead tr {
   th:nth-child(6) {
     min-width: 80px !important;
   }
+  th.col-staff_detail {
+    min-width: 145px !important;
+  }
+  td.col-staff_detail {
+    li {
+      display: inline;
+    }
+  }
 }
 
 .engineering_staffs .index_table{
