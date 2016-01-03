@@ -174,7 +174,6 @@ zh-CN:
         updated_at: "更新时间"
       engineering_staff:
         id: '编号'
-        nest_index: '本单位中编号'
         name: '姓名'
         company_name: '公司名称'
         identity_card: '身份证号'
