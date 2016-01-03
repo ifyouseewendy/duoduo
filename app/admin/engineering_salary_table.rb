@@ -23,6 +23,20 @@ ActiveAdmin.register EngineeringSalaryTable do
 
     column :audition_status, sortable: :id
 
+    column :salary_item_detail, sortable: :updated_at do |obj|
+      parts = obj.class.name.underscore.pluralize.split('_')
+      parts[-1] = parts[-1].sub('table', 'item')
+      path = parts.join('_')
+
+      project_id = request.url.split('/')[-2]
+
+      ul do
+        li( link_to "查看", "/#{path}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
+        li( link_to "导入", "#", class: "add_staffs_link" )
+        li( link_to "添加", "/#{path}/new?project_id=#{project_id}&salary_table_id=#{obj.id}", target: "_blank" )
+      end
+    end
+
     actions defaults: false do |obj|
       item "查看", engineering_salary_table_path(obj)
       text_node "&nbsp;&nbsp;".html_safe
@@ -35,10 +49,6 @@ ActiveAdmin.register EngineeringSalaryTable do
       item "发票",  "/invoices?utf8=✓&q%5Binvoicable_id_eq%5D=#{obj.id}&invoicable_type%5D=#{obj.class.name}&commit=过滤&order=id_desc"
       text_node "&nbsp;&nbsp;".html_safe
 
-      parts = obj.class.name.underscore.pluralize.split('_')
-      parts[-1] = parts[-1].sub('table', 'item')
-      path = parts.join('_')
-      item "工资条", "/#{path}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
 
       if current_admin_user.finance_admin?
         if obj.audition.try(:already_audit?)
@@ -57,7 +67,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
   end
 
-  filter :project, as: :select, collection: ->{ EngineeringProject.as_filter }.call
+  # filter :project, as: :select, collection: ->{ EngineeringProject.as_filter }.call
   filter :name
   filter :type, as: :select, collection: ->{ EngineeringSalaryTable.types.map{|ty| [ty.model_name.human, ty.to_s]} }.call
   filter :start_date
@@ -65,6 +75,7 @@ ActiveAdmin.register EngineeringSalaryTable do
   preserve_default_filters!
   remove_filter :audition
   remove_filter :reference
+  remove_filter :project
 
   permit_params *( @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) )
 

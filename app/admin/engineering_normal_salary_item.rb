@@ -1,7 +1,7 @@
 ActiveAdmin.register EngineeringNormalSalaryItem do
   menu false
 
-  config.clear_action_items!
+  config.per_page = 100
 
   breadcrumb do
     if params['q'].present?
@@ -18,7 +18,6 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   index do
     selectable_column
 
-    column :id
     column :name, sortable: ->(obj){ obj.staff.name } do |obj|
       staff = obj.staff
       link_to staff.name, engineering_staff_path(staff)
@@ -31,6 +30,7 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   end
 
   preserve_default_filters!
+  remove_filter :salary_table
   remove_filter :staff
 
   permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
@@ -39,6 +39,12 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
+      if request.url.index('/new')
+        project = EngineeringProject.find(params[:project_id])
+        st = EngineeringSalaryTable.find(params[:salary_table_id])
+        valid_ids = project.staffs.map(&:id) - st.salary_items.map(&:engineering_staff_id)
+        f.input :staff, as: :select, collection: ->{ EngineeringStaff.where(id: valid_ids) }.call, hint: '可添加的员工集合为，出现在项目的用工明细，但是还未生成工资条的员工'
+      end
       f.input :social_insurance, as: :number
       f.input :medical_insurance, as: :number
       f.input :salary_in_fact, as: :number

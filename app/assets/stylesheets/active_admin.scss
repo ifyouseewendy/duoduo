@@ -149,3 +149,18 @@ body.engineering_customers table.index_table thead tr {
     min-width: 150px !important;
   }
 }
+
+.engineering_salary_tables .index_table{
+  th.col-salary_item_detail {
+    min-width: 80px !important;
+  }
+  td.col-salary_item_detail {
+    li {
+      display: inline;
+    }
+  }
+}
+
+.engineering_normal_salary_items .action_items {
+  display: none;
+}
