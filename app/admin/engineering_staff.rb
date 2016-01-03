@@ -8,6 +8,10 @@ ActiveAdmin.register EngineeringStaff do
     priority: 4
 
   # Index
+  scope "可用" do |record|
+    record.enabled
+  end
+
   config.sort_order = 'updated_at_desc'
 
   index do

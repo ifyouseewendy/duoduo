@@ -27,6 +27,7 @@ class EngineeringStaff < ActiveRecord::Base
   validates_inclusion_of :gender, in: %w(male female)
 
   default_scope { order(updated_at: :desc).order(enable: :desc) }
+  scope :enabled, -> { where(enable: true) }
 
   class << self
     def policy_class
