@@ -439,4 +439,8 @@ class EngineeringProject < ActiveRecord::Base
   def display_name
     [nest_index, name].join('、')
   end
+
+  def engineering_salary_tables
+    salary_tables
+  end
 end

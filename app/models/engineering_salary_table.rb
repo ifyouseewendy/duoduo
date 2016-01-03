@@ -1,5 +1,8 @@
 class EngineeringSalaryTable < ActiveRecord::Base
-  belongs_to :project, class: EngineeringProject, foreign_key: :engineering_project_id
+  belongs_to :project, \
+    class: EngineeringProject,
+    foreign_key: :engineering_project_id,
+    required: true
 
   has_one :reference, class_name: EngineeringBigTableSalaryTableReference, dependent: :destroy
 
@@ -18,6 +21,13 @@ class EngineeringSalaryTable < ActiveRecord::Base
         EngineeringNormalWithTaxSalaryTable,
         EngineeringBigTableSalaryTable,
         EngineeringDongFangSalaryTable
+      ]
+    end
+
+    def new_record_types
+      [
+        EngineeringNormalSalaryTable,
+        EngineeringNormalWithTaxSalaryTable,
       ]
     end
 

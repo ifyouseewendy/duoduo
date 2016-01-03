@@ -514,6 +514,8 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
         project: '项目'
+        start_date: '起始日期'
+        end_date: '结束日期'
       engineering_normal_salary_item:
         id: '编号'
         name: '姓名'

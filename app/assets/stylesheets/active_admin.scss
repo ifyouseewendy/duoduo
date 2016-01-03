@@ -137,3 +137,15 @@ body.engineering_customers table.index_table thead tr {
     min-width: 150px !important;
   }
 }
+
+.engineering_salary_tables .index_table{
+  th.col-actions {
+    min-width: 230px !important;
+  }
+  th.col-name {
+    min-width: 70px !important;
+  }
+  th.col-project {
+    min-width: 150px !important;
+  }
+}

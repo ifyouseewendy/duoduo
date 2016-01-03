@@ -8,12 +8,13 @@ ActiveAdmin.register EngineeringSalaryTable do
   index do
     selectable_column
 
-    column :id
     column :name
-    column :type, sortable: :id do |obj|
-      obj.model_name.human
+    column :type, sortable: :updated_at do |obj|
+      obj.model_name.human.gsub('工资表', '')
     end
-    column :engineering_project, sortable: :engineering_project_id do |obj|
+    column :start_date
+    column :end_date
+    column :project, sortable: :engineering_project_id do |obj|
       link_to obj.project.name, engineering_project_path(obj.project)
     end
     column :remark
@@ -65,17 +66,19 @@ ActiveAdmin.register EngineeringSalaryTable do
   remove_filter :audition
   remove_filter :reference
 
-  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
+  permit_params *( @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) )
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :project, collection: ->{ EngineeringProject.all }
       f.input :name, as: :string
       if request.url.split('/')[-1] == 'new'
-        f.input :type, as: :radio, collection: ->{ EngineeringSalaryTable.types.map{|k| [k.model_name.human, k.to_s]} }
+        f.input :type, as: :radio, collection: ->{ EngineeringSalaryTable.new_record_types.map{|k| [k.model_name.human, k.to_s]} }.call
       end
+      f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
+      f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'
+      f.input :project, collection: ->{ EngineeringProject.as_filter }.call
       if resource.type == 'EngineeringBigTableSalaryTable'
         f.input :url, as: :string
       end
