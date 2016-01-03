@@ -10,9 +10,6 @@ ActiveAdmin.register EngineeringProject do
 
     column :nest_index
     column :name
-    column :staffs, sortable: :id do |obj|
-      link_to "用工明细", "/engineering_staffs?utf8=✓&q%5Bprojects_id_eq%5D=74860&commit=过滤"
-    end
     column :customer, sortable: :id do |obj|
       link_to obj.customer.name, engineering_customer_path(obj.customer)
     end
@@ -48,7 +45,7 @@ ActiveAdmin.register EngineeringProject do
 
     column :staff_detail, sortable: :updated_at do |obj|
       ul do
-        li( link_to "员工列表", "/engineering_staffs?utf8=✓&q%5Bprojects_id_eq%5D=74860&commit=过滤", target: '_blank' )
+        li( link_to "员工列表", "/engineering_staffs?utf8=✓&q%5Bprojects_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
         li( link_to "添加员工", "#", class: "add_staffs_link" )
         li( link_to "删除员工", "#", class: "remove_staffs_link" )
       end
@@ -314,7 +311,7 @@ ActiveAdmin.register EngineeringProject do
     staffs.each do |staff|
       begin
         project.staffs << staff
-        messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
+        messages << "操作成功，<#{staff.name}>"
       rescue => e
         messages << "操作失败，#{e.message}"
       end

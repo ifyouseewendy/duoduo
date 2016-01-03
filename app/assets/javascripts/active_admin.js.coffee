@@ -156,9 +156,9 @@ $(document).on 'ready', ->
       columns = {}
       columns['engineering_staff_ids'] = stats
 
-      names = ["当前客户<#{data['customer']}>下可用员工"]
+      names = ["当前客户<#{data['customer']}>可用员工（#{data['count']}个）"]
 
-      ActiveAdmin.modal_dialog_project_add_staffs "可用员工列表（#{data['range_output']}）", columns, names, project_id,
+      ActiveAdmin.modal_dialog_project_add_staffs "#{data['display_name']}", columns, names, project_id,
         (inputs)=>
           staff_ids = []
           $('.current_staff_select option:checked').each (idx, ele) ->
@@ -569,8 +569,8 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
           <option selected disabled>请选择</option>
     """
 
-    for v in opts
-      html += "<option value='#{v[1]}'>#{v[0]}</option>"
+    for v,i in opts
+      html += "<option value='#{v[1]}'>#{i+1} - #{v[0]}</option>"
 
     html += "</select></li>"
 
@@ -618,7 +618,7 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
       $.getJSON "/engineering_customers/" + customer_id + "/free_staffs?project_id=#{project_id}", (data) =>
         $.each data, (idx, ele) ->
           staff_select.append """
-            <option value="#{ele['id']}">#{ele['name']}</option>
+            <option value="#{ele['id']}">#{idx} - #{ele['name']}</option>
           """
         staff_select.show()
 
