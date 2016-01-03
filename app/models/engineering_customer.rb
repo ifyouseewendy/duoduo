@@ -70,9 +70,22 @@ class EngineeringCustomer < ActiveRecord::Base
     end
   end
 
-  def free_staffs(start_date, end_date, count = nil)
-    count ||= staffs.count
-    staffs.lazy.select{|es| es.accept_schedule?(start_date, end_date)}.first(count)
+  def free_staffs(start_date, end_date, exclude_project_id: nil, count: nil)
+    count ||= staffs.enabled.count
+
+    if exclude_project_id.present?
+      criteria = staffs.enabled.includes(:projects)
+      criteria.lazy.select {|es|
+        !(es.projects.select(:id).pluck(:id).include? exclude_project_id) \
+          && es.accept_schedule?(start_date, end_date)
+      }.first(count)
+
+    else
+      criteria = staffs.enabled
+      criteria.lazy.select {|es|
+        es.accept_schedule?(start_date, end_date)
+      }.first(count)
+    end
   end
 
   def sub_companies
