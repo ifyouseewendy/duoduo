@@ -56,7 +56,13 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
   end
 
+  filter :project, as: :select, collection: ->{ EngineeringProject.as_filter }.call
+  filter :name
+  filter :type, as: :select, collection: ->{ EngineeringSalaryTable.types.map{|ty| [ty.model_name.human, ty.to_s]} }.call
+  filter :start_date
+  filter :end_date
   preserve_default_filters!
+  remove_filter :audition
   remove_filter :reference
 
   permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }

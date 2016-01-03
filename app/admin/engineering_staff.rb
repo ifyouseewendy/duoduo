@@ -62,6 +62,8 @@ ActiveAdmin.register EngineeringStaff do
   filter :identity_card
   filter :name
   filter :enable
+  filter :customer
+  filter :projects, as: :select, collection: ->{ EngineeringProject.as_filter }.call
   preserve_default_filters!
   remove_filter :salary_items
   remove_filter :engineering_normal_salary_items

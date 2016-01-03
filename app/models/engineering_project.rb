@@ -36,6 +36,12 @@ class EngineeringProject < ActiveRecord::Base
       [:nest_index] + (names - [:nest_index])
     end
 
+    def as_filter
+      self.includes(:customer).map do |ep|
+        ["#{ep.customer.display_name} - #{ep.display_name}", ep.id]
+      end
+    end
+
     def columns_of(type)
       self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
     end
