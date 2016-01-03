@@ -5,6 +5,14 @@ ActiveAdmin.register EngineeringProject do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 3
 
+  # Index
+  scope "全部" do |record|
+    record.all
+  end
+  scope "活动" do |record|
+    record.active
+  end
+
   index do
     selectable_column
 

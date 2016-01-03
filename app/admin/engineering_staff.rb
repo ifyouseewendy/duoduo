@@ -8,6 +8,9 @@ ActiveAdmin.register EngineeringStaff do
     priority: 4
 
   # Index
+  scope "全部" do |record|
+    record.all
+  end
   scope "可用" do |record|
     record.enabled
   end
