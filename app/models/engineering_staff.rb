@@ -1,5 +1,9 @@
 class EngineeringStaff < ActiveRecord::Base
-  belongs_to :customer, class: EngineeringCustomer, foreign_key: :engineering_customer_id
+  belongs_to :customer, \
+    class: EngineeringCustomer, \
+    foreign_key: :engineering_customer_id, \
+    required: true
+
   # TODO
   #
   #   Temp comment out check_schedule on importing stage
@@ -20,6 +24,7 @@ class EngineeringStaff < ActiveRecord::Base
 
   validates_uniqueness_of :identity_card
   validates_presence_of :identity_card
+  validates_inclusion_of :gender, in: %w(male female)
 
   default_scope { order(updated_at: :desc).order(enable: :desc) }
 
