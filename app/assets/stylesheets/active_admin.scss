@@ -117,3 +117,15 @@ body.engineering_customers table.index_table thead tr {
     min-width: 80px !important;
   }
 }
+
+.engineering_staffs .index_table{
+  th:nth-child(4) { // 状态
+    min-width: 42px !important;
+  }
+  th:nth-child(5) { // 客户
+    min-width: 100px !important;
+  }
+  th:nth-child(12) { // 备注
+    min-width: 150px !important;
+  }
+}

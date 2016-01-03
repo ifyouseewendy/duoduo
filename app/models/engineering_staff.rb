@@ -21,20 +21,23 @@ class EngineeringStaff < ActiveRecord::Base
   validates_uniqueness_of :identity_card
   validates_presence_of :identity_card
 
-  default_scope { order(enable: :desc) }
+  default_scope { order(updated_at: :desc).order(enable: :desc) }
 
   class << self
     def policy_class
       EngineeringPolicy
     end
 
-    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
-      names = column_names.map(&:to_sym)
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
+      if export
+        names = [:identity_card, :name, :enable, :birth, :gender, :nation, :address, :remark, :engineering_customer_id]
+      else
+        names = column_names.map(&:to_sym)
+        names -= %i(id alias_name created_at updated_at) if without_base_keys
+        names -= %i(engineering_customer_id) if without_foreign_keys
 
-      names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(engineering_customer_id) if without_foreign_keys
-
-      names
+        names
+      end
     end
 
     def genders_option

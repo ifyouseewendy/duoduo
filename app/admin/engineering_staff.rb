@@ -8,7 +8,7 @@ ActiveAdmin.register EngineeringStaff do
     priority: 4
 
   # Index
-  config.sort_order = 'enable_desc'
+  config.sort_order = 'updated_at_desc'
 
   index do
     selectable_column
@@ -23,7 +23,7 @@ ActiveAdmin.register EngineeringStaff do
       end
     end
     column :customer, sortable: :id do |obj|
-      link_to obj.customer.name, engineering_customer_path(obj.customer)
+      link_to obj.customer.display_name, engineering_customer_path(obj.customer)
     end
     column :projects, sortable: :id do |obj|
       link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
@@ -116,7 +116,7 @@ ActiveAdmin.register EngineeringStaff do
         end
       end
       row :customer do |obj|
-        link_to obj.customer.name, engineering_customer_path(obj.customer)
+        link_to obj.customer.display_name, engineering_customer_path(obj.customer)
       end
       row :projects do |obj|
         link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
