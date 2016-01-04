@@ -84,9 +84,13 @@ ActiveAdmin.register EngineeringProject do
   remove_filter :income_items
   remove_filter :outcome_items
 
-  permit_params \
-    *(@resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
-    + [{ income_items_attributes: [:id, :date, :amount, :remark, :_destroy], outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [], bank: [], address: [], account: [] ] }])
+  permit_params do
+    resource.class.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
+      + [{
+        income_items_attributes: [:id, :date, :amount, :remark, :_destroy],
+        outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [], bank: [], address: [], account: [] ]
+      }]
+  end
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
