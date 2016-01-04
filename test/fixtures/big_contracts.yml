@@ -5,11 +5,11 @@ one:
   end_date: 2016-01-31
   sub_company_id: 1
   engineering_corp_id: 1
-  file: MyText
+  contract: MyText
 
 two:
   start_date: 2016-03-01
   end_date: 2016-03-31
   sub_company_id: 1
   engineering_corp_id: 2
-  file: MyText
+  contract: MyText

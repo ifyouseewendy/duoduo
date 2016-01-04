@@ -2,7 +2,6 @@
 
 one:
   id: 1
-  nest_index: 1
   name: MyText
   identity_card: MyText
   birth: 2015-08-28
@@ -15,7 +14,6 @@ one:
 
 two:
   id: 2
-  nest_index: 1
   name: MyText
   identity_card: MyText
   birth: 2015-08-28
@@ -28,7 +26,6 @@ two:
 
 three:
   id: 3
-  nest_index: 1
   name: MyText
   identity_card: MyText
   birth: 2015-08-28
@@ -41,7 +38,6 @@ three:
 
 four:
   id: 4
-  nest_index: 1
   name: MyText
   identity_card: MyText
   birth: 2015-08-28
@@ -54,7 +50,6 @@ four:
 
 five:
   id: 5
-  nest_index: 1
   name: MyText
   identity_card: MyText
   birth: 2015-08-28
@@ -67,7 +62,6 @@ five:
 
 six:
   id: 6
-  nest_index: 1
   name: MyText
   identity_card: MyText
   birth: 2015-08-28
@@ -80,7 +74,6 @@ six:
 
 seven:
   id: 7
-  nest_index: 1
   name: seven
   identity_card: MyText
   birth: 2015-08-28
@@ -93,7 +86,6 @@ seven:
 
 eight:
   id: 8
-  nest_index: 1
   name: eight
   identity_card: MyText
   birth: 2015-08-28
@@ -106,7 +98,6 @@ eight:
 
 nine:
   id: 9
-  nest_index: 1
   name: nine
   identity_card: MyText
   birth: 2015-08-28
