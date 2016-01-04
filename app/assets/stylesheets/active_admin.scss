@@ -136,6 +136,14 @@ body.engineering_customers table.index_table thead tr {
   th:nth-child(12) { // 备注
     min-width: 150px !important;
   }
+  td.col-salary_item_detail {
+    li {
+      display: inline;
+    }
+  }
+  th.col-remark {
+    min-width: 100px !important;
+  }
 }
 
 .engineering_salary_tables .index_table{

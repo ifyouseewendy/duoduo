@@ -193,6 +193,7 @@ zh-CN:
         updated_at: "更新时间"
         seal_index: '刻章'
         enable: '状态'
+        salary_item_detail: '工资条'
       salary_table:
         id: '编号'
         name: '名称'
