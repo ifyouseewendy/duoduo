@@ -7,7 +7,7 @@ require 'mina/whenever'
 set :domain, 'duoduo'
 set :deploy_to, '/home/deploy/apps/duoduo'
 set :repository, 'git@github.com:ifyouseewendy/duoduo.git'
-set :branch, 'master'
+set :branch, 'proudction'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, ['config/database.yml','config/unicorn.rb', 'log', 'tmp', '.env.production']
