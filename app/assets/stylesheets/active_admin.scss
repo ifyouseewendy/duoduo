@@ -192,3 +192,12 @@ body.engineering_customers table.index_table thead tr {
     }
   }
 }
+
+#header {
+  #tabs > li:nth-child(3) { // 业务
+    display: none;
+  }
+  #tabs > li:nth-child(6) { // 开发相关
+    display: none;
+  }
+}
