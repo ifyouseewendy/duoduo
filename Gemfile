@@ -70,6 +70,9 @@ gem 'roo-xls'           # xls support
 gem 'axlsx_rails'       # Write xlsx
 gem 'zip-zip'           # Fix axlsx dependency
 
+# Read .doc when importing
+gem 'doc_ripper'
+
 # Optimize
 gem 'goldiloader'
 
@@ -108,9 +111,6 @@ group :development, :test do
   gem 'spring'
 
   gem "pry-byebug"
-
-  # Read .doc when importing
-  gem 'doc_ripper'
 
   gem 'minitest-focus'
 end
