@@ -10,6 +10,8 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
     foreign_key: :engineering_staff_id,
     required: true
 
+  validates_uniqueness_of :staff, scope: :salary_table
+
   before_save :revise_fields
 
   class << self

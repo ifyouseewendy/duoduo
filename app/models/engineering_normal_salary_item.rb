@@ -10,8 +10,9 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
     foreign_key: :engineering_staff_id,
     required: true
 
-  before_save :revise_fields
+  validates_uniqueness_of :staff, scope: :salary_table
 
+  before_save :revise_fields
 
   class << self
     def policy_class
