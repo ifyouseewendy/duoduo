@@ -39,13 +39,13 @@ ActiveAdmin.register EngineeringCustomer do
   remove_filter :staffs
 
   # New and Edit
-  permit_params *@resource.ordered_columns(without_base_keys: true, without_foreign_keys: false)
+  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }.call
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :nest_index, as: :number, input_html: { :value => resource.nest_index || EngineeringCustomer.available_nest_index }
+      f.input :nest_index, as: :number, input_html: { :value => resource.nest_index || resource.class.available_nest_index }
       f.input :name, as: :string
       f.input :telephone, as: :string
       f.input :identity_card, as: :string
@@ -76,7 +76,7 @@ ActiveAdmin.register EngineeringCustomer do
           end
         end
       end
-      (EngineeringCustomer.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
+      (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name]).map(&:to_sym).map do |field|
         row field
       end
     end
