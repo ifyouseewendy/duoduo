@@ -853,7 +853,7 @@ class Engineer < DuoduoCli
 
             total.each do |k,v|
               value_in_file = v.to_f.round(2)
-              value_calc = items.values.map(&k).map(&:to_f).sum.to_f.round(2)
+              value_calc = items.values.compact.map(&k).map(&:to_f).sum.to_f.round(2)
               logger.error "#{better_path path} ; 工资表 ; 校验失败：#{total_i18n[k]} ; 文件中合计 #{value_in_file} - 累加合计 #{value_calc}" \
                 unless equal_value?(value_in_file, value_calc)
             end
@@ -990,7 +990,7 @@ class Engineer < DuoduoCli
     def fix_project_nest_index_and_name(pr)
       idx, name = pr.name.split(/[、|.]/)
       if name.nil?
-        puts [pr.customer.nest_index, pr.customer.name, pr.name].join(' - ')
+        # puts [pr.customer.nest_index, pr.customer.name, pr.name].join(' - ')
         return
       end
 
