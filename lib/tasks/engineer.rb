@@ -243,7 +243,7 @@ class Engineer < DuoduoCli
     end
 
     def split_by_comma(string)
-      string.to_s.split(',').map(&:strip)
+      string.to_s.split(/,|，/).map(&:strip)
     end
 
     def process_provide_staff_file(file)
@@ -734,9 +734,17 @@ class Engineer < DuoduoCli
     end
 
     def process_proxy_files(files, project)
+      return if files.blank?
+
+      oi = project.outcome_items.first
+      if oi.blank?
+        logger.error "#{better_path files.first} ; 协议文件 ; 没有回款记录，无法记录协议文件 ; #{project.display_name}"
+        return
+      end
+
       files.each do |file|
         logger.info "----- #{file.basename}"
-        project.add_contract_file(path: file, role: :proxy)
+        oi.add_contract_file(path: file, role: :proxy)
       end
     end
 
