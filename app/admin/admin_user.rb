@@ -54,7 +54,7 @@ ActiveAdmin.register AdminUser do
       if current_admin_user.admin? && current_admin_user.id != f.object.id
         # Update others
         # unless f.object.new_record?
-        f.input :role, as: :radio, collection: ->{ AdminUser.roles_option(user: current_admin_user) }
+        f.input :role, as: :radio, collection: ->{ AdminUser.roles_option(user: current_admin_user) }.call
       else
         # Update self
         f.input :password
