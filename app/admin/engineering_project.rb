@@ -19,7 +19,7 @@ ActiveAdmin.register EngineeringProject do
     column :nest_index
     column :name
     column :customer, sortable: :id do |obj|
-      link_to obj.customer.name, engineering_customer_path(obj.customer)
+      link_to obj.customer.display_name, engineering_customer_path(obj.customer)
     end
     column :sub_company, sortable: :id do |obj|
       sc = obj.sub_company
@@ -152,7 +152,7 @@ ActiveAdmin.register EngineeringProject do
             link_to "用工明细", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
           end
           row :customer do |obj|
-            link_to obj.customer.name, engineering_customer_path(obj.customer)
+            link_to obj.customer.display_name, engineering_customer_path(obj.customer)
           end
           row :corporation do |obj|
             if obj.corporation.nil?
