@@ -35,18 +35,22 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       item.save!
     end
 
-    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
-      names = column_names.map(&:to_sym)
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
+      if export
+        [:engineering_staff_id, :salary_deserve, :social_insurance, :medical_insurance, :remark]
+      else
+        names = column_names.map(&:to_sym)
 
-      names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(engineering_salary_table_id engineering_staff_id) if without_foreign_keys
+        names -= %i(id created_at updated_at) if without_base_keys
+        names -= %i(engineering_salary_table_id engineering_staff_id) if without_foreign_keys
 
-      names
+        names
+      end
     end
 
     def batch_form_fields
       hash = {}
-      fields = [:salary_deserve, :social_insurance, :medical_insurance]
+      fields = [:salary_deserve, :social_insurance, :medical_insurance, :tax]
       fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
       hash
     end

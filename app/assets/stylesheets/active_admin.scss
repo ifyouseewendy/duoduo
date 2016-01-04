@@ -159,8 +159,28 @@ body.engineering_customers table.index_table thead tr {
       display: inline;
     }
   }
+  th.col-type {
+    min-width: 80px !important;
+  }
 }
 
-.engineering_normal_salary_items .action_items {
-  display: none;
+.engineering_normal_salary_items {
+  .action_items {
+    display: none;
+  }
+  .index_table {
+    .view_link {
+      display: none;
+    }
+  }
+}
+.engineering_normal_with_tax_salary_items {
+  .action_items {
+    display: none;
+  }
+  .index_table {
+    .view_link {
+      display: none;
+    }
+  }
 }

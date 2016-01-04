@@ -58,14 +58,17 @@ ActiveAdmin.register EngineeringProject do
         li( link_to "删除员工", "#", class: "remove_staffs_link" )
       end
     end
+    column :salary_table_detail, sortable: :updated_at do |obj|
+      link_to "工资表", engineering_project_engineering_salary_tables_path(obj), target: '_blank'
+    end
 
     actions do |obj|
-      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      # text_node "&nbsp;|&nbsp;&nbsp;".html_safe
 
-      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      item "生成工资表", "#", class: "generate_salary_table_link expand_table_action_width_large"
-      text_node "&nbsp;&nbsp;".html_safe
-      item "查看工资表", engineering_project_engineering_salary_tables_path(obj)
+      # text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      # item "生成工资表", "#", class: "generate_salary_table_link expand_table_action_width_large"
+      # text_node "&nbsp;&nbsp;".html_safe
+      # item "查看工资表", engineering_project_engineering_salary_tables_path(obj)
     end
   end
 

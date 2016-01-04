@@ -6,6 +6,19 @@ Rails.application.routes.draw do
   resources :engineering_big_table_salary_tables, controller: "engineering_salary_tables"
   resources :engineering_dong_fang_salary_tables, controller: "engineering_salary_tables"
 
+  resources :engineering_normal_with_tax_salary_items do
+    collection do
+      post 'import_do'
+      get 'import_new'
+    end
+  end
+  resources :engineering_normal_salary_items do
+    collection do
+      post 'import_do'
+      get 'import_new'
+    end
+  end
+
   ActiveAdmin.routes(self)
 
   resources :big_contracts, only: [:create, :destroy] do
@@ -30,4 +43,5 @@ Rails.application.routes.draw do
       post "generate_and_download"
     end
   end
+
 end
