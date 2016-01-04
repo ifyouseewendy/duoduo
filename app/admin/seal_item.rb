@@ -18,7 +18,7 @@ ActiveAdmin.register SealItem do
   preserve_default_filters!
   remove_filter :seal_table
 
-  permit_params ->{ @resource.column_names }
+  permit_params { resource_class.column_names }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)

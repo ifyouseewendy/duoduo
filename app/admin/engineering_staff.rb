@@ -86,7 +86,9 @@ ActiveAdmin.register EngineeringStaff do
   remove_filter :engineering_dong_fang_salary_items
   remove_filter :alias_name
 
-  permit_params { resource.class.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []] }
+  permit_params {
+    resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []]
+  }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)

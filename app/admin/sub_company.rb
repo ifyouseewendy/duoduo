@@ -47,7 +47,7 @@ ActiveAdmin.register SubCompany do
     end
   end
 
-  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
+  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)

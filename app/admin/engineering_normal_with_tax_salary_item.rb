@@ -40,7 +40,7 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
   remove_filter :salary_table
   remove_filter :staff
 
-  permit_params { resource.class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
+  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)

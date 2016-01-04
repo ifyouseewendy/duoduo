@@ -5,7 +5,7 @@ ActiveAdmin.register NormalCorporation do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 1
 
-  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
+  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
   scope "最近10条更新" do |record|
     record.updated_latest_10

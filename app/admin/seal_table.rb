@@ -22,7 +22,7 @@ ActiveAdmin.register SealTable do
   remove_filter :seal_items
   filter :seal_items_name, as: :string
 
-  permit_params ->{ @resource.column_names }
+  permit_params { resource_class.column_names }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)

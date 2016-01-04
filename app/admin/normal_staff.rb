@@ -7,7 +7,7 @@ ActiveAdmin.register NormalStaff do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 3
 
-  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
+  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
   index do
     selectable_column
