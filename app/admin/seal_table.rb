@@ -1,7 +1,8 @@
 ActiveAdmin.register SealTable do
-  menu \
-    parent: I18n.t("activerecord.models.engineering_business"),
-    priority: 7
+  menu false
+  # menu \
+  #   parent: I18n.t("activerecord.models.engineering_business"),
+  #   priority: 7
 
   index download_links: false do
     selectable_column

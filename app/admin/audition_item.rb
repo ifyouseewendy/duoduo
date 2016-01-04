@@ -1,8 +1,9 @@
 ActiveAdmin.register AuditionItem do
-  menu \
-    parent: I18n.t("activerecord.models.engineering_business"),
-    priority: 6,
-    if: -> {current_admin_user.finance_admin?}
+  menu false
+  # menu \
+  #   parent: I18n.t("activerecord.models.engineering_business"),
+  #   priority: 6,
+  #   if: -> {current_admin_user.finance_admin?}
 
   actions :all, except: [:show, :new, :create, :edit, :update, :destroy]
 
