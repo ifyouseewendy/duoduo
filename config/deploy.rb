@@ -7,10 +7,10 @@ require 'mina/whenever'
 set :domain, 'duoduo'
 set :deploy_to, '/home/deploy/apps/duoduo'
 set :repository, 'git@github.com:ifyouseewendy/duoduo.git'
-set :branch, 'proudction'
+set :branch, 'production'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_paths, ['config/database.yml','config/unicorn.rb', 'log', 'tmp', '.env.production']
+set :shared_paths, ['config/database.yml','config/newrelic.yml','config/unicorn.rb', 'log', 'tmp', '.env.production']
 
 # set :user, 'deploy'    # Username in the server to SSH to.
 # set :port, '10080'     # SSH port number.
@@ -34,6 +34,9 @@ task :setup => :environment do
 
   queue! %[touch "#{deploy_to}/#{shared_path}/config/database.yml"]
   queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/database.yml'."]
+
+  queue! %[touch "#{deploy_to}/#{shared_path}/config/newrelic.yml"]
+  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/newrelic.yml'."]
 
   queue! %[touch "#{deploy_to}/#{shared_path}/config/unicorn.rb"]
   queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/unicorn.rb'."]
