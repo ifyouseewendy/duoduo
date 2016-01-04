@@ -7,12 +7,16 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
 
   breadcrumb do
     if params['q'].present?
-      st = ->{ EngineeringSalaryTable.find(params['q']['salary_table_id_eq']) }.call
-      project = st.project
-      [
-        link_to(project.name,  "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤", target: '_blank' ),
-        link_to(st.name, "/engineering_salary_tables?utf8=✓&q%5Bid_equals%5D=#{st.id}&commit=过滤", target: '_blank')
-      ]
+      st = ->{ EngineeringSalaryTable.where(id: params['q']['salary_table_id_eq']).first }.call
+      if st.present?
+        project = st.project
+        [
+          link_to(project.name,  "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤", target: '_blank' ),
+          link_to(st.name, "/engineering_salary_tables?utf8=✓&q%5Bid_equals%5D=#{st.id}&commit=过滤", target: '_blank' )
+        ]
+      else
+        []
+      end
     else
       []
     end
