@@ -22,7 +22,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     column :created_at
     column :updated_at
 
-    column :audition_status, sortable: :id
+    # column :audition_status, sortable: :id
 
     column :salary_item_detail, sortable: :updated_at do |obj|
       parts = obj.class.name.underscore.pluralize.split('_')
@@ -45,24 +45,24 @@ ActiveAdmin.register EngineeringSalaryTable do
       text_node "&nbsp;&nbsp;".html_safe
       item "删除", engineering_salary_table_path(obj), method: :delete
 
-      text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+      # text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+      #
+      # item "发票",  "/invoices?utf8=✓&q%5Binvoicable_id_eq%5D=#{obj.id}&invoicable_type%5D=#{obj.class.name}&commit=过滤&order=id_desc"
 
-      item "发票",  "/invoices?utf8=✓&q%5Binvoicable_id_eq%5D=#{obj.id}&invoicable_type%5D=#{obj.class.name}&commit=过滤&order=id_desc"
-
-      if current_admin_user.finance_admin?
-        if obj.audition.try(:already_audit?)
-          text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-          item "解除复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=init"
-        else
-          text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-          item "确认复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=already_audit"
-        end
-      elsif current_admin_user.finance_normal?
-        if obj.audition.nil? or obj.audition.try(:init?)
-          text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
-          item "申请复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=apply_audit"
-        end
-      end
+      # if current_admin_user.finance_admin?
+      #   if obj.audition.try(:already_audit?)
+      #     text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+      #     item "解除复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=init"
+      #   else
+      #     text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+      #     item "确认复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=already_audit"
+      #   end
+      # elsif current_admin_user.finance_normal?
+      #   if obj.audition.nil? or obj.audition.try(:init?)
+      #     text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
+      #     item "申请复核", "#{update_status_audition_items_path}?auditable_id=#{obj.id}&auditable_type=#{obj.class.name}&status=apply_audit"
+      #   end
+      # end
     end
   end
 
