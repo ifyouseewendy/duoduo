@@ -8,7 +8,6 @@ ActiveAdmin.register SubCompany do
   index download_links: false do
     selectable_column
 
-    column :id
     column :name
     column :created_at
     column :updated_at
@@ -63,7 +62,7 @@ ActiveAdmin.register SubCompany do
 
   show do
     boolean_columns = resource.class.columns_of(:boolean)
-    columns = resource.class.ordered_columns - %i(engi_contract_template engi_protocol_template)
+    columns = resource.class.ordered_columns - %i(id engi_contract_template engi_protocol_template)
     attributes_table do
       columns.map do |field|
         if boolean_columns.include? field
