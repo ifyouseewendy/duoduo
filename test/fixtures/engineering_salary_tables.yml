@@ -14,3 +14,10 @@ two:
   type: 'EngineeringNormalSalaryTable'
   remark: MyText
 
+three:
+  id: 3
+  engineering_project_id: 1
+  start_date: '2015-02-01'
+  end_date: '2015-02-28'
+  type: 'EngineeringNormalWithTaxSalaryTable'
+  remark: MyText

@@ -8,3 +8,5 @@ one:
   total_amount: 120
   tax: 0
   salary_in_fact: 120
+  engineering_salary_table_id: 3
+  engineering_staff_id: 9
