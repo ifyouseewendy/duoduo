@@ -2,9 +2,13 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
   belongs_to :salary_table, \
     class_name: EngineeringNormalWithTaxSalaryTable,
     foreign_key: :engineering_salary_table_id,
-    inverse_of: :salary_items
+    inverse_of: :salary_items,
+    required: true
 
-  belongs_to :staff, class: EngineeringStaff, foreign_key: :engineering_staff_id
+  belongs_to :staff, \
+    class: EngineeringStaff, \
+    foreign_key: :engineering_staff_id,
+    required: true
 
   before_save :revise_fields
 
@@ -95,7 +99,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
   end
 
   def revise_fields
-    if (changed & ['salary_deserve', 'social_insurance', 'medical_insurance']).present?
+    if (changed & ['salary_deserve', 'social_insurance', 'medical_insurance', 'tax']).present?
       self.total_insurance  = self.social_insurance + self.medical_insurance
       self.total_amount     = self.salary_deserve + self.total_insurance
       self.tax              = IndividualIncomeTax.calculate(salary: self.total_amount) unless (changed & ['tax']).present?
