@@ -24,6 +24,12 @@ class Engineer < DuoduoCli
     logger.info "[#{Time.now}] Import start"
 
     dir = Pathname(options[:from])
+
+    contract_path = dir.entries.detect{|en| en.basename.to_s == '__大协议'}
+    if contract_path.present?
+      self.class.new.invoke('add_big_contract', [], from: dir.join(contract_path))
+    end
+
     entries = dir.entries.reject{|en| skip_file?(en)}.sort_by{|en| en.basename.to_s.split('、')[0].to_i }
     entries.each do |entry|
       self.class.new.invoke('start', [],
