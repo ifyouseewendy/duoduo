@@ -8,9 +8,10 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   breadcrumb do
     if params['q'].present?
       st = ->{ EngineeringSalaryTable.find(params['q']['salary_table_id_eq']) }.call
+      project = st.project
       [
-        link_to(st.project.name, engineering_project_path(st.project) ),
-        link_to(st.name, engineering_salary_table_path(st) )
+        link_to(project.name,  "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤", target: '_blank' ),
+        link_to(st.name, "/engineering_salary_tables?utf8=✓&q%5Bid_equals%5D=#{st.id}&commit=过滤", target: '_blank' )
       ]
     else
       []
@@ -20,7 +21,7 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   index do
     selectable_column
 
-    column :name, sortable: ->(obj){ obj.staff.name } do |obj|
+    column :name, sortable: :updated_at do |obj|
       staff = obj.staff
       link_to staff.name, engineering_staff_path(staff)
     end
@@ -35,7 +36,7 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   remove_filter :salary_table
   remove_filter :staff
 
-  permit_params ->{ @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
+  permit_params *( @resource.ordered_columns(without_base_keys: true, without_foreign_keys: false) )
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)

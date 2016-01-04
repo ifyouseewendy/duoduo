@@ -1,14 +1,17 @@
 ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
+  include ImportSupport
+
   menu false
 
-  config.clear_action_items!
+  config.per_page = 100
 
   breadcrumb do
     if params['q'].present?
       st = ->{ EngineeringSalaryTable.find(params['q']['salary_table_id_eq']) }.call
+      project = st.project
       [
-        link_to(st.project.name, engineering_project_path(st.project) ),
-        link_to(st.name, engineering_salary_table_path(st) )
+        link_to(project.name,  "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤", target: '_blank' ),
+        link_to(st.name, "/engineering_salary_tables?utf8=✓&q%5Bid_equals%5D=#{st.id}&commit=过滤", target: '_blank')
       ]
     else
       []

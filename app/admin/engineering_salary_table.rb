@@ -15,7 +15,8 @@ ActiveAdmin.register EngineeringSalaryTable do
     column :start_date
     column :end_date
     column :project, sortable: :engineering_project_id do |obj|
-      link_to obj.project.name, engineering_project_path(obj.project)
+      project = obj.project
+      link_to project.name, "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤"
     end
     column :remark
     column :created_at
@@ -28,7 +29,7 @@ ActiveAdmin.register EngineeringSalaryTable do
       parts[-1] = parts[-1].sub('table', 'item')
       path = parts.join('_')
 
-      project_id = request.url.split('/')[-2]
+      project_id = obj.project.id
 
       ul do
         li( link_to "查看", "/#{path}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
@@ -47,8 +48,6 @@ ActiveAdmin.register EngineeringSalaryTable do
       text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
 
       item "发票",  "/invoices?utf8=✓&q%5Binvoicable_id_eq%5D=#{obj.id}&invoicable_type%5D=#{obj.class.name}&commit=过滤&order=id_desc"
-      text_node "&nbsp;&nbsp;".html_safe
-
 
       if current_admin_user.finance_admin?
         if obj.audition.try(:already_audit?)
