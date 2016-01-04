@@ -40,7 +40,7 @@ class DuoduoCli < Thor
 
     names.each do |name|
       has_engineering_relation = (name =~ /人力/ ? true : false)
-      sc = SubCompany.where(name: name, has_engineering_relation: has_engineering_relation).first
+      sc = SubCompany.create!(name: name, has_engineering_relation: has_engineering_relation)
 
       if has_engineering_relation
         if name == '吉易人力资源（公主岭分）'
