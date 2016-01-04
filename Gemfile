@@ -82,6 +82,9 @@ gem 'rmb_chinese_yuan'
 # Activity tracking for models
 gem 'public_activity'
 
+# Monitor
+gem 'newrelic_rpm'
+
 group :development do
   gem 'quiet_assets'
 
