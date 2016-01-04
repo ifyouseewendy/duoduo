@@ -14,7 +14,7 @@ class DuoduoCli < Thor
   desc "base", ''
   def base
     load_rails
-    clean_db(:business, :engineer, :base)
+    clean_db(:business, :engineer, :engineer_corp, :base)
 
     seed_admin_user
     seed_sub_companies
