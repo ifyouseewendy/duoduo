@@ -107,14 +107,20 @@ body.engineering_customers table.index_table thead tr {
 }
 
 .engineering_projects .index_table{
-  th:nth-child(3) {
+  th.col-name {
     min-width: 250px !important;
   }
-  th:nth-child(5) {
+  th.col-customer {
     min-width: 100px !important;
   }
-  th:nth-child(6) {
-    min-width: 80px !important;
+  th.col-sub_company {
+    min-width: 100px !important;
+  }
+  th.col-corporation {
+    min-width: 100px !important;
+  }
+  th.col-remark {
+    min-width: 100px !important;
   }
   th.col-staff_detail {
     min-width: 145px !important;
