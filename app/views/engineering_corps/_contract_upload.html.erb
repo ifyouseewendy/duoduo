@@ -11,11 +11,11 @@
       </li>
       <li>
         <%= label_tag '开始时间' %>
-        <%= date_field_tag :start_date %>
+        <%= date_field_tag :start_date, Date.today %>
       </li>
       <li>
         <%= label_tag '结束时间' %>
-        <%= date_field_tag :end_date %>
+        <%= date_field_tag :end_date, Date.today %>
       </li>
       <li>
         <%= label_tag '上传文件' %>
