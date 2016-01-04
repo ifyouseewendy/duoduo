@@ -30,6 +30,8 @@ class Engineer < DuoduoCli
       self.class.new.invoke('add_big_contract', [], from: dir.join(contract_path))
     end
 
+    self.class.new.invoke('validate_staff', [], from: options[:from])
+
     entries = dir.entries.reject{|en| skip_file?(en)}.sort_by{|en| en.basename.to_s.split('、')[0].to_i }
     entries.each do |entry|
       self.class.new.invoke('start', [],
