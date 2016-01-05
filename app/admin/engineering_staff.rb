@@ -182,30 +182,30 @@ ActiveAdmin.register EngineeringStaff do
     redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
   end
 
-  batch_action :assign_project, form: ->{
-      {'engineering_project_id_工程项目' => EngineeringProject.id_name_option}
-    } do |ids|
-    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
-    project = EngineeringProject.find(inputs[:engineering_project_id])
-
-    messages = []
-    failed = false
-    batch_action_collection.find(ids).each do |obj|
-      begin
-        obj.projects << project
-        messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
-      rescue => e
-        failed = true
-        messages << "操作失败，#{e.message}"
-      end
-    end
-
-    if failed
-      redirect_to :back, alert: messages.join('；')
-    else
-      redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
-    end
-  end
+  # batch_action :assign_project, form: ->{
+  #     {'engineering_project_id_工程项目' => EngineeringProject.id_name_option}
+  #   } do |ids|
+  #   inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+  #   project = EngineeringProject.find(inputs[:engineering_project_id])
+  #
+  #   messages = []
+  #   failed = false
+  #   batch_action_collection.find(ids).each do |obj|
+  #     begin
+  #       obj.projects << project
+  #       messages << "操作成功，项目<#{project.name}>已分配给<#{staff.name}>"
+  #     rescue => e
+  #       failed = true
+  #       messages << "操作失败，#{e.message}"
+  #     end
+  #   end
+  #
+  #   if failed
+  #     redirect_to :back, alert: messages.join('；')
+  #   else
+  #     redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+  #   end
+  # end
 
   # Collection actions
   collection_action :export_xlsx do
@@ -287,5 +287,11 @@ ActiveAdmin.register EngineeringStaff do
     end
 
     render json: {message: messages.join('；') }
+  end
+
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:customer)
+    end
   end
 end
