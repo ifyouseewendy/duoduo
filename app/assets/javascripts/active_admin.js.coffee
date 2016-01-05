@@ -82,7 +82,7 @@ $(document).on 'ready', ->
   $('.expand_table_action_width_large').closest('.table_actions').css('width', '350px')
 
   # Write all engineering staffs info into a hidden field
-  if $('.engineering_staffs.index').length > 0
+  if $('.engineering_staffs.index .add_projects_link').length > 0
     $.getJSON '/engineering_projects/query_all', (data) =>
       $('.engineering_staffs').append """
         <input type="hidden" class="project_ids_cache">
