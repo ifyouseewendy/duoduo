@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160105150015) do
+ActiveRecord::Schema.define(version: 20160105151030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -345,6 +345,7 @@ ActiveRecord::Schema.define(version: 20160105150015) do
   add_index "engineering_staffs", ["name"], name: "index_engineering_staffs_on_name", using: :btree
   add_index "engineering_staffs", ["nation"], name: "index_engineering_staffs_on_nation", using: :btree
   add_index "engineering_staffs", ["remark"], name: "index_engineering_staffs_on_remark", using: :btree
+  add_index "engineering_staffs", ["updated_at"], name: "index_engineering_staffs_on_updated_at", using: :btree
 
   create_table "guard_salary_items", force: :cascade do |t|
     t.decimal  "income",                precision: 8, scale: 2
