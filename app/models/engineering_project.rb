@@ -21,6 +21,10 @@ class EngineeringProject < ActiveRecord::Base
   enum status: [:active, :archive]
 
   default_scope { order(engineering_customer_id: :asc).order(nest_index: :asc) }
+  scope :by_staff, ->(staff_id){
+    joins("join engineering_projects_staffs on engineering_projects.id = engineering_projects_staffs.engineering_project_id")\
+      .where("engineering_projects_staffs.engineering_staff_id = ?", staff_id)
+  }
 
   class << self
     def policy_class

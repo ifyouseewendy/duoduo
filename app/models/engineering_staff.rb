@@ -28,6 +28,10 @@ class EngineeringStaff < ActiveRecord::Base
 
   default_scope { order(updated_at: :desc).order(enable: :desc) }
   scope :enabled, -> { where(enable: true) }
+  scope :by_project, ->(project_id){
+    joins("join engineering_projects_staffs on engineering_staffs.id = engineering_projects_staffs.engineering_staff_id")\
+      .where("engineering_projects_staffs.engineering_project_id = ?", project_id)
+  }
 
   class << self
     def policy_class
@@ -68,8 +72,15 @@ class EngineeringStaff < ActiveRecord::Base
       filename = "#{I18n.t("activerecord.models.#{name.underscore}")}_#{Time.stamp}.xlsx"
       filepath = EXPORT_PATH.join filename
 
+      require'pry';binding.pry
+      raise 'hi'
       collection = self.all
-      collection = collection.where(id: options[:selected]) if options[:selected].present?
+      if options[:selected].present?
+        collection = collection.where(id: options[:selected])
+      elsif options['projects_id_eq'].present?
+        # collection = collection.where(id: options[:selected])
+      else
+      end
 
       columns = columns_based_on(options: options)
 
