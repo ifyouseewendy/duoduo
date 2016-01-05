@@ -77,6 +77,8 @@ class EngineeringStaff < ActiveRecord::Base
         collection = collection.where(id: options[:selected])
       elsif options['projects_id_eq'].present?
         collection = collection.by_project(options['projects_id_eq'])
+      elsif options['customer_id_eq'].present?
+        collection = collection.where(engineering_customer_id: options['customer_id_eq'])
       else
       end
 

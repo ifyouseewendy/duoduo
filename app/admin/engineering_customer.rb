@@ -16,7 +16,7 @@ ActiveAdmin.register EngineeringCustomer do
       link_to "项目汇总", engineering_customer_engineering_projects_path(obj)
     end
     column :staffs, sortable: :id do |obj|
-      link_to "提供人员", engineering_customer_engineering_staffs_path(obj)
+      link_to "提供人员", engineering_customer_engineering_staffs_path(obj) + "?q[customer_id_eq]=#{obj.id}"
     end
     column :sub_companies, sortable: :id do |obj|
       ul do
