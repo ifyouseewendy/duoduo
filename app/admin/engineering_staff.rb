@@ -76,8 +76,6 @@ ActiveAdmin.register EngineeringStaff do
   filter :identity_card
   filter :name
   filter :enable
-  filter :customer
-  filter :projects, as: :select, collection: ->{ EngineeringProject.as_filter }
   preserve_default_filters!
   remove_filter :salary_items
   remove_filter :engineering_normal_salary_items
@@ -85,6 +83,10 @@ ActiveAdmin.register EngineeringStaff do
   remove_filter :engineering_big_table_salary_items
   remove_filter :engineering_dong_fang_salary_items
   remove_filter :alias_name
+  remove_filter :customer
+  remove_filter :projects
+  # filter :customer
+  # filter :projects, as: :select, collection: ->{ EngineeringProject.as_filter }
 
   permit_params {
     resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []]
