@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160105145010) do
+ActiveRecord::Schema.define(version: 20160105150015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -192,6 +192,8 @@ ActiveRecord::Schema.define(version: 20160105145010) do
     t.datetime "updated_at",                          null: false
     t.integer  "nest_index"
   end
+
+  add_index "engineering_customers", ["nest_index"], name: "index_engineering_customers_on_nest_index", using: :btree
 
   create_table "engineering_dong_fang_salary_items", force: :cascade do |t|
     t.decimal  "salary_deserve",              precision: 8, scale: 2
