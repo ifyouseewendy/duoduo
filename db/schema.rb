@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160103015530) do
+ActiveRecord::Schema.define(version: 20160105145010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -664,6 +664,7 @@ ActiveRecord::Schema.define(version: 20160103015530) do
     t.integer  "seal_table_id"
   end
 
+  add_index "seal_items", ["name"], name: "index_seal_items_on_name", using: :btree
   add_index "seal_items", ["seal_table_id"], name: "index_seal_items_on_seal_table_id", using: :btree
 
   create_table "seal_tables", force: :cascade do |t|
