@@ -3,7 +3,7 @@ namespace :pg do
   task :dump => :environment do
     cmd = nil
     with_config do |app, host, db, user|
-      cmd = "pg_dump -h #{host} -d #{db} -U #{user} -Ft -v -c -f #{Rails.root}/public/resources/duoduo/db_backup/#{Time.now.strftime("%Y%m%d%H%M%S")}_#{db}.tar"
+      cmd = "pg_dump -h #{host} -d #{db} -U #{user} -Ft -v -c -f #{Rails.root}/backups/#{Time.now.strftime("%Y%m%d%H%M%S")}_#{db}.tar"
     end
     puts cmd
     exec cmd
@@ -14,7 +14,7 @@ namespace :pg do
     if args.timestamp.present?
       cmd = nil
       with_config do |app, host, db, user|
-        cmd = "pg_restore -h #{host} -d #{db} -U #{user}  -Ft -v -c #{Rails.root}/public/resources/duoduo/db_backup/#{args.timestamp}_#{db}.tar"
+        cmd = "pg_restore -h #{host} -d #{db} -U #{user}  -Ft -v -c #{Rails.root}/backups/#{args.timestamp}_#{db}.tar"
       end
       Rake::Task["db:drop"].invoke
       Rake::Task["db:create"].invoke

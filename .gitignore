@@ -21,3 +21,4 @@ public/resources
 .env.*
 config/database.yml
 .erdconfig
+backups

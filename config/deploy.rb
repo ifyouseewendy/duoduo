@@ -10,7 +10,7 @@ set :repository, 'git@github.com:ifyouseewendy/duoduo.git'
 set :branch, 'production'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_paths, ['config/database.yml','config/newrelic.yml','config/unicorn.rb', 'log', 'tmp', '.env.production']
+set :shared_paths, ['config/database.yml','config/newrelic.yml','config/unicorn.rb', 'backups', 'log', 'tmp', '.env.production']
 
 # set :user, 'deploy'    # Username in the server to SSH to.
 # set :port, '10080'     # SSH port number.
@@ -28,6 +28,9 @@ end
 task :setup => :environment do
   queue! %[mkdir -p "#{deploy_to}/#{shared_path}/log"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/log"]
+
+  queue! %[mkdir -p "#{deploy_to}/#{shared_path}/backups"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/backups"]
 
   queue! %[mkdir -p "#{deploy_to}/#{shared_path}/config"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/config"]
