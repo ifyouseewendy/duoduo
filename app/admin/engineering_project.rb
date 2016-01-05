@@ -384,6 +384,14 @@ ActiveAdmin.register EngineeringProject do
   controller do
     before_action :wrap_params, only: :update
 
+    def scoped_collection
+      end_of_association_chain
+        .includes(:customer)
+        .includes(:sub_company)
+        .includes(:corporation)
+        .includes(:income_items)
+        .includes(:outcome_items)
+    end
     private
 
       def wrap_params
