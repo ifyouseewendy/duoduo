@@ -72,13 +72,11 @@ class EngineeringStaff < ActiveRecord::Base
       filename = "#{I18n.t("activerecord.models.#{name.underscore}")}_#{Time.stamp}.xlsx"
       filepath = EXPORT_PATH.join filename
 
-      require'pry';binding.pry
-      raise 'hi'
       collection = self.all
       if options[:selected].present?
         collection = collection.where(id: options[:selected])
       elsif options['projects_id_eq'].present?
-        # collection = collection.where(id: options[:selected])
+        collection = collection.by_project(options['projects_id_eq'])
       else
       end
 
