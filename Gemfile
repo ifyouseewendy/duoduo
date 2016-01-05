@@ -74,7 +74,7 @@ gem 'zip-zip'           # Fix axlsx dependency
 gem 'doc_ripper'
 
 # Optimize
-gem 'goldiloader'
+# gem 'goldiloader'
 
 # RMB
 gem 'rmb_chinese_yuan'
