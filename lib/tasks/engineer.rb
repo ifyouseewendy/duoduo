@@ -16,7 +16,7 @@ class Engineer < DuoduoCli
     fail "Invalid <from> file position: #{options[:from]}" unless File.exist?(options[:from])
 
     load_rails
-    clean_db(:engineer) unless options[:skip_clean]
+    clean_db(:engineer, :engineer_corp) unless options[:skip_clean]
 
     clean_logger
     init_logger
@@ -25,13 +25,19 @@ class Engineer < DuoduoCli
 
     dir = Pathname(options[:from])
 
+    # 单位部分医保、社保金额
+    seed_engineer_insurance
+
+    # 大协议
     contract_path = dir.entries.detect{|en| en.basename.to_s == '__大协议'}
     if contract_path.present?
       self.class.new.invoke('add_big_contract', [], from: dir.join(contract_path))
     end
 
+    # 提供人员
     self.class.new.invoke('validate_staff', [], from: options[:from])
 
+    # 项目文件夹
     entries = dir.entries.reject{|en| skip_file?(en)}.sort_by{|en| en.basename.to_s.split('、')[0].to_i }
     entries.each do |entry|
       self.class.new.invoke('start', [],
@@ -166,6 +172,15 @@ class Engineer < DuoduoCli
     end
 
     logger.info "[#{Time.now}] Import end"
+  end
+
+
+  desc 'seed_engineer_insurance', ''
+  def seed_engineer_insurance
+    load_rails
+
+    seed_engineering_company_social_insurance_amounts
+    seed_engineering_company_medical_insurance_amounts
   end
 
   private
@@ -1025,6 +1040,41 @@ class Engineer < DuoduoCli
         fix_project_nest_index_and_name(pr)
       end
     end
+
+    def seed_engineering_company_social_insurance_amounts
+      puts "==> Preparing EngineeringCompanySocialInsuranceAmount"
+
+      dates = %w(2000-01-01 2014-01-01 2014-07-01 2015-01-01)
+      amounts = [0, 200, 300, 407]
+
+      dates.each_with_index do |start_date, idx|
+        next_date = dates[idx+1]
+        end_date = next_date.to_date.yesterday rescue nil
+        ::EngineeringCompanySocialInsuranceAmount.create!(
+          start_date: Date.parse(start_date),
+          end_date: end_date,
+          amount: amounts[idx]
+        )
+      end
+    end
+
+    def seed_engineering_company_medical_insurance_amounts
+      puts "==> Preparing EngineeringCompanyMedicalInsuranceAmount"
+
+      dates = %w(2000-01-01 2014-01-01 2014-07-01 2015-01-01)
+      amounts = [0, 100, 200, 249]
+
+      dates.each_with_index do |start_date, idx|
+        next_date = dates[idx+1]
+        end_date = next_date.to_date.yesterday rescue nil
+        ::EngineeringCompanyMedicalInsuranceAmount.create!(
+          start_date: Date.parse(start_date),
+          end_date: end_date,
+          amount: amounts[idx]
+        )
+      end
+    end
+
 end
 
 Engineer.start(ARGV)
