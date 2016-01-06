@@ -1,0 +1,21 @@
+<% keys = params.reject{|k| %i(controller action order).include?(k.to_sym)} %>
+<%= semantic_form_for collection.new, url: {action: :import_do}, html: {multipart: true} do |f| %>
+  <%= f.inputs "说明", class: 'inputs import_guide' do %>
+    <li>1. 上传文件需为 xls(x) 格式</li>
+    <li>2. 请参考 <a href='/engineering_salary_tables/import_demo?type=normal' >示例文件(基础)</a>，<a href='/engineering_salary_tables/import_demo?type=tax' >示例文件(基础带个税)</a> 中的字段顺序</li>
+    <li>3. 注意：工资表因为涉及较多校验，必须全部信息正确才可导入</li>
+    <li>4. 导入后工资表的起止日期，是根据工程项目的起止日期，按照上传文件中表格个数进行拆分而来。例如，工程项目起止日期 2015-01-01 ~ 2015-02-28，则如果上传文件中有一张表格，则生成一张工资表，日期为 2015-01-01 ~ 2015-02-28；而如果上传文件中有两张表格，则生成两张工资表，日期分别为 2015-01-01 ~ 2015-01-31 和 2015-02-01 ~ 2015-02-28</li>
+  <% end %>
+
+  <%= f.inputs do %>
+    <%= f.input :type, as: :radio, label: '类型', collection: [['基础', 'normal', {'checked' => 'checked'} ], ['基础带个税', 'tax']] %>
+    <%= f.input :file, as: :file, label: t('active_admin.import.file') %>
+    <% keys.each do |k,v| %>
+      <%= f.hidden_field k, value: v %>
+    <% end %>
+  <% end %>
+
+  <%= f.actions do %>
+    <%= f.action :submit, label: t("active_admin.import.import_btn"), button_html: {disable_with: t("active_admin.import.import_btn_disabled")} %>
+  <% end %>
+<% end %>

@@ -137,6 +137,147 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
   end
 
+  collection_action :import_demo do
+    # Check params
+    if params[:type] == 'normal'
+      model = EngineeringNormalSalaryItem
+    elsif params[:type] == 'tax'
+    end
+    columns = EngineeringNormalSalaryItem.import_columns
+
+    filename = I18n.t("activerecord.models.#{model.to_s.underscore}") + " - " + I18n.t("misc.import_demo.name") + '.xlsx'
+    dir = Pathname("tmp/import_demo")
+    dir.mkdir unless dir.exist?
+    filepath = dir.join(filename)
+
+    Axlsx::Package.new do |p|
+      p.workbook.add_worksheet do |sheet|
+        stat = columns.map{|col| model.human_attribute_name(col) }
+        sheet.add_row stat
+      end
+      p.serialize(filepath.to_s)
+    end
+
+    send_file filepath
+  end
+
+  collection_action :import_new do
+    render template: 'engineering_salary_tables/import_template'
+  end
+
+  collection_action :import_do, method: :post do
+    project = EngineeringProject.find params[collection.name.underscore][:project_id]
+
+    if params[collection.name.underscore][:type] == 'normal'
+      model = EngineeringNormalSalaryItem
+      table_model = EngineeringNormalSalaryTable
+    elsif params[collection.name.underscore][:type] == 'tax'
+    end
+
+    file = params[collection.name.underscore].try(:[], :file)
+    redirect_to :back, alert: '导入失败（未找到文件），请选择上传文件' and return \
+      if file.nil?
+
+    redirect_to :back, alert: '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
+      unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
+
+    xls = Roo::Spreadsheet.open(file.path)
+    count = xls.sheets.count
+    ranges = project.split_range(count)
+
+    columns = model.import_columns
+
+    # Table Check
+    begin
+      stats = []
+      xls.sheets.each_with_index do |sheet_name, sheet_id|
+        sheet = xls.sheet(sheet_id).to_a
+
+        stat = []
+        sheet.each_with_index do |row, row_id|
+          next if row[0].blank?
+
+          if row[0] == '合计'
+            values = stat.map(&:values).transpose.map{|ar| ar.map(&:to_f).sum}
+
+            row[2..-1].each_with_index do |data, col_id|
+              raise "表#{sheet_id+1} - 合计数目不等：#{data}" unless \
+                values[col_id+2].to_f.round(2) == data.to_f.round(2)
+            end
+            break
+          end
+
+          ha = {}
+          row.each_with_index do |data, col_id|
+            key = columns[col_id]
+            ha[key] = data
+          end
+          stat << ha
+        end
+
+        raise "表#{sheet_id+1} - 用工明细与工资表员工人数不等" \
+          unless project.staffs.count == stat.count - 1
+
+        valid_names = project.staffs.map(&:name).to_set
+        stat_names  = stat[1..-1].map{|ha| ha[:name].delete(' ')}.to_set
+        raise "表#{sheet_id+1} - 用工明细与工资表员工人员不符，未找到 #{(valid_names - stat_names).join(',')}" \
+          unless valid_names == stat_names
+
+        stats << stat
+      end
+    rescue => e
+      redirect_to :back, alert: e.message and return
+    end
+
+    total_amount = stats.map{|stat| stat.map{|ha| ha[:salary_in_fact].to_f}.sum}.sum.round(2)
+    raise "各表合计实发金额与工程劳务费不等" \
+      unless total_amount == project.project_amount.to_f.round(2)
+
+    stats.each_with_index do |sheet_data, sheet_id|
+      start_date, end_date = ranges[sheet_id]
+      st = table_model.create!(
+        project: project,
+        start_date: start_date,
+        end_date: end_date,
+        amount: sheet_data.map{|ha| ha[:salary_in_fact].to_f}.sum.round(2),
+        name: "#{start_date} ~ #{end_date}"
+      )
+
+      failed = false
+      sheet_data.each_with_index do |data, data_id|
+        next if data_id == 0
+        begin
+          name = data[:name].delete(' ')
+          staff = project.staffs.where(name: name).first
+
+          model.create!(data.reject{|k| k == :id or k == :name or k.blank?}.merge({
+            salary_table: st,
+            staff: staff
+          }))
+        rescue => e
+          data[:error] = e.message
+          failed = true
+        end
+
+        if failed
+          st.destroy
+
+          filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
+          filepath = Pathname("tmp/#{filename}.#{Time.stamp}.xlsx")
+          Axlsx::Package.new do |p|
+            p.workbook.add_worksheet do |sheet|
+              sheet_data.each{|stat| sheet.add_row stat.values}
+            end
+            p.serialize(filepath.to_s)
+          end
+          send_file filepath and return
+        end
+      end
+    end
+
+    redirect_to "/engineering_projects/#{project.id}/engineering_salary_tables", notice: "成功导入工资表"
+  end
+
   controller do
     def scoped_collection
       end_of_association_chain.includes(:project)

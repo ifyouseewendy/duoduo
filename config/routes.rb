@@ -6,6 +6,14 @@ Rails.application.routes.draw do
   resources :engineering_big_table_salary_tables, controller: "engineering_salary_tables"
   resources :engineering_dong_fang_salary_tables, controller: "engineering_salary_tables"
 
+  resources :engineering_salary_tables do
+    collection do
+      post 'import_do'
+      get 'import_new'
+      get 'import_demo'
+      get 'export_xlsx'
+    end
+  end
   resources :engineering_normal_with_tax_salary_items do
     collection do
       post 'import_do'
