@@ -279,6 +279,30 @@ ActiveAdmin.register EngineeringStaff do
     render json: {message: messages.join('；') }
   end
 
+  collection_action :import_demo do
+    model = controller_name.classify.constantize
+
+    filename = I18n.t("activerecord.models.#{model.to_s.underscore}") + " - " + I18n.t("misc.import_demo.name") + '.xlsx'
+    dir = Pathname("tmp/import_demo")
+    dir.mkdir unless dir.exist?
+    filepath = dir.join(filename)
+
+    if params[:project_id].present?
+      columns = [:identity_card]
+    else
+      columns = model.ordered_columns(export: true)
+    end
+    Axlsx::Package.new do |p|
+      p.workbook.add_worksheet do |sheet|
+        stat = columns.map{|col| model.human_attribute_name(col) }
+        sheet.add_row stat
+      end
+      p.serialize(filepath.to_s)
+    end
+
+    send_file filepath
+  end
+
   collection_action :import_do, method: :post do
     file = params[collection.name.underscore].try(:[], :file)
     redirect_to :back, alert: '导入失败（未找到文件），请选择上传文件' and return \
@@ -291,7 +315,14 @@ ActiveAdmin.register EngineeringStaff do
     sheet = xls.sheet(0)
     data = sheet.to_a
 
-    columns = collection.ordered_columns(export:true)
+    project_id = params[:engineering_staff][:project_id] rescue nil
+    project = EngineeringProject.where(id: project_id).first
+
+    if project_id.present?
+      columns = [:identity_card]
+    else
+      columns = collection.ordered_columns(export:true)
+    end
 
     gender_map = {'男' => 'male', '女' => 'female'}
     stats = []
@@ -306,9 +337,6 @@ ActiveAdmin.register EngineeringStaff do
 
       stats << stat
     end
-
-    project_id = params[:engineering_staff][:project_id] rescue nil
-    project = EngineeringProject.where(id: project_id).first
 
     failed = []
     stats.each_with_index do |stat, idx|
@@ -338,7 +366,7 @@ ActiveAdmin.register EngineeringStaff do
       filepath = Pathname("tmp/#{filename}.#{Time.stamp}.xlsx")
       Axlsx::Package.new do |p|
         p.workbook.add_worksheet do |sht|
-          failed.each{|stat| sht.add_row stat}
+          failed.each{|stat| stat[0] = "'#{stat[0]}"; sht.add_row stat}
         end
         p.serialize(filepath.to_s)
       end
