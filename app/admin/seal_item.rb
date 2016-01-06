@@ -3,6 +3,8 @@ ActiveAdmin.register SealItem do
 
   include ImportSupport
 
+  config.per_page = 100
+
   index download_links: false do
     selectable_column
 
@@ -24,7 +26,12 @@ ActiveAdmin.register SealItem do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :nest_index, as: :number
+      if request.url.index('/new')
+        st = SealTable.where(id: params[:seal_table_id]).first
+        f.input :nest_index, as: :number, input_html: { value: st.try(:latest_item_index) }
+      else
+        f.input :nest_index, as: :number
+      end
       f.input :name, as: :string
       f.input :remark, as: :text
     end
