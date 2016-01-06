@@ -60,7 +60,10 @@ ActiveAdmin.register EngineeringProject do
       end
     end
     column :salary_table_detail, sortable: :updated_at do |obj|
-      link_to "工资表", engineering_project_engineering_salary_tables_path(obj), target: '_blank'
+      ul do
+        li( link_to "查看", engineering_project_engineering_salary_tables_path(obj), target: '_blank' )
+        li( link_to "自动生成", auto_generate_salary_table_engineering_project_path(obj), target: '_blank' )
+      end
     end
 
     actions do |obj|

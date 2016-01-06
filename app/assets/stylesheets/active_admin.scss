@@ -122,10 +122,14 @@ body.engineering_customers table.index_table thead tr {
   th.col-remark {
     min-width: 100px !important;
   }
-  th.col-staff_detail {
-    min-width: 110px !important;
-  }
   td.col-staff_detail {
+    min-width: 110px !important;
+    li {
+      display: inline;
+    }
+  }
+  td.col-salary_table_detail {
+    min-width: 100px !important;
     li {
       display: inline;
     }
