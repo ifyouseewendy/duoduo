@@ -4,6 +4,8 @@ class EngineeringCustomer < ActiveRecord::Base
 
   default_scope { order(nest_index: :desc) }
 
+  validates_uniqueness_of :nest_index
+
   class << self
     def policy_class
       EngineeringPolicy

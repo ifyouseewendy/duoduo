@@ -19,7 +19,7 @@ ActiveAdmin.register EngineeringProject do
     column :nest_index
     column :name
     column :customer, sortable: :id do |obj|
-      link_to obj.customer.display_name, engineering_customer_path(obj.customer)
+      link_to obj.customer.display_name, "/engineering_customers?utf8=✓&q%5Bnest_index_equals%5D=#{obj.customer.nest_index}&commit=过滤"
     end
     column :sub_company, sortable: :id do |obj|
       sc = obj.sub_company
