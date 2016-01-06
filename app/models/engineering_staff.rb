@@ -24,6 +24,7 @@ class EngineeringStaff < ActiveRecord::Base
 
   validates_uniqueness_of :identity_card
   validates_presence_of :identity_card
+  validates_length_of :identity_card, is: 18, message: "身份证号必须为18位"
   validates_inclusion_of :gender, in: %w(male female)
 
   default_scope { order(updated_at: :desc).order(enable: :desc) }
@@ -152,8 +153,13 @@ class EngineeringStaff < ActiveRecord::Base
   def revise_fields
     if (changed & ['identity_card']).present?
       id_card = self.identity_card
-      if id_card.length == 18
-        self.birth = Date.parse(id_card[6,8]) rescue nil
+      begin
+        self.birth = Date.parse(id_card[6,8])
+        if self.birth + 18.years > Date.today
+          errors.add(:birth, "员工未满十八周岁")
+        end
+      rescue => _
+        errors.add(:birth, "无法通过身份证号获取生日信息，请检查身份证号：#{id_card}")
       end
     end
   end
