@@ -26,6 +26,8 @@ class EngineeringProject < ActiveRecord::Base
       .where("engineering_projects_staffs.engineering_staff_id = ?", staff_id)
   }
 
+  validates_uniqueness_of :nest_index, scope: :customer
+
   class << self
     def policy_class
       EngineeringPolicy
