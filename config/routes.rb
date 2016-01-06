@@ -10,12 +10,14 @@ Rails.application.routes.draw do
     collection do
       post 'import_do'
       get 'import_new'
+      get 'import_demo'
     end
   end
   resources :engineering_normal_salary_items do
     collection do
       post 'import_do'
       get 'import_new'
+      get 'import_demo'
     end
   end
 
