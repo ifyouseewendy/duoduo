@@ -147,6 +147,9 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def accept_schedule?(start_date, end_date)
+    if birth.present?
+      return false if start_date < birth + 18.years
+    end
     busy_range.all?{|range| range[0] > end_date.to_date || range[1] < start_date.to_date }
   end
 
