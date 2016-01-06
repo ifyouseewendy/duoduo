@@ -18,6 +18,7 @@ ActiveAdmin.register EngineeringCorp do
   preserve_default_filters!
   remove_filter :projects
   remove_filter :big_contracts
+  remove_filter :sub_company
 
   permit_params :name
 

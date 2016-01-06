@@ -113,6 +113,7 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
     options[:selected] = params[:selected].split('-') if params[:selected].present?
     options[:columns] = params[:columns].split('-') if params[:columns].present?
     options[:salary_table_id] = params[:q][:salary_table_id_eq] rescue nil
+    options[:order] = params[:order] if params[:order].present?
 
     file = EngineeringNormalSalaryItem.export_xlsx(options: options)
     send_file file, filename: file.basename

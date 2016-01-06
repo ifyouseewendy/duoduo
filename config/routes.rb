@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post 'import_do'
       get 'import_new'
       get 'import_demo'
+      get 'export_xlsx'
     end
   end
   resources :engineering_normal_salary_items do
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
       post 'import_do'
       get 'import_new'
       get 'import_demo'
+      get 'export_xlsx'
     end
   end
 

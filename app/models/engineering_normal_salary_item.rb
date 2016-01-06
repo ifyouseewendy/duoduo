@@ -64,6 +64,9 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
         collection = salary_table.salary_items
         names += [salary_table.project.name, salary_table.name]
       end
+
+      collection = collection.includes(:staff).order('engineering_staffs.seal_index asc') if options[:order].present?
+
       names << Time.stamp
 
       filename = "#{names.join('_')}.xlsx"
@@ -74,11 +77,13 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
         p.workbook.add_worksheet(name: name) do |sheet|
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}
 
-          collection.each do |item|
+          collection.includes(:staff).each_with_index do |item,idx|
              stats = \
               columns.map do |col|
                 if [:staff].include? col
                   item.send(col).name
+                elsif [:id].include? col
+                  idx+1
                 else
                   item.send(col)
                 end
