@@ -182,4 +182,8 @@ class EngineeringStaff < ActiveRecord::Base
     nm = st_name.to_s.match(/^[\d|\-]*/)[0] # "108"
     nm.present? ? nm : st_name
   end
+
+  def validate_seal_index
+    self.update_attribute(:seal_index, query_seal_index)
+  end
 end
