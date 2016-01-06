@@ -165,6 +165,9 @@ class EngineeringStaff < ActiveRecord::Base
         errors.add(:birth, "无法通过身份证号获取生日信息，请检查身份证号：#{id_card}")
       end
     end
+    if (changed & ['name']).present?
+      self.seal_index = query_seal_index
+    end
   end
 
   def age
@@ -174,7 +177,7 @@ class EngineeringStaff < ActiveRecord::Base
     (birth + num.years >= Date.today) ? num-1 : num
   end
 
-  def seal_index
+  def query_seal_index
     st_name = SealItem.query_user(name: name) # "108、陈连春提供22人"
     nm = st_name.to_s.match(/^[\d|\-]*/)[0] # "108"
     nm.present? ? nm : st_name
