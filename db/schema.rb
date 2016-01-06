@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160106051353) do
+ActiveRecord::Schema.define(version: 20160106053332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -297,6 +297,7 @@ ActiveRecord::Schema.define(version: 20160106051353) do
   add_index "engineering_projects", ["engineering_customer_id", "nest_index"], name: "idx_customer_and_nest_index_on_engi_project", using: :btree
   add_index "engineering_projects", ["engineering_customer_id"], name: "index_engineering_projects_on_engineering_customer_id", using: :btree
   add_index "engineering_projects", ["nest_index"], name: "index_engineering_projects_on_nest_index", using: :btree
+  add_index "engineering_projects", ["status"], name: "index_engineering_projects_on_status", using: :btree
   add_index "engineering_projects", ["sub_company_id"], name: "index_engineering_projects_on_sub_company_id", using: :btree
 
   create_table "engineering_projects_staffs", id: false, force: :cascade do |t|
