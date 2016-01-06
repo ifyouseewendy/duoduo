@@ -175,6 +175,8 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def seal_index
-    SealItem.query_user(name: name)
+    st_name = SealItem.query_user(name: name) # "108、陈连春提供22人"
+    nm = st_name.to_s.match(/^[\d|\-]*/)[0] # "108"
+    nm.present? ? nm : st_name
   end
 end
