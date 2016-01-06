@@ -510,6 +510,7 @@ zh-CN:
         id: '编号'
         name: '名称'
         type: '类型'
+        amount: '合计'
         remark: '备注'
         url: '大表链接'
         audition_status: '复核状态'
