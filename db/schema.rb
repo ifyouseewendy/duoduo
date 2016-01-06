@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160106053528) do
+ActiveRecord::Schema.define(version: 20160106060111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -327,8 +327,6 @@ ActiveRecord::Schema.define(version: 20160106053528) do
     t.date     "birth"
     t.integer  "age"
     t.integer  "gender",                  default: 0
-    t.text     "nation"
-    t.text     "address"
     t.text     "remark"
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
@@ -338,7 +336,6 @@ ActiveRecord::Schema.define(version: 20160106053528) do
     t.text     "seal_index"
   end
 
-  add_index "engineering_staffs", ["address"], name: "index_engineering_staffs_on_address", using: :btree
   add_index "engineering_staffs", ["age"], name: "index_engineering_staffs_on_age", using: :btree
   add_index "engineering_staffs", ["birth"], name: "index_engineering_staffs_on_birth", using: :btree
   add_index "engineering_staffs", ["enable"], name: "index_engineering_staffs_on_enable", using: :btree
@@ -346,7 +343,6 @@ ActiveRecord::Schema.define(version: 20160106053528) do
   add_index "engineering_staffs", ["gender"], name: "index_engineering_staffs_on_gender", using: :btree
   add_index "engineering_staffs", ["identity_card"], name: "index_engineering_staffs_on_identity_card", using: :btree
   add_index "engineering_staffs", ["name"], name: "index_engineering_staffs_on_name", using: :btree
-  add_index "engineering_staffs", ["nation"], name: "index_engineering_staffs_on_nation", using: :btree
   add_index "engineering_staffs", ["remark"], name: "index_engineering_staffs_on_remark", using: :btree
   add_index "engineering_staffs", ["seal_index"], name: "index_engineering_staffs_on_seal_index", using: :btree
   add_index "engineering_staffs", ["updated_at", "enable"], name: "index_engineering_staffs_on_updated_at_and_enable", using: :btree

@@ -41,7 +41,7 @@ class EngineeringStaff < ActiveRecord::Base
 
     def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
       if export
-        names = [:identity_card, :name, :enable, :birth, :gender, :nation, :address, :remark, :engineering_customer_id]
+        names = [:identity_card, :name, :gender, :remark, :engineering_customer_id]
       else
         names = column_names.map(&:to_sym)
         names -= %i(id alias_name created_at updated_at) if without_base_keys
