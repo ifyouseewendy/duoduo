@@ -4,6 +4,8 @@ $(document).on 'ready', ->
   # Clean footer
   $('.footer').empty()
 
+  $( "#datepicker" ).datepicker( $.datepicker.regional['zh-CN'] )
+
   # Individual Income Tax calculate
   $('.iit_form .submit').on 'click', ->
     $.ajax
