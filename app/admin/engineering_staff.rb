@@ -288,7 +288,7 @@ ActiveAdmin.register EngineeringStaff do
     filepath = dir.join(filename)
 
     if params[:project_id].present?
-      columns = [:identity_card]
+      columns = [:identity_card, :engineering_customer_id]
     else
       columns = model.ordered_columns(export: true)
     end
@@ -319,7 +319,7 @@ ActiveAdmin.register EngineeringStaff do
     project = EngineeringProject.where(id: project_id).first
 
     if project_id.present?
-      columns = [:identity_card]
+      columns = [:identity_card, :engineering_customer_id]
     else
       columns = collection.ordered_columns(export:true)
     end
@@ -344,12 +344,13 @@ ActiveAdmin.register EngineeringStaff do
         failed << stat.values
       else
         begin
+          customer = EngineeringCustomer.where(nest_index: stat[:engineering_customer_id]).first
           if project.present?
-            staff = EngineeringStaff.where(identity_card: stat[:identity_card]).first
-            raise "找不到身份证号，请确认员工出现在某个客户的提供人员中" if staff.nil?
+            staff = customer.staffs.where(identity_card: stat[:identity_card]).first
+            raise "无法在客户提供人员找到该身份证号" if staff.nil?
             staff.projects << project
           else
-            stat[:engineering_customer_id] = EngineeringCustomer.where(nest_index: stat[:engineering_customer_id]).first.try(:id)
+            stat[:engineering_customer_id] = customer.id
             staff = collection.create!(stat)
           end
 
