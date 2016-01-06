@@ -52,11 +52,13 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
         valid_ids = project.staffs.map(&:id) - st.salary_items.map(&:engineering_staff_id)
         f.input :staff, as: :select, collection: ->{ EngineeringStaff.where(id: valid_ids) }.call, hint: '可添加的员工集合为，出现在项目的用工明细，但是还未生成工资条的员工'
         f.input :engineering_salary_table_id, as: :hidden, input_html: { value: params[:salary_table_id] }
-      end
-      f.input :salary_deserve, as: :number
-      f.input :social_insurance, as: :number
-      f.input :medical_insurance, as: :number
-      if request.url.index('/edit')
+        f.input :salary_deserve, as: :number
+        f.input :social_insurance, as: :number, input_html: { value: EngineeringCompanySocialInsuranceAmount.query_amount(date: st.try(:start_date) ) }
+        f.input :medical_insurance, as: :number, input_html: { value: EngineeringCompanyMedicalInsuranceAmount.query_amount(date: st.try(:start_date) ) }
+      elsif request.url.index('/edit')
+        f.input :salary_deserve, as: :number
+        f.input :social_insurance, as: :number
+        f.input :medical_insurance, as: :number
         f.input :tax, as: :number
       end
       f.input :remark, as: :text

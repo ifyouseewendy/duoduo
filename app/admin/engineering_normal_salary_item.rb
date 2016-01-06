@@ -45,15 +45,20 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
 
+    st = EngineeringSalaryTable.where(id: params[:salary_table_id]).first
     f.inputs do
       if request.url.index('/new')
         project = EngineeringProject.find(params[:project_id])
         st = EngineeringSalaryTable.find(params[:salary_table_id])
         valid_ids = project.staffs.map(&:id) - st.salary_items.map(&:engineering_staff_id)
         f.input :staff, as: :select, collection: ->{ EngineeringStaff.where(id: valid_ids) }.call, hint: '可添加的员工集合为，出现在项目的用工明细，但是还未生成工资条的员工'
+        f.input :social_insurance, as: :number, input_html: { value: EngineeringCompanySocialInsuranceAmount.query_amount(date: st.try(:start_date) ) }
+        f.input :medical_insurance, as: :number, input_html: { value: EngineeringCompanyMedicalInsuranceAmount.query_amount(date: st.try(:start_date) ) }
       end
-      f.input :social_insurance, as: :number
-      f.input :medical_insurance, as: :number
+      if request.url.index('/edit')
+        f.input :social_insurance, as: :number
+        f.input :medical_insurance, as: :number
+      end
       f.input :salary_in_fact, as: :number
       f.input :remark, as: :text
     end
