@@ -385,6 +385,15 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
+  member_action :auto_generate_salary_table do
+    begin
+      resource.auto_generate_salary_table
+      redirect_to engineering_project_engineering_salary_tables_path(resource), notice: "成功自动生成工资表"
+    rescue => e
+      redirect_to :back, alert: "生成失败 #{e.message}"
+    end
+  end
+
   controller do
     before_action :wrap_params, only: :update
 

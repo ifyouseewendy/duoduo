@@ -180,6 +180,35 @@ class EngineeringProject < ActiveRecord::Base
     "项目：#{name}，起止日期：#{project_start_date} - #{project_end_date}"
   end
 
+  def auto_generate_salary_table
+    self.class.transaction do
+      dates = split_range
+      amounts = gennerate_random_salary(amount: self.project_amount, count: dates.count)
+
+      dates.each_with_index do |ar, idx|
+        start_date, end_date = ar
+        amount = amounts[idx]
+        st = self.salary_tables.create!(
+          type: 'EngineeringNormalSalaryTable',
+          start_date: start_date,
+          end_date: end_date,
+          amount: amount,
+          name: "#{start_date} ~ #{end_date}"
+        )
+
+        salaries = gennerate_random_salary(amount: amount, count: staffs.count)
+        self.staffs.each_with_index do |staff, id|
+          st.salary_items.create!(
+            staff: staff,
+            salary_in_fact: salaries[id],
+            social_insurance: EngineeringCompanySocialInsuranceAmount.query_amount(date: start_date),
+            medical_insurance: EngineeringCompanyMedicalInsuranceAmount.query_amount(date: start_date)
+          )
+        end
+      end
+    end
+  end
+
   def generate_salary_table(need_count:)
     month, day = calc_range
     table_count = month + ( day > 0 ? 1 : 0 )
@@ -230,11 +259,11 @@ class EngineeringProject < ActiveRecord::Base
     amount = amount.ceil
 
     tax_limit = 3500
-    raise "Value of #{amount}<amount> is too big, higher than #{tax_limit*count} ( = #{count}<count> * #{tax_limit}<tax_limit> )" if amount > count*tax_limit
+    # raise "Value of #{amount}<amount> is too big, higher than #{tax_limit*count} ( = #{count}<count> * #{tax_limit}<tax_limit> )" if amount > count*tax_limit
 
     lower_bound = EngineeringCompanySocialInsuranceAmount.order(amount: :desc).first.amount \
       + EngineeringCompanyMedicalInsuranceAmount.order(amount: :desc).first.amount
-    raise "Value of #{amount}<amount> is too small, lower than #{lower_bound*count} ( = #{count}<count> * #{lower_bound}<lower_bound> )" if amount < count*lower_bound
+    # raise "Value of #{amount}<amount> is too small, lower than #{lower_bound*count} ( = #{count}<count> * #{lower_bound}<lower_bound> )" if amount < count*lower_bound
 
     amount, count = [amount, count].map(&:to_i)
 
