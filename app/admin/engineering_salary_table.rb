@@ -137,4 +137,10 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
   end
 
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:project)
+    end
+  end
+
 end
