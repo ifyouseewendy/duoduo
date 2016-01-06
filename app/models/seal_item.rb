@@ -1,5 +1,7 @@
 class SealItem < ActiveRecord::Base
-  belongs_to :seal_table
+  belongs_to :seal_table, required: true
+
+  validates_uniqueness_of :nest_index, scope: :seal_table
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
