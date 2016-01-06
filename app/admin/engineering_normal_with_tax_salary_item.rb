@@ -33,6 +33,10 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
       column field
     end
 
+    column :seal_index, sortable: 'engineering_staffs.seal_index' do |obj|
+      obj.staff.seal_index
+    end
+
     actions
   end
 
@@ -84,6 +88,9 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
       end
       (resource.class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
         row field
+      end
+      row :seal_index do |obj|
+        obj.staff.seal_index
       end
     end
     active_admin_comments
@@ -214,5 +221,10 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
     end
   end
 
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:staff)
+    end
+  end
 
 end

@@ -33,6 +33,10 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
       column field
     end
 
+    column :seal_index, sortable: 'engineering_staffs.seal_index' do |obj|
+      obj.staff.seal_index
+    end
+
     actions
   end
 
@@ -84,6 +88,10 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
       (resource.class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
         row field
       end
+      row :seal_index do |obj|
+        obj.staff.seal_index
+      end
+
     end
     active_admin_comments
   end
@@ -211,6 +219,12 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
       redirect_to "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.engineering_salary_table_id}&commit=过滤", notice: "成功删除工资条<#{obj.staff.name}>"
     rescue => e
       redirect_to "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.engineering_salary_table_id}&commit=过滤", alert: "删除失败，#{e.message}"
+    end
+  end
+
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:staff)
     end
   end
 

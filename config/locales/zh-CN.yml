@@ -534,6 +534,7 @@ zh-CN:
         engineering_staff_id: '员工'
         staff: '员工'
         salary_table: '工资表'
+        seal_index: '刻章'
       engineering_normal_with_tax_salary_item:
         id: '编号'
         name: '姓名'
@@ -551,6 +552,7 @@ zh-CN:
         engineering_staff_id: '员工'
         staff: '员工'
         salary_table: '工资表'
+        seal_index: '刻章'
       engineering_big_table_salary_item:
         id: '编号'
         salary_deserve: '应发工资'
