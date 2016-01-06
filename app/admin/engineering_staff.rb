@@ -33,7 +33,7 @@ ActiveAdmin.register EngineeringStaff do
       link_to obj.customer.display_name, engineering_customer_path(obj.customer)
     end
     column :projects, sortable: :id do |obj|
-      link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bstaffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     end
     column :salary_item_detail, sortable: :updated_at do |obj|
       stats = []
@@ -277,6 +277,75 @@ ActiveAdmin.register EngineeringStaff do
     end
 
     render json: {message: messages.join('；') }
+  end
+
+  collection_action :import_do, method: :post do
+    file = params[collection.name.underscore].try(:[], :file)
+    redirect_to :back, alert: '导入失败（未找到文件），请选择上传文件' and return \
+      if file.nil?
+
+    redirect_to :back, alert: '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
+      unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
+
+    xls = Roo::Spreadsheet.open(file.path)
+    sheet = xls.sheet(0)
+    data = sheet.to_a
+
+    columns = collection.ordered_columns(export:true)
+
+    gender_map = {'男' => 'male', '女' => 'female'}
+    stats = []
+    data.each_with_index do |row, id|
+      stat = {}
+      row.each_with_index do |v, idx|
+        key = columns[idx]
+        value = (String === v ? v.strip : v)
+        value = gender_map[value] if gender_map.keys.include? value
+        stat[key] = value
+      end
+
+      stats << stat
+    end
+
+    project_id = params[:engineering_staff][:project_id] rescue nil
+    project = EngineeringProject.where(id: project_id).first
+
+    failed = []
+    stats.each_with_index do |stat, idx|
+      if idx == 0
+        failed << stat.values
+      else
+        begin
+          if project.present?
+            staff = EngineeringStaff.where(identity_card: stat[:identity_card]).first
+            raise "找不到身份证号，请确认员工出现在某个客户的提供人员中" if staff.nil?
+            staff.projects << project
+          else
+            staff = collection.create!(stat)
+          end
+
+        rescue => e
+          failed << (stat.values << e.message)
+        end
+      end
+    end
+
+    if failed.count > 1
+      # generate new xls file
+
+      filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
+      filepath = Pathname("tmp/#{filename}.#{Time.stamp}.xlsx")
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet do |sht|
+          failed.each{|stat| sht.add_row stat}
+        end
+        p.serialize(filepath.to_s)
+      end
+      send_file filepath
+    else
+      redirect_to send("#{collection.name.underscore.pluralize}_path"), notice: "成功导入 #{stats.count-1} 条记录"
+    end
+
   end
 
   controller do
