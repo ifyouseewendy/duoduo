@@ -63,6 +63,7 @@ ActiveAdmin.register EngineeringProject do
       ul do
         li( link_to "查看", engineering_project_engineering_salary_tables_path(obj), target: '_blank' )
         li( link_to "自动生成", auto_generate_salary_table_engineering_project_path(obj), target: '_blank' )
+        li( link_to "导入", '#', target: "/engineering_salary_tables/import_new?project_id=#{obj.id}" )
       end
     end
 
