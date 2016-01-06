@@ -1,13 +1,14 @@
+<% keys = params.reject{|k| %i(controller action order).include?(k.to_sym)} %>
 <%= semantic_form_for collection.new, url: {action: :import_do}, html: {multipart: true} do |f| %>
   <%= f.inputs "说明", class: 'inputs import_guide' do %>
     <li>1. 上传文件需为 xls(x) 格式</li>
-    <li>2. 请参考 <a href=<%= "#{request.path.split('/')[0..-2].push('import_demo').join('/')}" %>>示例文件</a> 中的字段顺序</li>
+    <li>2. 请参考 <a href=<%= request.path.split('/')[0..-2].push('import_demo').join('/') + '?' + keys.map{|k,v| "#{k}=#{v}"}.join('&') %>>示例文件</a> 中的字段顺序</li>
     <li>3. 导入失败的情况，系统会将失败条目以及说明返回，请查看并参照说明进行修改，重新导入。例如，导入三个条目 A,B,C。条目 A 和 C 数据正确，成功导入。条目 B 因为身份证号因为在系统中已存在，无法导入。此时系统会自动下载一份文件 F，包含条目 B 的内容，以及在最后一列附上导入失败的原因。请参照失败原因修改文件 F 的内容，并重新上传，直到成功导入。</li>
   <% end %>
 
   <%= f.inputs do %>
     <%= f.input :file, as: :file, label: t('active_admin.import.file') %>
-    <% params.reject{|k| %i(controller action order).include?(k.to_sym)}.each do |k,v| %>
+    <% keys.each do |k,v| %>
       <%= f.hidden_field k, value: v %>
     <% end %>
   <% end %>
