@@ -23,10 +23,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
       item = self.new(salary_table: table, staff: staff)
       item.salary_in_fact =  salary_in_fact
 
-      project = item.salary_table.project
-
-      dates = table.name.split('~').map(&:strip)
-      date = dates.count == 2 ? dates[0] : project.project_start_date
+      date = table.start_date
 
       item.social_insurance = EngineeringCompanySocialInsuranceAmount.query_amount(date: date)
       item.medical_insurance = EngineeringCompanyMedicalInsuranceAmount.query_amount(date: date)

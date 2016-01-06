@@ -24,10 +24,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
 
       item.salary_deserve     = salary_deserve
 
-      project = item.salary_table.project
-
-      dates = table.name.split('~').map(&:strip)
-      date = dates.count == 2 ? dates[0] : project.project_start_date
+      date = table.start_date
 
       item.social_insurance = EngineeringCompanySocialInsuranceAmount.query_amount(date: date)
       item.medical_insurance = EngineeringCompanyMedicalInsuranceAmount.query_amount(date: date)
