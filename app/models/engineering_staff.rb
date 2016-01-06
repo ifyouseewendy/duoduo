@@ -10,8 +10,8 @@ class EngineeringStaff < ActiveRecord::Base
   #   Remember to check test/models/engineering_staff_test.rb:21
   has_and_belongs_to_many :projects, \
     class_name: EngineeringProject, \
-    join_table: 'engineering_projects_staffs'
-    #, before_add: :check_schedule
+    join_table: 'engineering_projects_staffs',
+    before_add: :check_schedule
 
   has_many :engineering_normal_salary_items
   has_many :engineering_normal_with_tax_salary_items
