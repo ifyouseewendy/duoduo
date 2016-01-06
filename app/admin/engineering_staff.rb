@@ -321,6 +321,7 @@ ActiveAdmin.register EngineeringStaff do
             raise "找不到身份证号，请确认员工出现在某个客户的提供人员中" if staff.nil?
             staff.projects << project
           else
+            stat[:engineering_customer_id] = EngineeringCustomer.where(nest_index: stat[:engineering_customer_id]).first.try(:id)
             staff = collection.create!(stat)
           end
 
