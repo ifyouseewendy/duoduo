@@ -4,11 +4,9 @@ one:
   id: 1
   name: MyText
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
 
@@ -16,11 +14,9 @@ two:
   id: 2
   name: MyText
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
 
@@ -28,11 +24,9 @@ three:
   id: 3
   name: MyText
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
 
@@ -40,11 +34,9 @@ four:
   id: 4
   name: MyText
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
 
@@ -52,11 +44,9 @@ five:
   id: 5
   name: MyText
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
 
@@ -64,11 +54,9 @@ six:
   id: 6
   name: MyText
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
 
@@ -76,11 +64,9 @@ seven:
   id: 7
   name: seven
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
 
@@ -88,11 +74,9 @@ eight:
   id: 8
   name: eight
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
 
@@ -100,10 +84,8 @@ nine:
   id: 9
   name: nine
   identity_card: MyText
-  birth: 2015-08-28
+  birth: 1970-01-01
   age: 1
   gender: 1
-  nation: MyText
-  address: MyText
   remark: MyText
   engineering_customer_id: 1
