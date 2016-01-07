@@ -135,6 +135,15 @@ class EngineeringProject < ActiveRecord::Base
         range += "#{day} 天" if day > 0
         range
       }.call
+
+      if corporation.present? && corporation.contract_start_date && corporation.contract_end_date
+        # if self.project_start_date < corporation.contract_start_date
+        #   errors.add(:project_start_date, "开始日期早于合作单位当前大协议开始日期")
+        if self.project_end_date > corporation.contract_end_date
+          errors.add(:project_end_date, "晚于合作单位当前大协议结束日期 #{corporation.contract_end_date}")
+          return false
+        end
+      end
     end
 
     if (changed & ['project_amount', 'admin_amount']).present?
