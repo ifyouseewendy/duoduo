@@ -191,25 +191,25 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   end
 
   collection_action :create, method: :post do
-    attrs = params.require(:engineering_normal_with_tax_salary_item).permit( EngineeringNormalSalaryItem.ordered_columns )
+    attrs = params.require(:engineering_normal_salary_item).permit( EngineeringNormalSalaryItem.ordered_columns )
 
     begin
       obj = EngineeringNormalSalaryItem.create! attrs
-      redirect_to "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.engineering_salary_table_id}&commit=过滤", notice: "成功创建工资条<#{obj.staff.name}>"
+      redirect_to "/engineering_normal_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.engineering_salary_table_id}&commit=过滤", notice: "成功创建工资条<#{obj.staff.name}>"
     rescue => e
-      redirect_to "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{attrs[:engineering_salary_table_id]}&commit=过滤", alert: "创建失败，#{e.message}"
+      redirect_to "/engineering_normal_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{attrs[:engineering_salary_table_id]}&commit=过滤", alert: "创建失败，#{e.message}"
     end
   end
 
   member_action :update, method: :post do
-    attrs = params.require(:engineering_normal_with_tax_salary_item).permit( EngineeringNormalSalaryItem.ordered_columns )
+    attrs = params.require(:engineering_normal_salary_item).permit( EngineeringNormalSalaryItem.ordered_columns )
 
     begin
       obj = EngineeringNormalSalaryItem.find(params[:id])
       obj.update! attrs
-      redirect_to "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{attrs[:engineering_salary_table_id]}&commit=过滤", notice: "成功更新工资条<#{obj.staff.name}>"
+      redirect_to "/engineering_normal_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{attrs[:engineering_salary_table_id]}&commit=过滤", notice: "成功更新工资条<#{obj.staff.name}>"
     rescue => e
-      redirect_to "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{attrs[:engineering_salary_table_id]}&commit=过滤", alert: "更新失败，#{e.message}"
+      redirect_to "/engineering_normal_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{attrs[:engineering_salary_table_id]}&commit=过滤", alert: "更新失败，#{e.message}"
     end
   end
 
@@ -217,9 +217,9 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
     begin
       obj = EngineeringNormalSalaryItem.find(params[:id])
       obj.destroy
-      redirect_to "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.engineering_salary_table_id}&commit=过滤", notice: "成功删除工资条<#{obj.staff.name}>"
+      redirect_to "/engineering_normal_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.engineering_salary_table_id}&commit=过滤", notice: "成功删除工资条<#{obj.staff.name}>"
     rescue => e
-      redirect_to "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.engineering_salary_table_id}&commit=过滤", alert: "删除失败，#{e.message}"
+      redirect_to "/engineering_normal_salary_items?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.engineering_salary_table_id}&commit=过滤", alert: "删除失败，#{e.message}"
     end
   end
 
