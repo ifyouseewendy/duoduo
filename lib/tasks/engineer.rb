@@ -966,6 +966,8 @@ class Engineer < DuoduoCli
 
           items[id.to_i] = item
         end
+
+        st.validate_amount
       end
     end
 
@@ -1043,6 +1045,7 @@ class Engineer < DuoduoCli
 
     def seed_engineering_company_social_insurance_amounts
       puts "==> Preparing EngineeringCompanySocialInsuranceAmount"
+      ::EngineeringCompanySocialInsuranceAmount.destroy_all
 
       dates = %w(2000-01-01 2014-01-01 2014-07-01 2015-01-01)
       amounts = [0, 200, 300, 407]
@@ -1060,6 +1063,7 @@ class Engineer < DuoduoCli
 
     def seed_engineering_company_medical_insurance_amounts
       puts "==> Preparing EngineeringCompanyMedicalInsuranceAmount"
+      ::EngineeringCompanyMedicalInsuranceAmount.destroy_all
 
       dates = %w(2000-01-01 2014-01-01 2014-07-01 2015-01-01)
       amounts = [0, 100, 200, 249]

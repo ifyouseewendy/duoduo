@@ -5,4 +5,7 @@ class EngineeringNormalWithTaxSalaryTable < EngineeringSalaryTable
     inverse_of: :salary_table,
     dependent: :destroy
 
+  def validate_amount
+    self.update_attribute(:amount, self.salary_items.map(&:total_amount).map(&:to_f).sum.round(2))
+  end
 end
