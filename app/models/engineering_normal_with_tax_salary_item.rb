@@ -13,6 +13,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
   validates_uniqueness_of :staff, scope: :salary_table
 
   before_save :revise_fields
+  after_save :validate_salary_table
 
   class << self
     def policy_class
@@ -112,6 +113,12 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       self.total_amount     = self.salary_deserve + self.total_insurance
       self.tax              = IndividualIncomeTax.calculate(salary: self.total_amount) unless (changed & ['tax']).present?
       self.salary_in_fact   = self.total_amount - self.tax
+    end
+  end
+
+  def validate_salary_table
+    if (changed & ['total_amount']).present?
+      self.salary_table.validate_amount
     end
   end
 end
