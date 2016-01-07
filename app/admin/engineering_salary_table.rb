@@ -14,6 +14,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
     column :start_date
     column :end_date
+    column :amount
     column :project, sortable: :engineering_project_id do |obj|
       project = obj.project
       link_to project.name, "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤"
@@ -86,9 +87,10 @@ ActiveAdmin.register EngineeringSalaryTable do
       if request.url.split('/')[-1] == 'new'
         f.input :type, as: :radio, collection: ->{ EngineeringSalaryTable.new_record_types.map{|k| [k.model_name.human, k.to_s]} }.call
       end
+      f.input :project, collection: ->{ EngineeringProject.as_filter }.call
       f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
       f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'
-      f.input :project, collection: ->{ EngineeringProject.as_filter }.call
+      f.input :amount, as: :number
       if resource.type == 'EngineeringBigTableSalaryTable'
         f.input :url, as: :string
       end
@@ -105,6 +107,9 @@ ActiveAdmin.register EngineeringSalaryTable do
       row :project do |obj|
         link_to obj.project.name, engineering_project_path(obj.project)
       end
+      row :start_date
+      row :end_date
+      row :amount
       row :type do |obj|
         obj.model_name.human
       end
