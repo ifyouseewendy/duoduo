@@ -63,7 +63,7 @@ ActiveAdmin.register EngineeringProject do
       ul do
         li( link_to "查看", engineering_project_engineering_salary_tables_path(obj), target: '_blank' )
         li( link_to "自动生成", auto_generate_salary_table_engineering_project_path(obj), target: '_blank' )
-        li( link_to "导入", '#', target: "/engineering_salary_tables/import_new?project_id=#{obj.id}" )
+        li( link_to "导入", "/engineering_salary_tables/import_new?project_id=#{obj.id}", target: '_blank' )
       end
     end
 
@@ -103,9 +103,9 @@ ActiveAdmin.register EngineeringProject do
     tabs do
       tab "基本信息" do
         f.inputs do
-          f.input :nest_index, as: :number
           f.input :name, as: :string
           f.input :customer, as: :select, collection: ->{ EngineeringCustomer.as_option }.call
+          f.input :nest_index, as: :number, hint: '选择客户后会自动分配编号'
           f.input :corporation
           f.input :sub_company, as: :select, collection: -> { SubCompany.hr }.call
           f.input :status, as: :radio, collection: ->{ EngineeringProject.statuses_option }.call
