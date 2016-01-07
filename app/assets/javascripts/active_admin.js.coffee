@@ -132,10 +132,10 @@ $(document).on 'ready', ->
     staff_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
     $.getJSON "/engineering_projects/query_staff?staff_id=#{staff_id}", (data) =>
-      columns = {}
+      columns = []
       names = []
       $.each data, (idx, ele) ->
-        columns[ele['id']] = 'checkbox'
+        columns.push([ele['id'], 'checkbox'])
         names.push( ele['name'] )
 
       ActiveAdmin.modal_dialog_check_list '项目列表', columns, names,
@@ -192,10 +192,10 @@ $(document).on 'ready', ->
     project_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
     $.getJSON "/engineering_staffs/query_project?project_id=#{project_id}", (data) =>
-      columns = {}
+      columns = []
       names = []
       $.each data, (idx, ele) ->
-        columns[ele['id']] = 'checkbox'
+        columns.push([ele['id'], 'checkbox'])
         names.push( ele['name'] )
 
       ActiveAdmin.modal_dialog_check_list '员工列表', columns, names,
@@ -540,7 +540,11 @@ ActiveAdmin.modal_dialog_check_list = (message, inputs, display_names, callback)
   """
 
   idx = 0
-  for name, type of inputs
+  $.each inputs, (id, column) ->
+    name = column[0]
+    type = column[1]
+    console.log(name)
+    console.log(type)
     if /^(datepicker|checkbox|text)$/.test type
       wrapper = 'input'
     else
