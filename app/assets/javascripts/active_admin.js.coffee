@@ -210,6 +210,23 @@ $(document).on 'ready', ->
               alert( data['message'] )
               location.reload()
 
+      $('.engineering_projects .unselect_all').on 'click', (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+
+        $.each $(this).closest('ul').find('li'), (idx, ele) ->
+          if idx > 0
+            $(ele).find('input').prop('checked', false)
+
+      $('.engineering_projects .select_all').on 'click', (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+
+        $.each $(this).closest('ul').find('li'), (idx, ele) ->
+          if idx > 0
+            $(ele).find('input').prop('checked', true)
+
+
   # Engineering Project, generate salary table link
   $('.generate_salary_table_link').on 'click', (e) ->
     e.stopPropagation()
@@ -518,6 +535,10 @@ ActiveAdmin.modal_dialog_multiple_select = (message, inputs, display_names, mult
 
 ActiveAdmin.modal_dialog_check_list = (message, inputs, display_names, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
+  html += """
+  <li><a href='#' class='select_all'>全选</a> <a href='#' class='unselect_all'>取消全选</a></li>
+  """
+
   idx = 0
   for name, type of inputs
     if /^(datepicker|checkbox|text)$/.test type
