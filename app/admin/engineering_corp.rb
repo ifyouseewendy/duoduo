@@ -3,7 +3,7 @@ ActiveAdmin.register EngineeringCorp do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 2
 
-  index do
+  index row_class: ->elem { 'due_date' if elem.due? } do
     selectable_column
     column :name
     column :contract_start_date

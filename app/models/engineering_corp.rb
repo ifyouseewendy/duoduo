@@ -76,6 +76,12 @@ class EngineeringCorp < ActiveRecord::Base
     contract.end_date
   end
 
+  def due?
+    return false if contract_end_date.nil?
+
+    Date.today + 1.month >= contract_end_date
+  end
+
   ransacker :sub_company, formatter: ->(qid) {
     sub_company = SubCompany.find(qid)
     sub_company.projects.pluck(:engineering_corp_id).compact.uniq
