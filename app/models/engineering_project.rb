@@ -26,7 +26,7 @@ class EngineeringProject < ActiveRecord::Base
       .where("engineering_projects_staffs.engineering_staff_id = ?", staff_id)
   }
 
-  validates_uniqueness_of :nest_index, scope: :customer
+  # validates_uniqueness_of :nest_index, scope: :customer
 
   class << self
     def policy_class
@@ -141,7 +141,7 @@ class EngineeringProject < ActiveRecord::Base
         #   errors.add(:project_start_date, "开始日期早于合作单位当前大协议开始日期")
         if self.project_end_date > corporation.contract_end_date
           errors.add(:project_end_date, "晚于合作单位当前大协议结束日期 #{corporation.contract_end_date}")
-          return false
+          # return false
         end
       end
     end

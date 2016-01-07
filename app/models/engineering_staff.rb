@@ -10,8 +10,8 @@ class EngineeringStaff < ActiveRecord::Base
   #   Remember to check test/models/engineering_staff_test.rb:21
   has_and_belongs_to_many :projects, \
     class_name: EngineeringProject, \
-    join_table: 'engineering_projects_staffs',
-    before_add: :check_schedule
+    join_table: 'engineering_projects_staffs'
+    # before_add: :check_schedule
 
   has_many :engineering_normal_salary_items
   has_many :engineering_normal_with_tax_salary_items
@@ -160,11 +160,11 @@ class EngineeringStaff < ActiveRecord::Base
         self.birth = Date.parse(id_card[6,8])
         if self.birth + 18.years > Date.today
           errors.add(:birth, "员工未满十八周岁")
-          return false
+          # return false
         end
       rescue => _
         errors.add(:birth, "无法通过身份证号获取生日信息，请检查身份证号：#{id_card}")
-        return false
+        # return false
       end
     end
     if (changed & ['name']).present?
