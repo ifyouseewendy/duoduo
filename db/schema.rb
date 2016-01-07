@@ -312,12 +312,12 @@ ActiveRecord::Schema.define(version: 20160106131219) do
     t.text     "name"
     t.text     "type"
     t.text     "remark"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.integer  "engineering_project_id"
     t.date     "start_date"
     t.date     "end_date"
-    t.decimal  "amount",                 precision: 8, scale: 2
+    t.decimal  "amount",                 precision: 12, scale: 2
   end
 
   add_index "engineering_salary_tables", ["engineering_project_id"], name: "index_engineering_salary_tables_on_engineering_project_id", using: :btree
