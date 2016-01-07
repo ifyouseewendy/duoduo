@@ -79,6 +79,13 @@ $(document).on 'ready', ->
 
       list.append(html)
 
+  # New project page, auto set nest_index when select customer
+  $('#new_engineering_project #engineering_project_engineering_customer_id').on 'change', ->
+    option = $(this).children(":selected")
+    index = option.data('project-index')
+    if index
+      $('#new_engineering_project #engineering_project_nest_index').val(index)
+
   # Expand index table action width
   $('.expand_table_action_width').closest('.table_actions').css('width', '250px')
   $('.expand_table_action_width_large').closest('.table_actions').css('width', '350px')

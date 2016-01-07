@@ -68,7 +68,9 @@ class EngineeringCustomer < ActiveRecord::Base
     end
 
     def as_option
-      pluck(:nest_index, :name, :id).map{|ar| [ar[0..1].join('、'), ar[-1]]}
+      self.all.map do |ec|
+        [ec.display_name, ec.id, {'data-project-index': ec.available_project_nest_index}]
+      end
     end
   end
 
@@ -117,6 +119,10 @@ class EngineeringCustomer < ActiveRecord::Base
   end
   def engineering_staffs
     staffs
+  end
+
+  def available_project_nest_index
+    ( self.projects.last.try(:nest_index) || 0 ) + 1
   end
 
 end
