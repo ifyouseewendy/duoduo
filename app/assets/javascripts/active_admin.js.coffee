@@ -80,6 +80,10 @@ $(document).on 'ready', ->
       list.append(html)
 
   # New project page, auto set nest_index when select customer
+  new_project_index = $('#new_engineering_project #engineering_project_engineering_customer_id option[selected=selected]').data('project-index')
+  if new_project_index
+    $('#new_engineering_project #engineering_project_nest_index').val(new_project_index)
+
   $('#new_engineering_project #engineering_project_engineering_customer_id').on 'change', ->
     option = $(this).children(":selected")
     index = option.data('project-index')
