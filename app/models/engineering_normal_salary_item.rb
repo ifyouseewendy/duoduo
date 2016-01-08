@@ -99,6 +99,17 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
               end
               sheet.add_row stats
           end
+
+          stats = columns.reduce([]) do |ar, col|
+            if sum_fields.include?(col)
+              ar << collection.sum(col)
+            else
+              ar << nil
+            end
+          end
+
+          stats[0] = '合计'
+          sheet.add_row stats
         end
         p.serialize(filepath.to_s)
       end
