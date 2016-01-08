@@ -215,3 +215,9 @@ body.engineering_customers table.index_table thead tr {
     display: none;
   }
 }
+
+.index_table {
+  tfoot {
+    background-color: rgba(34, 112, 255, 0.18);
+  }
+}
