@@ -42,6 +42,10 @@ class EngineeringProject < ActiveRecord::Base
       [:nest_index] + (names - [:nest_index])
     end
 
+    def sum_fields
+      [:project_amount, :admin_amount, :total_amount]
+    end
+
     def as_filter
       self.includes(:customer).map do |ep|
         ["#{ep.customer.display_name} - #{ep.display_name}", ep.id]
@@ -364,6 +368,11 @@ class EngineeringProject < ActiveRecord::Base
     income_items.map(&:amount).map(&:to_s)
   end
 
+  def validate_income_amount
+    sum = income_amount.map(&:to_f).sum.round(2)
+    self.update_attribute(:income_amount, sum)
+  end
+
   def outcome_date
     outcome_items.map(&:date).map(&:to_s)
   end
@@ -374,6 +383,11 @@ class EngineeringProject < ActiveRecord::Base
 
   def outcome_amount
     outcome_items.map(&:amount).map(&:to_s)
+  end
+
+  def validate_outcome_amount
+    sum = outcome_amount.map(&:to_f).sum.round(2)
+    self.update_attribute(:outcome_amount, sum)
   end
 
   def generate_contract_file(role:, outcome_item_id:, content: {})
@@ -487,4 +501,5 @@ class EngineeringProject < ActiveRecord::Base
   def engineering_salary_tables
     salary_tables
   end
+
 end

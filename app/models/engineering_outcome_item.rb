@@ -7,6 +7,8 @@ class EngineeringOutcomeItem < ActiveRecord::Base
 
   default_scope { order('created_at DESC') }
 
+  after_save :revise_fields
+
   class << self
     def policy_class
       EngineeringPolicy
@@ -30,5 +32,11 @@ class EngineeringOutcomeItem < ActiveRecord::Base
     res = [avg]*count
     res[0] += (mod + fraction).round(2)
     res
+  end
+
+  def revise_fields
+    if (changed & ['amount']).present?
+      project.validate_outcome_amount
+    end
   end
 end
