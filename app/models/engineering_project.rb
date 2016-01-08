@@ -485,14 +485,14 @@ class EngineeringProject < ActiveRecord::Base
     ret
   end
 
-  ransacker :sub_company, formatter: ->(qid) {
-    # ids = User.search_in_all_translated(search).map(&:id)
-    # ids = ids.any? ? ids : nil
-    sub_company = SubCompany.find(qid)
-    sub_company.customers.select(:id).flat_map{|ec| ec.projects.pluck(:id)}
-  } do |parent|
-      parent.table[:id]
-  end
+  # ransacker :sub_company, formatter: ->(qid) {
+  #   # ids = User.search_in_all_translated(search).map(&:id)
+  #   # ids = ids.any? ? ids : nil
+  #   sub_company = SubCompany.find(qid)
+  #   sub_company.customers.select(:id).flat_map{|ec| ec.projects.pluck(:id)}
+  # } do |parent|
+  #     parent.table[:id]
+  # end
 
   def display_name
     [nest_index, name].join('、')
