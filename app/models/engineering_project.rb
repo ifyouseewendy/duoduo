@@ -17,6 +17,7 @@ class EngineeringProject < ActiveRecord::Base
   accepts_nested_attributes_for :outcome_items, allow_destroy: true
 
   before_save :revise_fields
+  before_create :generate_outcome_items
 
   enum status: [:active, :archive]
 
@@ -515,6 +516,24 @@ class EngineeringProject < ActiveRecord::Base
 
   def engineering_salary_tables
     salary_tables
+  end
+
+  def generate_outcome_items
+    last_project = customer.projects.last
+
+    return if last_project.nil?
+
+    if last_project.outcome_items.count == 1
+      oi = last_project.outcome_items.first
+
+      self.outcome_items.new(
+        amount: self.project_amount,
+        persons: oi.persons,
+        bank: oi.bank,
+        address: oi.address,
+        account: oi.account
+      )
+    end
   end
 
 end
