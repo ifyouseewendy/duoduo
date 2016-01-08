@@ -46,6 +46,10 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       end
     end
 
+    def sum_fields
+      [:salary_deserve, :social_insurance, :medical_insurance, :total_insurance, :total_amount, :tax, :salary_in_fact]
+    end
+
     def batch_form_fields
       hash = {}
       fields = [:salary_deserve, :social_insurance, :medical_insurance, :tax]
