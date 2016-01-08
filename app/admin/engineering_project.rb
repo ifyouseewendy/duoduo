@@ -13,7 +13,7 @@ ActiveAdmin.register EngineeringProject do
     record.active
   end
 
-  index do
+  index footer_fields: (@resource.sum_fields+[:income_amount, :outcome_amount]) do
     selectable_column
 
     column :nest_index
@@ -37,7 +37,9 @@ ActiveAdmin.register EngineeringProject do
     end
     (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name, :status]).each do |field|
       if resource_class.nest_fields.include? field
-        column field do |obj|
+        opt = {}
+        opt = {footer: ->(data){ data[field]}} if [:outcome_amount, :income_amount].include?(field)
+        column field, opt do |obj|
           data = obj.send(field)
           if data.count > 1
             options = data.zip( data.count.downto(1) ).reduce([]){|ar, (e,i)| ar << ["第#{i}批 - #{e}", i] }
@@ -46,6 +48,8 @@ ActiveAdmin.register EngineeringProject do
             data[0]
           end
         end
+      elsif resource_class.sum_fields.include? field
+        column field, footer: ->(data){ data[field] }
       else
         column field
       end
