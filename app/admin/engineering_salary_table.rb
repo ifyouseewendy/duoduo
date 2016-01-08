@@ -5,7 +5,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 5
 
-  index do
+  index footer_fields: @resource.sum_fields do
     selectable_column
 
     column :name
@@ -14,7 +14,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
     column :start_date
     column :end_date
-    column :amount
+    column :amount, footer: ->(data){ data[:amount] }
     column :project, sortable: :engineering_project_id do |obj|
       project = obj.project
       link_to project.name, "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤"

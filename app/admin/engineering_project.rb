@@ -65,7 +65,7 @@ ActiveAdmin.register EngineeringProject do
     end
     column :salary_table_detail, sortable: :updated_at do |obj|
       ul do
-        li( link_to "查看", engineering_project_engineering_salary_tables_path(obj), target: '_blank' )
+        li( link_to "查看", "/engineering_salary_tables?utf8=✓&q%5Bproject_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
         li( link_to "自动生成", auto_generate_salary_table_engineering_project_path(obj), target: '_blank' )
         li( link_to "导入", "/engineering_salary_tables/import_new?project_id=#{obj.id}", target: '_blank' )
       end

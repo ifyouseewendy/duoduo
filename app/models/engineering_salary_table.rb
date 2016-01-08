@@ -40,6 +40,10 @@ class EngineeringSalaryTable < ActiveRecord::Base
       names
     end
 
+    def sum_fields
+      [:amount]
+    end
+
   end
 
   def audition_status
