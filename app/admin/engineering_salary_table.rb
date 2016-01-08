@@ -8,7 +8,7 @@ ActiveAdmin.register EngineeringSalaryTable do
   index footer_fields: @resource.sum_fields do
     selectable_column
 
-    column :name
+    column :name, footer: ->(data){ '合计' }
     column :type, sortable: :updated_at do |obj|
       obj.model_name.human.gsub('工资表', '')
     end

@@ -25,7 +25,7 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
   index footer_fields: @resource.sum_fields do
     selectable_column
 
-    column :name, sortable: :updated_at do |obj|
+    column :name, sortable: :updated_at, footer: ->(data){ '合计' } do |obj|
       staff = obj.staff
       link_to staff.name, engineering_staff_path(staff)
     end

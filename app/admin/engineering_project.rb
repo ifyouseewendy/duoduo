@@ -17,7 +17,7 @@ ActiveAdmin.register EngineeringProject do
     selectable_column
 
     column :nest_index
-    column :name
+    column :name, footer: ->(data){ '合计' }
     column :customer, sortable: :id do |obj|
       link_to obj.customer.display_name, "/engineering_customers?utf8=✓&q%5Bnest_index_equals%5D=#{obj.customer.nest_index}&commit=过滤"
     end
