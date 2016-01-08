@@ -22,15 +22,15 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
     end
   end
 
-  index do
+  index footer_fields: @resource.sum_fields do
     selectable_column
 
     column :name, sortable: :updated_at do |obj|
       staff = obj.staff
       link_to staff.name, engineering_staff_path(staff)
     end
-    (resource_class.ordered_columns(without_foreign_keys: true) - [:id]).each do |field|
-      column field
+    resource_class.sum_fields.each do |field|
+      column field, footer: ->(data){ data[field] }
     end
 
     column :seal_index, sortable: 'engineering_staffs.seal_index' do |obj|

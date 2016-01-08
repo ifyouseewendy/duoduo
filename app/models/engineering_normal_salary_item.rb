@@ -47,6 +47,10 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
       end
     end
 
+    def sum_fields
+      [:salary_deserve, :social_insurance, :medical_insurance, :total_insurance, :salary_in_fact]
+    end
+
     def import_columns
       [:id, :name, :salary_deserve, :social_insurance, :medical_insurance, :total_insurance, :salary_in_fact]
     end
