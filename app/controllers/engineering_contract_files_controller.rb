@@ -22,7 +22,7 @@ class EngineeringContractFilesController < ApplicationController
       valid_keys = \
         case params[:role].to_sym
         when :normal
-          %i(corp_name name start_date end_date range need_count salary admin_rate)
+          %i(corp_name name start_date end_date range need_count admin_rate)
         when :proxy
           %i(corp_name amount bank account address persons)
         end
