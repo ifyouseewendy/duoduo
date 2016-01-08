@@ -76,7 +76,11 @@ class EngineeringProject < ActiveRecord::Base
       filepath = EXPORT_PATH.join filename
 
       collection = self.all
-      collection = collection.where(id: options[:selected]) if options[:selected].present?
+      if options[:selected].present?
+        collection = collection.where(id: options[:selected])
+      elsif options['customer_id_eq'].present?
+        collection = collection.where(engineering_customer_id: options['customer_id_eq'])
+      end
 
       columns = columns_based_on(options: options)
 
