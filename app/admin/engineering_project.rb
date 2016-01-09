@@ -59,8 +59,8 @@ ActiveAdmin.register EngineeringProject do
       ul do
         li( link_to "查看", "/engineering_staffs?utf8=✓&q%5Bprojects_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
         li( link_to "添加", "#", class: "add_staffs_link" )
-        li( link_to "删除", "#", class: "remove_staffs_link" )
         li( link_to "导入", "/engineering_staffs/import_new?project_id=#{obj.id}" )
+        li( link_to "删除", "#", class: "remove_staffs_link" )
       end
     end
     column :salary_table_detail, sortable: :updated_at do |obj|
