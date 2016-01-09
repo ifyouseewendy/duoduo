@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160109131022) do
+ActiveRecord::Schema.define(version: 20160109131439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,12 @@ ActiveRecord::Schema.define(version: 20160109131022) do
 
   add_index "big_contracts", ["engineering_corp_id"], name: "index_big_contracts_on_engineering_corp_id", using: :btree
   add_index "big_contracts", ["sub_company_id"], name: "index_big_contracts_on_sub_company_id", using: :btree
+
+  create_table "contract_files", force: :cascade do |t|
+    t.text     "contract"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "contract_templates", force: :cascade do |t|
     t.text     "contract"
