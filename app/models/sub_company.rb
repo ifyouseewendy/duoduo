@@ -3,7 +3,7 @@ class SubCompany < ActiveRecord::Base
   has_many :normal_corporations
   has_many :labor_contracts
   has_many :normal_staffs
-  has_many :contract_templates, dependent: :destroy
+  mount_uploader :busi_contract_template, ContractTemplateUploader
 
   # Engineer
   has_many :projects, class: EngineeringProject
@@ -37,17 +37,17 @@ class SubCompany < ActiveRecord::Base
     end
   end
 
-  def add_contract_template(filename)
-    self.contract_templates.create(contract: File.open(filename))
-  end
-
-  def add_file(filename, template: false)
-    if template
-      self.contract_templates.create!(contract: File.open(filename))
-    else
-      self.contract_files.create!(contract: File.open(filename))
-    end
-  end
+  # def add_contract_template(filename)
+  #   self.contract_templates.create(contract: File.open(filename))
+  # end
+  #
+  # def add_file(filename, template: false)
+  #   if template
+  #     self.contract_templates.create!(contract: File.open(filename))
+  #   else
+  #     self.contract_files.create!(contract: File.open(filename))
+  #   end
+  # end
 
   def customers
     ids = projects.pluck(:engineering_customer_id)
