@@ -98,8 +98,6 @@ ActiveAdmin.register EngineeringStaff do
       f.input :customer
       # f.input :projects, as: :select, collection: ->{ EngineeringProject.includes(:customer).map{|ep| ["#{ep.customer.display_name} - #{ep.display_name}", ep.id] } }.call
       f.input :gender, as: :radio, collection: ->{ EngineeringStaff.genders_option }.call
-      f.input :nation, as: :string
-      f.input :address, as: :string
       f.input :remark, as: :text
     end
 
