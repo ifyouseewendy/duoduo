@@ -12,9 +12,10 @@ ActiveAdmin.register Project do
   #     allow_archive: false,
   # )
 
-  menu \
-    parent: "开发相关",
-    priority: 2
+  menu false
+  # menu \
+  #   parent: "开发相关",
+  #   priority: 2
 
   sidebar "Project Details", only: [:show, :edit] do
     ul do

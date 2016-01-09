@@ -219,11 +219,11 @@ ActiveAdmin.setup do |config|
   #   end
   config.namespace false do |default|
     default.build_menu do |menu|
-      menu.add label: I18n.t("activerecord.models.engineering_business"), priority: 2
+      menu.add label: I18n.t("activerecord.models.engineering_business"), priority: 2 do |sub_menu|
+        sub_menu.add label: '说明文档', url: 'https://quip.com/IbzYA17FOjCJ', priority: 10, html_options: { target: :blank }
+      end
       menu.add label: I18n.t("activerecord.models.normal_business"), priority: 3
       menu.add label: I18n.t("activerecord.models.settings"), priority: 10
-      menu.add label: "开发相关", priority: 11
-      menu.add label: '需求文档', parent: "开发相关", priority: 1, url: 'https://quip.com/rljZAYw1rPLB', html_options: { target: :blank }
     end
 
     default.build_menu :utility_navigation do |menu|

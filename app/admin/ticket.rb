@@ -1,9 +1,10 @@
 ActiveAdmin.register Ticket do
   belongs_to :project, optional: true
 
-  menu \
-    parent: "开发相关",
-    priority: 3
+  menu false
+  # menu \
+  #   parent: "开发相关",
+  #   priority: 3
 
   include ImportSupport
 
