@@ -1,6 +1,6 @@
 class NormalCorporation < ActiveRecord::Base
   belongs_to :sub_company
-  has_many :contract_files, through: :sub_companies
+  has_many :contract_files, dependent: :destroy, as: :busi_contract
 
   has_many :labor_contracts
   has_many :normal_staffs

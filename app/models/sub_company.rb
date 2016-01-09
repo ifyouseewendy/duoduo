@@ -1,9 +1,9 @@
 class SubCompany < ActiveRecord::Base
   # Business
   has_many :normal_corporations
+  mount_uploader :busi_contract_template, ContractTemplateUploader
   has_many :labor_contracts
   has_many :normal_staffs
-  mount_uploader :busi_contract_template, ContractTemplateUploader
 
   # Engineer
   has_many :projects, class: EngineeringProject
