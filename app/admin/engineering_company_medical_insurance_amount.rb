@@ -1,7 +1,7 @@
 ActiveAdmin.register EngineeringCompanyMedicalInsuranceAmount do
   menu \
-    parent: I18n.t("activerecord.models.settings"),
-    priority: 5
+    parent: I18n.t("activerecord.models.engineering_business"),
+    priority: 9
 
   config.batch_actions = false
   config.clear_action_items!
@@ -26,6 +26,7 @@ ActiveAdmin.register EngineeringCompanyMedicalInsuranceAmount do
   sidebar "说明" do
     ul do
       li span "本页条目用于计算工程工资表中的'医保医疗工伤生育保险单位7.9%'，根据工程项目起止时间到此表中获取应缴保险金额"
+      li span "结束日期可为空，用来标识没有结束日期，一直有效"
     end
   end
 end
