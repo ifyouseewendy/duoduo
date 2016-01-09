@@ -45,6 +45,11 @@ class BusinessSalary < DuoduoCli
       files = Array.wrap(path)
     end
 
+    $NULL_ID = 222222222222222222
+    (NormalStaff.count - 1298).downto(1).each do |num|
+      NormalStaff.where(identity_card: $NULL_ID + num - 1).first.destroy
+    end
+
     files.each do |f|
       logger.info "--> Processing #{f.basename}"
 
@@ -162,18 +167,33 @@ class BusinessSalary < DuoduoCli
         end
 
         stats = Hash[fields.zip(data)]
-        name = stats[:name]
+        staff_name = stats[:name].delete(' ')
         account = stats[:bank_account]
 
         item = table.salary_items.new \
           stats.reject{|k| %i(id bank_account name).include? k}
 
-        # TODO
-        #
-        #   + Import NormalStaff first
-        #   + Confirm on account field when conflict with imported info
-        item.normal_staff = ( SalaryItem.find_staff(salary_table: table, name: name) \
-          rescue NormalStaff.create(normal_corporation: corporation, name: name, account: account, identity_card: SecureRandom.hex(9)) )
+        begin
+          staff = SalaryItem.find_staff(salary_table: table, name: staff_name)
+        rescue => e
+          logger.error "#{file.basename} ; #{name} ; #{e.message}"
+
+          staff = corporation.normal_staffs.create!(name: staff_name, identity_card: $NULL_ID , in_service: true)
+          $NULL_ID += 1
+          staff.labor_contracts.create!(
+            in_contract: true,
+            has_social_insurance: true,
+            has_medical_insurance: true,
+            social_insurance_base: 1861.15,
+            medical_insurance_base: 3102.0,
+            normal_corporation_id: corporation.id
+          )
+        end
+
+        staff.update_attribute(:account_bank, account) if staff.account_bank.nil? && account.present?
+
+        item.normal_staff = staff
+          # rescue NormalStaff.create(normal_corporation: corporation, name: name, account: account, identity_card: SecureRandom.hex(9)) )
 
         item.save!
 
