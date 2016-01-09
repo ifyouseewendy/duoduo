@@ -241,7 +241,6 @@ class BusinessStaff < DuoduoCli
             social_insurance_release_date: nil,
             medical_insurance_release_date: nil,
             remark: nil,
-            sub_company_id: sub_company.id,
             normal_corporation_id: normal_corporation_id,
             normal_staff_id: ns.id,
           }
@@ -386,7 +385,6 @@ class BusinessStaff < DuoduoCli
             social_insurance_release_date: parse_date(social_insurance_release_date),
             medical_insurance_release_date: parse_date(medical_insurance_release_date),
             remark: nil,
-            sub_company_id: sub_company.id,
             normal_corporation_id: normal_corporation_id,
             normal_staff_id: ns.id,
           }
@@ -517,7 +515,6 @@ class BusinessStaff < DuoduoCli
             social_insurance_release_date: nil,
             medical_insurance_release_date: nil,
             remark: nil,
-            sub_company_id: sub_company.id,
             normal_corporation_id: normal_corporation_id,
             normal_staff_id: ns.id,
           }
@@ -627,7 +624,6 @@ class BusinessStaff < DuoduoCli
             social_insurance_release_date: nil,
             medical_insurance_release_date: nil,
             remark: nil,
-            sub_company_id: sub_company.id,
             normal_corporation_id: normal_corporation_id,
             normal_staff_id: ns.id,
           }

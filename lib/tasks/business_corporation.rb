@@ -22,7 +22,6 @@ class BusinessCorporation < DuoduoCli
   def start
     load_rails
     clean_db(:business)
-    seed_sub_companies
     init_logger
 
     logger.info "[#{Time.now}] Import start"
