@@ -21,6 +21,7 @@ class BusinessSalary < DuoduoCli
   def start
     load_rails
     clean_db(:business_salary)
+    clean_logger
     init_logger
 
     logger.info "[#{Time.now}] Import start"
@@ -120,7 +121,7 @@ class BusinessSalary < DuoduoCli
       when :daka
         process_table_daka(name: name, sheet: sheet)
       else
-        logger.error "无法解析工资表类型：#{type}"
+        logger.error "#{file.basename} ; 无法解析工资表类型：#{type}"
       end
     end
 
@@ -151,7 +152,7 @@ class BusinessSalary < DuoduoCli
       items = []
 
       fields = sheet[header_row].compact.map do |col|
-        FIELD[col.delete(' ')].tap{|fd| logger.warn "无法判断的列名：#{col} from #{name}" if fd.blank? }
+        FIELD[col.delete(' ')].tap{|fd| logger.error "#{file.basename} ; #{name} ; 无法判断的列名：#{col}" if fd.blank? }
       end
 
       sheet[start_row..-1].each_with_index do |data, idx|
@@ -184,7 +185,7 @@ class BusinessSalary < DuoduoCli
         summary.each do |k, v|
           sum = items.map{|it| it.send(k).to_f }.sum.round(2)
           if sum != v.to_f.round(2)
-            logger.warn "合计金额不等，#{FIELD[k]}: #{sum} from #{name}"
+            logger.error "#{file.basename} ; #{name} ; 合计金额不等，#{FIELD[k]}: #{sum}"
           end
         end
       end
@@ -229,7 +230,7 @@ class BusinessSalary < DuoduoCli
       when /改/ then :gai
       when /打卡/ then :daka
       else
-        logger.error "无法根据工资表名称判断类型：#{name}"
+        logger.error "#{file.basename} ; 无法根据工资表名称判断类型：#{name}"
       end
     end
 
