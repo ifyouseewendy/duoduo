@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160106131219) do
+ActiveRecord::Schema.define(version: 20160109131022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,18 +89,6 @@ ActiveRecord::Schema.define(version: 20160106131219) do
 
   add_index "big_contracts", ["engineering_corp_id"], name: "index_big_contracts_on_engineering_corp_id", using: :btree
   add_index "big_contracts", ["sub_company_id"], name: "index_big_contracts_on_sub_company_id", using: :btree
-
-  create_table "contract_files", force: :cascade do |t|
-    t.integer  "sub_company_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.text     "contract"
-    t.integer  "role",                default: 0
-    t.integer  "engineering_corp_id"
-  end
-
-  add_index "contract_files", ["engineering_corp_id"], name: "index_contract_files_on_engineering_corp_id", using: :btree
-  add_index "contract_files", ["sub_company_id"], name: "index_contract_files_on_sub_company_id", using: :btree
 
   create_table "contract_templates", force: :cascade do |t|
     t.text     "contract"
@@ -703,8 +691,6 @@ ActiveRecord::Schema.define(version: 20160106131219) do
 
   add_foreign_key "big_contracts", "engineering_corps"
   add_foreign_key "big_contracts", "sub_companies"
-  add_foreign_key "contract_files", "engineering_corps"
-  add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "contract_templates", "sub_companies"
   add_foreign_key "engineering_big_table_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_big_table_salary_items", "engineering_staffs"
