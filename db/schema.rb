@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160109131439) do
+ActiveRecord::Schema.define(version: 20160109133058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,9 +92,13 @@ ActiveRecord::Schema.define(version: 20160109131439) do
 
   create_table "contract_files", force: :cascade do |t|
     t.text     "contract"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.integer  "busi_contract_id"
+    t.string   "busi_contract_type"
   end
+
+  add_index "contract_files", ["busi_contract_type", "busi_contract_id"], name: "idx_busi_contract_id_and_type", using: :btree
 
   create_table "contract_templates", force: :cascade do |t|
     t.text     "contract"
