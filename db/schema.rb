@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160110022405) do
+ActiveRecord::Schema.define(version: 20160110095138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -517,11 +517,11 @@ ActiveRecord::Schema.define(version: 20160110022405) do
     t.text     "telephone"
     t.money    "contract_amount",                   scale: 2
     t.integer  "admin_charge_type",                           default: 0
-    t.decimal  "admin_charge_amount", precision: 8, scale: 2
+    t.decimal  "admin_charge_amount", precision: 8, scale: 2, default: 0.0
     t.date     "expense_date"
     t.text     "remark"
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
     t.date     "contract_start_date"
     t.date     "contract_end_date"
     t.text     "full_name"
