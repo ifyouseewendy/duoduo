@@ -146,6 +146,10 @@ class BusinessCorporation < DuoduoCli
       special_full_names.each do |full_name|
         NormalCorporation.where(full_name: full_name, name: nil).first.delete
       end
+
+      NormalCorporation.where(name: nil).each do |nc|
+        nc.update_attribute(:name, nc.full_name)
+      end
     end
 
     def seed_internal_corporation
