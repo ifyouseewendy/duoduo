@@ -17,13 +17,13 @@ zh-CN:
   activerecord:
     models:
       corporation: "合作单位"
-      normal_corporation: "普通合作单位"
+      normal_corporation: "合作单位"
       normal_business: "业务"
       engineering_corporation: "工程合作单位"
       project: "测试项目"
       sub_company: "吉易子公司"
       staff: "员工信息"
-      normal_staff: "普通员工信息"
+      normal_staff: "员工信息"
       engineering_staff: "员工档案"
       salary_table: "普通工资表"
       salary_table_entrance: '工资表'
@@ -81,16 +81,16 @@ zh-CN:
         contract_amount: '合同金额'
         admin_charge_type: '管理费收取方式'
         admin_charge_types:
-          by_rate_on_salary: "每人固定比例（应发工资）"
-          by_rate_on_salary_and_company: "每人固定比例（应发工资+单位缴费）"
-          by_count: "每人固定金额"
+          by_rate_on_salary: "比例（应发）"
+          by_rate_on_salary_and_company: "比例（应发+单位缴费）"
+          by_count: "固定"
         admin_charge_amount: '管理费收取比例/金额'
         expense_date: '单位开支日期'
         stuff_count: '员工人数'
         stuff_has_insurance_count: '参保人数'
         remark: '备注'
-        sub_companies: '吉易子公司'
-        sub_companies_display: '吉易子公司'
+        sub_company: '吉易子公司'
+        sub_company_id: '吉易子公司'
         normal_staffs: '普通员工列表'
         salary_tables: '普通工资表'
         guard_salary_tables: '保安工资表'

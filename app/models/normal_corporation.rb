@@ -24,7 +24,7 @@ class NormalCorporation < ActiveRecord::Base
       names = column_names.map(&:to_sym)
 
       names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i() if without_foreign_keys
+      names -= %i(sub_company_id) if without_foreign_keys
 
       names
     end
@@ -83,18 +83,10 @@ class NormalCorporation < ActiveRecord::Base
         options[:columns].map(&:to_sym)
       else
         %i(id name) \
-          + %i(sub_companies_display stuff_count stuff_has_insurance_count) \
+          + %i(sub_company_id stuff_count stuff_has_insurance_count) \
           + (NormalCorporation.ordered_columns(without_foreign_keys: true) - %i(id name) )
       end
     end
-  end
-
-  def sub_companies_display
-    sub_company_names.join(' ')
-  end
-
-  def sub_company_names
-    sub_companies.map(&:name)
   end
 
   def admin_charge_type_i18n

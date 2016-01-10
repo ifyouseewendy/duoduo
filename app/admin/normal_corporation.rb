@@ -17,20 +17,17 @@ ActiveAdmin.register NormalCorporation do
     column :id
     column :name
 
-    columns = resource_class.ordered_columns(without_foreign_keys: true) - %i(id name)
-
-    column :sub_companies_display, sortable: :id
-
+    column :sub_company, sortable: :sub_company_id
     column :normal_staffs, sortable: :id do |obj|
-      link_to "普通员工列表", normal_corporation_normal_staffs_path(obj)
+      link_to "员工列表", normal_corporation_normal_staffs_path(obj)
     end
 
-    column :stuff_count, sortable: ->(obj){ obj.stuff_count }
-    column :stuff_has_insurance_count, sortable: ->(obj){ obj.stuff_has_insurance_count }
+    # column :stuff_count, sortable: ->(obj){ obj.stuff_count }
+    # column :stuff_has_insurance_count, sortable: ->(obj){ obj.stuff_has_insurance_count }
 
-    column :labor_contracts, sortable: :id do |obj|
-      link_to "劳务合同列表", "/labor_contracts?utf8=✓&q%5Bnormal_corporation_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
-    end
+    # column :labor_contracts, sortable: :id do |obj|
+    #   link_to "劳务合同列表", "/labor_contracts?utf8=✓&q%5Bnormal_corporation_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+    # end
 
     column :salary_tables, sortable: :id do |obj|
       href = link_to("普通工资表", normal_corporation_salary_tables_path(obj) )
@@ -41,6 +38,10 @@ ActiveAdmin.register NormalCorporation do
 
       href
     end
+
+    order_cols = %i(contract_amount contract_start_date contract_end_date remark updated_at created_at)
+    columns = resource_class.ordered_columns(without_foreign_keys: true)\
+      - order_cols + order_cols
 
     columns.map do |field|
       if field == :admin_charge_type
@@ -147,5 +148,11 @@ ActiveAdmin.register NormalCorporation do
 
     file = NormalCorporation.export_xlsx(options: options)
     send_file file, filename: file.basename
+  end
+
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:sub_company)
+    end
   end
 end

@@ -214,16 +214,22 @@ body.engineering_customers table.index_table {
 }
 
 #header {
-  #tabs > li:nth-child(3) { // 业务
-    display: none;
-  }
-  #tabs > li:nth-child(6) { // 开发相关
-    display: none;
-  }
 }
 
 .index_table {
   tfoot {
     background-color: rgba(34, 112, 255, 0.18);
+  }
+}
+
+.normal_corporations .index_table{
+  th.col-full_name {
+    min-width: 100px !important;
+  }
+  th.col-remark {
+    min-width: 200px !important;
+  }
+  th.col-address {
+    min-width: 100px !important;
   }
 }
