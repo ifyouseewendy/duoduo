@@ -1,0 +1,7 @@
+<%= form_for ContractFile.new, url: contract_files_path, class: 'form_tag' do |f| %>
+  <%= f.file_field :contract %>
+  <%= f.hidden_field :busi_contract_id, value: resource.id %>
+  <%= f.hidden_field :busi_contract_type, value: resource.class %>
+  <%= link_to "上传",  "#", :onclick=>"$(this).closest('form').submit()" %>
+<% end %>
+

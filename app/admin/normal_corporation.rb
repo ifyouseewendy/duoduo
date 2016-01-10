@@ -92,14 +92,8 @@ ActiveAdmin.register NormalCorporation do
   show do
     attributes_table do
       row :id
-      row :sub_company
-      row :normal_staffs do |obj|
-        link_to "员工列表", normal_corporation_normal_staffs_path(obj)
-      end
-      row :salary_tables do |obj|
-        link_to '#', '#'
-      end
       row :name
+      row :sub_company
       row :full_name
       row :license
       row :taxpayer_serial
@@ -124,14 +118,8 @@ ActiveAdmin.register NormalCorporation do
     end
 
     panel "业务代理合同" do
-      tabs do
-        resource.sub_companies.each do |comp|
-          tab comp.name do
-            # TODO need to refact
-            render partial: "shared/contract", locals: {sub_company: comp, corporation: resource}
-          end
-        end
-      end
+      render partial: "normal_corporations/contract_list", locals: {contract_files: resource.contract_files}
+      render partial: "normal_corporations/contract_upload", locals: {resource: resource}
     end
 
     active_admin_comments
@@ -139,8 +127,16 @@ ActiveAdmin.register NormalCorporation do
 
   sidebar '链接', only: [:show] do
     ul do
-      li link_to NormalStaff.model_name.human, normal_corporation_normal_staffs_path(normal_corporation)
-      li link_to SalaryTable.model_name.human, normal_corporation_salary_tables_path(normal_corporation)
+      li link_to "员工列表", normal_corporation_normal_staffs_path(normal_corporation)
+      if normal_corporation.salary_tables.count > 0
+        li link_to '普通工资表', normal_corporation_salary_tables_path(normal_corporation)
+      end
+      if normal_corporation.guard_salary_tables.count > 0
+        li link_to '保安工资表', normal_corporation_guard_salary_tables_path(normal_corporation)
+      end
+      if normal_corporation.non_full_day_salary_tables.count > 0
+        li link_to '保安工资表', normal_corporation_non_full_day_salary_tables_path(normal_corporation)
+      end
     end
   end
 
