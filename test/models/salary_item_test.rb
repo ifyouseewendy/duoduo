@@ -42,7 +42,7 @@ class SalaryItemTest < ActiveSupport::TestCase
 
     stats = {
       pension_margin_personal: 100,
-      insurance_pre_deduct_addition: 200
+      medical_scan_addition: 200
     }
 
     item.update_by(stats)
@@ -78,13 +78,13 @@ class SalaryItemTest < ActiveSupport::TestCase
     stats = {
       salary_deserve: 5000,
       pension_margin_personal: 100,
-      insurance_pre_deduct_addition: 200,
+      medical_scan_addition: 200,
       birth_company: 100,
       admin_amount: 200
     }
 
     item.update_by(stats)
-    assert_equal 216 + 300 + 45,    item.total_personal # add income tax
+    assert_equal 216 + 300 + 45,    item.total_personal.to_f # add income tax
     assert_equal 5000 - 561,        item.salary_in_fact
     assert_equal 200 + 100,         item.total_company
 

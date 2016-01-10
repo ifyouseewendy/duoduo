@@ -24,7 +24,6 @@ one:
   social_insurance_release_date: 2015-10-10
   medical_insurance_release_date: 2015-10-10
   remark: MyText
-  sub_company_id: 
   normal_corporation_id: 
   normal_staff: one
 
@@ -52,7 +51,6 @@ two:
   social_insurance_release_date: 2015-10-10
   medical_insurance_release_date: 2015-10-10
   remark: MyText
-  sub_company_id: 
   normal_corporation_id: 
   normal_staff: two
 
@@ -80,6 +78,5 @@ three:
   social_insurance_release_date: 2015-10-10
   medical_insurance_release_date: 2015-10-10
   remark: MyText
-  sub_company_id: 
   normal_corporation_id: 
   normal_staff: three
