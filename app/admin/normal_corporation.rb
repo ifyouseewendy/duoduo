@@ -16,7 +16,6 @@ ActiveAdmin.register NormalCorporation do
 
     column :id
     column :name
-
     column :sub_company, sortable: :sub_company_id
     column :normal_staffs, sortable: :id do |obj|
       link_to "员工列表", normal_corporation_normal_staffs_path(obj)
@@ -43,6 +42,9 @@ ActiveAdmin.register NormalCorporation do
       end
     end
 
+    column :status do |obj|
+      status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+    end
     column :admin_charge_type do |obj|
       obj.admin_charge_type_i18n
     end
@@ -54,6 +56,10 @@ ActiveAdmin.register NormalCorporation do
     actions
   end
 
+  filter :status, as: :check_boxes, collection: ->{ NormalCorporation.statuses_option }
+  filter :id
+  filter :name
+  filter :sub_company
   preserve_default_filters!
   remove_filter :contract_files
   remove_filter :normal_staffs
@@ -69,8 +75,9 @@ ActiveAdmin.register NormalCorporation do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :sub_company
       f.input :name, as: :string
+      f.input :sub_company
+      f.input :status, as: :radio, collection: ->{ NormalCorporation.statuses_option }.call
       f.input :full_name, as: :string
       f.input :license, as: :string
       f.input :taxpayer_serial, as: :string
@@ -98,6 +105,9 @@ ActiveAdmin.register NormalCorporation do
       row :id
       row :name
       row :sub_company
+      row :status do |obj|
+        status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+      end
       row :full_name
       row :license
       row :taxpayer_serial

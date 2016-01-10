@@ -18,6 +18,7 @@ class NormalCorporation < ActiveRecord::Base
   scope :updated_latest_10, ->{ order(updated_at: :desc).limit(10) }
 
   enum admin_charge_type: [:by_rate_on_salary, :by_rate_on_salary_and_company, :by_count]
+  enum status: [:active, :archive]
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
@@ -45,6 +46,10 @@ class NormalCorporation < ActiveRecord::Base
 
     def reference_option
       order(id: :asc).pluck(:name, :id)
+    end
+
+    def statuses_option
+      statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
     end
 
     def export_xlsx(options: {})
@@ -104,4 +109,9 @@ class NormalCorporation < ActiveRecord::Base
   def stuff_has_insurance_count
     normal_staffs.includes(:labor_contracts).select(&:has_insurance?).count
   end
+
+  def status_i18n
+    I18n.t("activerecord.attributes.#{self.class.name.underscore}.statuses.#{status}")
+  end
+
 end
