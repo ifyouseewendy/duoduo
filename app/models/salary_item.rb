@@ -2,6 +2,8 @@ class SalaryItem < ActiveRecord::Base
   belongs_to :salary_table
   belongs_to :normal_staff
 
+  enum role: ['normal', 'transfer']
+
   # Two entrances with callbacks implemented
   #
   #   + SalaryItem.create_by
