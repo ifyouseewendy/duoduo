@@ -47,9 +47,7 @@ class BusinessSalary < DuoduoCli
 
     $NULL_ID = 222222222222222222
     zheqi_staff.destroy
-    (NormalStaff.count - 1298).downto(1).each do |num|
-      NormalStaff.where(identity_card: $NULL_ID + num - 1).first.destroy
-    end
+    NormalStaff.where("identity_card like ?", '22222222222222%%%%').each(&:destroy)
 
     files.each do |f|
       logger.info "--> Processing #{f.basename}"
@@ -201,7 +199,7 @@ class BusinessSalary < DuoduoCli
 
         begin
           item = table.salary_items.new \
-            stats.reject{|k| %i(id bank_account name).include? k}
+            stats.reject{|k| %i(id bank_account name social_insurance_base medical_insurance_base).include? k}
         rescue => e
           logger.error "#{file.basename} ; #{name} ; #{e.message}"
         end
@@ -229,19 +227,29 @@ class BusinessSalary < DuoduoCli
           rescue => e
             logger.error "#{file.basename} ; #{name} ; #{e.message}"
 
-            staff = corporation.normal_staffs.create!(name: staff_name, identity_card: $NULL_ID , in_service: true)
-            $NULL_ID += 1
-            staff.labor_contracts.create!(
-              in_contract: true,
-              has_social_insurance: true,
-              has_medical_insurance: true,
-              social_insurance_base: 1861.15,
-              medical_insurance_base: 3102.0,
-              normal_corporation_id: corporation.id
-            )
+            staff = corporation.normal_staffs.where(name: staff_name).first
+
+            if staff.blank?
+              staff = corporation.normal_staffs.create!(name: staff_name, identity_card: $NULL_ID , in_service: true)
+              $NULL_ID += 1
+              staff.labor_contracts.create!(
+                in_contract: true,
+                has_social_insurance: true,
+                has_medical_insurance: true,
+                social_insurance_base: 1861.15,
+                medical_insurance_base: 3102.0,
+                normal_corporation_id: corporation.id
+              )
+            end
           end
 
           staff.update_attribute(:account, account) if staff.account.nil? && account.present?
+        end
+
+        if (contract=staff.try(:labor_contract)) && (stats[:social_insurance_base].present? || stats[:medical_insurance_base].present?)
+          contract.social_insurance_base = stats[:social_insurance_base] if stats[:social_insurance_base].present?
+          contract.medical_insurance_base = stats[:medical_insurance_base] if stats[:medical_insurance_base].present?
+          contract.save!
         end
 
         last_staff = staff
@@ -254,7 +262,7 @@ class BusinessSalary < DuoduoCli
       end
 
       if sum_row.present?
-        summary = Hash[ fields.zip(sheet[sum_row]) ].reject{|k| %i(id bank_account name).include? k}
+        summary = Hash[ fields.zip(sheet[sum_row]) ].reject{|k| %i(id bank_account name remark social_insurance_base medical_insurance_base).include? k}
         summary.each do |k, v|
           sum = items.map{|it| it.send(k).to_f }.sum.round(2)
           if sum != v.to_f.round(2)
@@ -321,6 +329,8 @@ class BusinessSalary < DuoduoCli
       '卡号'             => :bank_account,
       '工资卡号'         => :bank_account,
       '姓名'             => :name,
+      '社保基数'         => :social_insurance_base,
+      '医保基数'         => :medical_insurance_base,
       '年终奖'           => :annual_reward,
       '应发工资'         => :salary_deserve,
       '应发工资合计'     => :salary_deserve,
