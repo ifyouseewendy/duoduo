@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160110095138) do
+ActiveRecord::Schema.define(version: 20160110142333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -535,6 +535,8 @@ ActiveRecord::Schema.define(version: 20160110095138) do
   add_index "normal_corporations", ["admin_charge_type"], name: "index_normal_corporations_on_admin_charge_type", using: :btree
   add_index "normal_corporations", ["contact"], name: "index_normal_corporations_on_contact", using: :btree
   add_index "normal_corporations", ["contract_amount"], name: "index_normal_corporations_on_contract_amount", using: :btree
+  add_index "normal_corporations", ["contract_end_date"], name: "index_normal_corporations_on_contract_end_date", using: :btree
+  add_index "normal_corporations", ["contract_start_date"], name: "index_normal_corporations_on_contract_start_date", using: :btree
   add_index "normal_corporations", ["corporate_name"], name: "index_normal_corporations_on_corporate_name", using: :btree
   add_index "normal_corporations", ["expense_date"], name: "index_normal_corporations_on_expense_date", using: :btree
   add_index "normal_corporations", ["license"], name: "index_normal_corporations_on_license", using: :btree
