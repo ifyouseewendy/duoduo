@@ -288,16 +288,19 @@ class BusinessSalary < DuoduoCli
       '医疗保险单位'     => :medical_company,
       '工伤保险单位'     => :injury_company,
       '生育保险单位'     => :birth_company,
-      '公积金单位'       => :house_accumulation_company,
       '养老保险差额单位' => :pension_margin_company,
       '失业保险差额单位' => :unemployment_margin_company,
       '医疗保险差额单位' => :medical_margin_company,
       '工伤保险差额单位' => :injury_margin_company,
       '生育保险差额单位' => :birth_margin_company,
-      '单位缴费合计'     => :total_company,
+      '公积金单位'       => :house_accumulation_company,
       '意外险'           => :accident_company,
+      '其他（单位）'     => :other_company,
+
+      '单位缴费合计'     => :total_company,
       '管理费'           => :admin_amount,
       '劳务费用合计'     => :total_sum_with_admin_amount,
+
       '备注'             => :remark,
     }
 end
