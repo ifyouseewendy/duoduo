@@ -4,7 +4,12 @@ class ContractFilesController < ApplicationController
     if cf.save
       redirect_to :back, notice: "成功上传合同文件"
     else
-      redirect_to :back, notice: "上传失败：#{cf.errors.full_messages.join(', ')}"
+      if cf.errors.keys.include?(:contract)
+        msg = "请选择上传文件"
+      else
+        msg = "#{cf.errors.full_messages.join(', ')}"
+      end
+      redirect_to :back, alert: "上传失败：#{msg}"
     end
   end
 
