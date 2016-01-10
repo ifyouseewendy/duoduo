@@ -7,9 +7,18 @@ ActiveAdmin.register NormalCorporation do
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
-  scope "最近10条更新" do |record|
-    record.updated_latest_10
+  scope "全部" do |record|
+    record.all
   end
+  scope "活动" do |record|
+    record.active
+  end
+
+  config.sort_order = 'status_asc_and_updated_at'
+
+  # scope "最近10条更新" do |record|
+  #   record.updated_latest_10
+  # end
 
   index do
     selectable_column
@@ -52,6 +61,7 @@ ActiveAdmin.register NormalCorporation do
     column :expense_date
     column :contract_start_date
     column :contract_end_date
+    column :updated_at
 
     actions
   end
