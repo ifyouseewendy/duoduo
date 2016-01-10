@@ -97,6 +97,10 @@ zh-CN:
         guard_salary_tables: '保安工资表'
         non_full_day_salary_tables: '非全日制工资表'
         labor_contracts: '劳务合同列表'
+        status: '状态'
+        statuses:
+          active: '活动'
+          archive: '存档'
         created_at: "创建时间"
         updated_at: "更新时间"
       engineering_corporation:
