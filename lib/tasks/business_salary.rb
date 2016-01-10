@@ -136,6 +136,7 @@ class BusinessSalary < DuoduoCli
 
     def create_table(name:)
       @table = corporation.salary_tables.find_or_create_by!(name: name)
+      corporation.active!
     end
 
     def process_table(type:, name:, sheet:)

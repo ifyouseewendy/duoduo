@@ -71,6 +71,7 @@ class BusinessCorporation < DuoduoCli
 
         nc = NormalCorporation.new(
           sub_company: sub_company,
+          status: 'archive',
           full_name: full_name,
           license: license,
           taxpayer_serial: taxpayer_serial,
@@ -123,6 +124,7 @@ class BusinessCorporation < DuoduoCli
         if full_name.blank?
           NormalCorporation.create!(
             sub_company: sub_company,
+            status: 'archive',
             name: name
           )
         else
