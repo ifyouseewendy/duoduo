@@ -46,6 +46,7 @@ class BusinessSalary < DuoduoCli
     end
 
     $NULL_ID = 222222222222222222
+    zheqi_staff.destroy
     (NormalStaff.count - 1298).downto(1).each do |num|
       NormalStaff.where(identity_card: $NULL_ID + num - 1).first.destroy
     end
@@ -198,10 +199,6 @@ class BusinessSalary < DuoduoCli
         staff_name = stats[:name].try(:delete, ' ')
         account = stats[:bank_account]
 
-        if staff_name.present? && ( staff_name.index("喆琦") or staff_name == last_staff.try(:name) )
-          require'pry';binding.pry
-        end
-
         begin
           item = table.salary_items.new \
             stats.reject{|k| %i(id bank_account name).include? k}
@@ -209,29 +206,48 @@ class BusinessSalary < DuoduoCli
           logger.error "#{file.basename} ; #{name} ; #{e.message}"
         end
 
-        begin
-          staff = SalaryItem.find_staff(salary_table: table, name: staff_name)
-        rescue => e
-          logger.error "#{file.basename} ; #{name} ; #{e.message}"
+        role = :normal
 
-          staff = corporation.normal_staffs.create!(name: staff_name, identity_card: $NULL_ID , in_service: true)
-          $NULL_ID += 1
-          staff.labor_contracts.create!(
-            in_contract: true,
-            has_social_insurance: true,
-            has_medical_insurance: true,
-            social_insurance_base: 1861.15,
-            medical_insurance_base: 3102.0,
-            normal_corporation_id: corporation.id
-          )
+        if staff_name.blank?
+          if account.try(:index, '喆琦')
+            staff = zheqi_staff
+          else
+            staff = last_staff
+          end
+          role = :transfer
+        elsif staff_name.index('喆琦')
+          staff = zheqi_staff
+          staff.update_attribute(:account, account) if account.present? && account.match(/^\d+$/)
+
+          role = :transfer
+        elsif staff_name == last_staff.try(:name)
+          staff = last_staff
+          role = :transfer
+        else
+          begin
+            staff = SalaryItem.find_staff(salary_table: table, name: staff_name)
+          rescue => e
+            logger.error "#{file.basename} ; #{name} ; #{e.message}"
+
+            staff = corporation.normal_staffs.create!(name: staff_name, identity_card: $NULL_ID , in_service: true)
+            $NULL_ID += 1
+            staff.labor_contracts.create!(
+              in_contract: true,
+              has_social_insurance: true,
+              has_medical_insurance: true,
+              social_insurance_base: 1861.15,
+              medical_insurance_base: 3102.0,
+              normal_corporation_id: corporation.id
+            )
+          end
+
+          staff.update_attribute(:account, account) if staff.account.nil? && account.present?
         end
+
         last_staff = staff
 
-        staff.update_attribute(:account_bank, account) if staff.account_bank.nil? && account.present?
-
+        item.role = role
         item.normal_staff = staff
-          # rescue NormalStaff.create(normal_corporation: corporation, name: name, account: account, identity_card: SecureRandom.hex(9)) )
-
         item.save!
 
         items << item
@@ -248,6 +264,7 @@ class BusinessSalary < DuoduoCli
       end
 
       remark_row = nil
+      sum_row ||= 0
       sheet[(sum_row+1)..-1].each_with_index do |data, idx|
         if data.compact[0].try(:index, '备注')
           remark_row = sum_row+1+idx
@@ -350,6 +367,11 @@ class BusinessSalary < DuoduoCli
 
       '备注'             => :remark,
     }
+
+    def zheqi_staff
+      NormalStaff.where(name: '喆琦').first \
+        || NormalStaff.create!(name: '喆琦', identity_card: '333333333333333333', in_service: true)
+    end
 end
 
 BusinessSalary.start(ARGV)
