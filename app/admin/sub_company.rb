@@ -74,13 +74,13 @@ ActiveAdmin.register SubCompany do
     end
 
     panel "模板" do
-      panel "业务代理合同" do
-        render partial: "sub_companies/contract_template", \
-          locals: {
-            company: sub_company,
-            templates: sub_company.contract_templates,
-          }
-      end
+      # panel "业务代理合同" do
+      #   render partial: "sub_companies/contract_template", \
+      #     locals: {
+      #       company: sub_company,
+      #       templates: sub_company.contract_templates,
+      #     }
+      # end
 
       if resource.has_engineering_relation
         panel "工程项目 - 劳务派遣协议" do
