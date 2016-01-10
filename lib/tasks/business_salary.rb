@@ -175,18 +175,22 @@ class BusinessSalary < DuoduoCli
     def process_table_gai(name:, sheet:)
       header_row = 2
       start_row = header_row + 1
-      end_row = nil
+      sum_row = nil
       last_staff = nil
       items = []
 
       fields = sheet[header_row].compact.map do |col|
-        FIELD[col.delete(' ')].tap{|fd| logger.error "#{file.basename} ; #{name} ; 无法判断的列名：#{col}" if fd.blank? }
-        return
+        FIELD[col.delete(' ')].tap do |fd|
+          if fd.blank?
+            logger.error "#{file.basename} ; #{name} ; 无法判断的列名：#{col}"
+            return
+          end
+        end
       end
 
       sheet[start_row..-1].each_with_index do |data, idx|
-        if data[0].to_i == 0
-          end_row = start_row + idx
+        if data.compact[0].to_s.delete(' ') == '合计'
+          sum_row = start_row + idx
           break
         end
 
@@ -233,8 +237,8 @@ class BusinessSalary < DuoduoCli
         items << item
       end
 
-      if sheet[end_row][0].to_s.delete(' ') == '合计'
-        summary = Hash[ fields.zip(sheet[end_row]) ].reject{|k| %i(id bank_account name).include? k}
+      if sum_row.present?
+        summary = Hash[ fields.zip(sheet[sum_row]) ].reject{|k| %i(id bank_account name).include? k}
         summary.each do |k, v|
           sum = items.map{|it| it.send(k).to_f }.sum.round(2)
           if sum != v.to_f.round(2)
@@ -243,8 +247,16 @@ class BusinessSalary < DuoduoCli
         end
       end
 
-      if remark_start_row = (end_row..(sheet.count-1)).detect{|row| sheet[row][0].to_s.delete(' ') == "备注"}
-        remarks = sheet[(remark_start_row+1)..-1].reduce([]) do |remark, data|
+      remark_row = nil
+      sheet[(sum_row+1)..-1].each_with_index do |data, idx|
+        if data.compact[0].try(:index, '备注')
+          remark_row = sum_row+1+idx
+          break
+        end
+      end
+
+      if remark_row.present?
+        remarks = sheet[(remark_row+1)..-1].reduce([]) do |remark, data|
           if data.all?(&:blank?)
             remark
           else
