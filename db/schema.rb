@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160109135337) do
+ActiveRecord::Schema.define(version: 20160110013534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -604,8 +604,6 @@ ActiveRecord::Schema.define(version: 20160109135337) do
     t.decimal  "income_tax",                           precision: 8, scale: 2
     t.decimal  "salary_card_addition",                 precision: 8, scale: 2
     t.decimal  "medical_scan_addition",                precision: 8, scale: 2
-    t.decimal  "salary_pre_deduct_addition",           precision: 8, scale: 2
-    t.decimal  "insurance_pre_deduct_addition",        precision: 8, scale: 2
     t.decimal  "physical_exam_addition",               precision: 8, scale: 2
     t.decimal  "total_personal",                       precision: 8, scale: 2
     t.decimal  "salary_in_fact",                       precision: 8, scale: 2
@@ -638,6 +636,7 @@ ActiveRecord::Schema.define(version: 20160109135337) do
     t.datetime "updated_at",                                                   null: false
     t.integer  "salary_table_id"
     t.integer  "normal_staff_id"
+    t.decimal  "deduct_addition",                      precision: 8, scale: 2
   end
 
   add_index "salary_items", ["normal_staff_id"], name: "index_salary_items_on_normal_staff_id", using: :btree

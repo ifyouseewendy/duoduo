@@ -112,8 +112,7 @@ ActiveAdmin.register SalaryItem do
       column :income_tax
       column :salary_card_addition
       column :medical_scan_addition
-      column :salary_pre_deduct_addition
-      column :insurance_pre_deduct_addition
+      column :deduct_addition
       column :physical_exam_addition
       column :total_personal
       column :salary_in_fact
@@ -177,8 +176,7 @@ ActiveAdmin.register SalaryItem do
       column :income_tax
       column :salary_card_addition
       column :medical_scan_addition
-      column :salary_pre_deduct_addition
-      column :insurance_pre_deduct_addition
+      column :deduct_addition
       column :physical_exam_addition
       column :total_personal
       column :salary_in_fact
@@ -231,8 +229,7 @@ ActiveAdmin.register SalaryItem do
         :income_tax,
         :salary_card_addition,
         :medical_scan_addition,
-        :salary_pre_deduct_addition,
-        :insurance_pre_deduct_addition,
+        :deduct_addition,
         :physical_exam_addition,
         :total_personal,
         :salary_in_fact,

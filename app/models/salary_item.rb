@@ -201,7 +201,7 @@ class SalaryItem < ActiveRecord::Base
       house_accumulation_personal,
       big_amount_personal,
       income_tax,
-      salary_card_addition, medical_scan_addition, salary_pre_deduct_addition, insurance_pre_deduct_addition, physical_exam_addition
+      salary_card_addition, medical_scan_addition, deduct_addition, physical_exam_addition
     ].map(&:to_f).sum
   end
 
