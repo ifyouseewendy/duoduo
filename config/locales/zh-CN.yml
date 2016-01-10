@@ -82,7 +82,7 @@ zh-CN:
         admin_charge_type: '管理费收取方式'
         admin_charge_types:
           by_rate_on_salary: "比例（应发）"
-          by_rate_on_salary_and_company: "比例（应发+单位缴费）"
+          by_rate_on_salary_and_company: "比例（应发+单位）"
           by_count: "固定"
         admin_charge_amount: '管理费收取比例/金额'
         expense_date: '单位开支日期'
@@ -91,7 +91,7 @@ zh-CN:
         remark: '备注'
         sub_company: '吉易子公司'
         sub_company_id: '吉易子公司'
-        normal_staffs: '普通员工列表'
+        normal_staffs: '员工列表'
         salary_tables: '普通工资表'
         guard_salary_tables: '保安工资表'
         non_full_day_salary_tables: '非全日制工资表'

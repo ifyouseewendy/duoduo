@@ -39,24 +39,19 @@ ActiveAdmin.register NormalCorporation do
       href
     end
 
-    order_cols = %i(contract_amount contract_start_date contract_end_date remark updated_at created_at)
-    columns = resource_class.ordered_columns(without_foreign_keys: true)\
-      - order_cols + order_cols
-
-    columns.map do |field|
-      if field == :admin_charge_type
-        # enum
-        column :admin_charge_type do |obj|
-          obj.admin_charge_type_i18n
-        end
-      else
-        column field
-      end
+    column :admin_charge_type do |obj|
+      obj.admin_charge_type_i18n
     end
+    column :admin_charge_amount
+    column :expense_date
+    column :contract_start_date
+    column :contract_end_date
+
     actions
   end
 
   preserve_default_filters!
+  remove_filter :contract_files
   remove_filter :normal_staffs
   remove_filter :labor_contracts
   remove_filter :salary_tables
@@ -70,8 +65,9 @@ ActiveAdmin.register NormalCorporation do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :sub_companies, as: :check_boxes
+      f.input :sub_company
       f.input :name, as: :string
+      f.input :full_name, as: :string
       f.input :license, as: :string
       f.input :taxpayer_serial, as: :string
       f.input :organization_serial, as: :string
@@ -81,11 +77,12 @@ ActiveAdmin.register NormalCorporation do
       f.input :account_bank, as: :string
       f.input :contact, as: :string
       f.input :telephone, as: :phone
-      f.input :contract_due_time, as: :datepicker
-      f.input :contract_amount, as: :number
-      f.input :admin_charge_type, as: :radio, collection: ->{ NormalCorporation.admin_charge_types_option }
-      f.input :admin_charge_amount, as: :number
+      f.input :admin_charge_type, as: :radio, collection: ->{ NormalCorporation.admin_charge_types_option }.call
+      f.input :admin_charge_amount, as: :number, hint: '比例值请填小数，例如 8% 请填 0.08'
       f.input :expense_date, as: :datepicker
+      f.input :contract_amount, as: :number
+      f.input :contract_start_date, as: :datepicker
+      f.input :contract_end_date, as: :datepicker
       f.input :remark, as: :text
     end
 
@@ -94,18 +91,36 @@ ActiveAdmin.register NormalCorporation do
 
   show do
     attributes_table do
-      resource.class.ordered_columns(without_foreign_keys: true).map do|field|
-        if field == :admin_charge_type
-          row :admin_charge_type do |obj|
-            obj.admin_charge_type_i18n
-          end
-        else
-          row field
-        end
+      row :id
+      row :sub_company
+      row :normal_staffs do |obj|
+        link_to "员工列表", normal_corporation_normal_staffs_path(obj)
       end
-      row :sub_companies do |corp|
-        corp.sub_company_names.join(', ')
+      row :salary_tables do |obj|
+        link_to '#', '#'
       end
+      row :name
+      row :full_name
+      row :license
+      row :taxpayer_serial
+      row :organization_serial
+      row :corporate_name
+      row :address
+      row :account
+      row :account_bank
+      row :contact
+      row :telephone
+      row :admin_charge_type do |obj|
+        obj.admin_charge_type_i18n
+      end
+      row :admin_charge_amount
+      row :expense_date
+      row :contract_amount
+      row :contract_start_date
+      row :contract_end_date
+      row :remark
+      row :updated_at
+      row :created_at
     end
 
     panel "业务代理合同" do
