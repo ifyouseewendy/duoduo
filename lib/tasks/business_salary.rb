@@ -88,7 +88,29 @@ class BusinessSalary < DuoduoCli
     #   }
     def preprocess_xlsx
       xlsx.sheets.each_with_index.reduce({}) do |ha, (name, idx)|
-        key = name.strip.match(/^\d+/).to_s
+        key = name.strip.match(/^\d{6}/).to_s
+
+        if key.length != 6
+          if name.index('月打卡')
+            month = name.strip.match(/^\d+/).to_s
+            month.prepend('0') if month.length == 1
+            key = month.prepend('2015')
+          else
+            logger.error "#{file.basename} ; 无法解析工资表名称：#{name}"
+            next
+          end
+        end
+
+        # 201501改（2）
+        if data=name.strip.match(/（\d{1}）/)
+          key += "#{data}"
+        end
+
+        # 201501改（补发）
+        if name.index '补发'
+          key += '补'
+        end
+
         ha[key] ||= {}
 
         type  = parse_type(name: name)
@@ -154,10 +176,12 @@ class BusinessSalary < DuoduoCli
       header_row = 2
       start_row = header_row + 1
       end_row = nil
+      last_staff = nil
       items = []
 
       fields = sheet[header_row].compact.map do |col|
         FIELD[col.delete(' ')].tap{|fd| logger.error "#{file.basename} ; #{name} ; 无法判断的列名：#{col}" if fd.blank? }
+        return
       end
 
       sheet[start_row..-1].each_with_index do |data, idx|
@@ -167,11 +191,19 @@ class BusinessSalary < DuoduoCli
         end
 
         stats = Hash[fields.zip(data)]
-        staff_name = stats[:name].delete(' ')
+        staff_name = stats[:name].try(:delete, ' ')
         account = stats[:bank_account]
 
-        item = table.salary_items.new \
-          stats.reject{|k| %i(id bank_account name).include? k}
+        if staff_name.present? && ( staff_name.index("喆琦") or staff_name == last_staff.try(:name) )
+          require'pry';binding.pry
+        end
+
+        begin
+          item = table.salary_items.new \
+            stats.reject{|k| %i(id bank_account name).include? k}
+        rescue => e
+          logger.error "#{file.basename} ; #{name} ; #{e.message}"
+        end
 
         begin
           staff = SalaryItem.find_staff(salary_table: table, name: staff_name)
@@ -189,6 +221,7 @@ class BusinessSalary < DuoduoCli
             normal_corporation_id: corporation.id
           )
         end
+        last_staff = staff
 
         staff.update_attribute(:account_bank, account) if staff.account_bank.nil? && account.present?
 
@@ -261,6 +294,7 @@ class BusinessSalary < DuoduoCli
       '姓名'             => :name,
       '年终奖'           => :annual_reward,
       '应发工资'         => :salary_deserve,
+      '应发工资合计'     => :salary_deserve,
 
       '养老保险个人'     => :pension_personal,
       '养老保险差额个人' => :pension_margin_personal,
@@ -282,6 +316,7 @@ class BusinessSalary < DuoduoCli
 
       '个人缴费合计'     => :total_personal,
       '实发工资'         => :salary_in_fact,
+      '实发工资合计'     => :salary_in_fact,
 
       '养老保险单位'     => :pension_company,
       '失业保险单位'     => :unemployment_company,
