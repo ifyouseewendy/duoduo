@@ -29,14 +29,18 @@ ActiveAdmin.register NormalCorporation do
     #   link_to "劳务合同列表", "/labor_contracts?utf8=✓&q%5Bnormal_corporation_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
     # end
 
-    column :salary_tables, sortable: :id do |obj|
-      href = link_to("普通工资表", normal_corporation_salary_tables_path(obj) )
-      href += link_to(" 保安工资表", normal_corporation_guard_salary_tables_path(obj) ) \
+    column :salary_table_display, sortable: :id do |obj|
+      ul do
+        if obj.salary_tables.count > 0
+          li link_to("普通工资表", normal_corporation_salary_tables_path(obj), target: '_blank' )
+        end
         if obj.guard_salary_tables.count > 0
-      href += link_to(" 非全日制工资表", normal_corporation_non_full_day_salary_tables_path(obj) ) \
+          li link_to(" 保安工资表", normal_corporation_guard_salary_tables_path(obj), target: '_blank' )
+        end
         if obj.non_full_day_salary_tables.count > 0
-
-      href
+          li link_to(" 非全日制工资表", normal_corporation_non_full_day_salary_tables_path(obj), target: '_blank' )
+        end
+      end
     end
 
     column :admin_charge_type do |obj|

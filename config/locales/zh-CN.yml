@@ -93,6 +93,7 @@ zh-CN:
         sub_company_id: '吉易子公司'
         normal_staffs: '员工列表'
         salary_tables: '普通工资表'
+        salary_table_display: '工资表'
         guard_salary_tables: '保安工资表'
         non_full_day_salary_tables: '非全日制工资表'
         labor_contracts: '劳务合同列表'
