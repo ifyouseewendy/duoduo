@@ -81,7 +81,7 @@ class BusinessCorporation < DuoduoCli
           account: account,
           account_bank: account_bank,
           contact: contact,
-          telephone: telephone.to_i.to_s,
+          telephone: Numeric === telephone ? telephone.to_i.to_s : telephone.to_s,
           contract_start_date: contract_start_date,
           contract_end_date: contract_end_date,
           contract_amount: contract_amount,
