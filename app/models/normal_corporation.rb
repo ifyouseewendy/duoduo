@@ -21,6 +21,8 @@ class NormalCorporation < ActiveRecord::Base
   enum admin_charge_type: [:by_rate_on_salary, :by_rate_on_salary_and_company, :by_count]
   enum status: [:active, :archive]
 
+  after_save :check_sub_company
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -126,6 +128,12 @@ class NormalCorporation < ActiveRecord::Base
 
   def status_i18n
     I18n.t("activerecord.attributes.#{self.class.name.underscore}.statuses.#{status}")
+  end
+
+  def check_sub_company
+    if changed.include? 'sub_company_id'
+      self.normal_staffs.update_all(:sub_company_id, self.sub_company_id)
+    end
   end
 
 end
