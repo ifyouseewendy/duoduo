@@ -107,12 +107,9 @@ class LaborContract < ActiveRecord::Base
     end
 
     def check_relationship
-      if changed.include? 'normal_corporation_id'
+      if self.in_contract && changed.include?('normal_corporation_id')
         normal_staff.update_attribute(:normal_corporation_id, self.normal_corporation_id)
-      end
-
-      if changed.include? 'sub_company_id'
-        normal_staff.update_attribute(:sub_company_id, self.sub_company_id)
+        normal_staff.update_attribute(:sub_company_id, self.normal_corporation.sub_company_id)
       end
     end
 
