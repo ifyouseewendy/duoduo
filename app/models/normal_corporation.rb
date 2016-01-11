@@ -92,6 +92,11 @@ class NormalCorporation < ActiveRecord::Base
           + (NormalCorporation.ordered_columns(without_foreign_keys: true) - %i(id name) )
       end
     end
+
+    def internal
+      @_internal ||= where(name: '内部').first
+    end
+
   end
 
   def admin_charge_type_i18n

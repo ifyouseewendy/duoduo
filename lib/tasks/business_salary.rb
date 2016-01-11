@@ -381,7 +381,12 @@ class BusinessSalary < DuoduoCli
 
     def zheqi_staff
       NormalStaff.where(name: '喆琦').first \
-        || NormalStaff.create!(name: '喆琦', identity_card: '333333333333333333', in_service: true)
+        || NormalStaff.create!(
+              name: '喆琦',
+              identity_card: '333333333333333333',
+              in_service: true,
+              normal_corporation_id: NormalCorporation.internal.id
+            )
     end
 end
 
