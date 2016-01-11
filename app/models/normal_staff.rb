@@ -16,7 +16,8 @@ class NormalStaff < ActiveRecord::Base
 
   enum gender: [:male, :female]
 
-  after_update :check_contracts_status
+  before_save :set_birth
+  after_save :check_contracts_status
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
@@ -79,6 +80,20 @@ class NormalStaff < ActiveRecord::Base
       medical_scan_addition: 10,
       salary_card_addition: 10
     }
+  end
+
+  def set_birth
+    if changed.include? 'identity_card'
+      self.birth = Date.parse(self.identity_card[6,8]) rescue nil
+      self.birth = nil if self.birth.try(:year) < 1910
+    end
+  end
+
+  def age
+    return '' if birth.blank?
+
+    num = Date.today.year - birth.year
+    (birth + num.years >= Date.today) ? num-1 : num
   end
 
   private
