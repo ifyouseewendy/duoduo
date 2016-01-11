@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160110145957) do
+ActiveRecord::Schema.define(version: 20160111023536) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -564,11 +564,12 @@ ActiveRecord::Schema.define(version: 20160110145957) do
     t.date     "social_insurance_start_date"
     t.boolean  "in_service"
     t.text     "remark"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.integer  "normal_corporation_id"
     t.integer  "sub_company_id"
     t.integer  "nest_index"
+    t.boolean  "in_contract",                 default: false
   end
 
   add_index "normal_staffs", ["account"], name: "index_normal_staffs_on_account", using: :btree
@@ -579,6 +580,8 @@ ActiveRecord::Schema.define(version: 20160110145957) do
   add_index "normal_staffs", ["gender"], name: "index_normal_staffs_on_gender", using: :btree
   add_index "normal_staffs", ["grade"], name: "index_normal_staffs_on_grade", using: :btree
   add_index "normal_staffs", ["identity_card"], name: "index_normal_staffs_on_identity_card", using: :btree
+  add_index "normal_staffs", ["in_contract"], name: "index_normal_staffs_on_in_contract", using: :btree
+  add_index "normal_staffs", ["in_service", "in_contract"], name: "index_normal_staffs_on_in_service_and_in_contract", using: :btree
   add_index "normal_staffs", ["in_service"], name: "index_normal_staffs_on_in_service", using: :btree
   add_index "normal_staffs", ["name"], name: "index_normal_staffs_on_name", using: :btree
   add_index "normal_staffs", ["nation"], name: "index_normal_staffs_on_nation", using: :btree
