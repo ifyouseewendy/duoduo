@@ -144,6 +144,10 @@ class BusinessStaff < DuoduoCli
         else
           name
         end
+      elsif sub_company.name == '百奕劳务公司'
+        if name == '铁通'
+          '铁通（百奕）'
+        end
       end
     end
 
@@ -191,13 +195,11 @@ class BusinessStaff < DuoduoCli
             account: nil,
             account_bank: nil,
             identity_card: identity_card,
-            birth: identity_card[6,8],
-            age: age,
             gender: {'男' => 'male', '女' => 'female'}[gender],
             nation: nation,
             grade: grade,
             address: address,
-            telephone: telephone.to_i.to_s,
+            telephone: Numeric === telephone ? telephone.to_i.to_s : telephone.to_s,
             social_insurance_start_date: parse_date(social_insurance_start_date),
             in_service: in_service,
             remark: remark,
@@ -338,13 +340,11 @@ class BusinessStaff < DuoduoCli
             account: nil,
             account_bank: nil,
             identity_card: identity_card,
-            birth: identity_card[6,8],
-            age: age,
             gender: {'男' => 'male', '女' => 'female'}[gender],
             nation: nation,
             grade: grade,
             address: address,
-            telephone: telephone.to_i.to_s,
+            telephone: Numeric === telephone ? telephone.to_i.to_s : telephone.to_s,
             social_insurance_start_date: parse_date(social_insurance_start_date),
             in_service: in_service,
             remark: remark,
@@ -465,13 +465,11 @@ class BusinessStaff < DuoduoCli
             account: nil,
             account_bank: nil,
             identity_card: identity_card,
-            birth: identity_card[6,8],
-            age: age,
             gender: {'男' => 'male', '女' => 'female'}[gender],
             nation: nation,
             grade: grade,
             address: address,
-            telephone: telephone.to_i.to_s,
+            telephone: Numeric === telephone ? telephone.to_i.to_s : telephone.to_s,
             social_insurance_start_date: parse_date(social_insurance_start_date),
             in_service: in_service,
             remark: remark,
@@ -573,13 +571,11 @@ class BusinessStaff < DuoduoCli
             account: nil,
             account_bank: nil,
             identity_card: identity_card,
-            birth: identity_card[6,8],
-            age: age,
             gender: {'男' => 'male', '女' => 'female'}[gender],
             nation: nation,
             grade: grade,
             address: address,
-            telephone: telephone.to_i.to_s,
+            telephone: Numeric === telephone ? telephone.to_i.to_s : telephone.to_s,
             social_insurance_start_date: parse_date(social_insurance_start_date),
             in_service: in_service,
             remark: remark,
