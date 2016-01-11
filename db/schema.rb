@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160111061038) do
+ActiveRecord::Schema.define(version: 20160111074405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -463,8 +463,31 @@ ActiveRecord::Schema.define(version: 20160111061038) do
     t.datetime "updated_at",                                                   null: false
   end
 
+  add_index "labor_contracts", ["arrive_current_company_at"], name: "index_labor_contracts_on_arrive_current_company_at", using: :btree
+  add_index "labor_contracts", ["backup_date"], name: "index_labor_contracts_on_backup_date", using: :btree
+  add_index "labor_contracts", ["backup_place"], name: "index_labor_contracts_on_backup_place", using: :btree
+  add_index "labor_contracts", ["contract_end_date"], name: "index_labor_contracts_on_contract_end_date", using: :btree
+  add_index "labor_contracts", ["contract_start_date"], name: "index_labor_contracts_on_contract_start_date", using: :btree
+  add_index "labor_contracts", ["contract_type"], name: "index_labor_contracts_on_contract_type", using: :btree
+  add_index "labor_contracts", ["current_medical_insurance_start_date"], name: "index_labor_contracts_on_current_medical_insurance_start_date", using: :btree
+  add_index "labor_contracts", ["current_social_insurance_start_date"], name: "index_labor_contracts_on_current_social_insurance_start_date", using: :btree
+  add_index "labor_contracts", ["has_accident_insurance"], name: "index_labor_contracts_on_has_accident_insurance", using: :btree
+  add_index "labor_contracts", ["has_medical_insurance"], name: "index_labor_contracts_on_has_medical_insurance", using: :btree
+  add_index "labor_contracts", ["has_social_insurance"], name: "index_labor_contracts_on_has_social_insurance", using: :btree
+  add_index "labor_contracts", ["house_accumulation_base"], name: "index_labor_contracts_on_house_accumulation_base", using: :btree
+  add_index "labor_contracts", ["in_contract"], name: "index_labor_contracts_on_in_contract", using: :btree
+  add_index "labor_contracts", ["medical_insurance_base"], name: "index_labor_contracts_on_medical_insurance_base", using: :btree
+  add_index "labor_contracts", ["medical_insurance_card"], name: "index_labor_contracts_on_medical_insurance_card", using: :btree
+  add_index "labor_contracts", ["medical_insurance_release_date"], name: "index_labor_contracts_on_medical_insurance_release_date", using: :btree
+  add_index "labor_contracts", ["medical_insurance_serial"], name: "index_labor_contracts_on_medical_insurance_serial", using: :btree
   add_index "labor_contracts", ["normal_corporation_id"], name: "index_labor_contracts_on_normal_corporation_id", using: :btree
   add_index "labor_contracts", ["normal_staff_id"], name: "index_labor_contracts_on_normal_staff_id", using: :btree
+  add_index "labor_contracts", ["release_date"], name: "index_labor_contracts_on_release_date", using: :btree
+  add_index "labor_contracts", ["social_insurance_base"], name: "index_labor_contracts_on_social_insurance_base", using: :btree
+  add_index "labor_contracts", ["social_insurance_release_date"], name: "index_labor_contracts_on_social_insurance_release_date", using: :btree
+  add_index "labor_contracts", ["social_insurance_serial"], name: "index_labor_contracts_on_social_insurance_serial", using: :btree
+  add_index "labor_contracts", ["work_place"], name: "index_labor_contracts_on_work_place", using: :btree
+  add_index "labor_contracts", ["work_type"], name: "index_labor_contracts_on_work_type", using: :btree
 
   create_table "milestones", force: :cascade do |t|
     t.string   "name"
