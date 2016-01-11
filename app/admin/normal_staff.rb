@@ -5,7 +5,7 @@ ActiveAdmin.register NormalStaff do
 
   menu \
     parent: I18n.t("activerecord.models.normal_business"),
-    priority: 3
+    priority: 2
 
   scope "全部" do |record|
     record.all

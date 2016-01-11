@@ -7,7 +7,7 @@ ActiveAdmin.register LaborContract do
 
   menu \
     parent: I18n.t("activerecord.models.normal_business"),
-    priority: 2
+    priority: 3
 
   scope "全部" do |record|
     record.all
