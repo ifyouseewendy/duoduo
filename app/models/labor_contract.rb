@@ -8,8 +8,9 @@ class LaborContract < ActiveRecord::Base
   scope :active, -> { where(in_contract: true) }
   scope :active_order, -> { order(in_contract: :desc) }
 
-  after_update :check_active_status
-  after_update :check_relationship
+  after_save :check_active_status
+  after_save :check_relationship
+  after_save :check_staff_in_contract
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
@@ -115,4 +116,15 @@ class LaborContract < ActiveRecord::Base
       end
     end
 
+    def check_staff_in_contract
+      if changed.include? 'in_contract'
+        if self.in_contract
+          normal_staff.update_attribute(:in_contract, true) unless normal_staff.in_contract
+        else
+          if normal_staff.labor_contracts.active.count == 0 && normal_staff.in_contract
+            normal_staff.update_attribute(:in_contract, false)
+          end
+        end
+      end
+    end
 end
