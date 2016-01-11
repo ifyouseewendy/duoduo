@@ -147,7 +147,7 @@ ActiveAdmin.register LaborContract do
     def scoped_collection
       action = request.url.split('?').first.split('/').last rescue ''
       if action == 'labor_contracts'
-        end_of_association_chain.includes(:normal_corporation)
+        end_of_association_chain# .includes(:normal_corporation)
       else
         end_of_association_chain
       end

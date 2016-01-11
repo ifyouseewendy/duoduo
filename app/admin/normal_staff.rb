@@ -39,7 +39,7 @@ ActiveAdmin.register NormalStaff do
       end
     end
     column :labor_contracts, sortable: :id do |obj|
-      link_to '劳务合同', '#'
+      link_to '劳务合同', "/labor_contracts?utf8=✓&q%5Bnormal_staff_id_equals%5D=#{obj.id}&commit=过滤"
     end
     column :in_service
     column :in_contract, sortable: :in_contract do |obj|
@@ -122,7 +122,7 @@ ActiveAdmin.register NormalStaff do
         end
       end
       row :labor_contracts do |obj|
-        link_to '劳务合同', '#'
+        link_to '劳务合同', "/labor_contracts?utf8=✓&q%5Bnormal_staff_id_equals%5D=#{obj.id}&commit=过滤"
       end
       row :in_service do |obj|
         if obj.in_service
