@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160111023536) do
+ActiveRecord::Schema.define(version: 20160111061038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -567,9 +567,9 @@ ActiveRecord::Schema.define(version: 20160111023536) do
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
     t.integer  "normal_corporation_id"
-    t.integer  "sub_company_id"
     t.integer  "nest_index"
     t.boolean  "in_contract",                 default: false
+    t.integer  "sub_company_id"
   end
 
   add_index "normal_staffs", ["account"], name: "index_normal_staffs_on_account", using: :btree
@@ -739,7 +739,6 @@ ActiveRecord::Schema.define(version: 20160111023536) do
   add_foreign_key "non_full_day_salary_tables", "normal_corporations"
   add_foreign_key "normal_corporations", "sub_companies"
   add_foreign_key "normal_staffs", "normal_corporations"
-  add_foreign_key "normal_staffs", "sub_companies"
   add_foreign_key "salary_items", "normal_staffs"
   add_foreign_key "salary_items", "salary_tables"
   add_foreign_key "salary_tables", "normal_corporations"
