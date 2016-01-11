@@ -14,6 +14,7 @@ class NormalCorporation < ActiveRecord::Base
 
   validates_uniqueness_of :name
 
+  default_scope { order(sub_company_id: :asc) }
   scope :updated_in_7_days, ->{ where('updated_at > ?', Date.today - 7.days) }
   scope :updated_latest_10, ->{ order(updated_at: :desc).limit(10) }
 
@@ -32,6 +33,14 @@ class NormalCorporation < ActiveRecord::Base
 
     def admin_charge_types_option
       admin_charge_types.keys.map{|k| [I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{k}"), k]}
+    end
+
+    def as_filter
+      self.includes(:sub_company).select(:sub_company_id, :name, :id).map do |nc|
+        name = nc.name
+        name = "#{nc.sub_company.name} - #{nc.name}" if nc.sub_company.present?
+        [name, nc.id]
+      end
     end
 
     def batch_form_fields

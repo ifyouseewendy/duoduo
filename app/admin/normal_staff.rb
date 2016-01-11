@@ -7,17 +7,52 @@ ActiveAdmin.register NormalStaff do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 3
 
-  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
+  scope "全部" do |record|
+    record.all
+  end
+  scope "存档" do |record|
+    record.not_in_service
+  end
+  scope "在职" do |record|
+    record.in_service
+  end
+  scope "有劳务关系" do |record|
+    record.in_contract
+  end
+  scope "无劳务关系" do |record|
+    record.not_in_contract
+  end
 
   index do
     selectable_column
 
     column :id
     column :name
+    column :identity_card
     column :sub_company, sortable: :sub_company_id
-    column :normal_corporation, sortable: :normal_corporation_id
+    column :normal_corporation, sortable: :normal_corporation_id do |obj|
+      corporation = obj.normal_corporation
+      if corporation.present?
+        link_to corporation.name || '#', normal_corporation_path(corporation)
+      else
+        # link_to '#', '#'
+      end
+    end
+    column :labor_contracts, sortable: :id do |obj|
+      link_to '劳务合同', '#'
+    end
+    column :in_service
+    column :in_contract, sortable: :in_contract do |obj|
+      if obj.in_contract
+        status_tag '有', :yes
+      else
+        status_tag '无', :no
+      end
+    end
 
-    (resource_class.ordered_columns.map(&:to_sym) - [:id, :name, :sub_company, :normal_corporation]).map do |field|
+    displayed_columns = [:id, :name, :identity_card, :sub_company_id, :normal_corporation_id, :in_service, :in_contract, :nest_index]
+
+    (resource_class.ordered_columns.map(&:to_sym) - displayed_columns).map do |field|
       if field == :gender
         # enum
         column :gender do |obj|
@@ -32,11 +67,21 @@ ActiveAdmin.register NormalStaff do
     end
   end
 
+  filter :sub_company
+  filter :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}
+  filter :in_service, as: :select, collection: ->{ [ ['在职', true], ['存档', false] ] }.call
+  filter :in_contract, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
+  filter :id
+  filter :name
+  filter :identity_card
   preserve_default_filters!
+  remove_filter :nest_index
   remove_filter :salary_items
   remove_filter :guard_salary_items
   remove_filter :non_full_day_salary_items
   remove_filter :labor_contracts
+
+  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
@@ -105,5 +150,11 @@ ActiveAdmin.register NormalStaff do
     end
 
     redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+  end
+
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:sub_company).includes(:normal_corporation)
+    end
   end
 end

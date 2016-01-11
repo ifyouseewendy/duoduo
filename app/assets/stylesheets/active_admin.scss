@@ -241,3 +241,9 @@ body.engineering_customers table.index_table {
     }
   }
 }
+
+.normal_staffs .index_table{
+  th.col-address {
+    min-width: 150px !important;
+  }
+}

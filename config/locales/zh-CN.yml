@@ -177,6 +177,8 @@ zh-CN:
         sub_company_id: '所属子公司'
         created_at: "创建时间"
         updated_at: "更新时间"
+        labor_contracts: '劳务合同'
+        in_contract: '有劳务关系'
       engineering_staff:
         id: '编号'
         name: '姓名'

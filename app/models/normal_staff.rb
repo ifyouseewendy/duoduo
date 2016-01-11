@@ -1,12 +1,18 @@
 class NormalStaff < ActiveRecord::Base
   belongs_to :normal_corporation
   belongs_to :sub_company
+  has_many :labor_contracts, dependent: :destroy
+
   has_many :salary_items, dependent: :destroy
   has_many :guard_salary_items, dependent: :destroy
   has_many :non_full_day_salary_items, dependent: :destroy
-  has_many :labor_contracts, dependent: :destroy
 
   validates_uniqueness_of :identity_card
+
+  scope :in_service, -> { where(in_service: true) }
+  scope :not_in_service, -> { where.not(in_service: true) }
+  scope :in_contract, ->{ where(in_contract: true) }
+  scope :not_in_contract, ->{ where.not(in_contract: true) }
 
   enum gender: [:male, :female]
 
