@@ -243,7 +243,13 @@ body.engineering_customers table.index_table {
 }
 
 .normal_staffs .index_table{
+  th.col-normal_corporation {
+    min-width: 80px !important;
+  }
   th.col-address {
     min-width: 150px !important;
+  }
+  th.col-remark {
+    min-width: 100px !important;
   }
 }

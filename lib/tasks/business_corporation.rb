@@ -124,13 +124,15 @@ class BusinessCorporation < DuoduoCli
         if full_name.blank?
           NormalCorporation.create!(
             sub_company: sub_company,
-            status: 'archive',
+            status: 'active',
             name: name
           )
         else
           # Ungly patch
           if special_full_names.include?(full_name)
             nc = NormalCorporation.where(full_name: full_name).first
+            nc.update_attribute(:status, 'active')
+
             NormalCorporation.create!(
               nc.attributes.reject{|k| k.to_s == 'id'}.merge({name: name})
             )
@@ -139,6 +141,7 @@ class BusinessCorporation < DuoduoCli
             nc = NormalCorporation.new(full_name: full_name) if nc.nil?
             # raise "无法找到合作单位全称：#{full_name}" if nc.nil?
 
+            nc.status = 'active'
             nc.name = name
             nc.save!
           end
@@ -156,7 +159,8 @@ class BusinessCorporation < DuoduoCli
 
     def seed_internal_corporation
       NormalCorporation.create!(
-        name: '内部'
+        name: '内部',
+        status: 'active'
       )
     end
 end
