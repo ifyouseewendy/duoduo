@@ -253,3 +253,12 @@ body.engineering_customers table.index_table {
     min-width: 100px !important;
   }
 }
+
+.labor_contracts .index_table{
+  th.col-normal_corporation {
+    min-width: 80px !important;
+  }
+  th.col-work_type {
+    min-width: 60px !important;
+  }
+}

@@ -6,6 +6,7 @@ class LaborContract < ActiveRecord::Base
   enum contract_type: [:normal_contract, :retire_contract, :temp_contract, :none_full_day_contract, :none_contract]
 
   scope :active, -> { where(in_contract: true) }
+  scope :archive, -> { where.not(in_contract: true) }
   scope :active_order, -> { order(in_contract: :desc) }
 
   after_save :check_active_status

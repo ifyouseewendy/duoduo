@@ -1,5 +1,5 @@
 ActiveAdmin.register NormalCorporation do
-  include ImportSupport
+  # include ImportSupport
 
   menu \
     parent: I18n.t("activerecord.models.normal_business"),

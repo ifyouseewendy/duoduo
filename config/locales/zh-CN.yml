@@ -307,7 +307,7 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
       labor_contract:
-        id: '序号'
+        id: '编号'
         contract_type: '合同类型'
         contract_types:
           normal_contract: '合同'
@@ -315,7 +315,7 @@ zh-CN:
           temp_contract: '临时'
           none_full_day_contract: '非全日制'
           none_contract: '无协议'
-        in_contract: '有劳务关系'
+        in_contract: '状态'
         contract_start_date: '合同起始时间'
         contract_end_date: '合同终止时间'
         arrive_current_company_at: '到本单位时间'
@@ -344,6 +344,7 @@ zh-CN:
         normal_corporation_id: '合作单位'
         normal_staff: '所属员工'
         normal_staff_id: '所属员工'
+        normal_staff_name: '员工姓名'
         created_at: "创建时间"
         updated_at: "更新时间"
       sub_company:
