@@ -62,9 +62,8 @@ ActiveAdmin.register NormalStaff do
         column field
       end
     end
-    actions do |obj|
-      a link_to "查看劳务合同", normal_staff_labor_contracts_path(obj), class: "expand_table_action_width"
-    end
+
+    actions
   end
 
   filter :sub_company
@@ -87,20 +86,21 @@ ActiveAdmin.register NormalStaff do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :nest_index, as: :number
       f.input :name, as: :string
+      f.input :identity_card, as: :string
+      f.input :in_service
+      f.input :in_contract
       f.input :account, as: :string
       f.input :account_bank, as: :string
-      f.input :identity_card, as: :string
-      f.input :birth, as: :datepicker
-      f.input :age, as: :number
-      f.input :gender, as: :radio, collection: ->{ NormalStaff.genders_option }
+      if request.url.split('/')[-1] == 'edit'
+        f.input :birth, as: :datepicker
+      end
+      f.input :gender, as: :radio, collection: ->{ NormalStaff.genders_option }.call
       f.input :nation, as: :string
       f.input :grade, as: :string
       f.input :address, as: :string
       f.input :telephone, as: :string
       f.input :social_insurance_start_date, as: :datepicker
-      f.input :in_service, as: :boolean
       f.input :remark, as: :text
     end
 
@@ -109,30 +109,54 @@ ActiveAdmin.register NormalStaff do
 
   show do
     attributes_table do
-      boolean_columns = resource.class.columns_of(:boolean)
-      resource.class.ordered_columns.map(&:to_sym).map do |field|
-        if boolean_columns.include? field
-          row(field) { status_tag resource.send(field).to_s }
+      row :id
+      row :name
+      row :identity_card
+      row :sub_company
+      row :normal_corporation do |obj|
+        corporation = obj.normal_corporation
+        if corporation.present?
+          link_to corporation.name || '#', normal_corporation_path(corporation)
         else
-          if field == :gender
-            row :gender do |obj|
-              obj.gender_i18n
-            end
-          elsif field == :normal_corporation_id
-            row :normal_corporation
-          elsif field == :sub_company_id
-            row :sub_company
-          else
-            row field
-          end
+          # link_to '#', '#'
         end
       end
+      row :labor_contracts do |obj|
+        link_to '劳务合同', '#'
+      end
+      row :in_service do |obj|
+        if obj.in_service
+          status_tag '在职', :yes
+        else
+          status_tag '存档', :no
+        end
+      end
+      row :in_contract do |obj|
+        if obj.in_contract
+          status_tag '有劳务关系', :yes
+        else
+          status_tag '无劳务关系', :no
+        end
+      end
+
+      displayed_columns = [:id, :name, :identity_card, :sub_company_id, :normal_corporation_id, :in_service, :in_contract, :nest_index]
+
+      (resource_class.ordered_columns.map(&:to_sym) - displayed_columns).map do |field|
+        if field == :gender
+          row :gender do |obj|
+            obj.gender_i18n
+          end
+        else
+          row field
+        end
+      end
+
     end
   end
 
   sidebar '劳务合同', only: [:show] do
     ul do
-      lc = normal_staff.labor_contracts.active.first
+      lc = normal_staff.labor_contract
       if lc.present?
         li link_to lc.name, normal_staff_labor_contract_path(normal_staff, lc), class: 'current_contract'
       end
