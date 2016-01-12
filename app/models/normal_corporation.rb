@@ -132,7 +132,7 @@ class NormalCorporation < ActiveRecord::Base
 
   def check_sub_company
     if changed.include? 'sub_company_id'
-      self.normal_staffs.update_all(:sub_company_id, self.sub_company_id)
+      self.normal_staffs.update_all(sub_company_id: self.sub_company_id)
     end
   end
 
