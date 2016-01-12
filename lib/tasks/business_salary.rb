@@ -94,36 +94,40 @@ class BusinessSalary < DuoduoCli
     #   }
     def preprocess_xlsx
       xlsx.sheets.each_with_index.reduce({}) do |ha, (name, idx)|
-        key = name.strip.match(/^\d{6}/).to_s
+        if name.start_with?('Sheet')
+          ha
+        else
+          key = name.strip.match(/^\d{6}/).to_s
 
-        if key.length != 6
-          if name.index('月打卡')
-            month = name.strip.match(/^\d+/).to_s
-            month.prepend('0') if month.length == 1
-            key = month.prepend('2015')
-          else
-            logger.error "#{file.basename} ; 无法解析工资表名称：#{name}"
-            next
+          if key.length != 6
+            if name.index('月打卡')
+              month = name.strip.match(/^\d+/).to_s
+              month.prepend('0') if month.length == 1
+              key = month.prepend('2015')
+            else
+              logger.error "#{file.basename} ; 无法解析工资表名称：#{name}"
+              next
+            end
           end
+
+          # 201501改（2）
+          if data=name.strip.match(/（\d{1}）/)
+            key += "#{data}"
+          end
+
+          # 201501改（补发）
+          if name.index '补发'
+            key += '补'
+          end
+
+          ha[key] ||= {}
+
+          type  = parse_type(name: name)
+          # puts "#{key} - #{type} - #{xlsx.sheet(idx).to_a[0].join(',')}"
+          ha[key][type] = { name: name, sheet: xlsx.sheet(idx).to_a }
+
+          ha
         end
-
-        # 201501改（2）
-        if data=name.strip.match(/（\d{1}）/)
-          key += "#{data}"
-        end
-
-        # 201501改（补发）
-        if name.index '补发'
-          key += '补'
-        end
-
-        ha[key] ||= {}
-
-        type  = parse_type(name: name)
-        # puts "#{key} - #{type} - #{xlsx.sheet(idx).to_a[0].join(',')}"
-        ha[key][type] = { name: name, sheet: xlsx.sheet(idx).to_a }
-
-        ha
       end
     end
 
