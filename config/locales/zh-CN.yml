@@ -227,6 +227,7 @@ zh-CN:
         company_name: '公司名称'
         staff_category: '用工类别'
         staff_name: '姓名'
+        staff_identity_card: '身份证号'
         salary_table_name: '名称（月份）'
         salary_deserve: '应发工资'
         annual_reward: '年终奖'

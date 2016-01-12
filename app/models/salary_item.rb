@@ -9,6 +9,12 @@ class SalaryItem < ActiveRecord::Base
   #   + SalaryItem.create_by
   #   + SalaryItem#update_by
 
+  # person/company insurance, and additional fees
+  before_create :auto_init_fields
+
+  # income_tax, other total fields
+  after_save :revise_fields
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -71,16 +77,6 @@ class SalaryItem < ActiveRecord::Base
       fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
 
-    def manipulate_insurance_fund_fields
-      fields = [
-        :social_insurance_to_salary_deserve,
-        :medical_insurance_to_salary_deserve,
-        :house_accumulation_to_salary_deserve,
-        :salary_deserve_to_insurance_fund
-      ]
-      fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
-    end
-
     def columns_based_on(view: nil, custom: nil)
       view ||= :whole
 
@@ -123,7 +119,7 @@ class SalaryItem < ActiveRecord::Base
         :salary_deduct_addition,
         :other_deduct_addition,
 
-        # 个人扣款
+        # 个人缴费
         :total_personal,
 
         # 实发工资
@@ -166,10 +162,89 @@ class SalaryItem < ActiveRecord::Base
         + [:total_sum, :remark]
     end
 
-  end
+    # Use labor_contract data to auto fill
+    def insurance_fields
+      [
+        :pension_personal,
+        :unemployment_personal,
+        :medical_personal,
+        :house_accumulation_personal,
+
+        :pension_company,
+        :unemployment_company,
+        :medical_company,
+        :injury_company,
+        :birth_company,
+        :house_accumulation_company
+      ]
+    end
+
+    # To calculate total_personal
+    def person_deduct_fields
+      [
+        # 吉易账户
+        :pension_personal,
+        :pension_margin_personal,
+        :unemployment_personal,
+        :unemployment_margin_personal,
+        :medical_personal,
+        :medical_margin_personal,
+        :house_accumulation_personal,
+        :big_amount_personal,
+        :income_tax,
+        :physical_exam_addition,
+        :other_personal,
+
+        # 喆琦账户
+        :deduct_addition,
+        :medical_scan_addition,
+        :salary_card_addition,
+        :salary_deduct_addition,
+        :other_deduct_addition,
+      ]
+    end
+
+    # To calculate total_company
+    def company_deduct_fields
+      [
+        # 单位缴费
+        :pension_company,
+        :unemployment_company,
+        :medical_company,
+        :injury_company,
+        :birth_company,
+        :pension_margin_company,
+        :unemployment_margin_company,
+        :medical_margin_company,
+        :injury_margin_company,
+        :birth_margin_company,
+        :house_accumulation_company,
+        :accident_company,
+        :other_company,
+      ]
+    end
+  end # Class method ends
 
   def staff_account
     normal_staff.account
+  end
+
+  def staff_name
+  end
+
+  def staff_identity_card
+  end
+
+  def corporation
+    normal_staff.normal_corporation
+  end
+
+  def normal_staff_name
+    normal_staff.name
+  end
+
+  def salary_table_name
+    salary_table.name
   end
 
   def auto_revise!
@@ -221,134 +296,101 @@ class SalaryItem < ActiveRecord::Base
     self.save!
   end
 
+  def auto_init_fields
+    set_insurance_fund
+    set_additional_fee
+  end
+
+  def revise_fields
+    # income_tax
+    if (self.changed & ['income_tax']).present?
+    else
+      if (self.changed & ['salary_deserve', 'annual_reward']).present?
+        set_income_tax
+      end
+    end
+
+    # total_personal
+    if (self.changed & self.class.person_deduct_fields.map(&:to_s)).present?
+      set_total_personal
+    end
+
+    # salary_in_fact
+    if (self.changed & ['salary_deserve', 'annual_reward', 'total_personal']).present?
+      set_salary_in_fact
+    end
+
+    # total_company
+    if (self.changed & self.class.company_deduct_fields.map(&:to_s)).present?
+      set_total_company
+    end
+
+    # total_sum
+    if (self.changed & ['salary_deserve', 'annual_reward', 'total_company']).present?
+      set_total_sum
+    end
+
+    # admin_amount
+    if (self.changed & ['total_sum']).present?
+      set_admin_amount
+    end
+
+    if (self.changed & ['admin_amount']).present?
+      set_total_sum_with_admin_amount
+    end
+  end
+
+  def init_addition_fee
+    {
+      big_amount_personal: 96,
+      medical_scan_addition: 10,
+      salary_card_addition: 10
+    }
+  end
+
   def set_insurance_fund
-    normal_staff.insurance_fund.each{|k,v| self.send("#{k}=", v)}
+    normal_staff.insurance_fund.each{|k,v| self.send("#{k}=", v.to_f.round(2))}
   end
 
   def set_additional_fee
-    normal_staff.init_addition_fee.each{|k,v| self.send("#{k}=", v)} if normal_staff.has_no_salary_item?
+    init_addition_fee.each{|k,v| self.send("#{k}=", v)}
   end
 
   def set_income_tax
-    self.income_tax = IndividualIncomeTax.calculate(salary: salary_deserve, bonus: annual_reward)
+    self.income_tax = IndividualIncomeTax.calculate(salary: salary_deserve, bonus: annual_reward).round(2)
   end
 
   def set_total_personal
-    self.total_personal = [
-      pension_personal, pension_margin_personal,
-      unemployment_personal, unemployment_margin_personal,
-      medical_personal, medical_margin_personal,
-      house_accumulation_personal,
-      big_amount_personal,
-      income_tax,
-      salary_card_addition, medical_scan_addition, deduct_addition, physical_exam_addition
-    ].map(&:to_f).sum
+    self.total_personal = self.class.person_deduct_fields.map(&:to_f).sum.round(2)
   end
 
   def set_salary_in_fact
-    self.salary_in_fact = salary_deserve - total_personal
+    self.salary_in_fact = (self.salary_deserve - self.total_personal).round(2)
   end
 
   def set_total_company
-    self.total_company = [
-      pension_company, pension_margin_company,
-      unemployment_company, unemployment_margin_company,
-      medical_company, medical_margin_company,
-      injury_company, injury_margin_company,
-      birth_company, birth_margin_company,
-      accident_company,
-      house_accumulation_company
-    ].map(&:to_f).sum
+    self.total_company = self.class.company_deduct_fields.map(&:to_f).sum.round(2)
   end
 
   def set_admin_amount
+    rate = corporation.admin_charge_amount || 0
+
     self.admin_amount = \
-      if corporation.by_rate?
-        set_total_sum * (corporation.admin_charge_amount || 0)
+      if corporation.by_rate_on_salary?
+        (self.salary_deserve + self.annual_reward)*rate
+      elsif corporation.by_rate_on_salary_and_company?
+        self.total_sum*rate
       else
-        corporation.admin_charge_amount || 0
+        rate
       end
   end
 
   def set_total_sum
-    self.total_sum = salary_deserve + total_company
+    self.total_sum = (self.salary_deserve + self.total_company).round(2)
   end
 
   def set_total_sum_with_admin_amount
     self.total_sum_with_admin_amount = total_sum + admin_amount
-  end
-
-  def manipulated_fields
-    @_manipulated_fields ||= %i(
-      social_insurance_to_salary_deserve
-      medical_insurance_to_salary_deserve
-      house_accumulation_to_salary_deserve
-    )
-  end
-
-  def clear_manipulated_fields
-    manipulated_fields.each{|f| self.send("#{f}=", nil)}
-  end
-
-  def corporation
-    normal_staff.normal_corporation
-  end
-
-  def normal_staff_name
-    normal_staff.name
-  end
-
-  def salary_table_name
-    salary_table.name
-  end
-
-  def manipulate_insurance_fund(options = {})
-    if options[:salary_deserve_to_insurance_fund].present?
-      set_insurance_fund
-      clear_manipulated_fields
-
-      self.save!
-    else
-      if options[:social_insurance_to_salary_deserve].present?
-        fields = \
-          [
-            :pension_company,
-            :pension_margin_company,
-            :unemployment_company,
-            :unemployment_margin_company,
-            :injury_company,
-            :injury_margin_company,
-            :birth_company,
-            :birth_margin_company
-          ]
-
-        self.social_insurance_to_salary_deserve = fields.map{|f| self.send("#{f}").to_f }.sum
-        fields.each{|f| self.send("#{f}=", nil)}
-
-        self.save!
-      end
-
-      if options[:medical_insurance_to_salary_deserve].present?
-        self.medical_insurance_to_salary_deserve = \
-          [
-            self.medical_company,
-            self.medical_margin_company
-          ].map(&:to_f).sum
-
-        self.medical_company = nil
-        self.medical_margin_company = nil
-
-        self.save!
-      end
-
-      if options[:house_accumulation_to_salary_deserve].present?
-        self.house_accumulation_to_salary_deserve = \
-          self.house_accumulation_company
-        self.house_accumulation_company = nil
-
-        self.save!
-      end
-    end
   end
 
 end
