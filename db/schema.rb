@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112075634) do
+ActiveRecord::Schema.define(version: 20160112092829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -702,6 +702,48 @@ ActiveRecord::Schema.define(version: 20160112075634) do
   add_index "salary_items", ["salary_deduct_addition"], name: "index_salary_items_on_salary_deduct_addition", using: :btree
   add_index "salary_items", ["salary_deserve"], name: "index_salary_items_on_salary_deserve", using: :btree
   add_index "salary_items", ["salary_in_fact"], name: "index_salary_items_on_salary_in_fact", using: :btree
+  add_index "salary_items", ["salary_table_id", "accident_company"], name: "idx_on_st_and_accident_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "admin_amount"], name: "idx_on_st_and_admin_amount", using: :btree
+  add_index "salary_items", ["salary_table_id", "annual_reward"], name: "idx_on_st_and_annual_reward", using: :btree
+  add_index "salary_items", ["salary_table_id", "big_amount_personal"], name: "idx_on_st_and_big_amount_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "birth_company"], name: "idx_on_st_and_birth_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "birth_margin_company"], name: "idx_on_st_and_birth_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "created_at"], name: "idx_on_st_and_created_at", using: :btree
+  add_index "salary_items", ["salary_table_id", "deduct_addition"], name: "idx_on_st_and_deduct_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "house_accumulation_company"], name: "idx_on_st_and_house_accumulation_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "house_accumulation_personal"], name: "idx_on_st_and_house_accumulation_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "income_tax"], name: "idx_on_st_and_income_tax", using: :btree
+  add_index "salary_items", ["salary_table_id", "injury_company"], name: "idx_on_st_and_injury_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "injury_margin_company"], name: "idx_on_st_and_injury_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_company"], name: "idx_on_st_and_medical_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_margin_company"], name: "idx_on_st_and_medical_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_margin_personal"], name: "idx_on_st_and_medical_margin_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_personal"], name: "idx_on_st_and_medical_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_scan_addition"], name: "idx_on_st_and_medical_scan_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "normal_staff_id"], name: "idx_on_st_and_normal_staff_id", using: :btree
+  add_index "salary_items", ["salary_table_id", "other_company"], name: "idx_on_st_and_other_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "other_deduct_addition"], name: "idx_on_st_and_other_deduct_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "other_personal"], name: "idx_on_st_and_other_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "pension_company"], name: "idx_on_st_and_pension_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "pension_margin_company"], name: "idx_on_st_and_pension_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "pension_margin_personal"], name: "idx_on_st_and_pension_margin_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "pension_personal"], name: "idx_on_st_and_pension_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "physical_exam_addition"], name: "idx_on_st_and_physical_exam_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "remark"], name: "idx_on_st_and_remark", using: :btree
+  add_index "salary_items", ["salary_table_id", "role"], name: "idx_on_st_and_role", using: :btree
+  add_index "salary_items", ["salary_table_id", "salary_card_addition"], name: "idx_on_st_and_salary_card_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "salary_deduct_addition"], name: "idx_on_st_and_salary_deduct_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "salary_deserve"], name: "idx_on_st_and_salary_deserve", using: :btree
+  add_index "salary_items", ["salary_table_id", "salary_in_fact"], name: "idx_on_st_and_salary_in_fact", using: :btree
+  add_index "salary_items", ["salary_table_id", "total_company"], name: "idx_on_st_and_total_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "total_personal"], name: "idx_on_st_and_total_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "total_sum"], name: "idx_on_st_and_total_sum", using: :btree
+  add_index "salary_items", ["salary_table_id", "total_sum_with_admin_amount"], name: "idx_on_st_and_total_sum_with_admin_amount", using: :btree
+  add_index "salary_items", ["salary_table_id", "unemployment_company"], name: "idx_on_st_and_unemployment_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "unemployment_margin_company"], name: "idx_on_st_and_unemployment_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "unemployment_margin_personal"], name: "idx_on_st_and_unemployment_margin_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "unemployment_personal"], name: "idx_on_st_and_unemployment_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "updated_at"], name: "idx_on_st_and_updated_at", using: :btree
   add_index "salary_items", ["salary_table_id"], name: "index_salary_items_on_salary_table_id", using: :btree
   add_index "salary_items", ["staff_account"], name: "index_salary_items_on_staff_account", using: :btree
   add_index "salary_items", ["staff_name"], name: "index_salary_items_on_staff_name", using: :btree
