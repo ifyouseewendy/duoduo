@@ -6,6 +6,8 @@ class SalaryTable < ActiveRecord::Base
   mount_uploader :lai_table, Attachment
   mount_uploader :daka_table, Attachment
 
+  enum status: [:active, :archive]
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
