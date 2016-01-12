@@ -31,9 +31,21 @@ ActiveAdmin.register SalaryItem do
     actions
   end
 
-  # preserve_default_filters!
-  # remove_filter :salary_tables
-  # remove_filter :normal_staffs
+  filter :id
+  filter :normal_staff_account, as: :string
+  filter :normal_staff_name, as: :string
+  filter :salary_deserve
+  filter :income_tax
+  filter :total_personal
+  filter :salary_in_fact
+  filter :total_company
+  filter :admin_amount
+  filter :total_sum
+  filter :total_sum_with_admin_amount
+  preserve_default_filters!
+  remove_filter :salary_table
+  remove_filter :normal_staff
+  remove_filter :role
 
   # Edit
   permit_params :staff_name, :salary_deserve, :salary_table_id, :staff_identity_card

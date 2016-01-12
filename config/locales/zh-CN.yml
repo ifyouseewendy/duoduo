@@ -223,6 +223,7 @@ zh-CN:
         id: '序号'
         identity_card: '身份证号'
         account: '工资卡号'
+        normal_staff_account: '工资卡号'
         company_name: '公司名称'
         staff_category: '用工类别'
         staff_name: '姓名'

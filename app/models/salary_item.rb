@@ -163,7 +163,7 @@ class SalaryItem < ActiveRecord::Base
     def proof_columns
       whole_columns\
         - [:admin_amount, :total_sum_with_admin_amount, :remark]\
-        + [:total_amount, :remark]
+        + [:total_sum, :remark]
     end
 
   end
