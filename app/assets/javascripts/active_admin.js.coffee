@@ -334,10 +334,16 @@ $(document).on 'ready', ->
 
   # Add View
   if $('.salary_items').length > 0
-    console.log(query_string)
+    if query_string == "view=proof"
+      button_name = '：帐用'
+    else if query_string == "view=card"
+      button_name = '：打卡'
+    else
+      button_name = '：基础'
+
     html =  """
             <div class='views_selector dropdown_menu'>
-              <a class='dropdown_menu_button' href='#'>视图</a>
+              <a class='dropdown_menu_button' href='#'>视图#{button_name}</a>
               <div class='dropdown_menu_list_wrapper' style='display: none;'><div class='dropdown_menu_nipple'></div>
                 <ul class='dropdown_menu_list'>
                   <li><a href='#{current_path}'>基础</a></li>
