@@ -49,6 +49,10 @@ class BusinessSalary < DuoduoCli
     zheqi_staff.destroy
     NormalStaff.where("identity_card like ?", '22222222222222%%%%').each(&:destroy)
 
+    # Skip callbacks
+    SalaryItem.skip_callback(:create, :before, :auto_init_fields)
+    SalaryItem.skip_callback(:save, :after, :revise_fields)
+
     files.each do |f|
       logger.info "--> Processing #{f.basename}"
 
