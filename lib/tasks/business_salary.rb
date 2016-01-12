@@ -269,6 +269,9 @@ class BusinessSalary < DuoduoCli
 
         item.role = role
         item.normal_staff = staff
+        item.staff_name = staff.name
+        item.staff_account = staff.account
+
         item.save!
 
         items << item
