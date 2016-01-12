@@ -291,3 +291,11 @@ body.engineering_customers table.index_table {
     }
   }
 }
+
+.salary_items {
+  .index_table{
+    th.col-actions {
+      min-width: 50px !important;
+    }
+  }
+}

@@ -34,7 +34,11 @@ ActiveAdmin.register SalaryItem do
       end
     end
 
-    actions
+    actions defaults: false do |obj|
+      item "编辑", edit_salary_table_salary_item_path(params[:salary_table_id], obj.id)
+      text_node "&nbsp;".html_safe
+      item "删除", salary_table_salary_item_path(params[:salary_table_id], obj.id), method: :delete
+    end
   end
 
   filter :id
