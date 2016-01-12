@@ -64,8 +64,12 @@ ActiveAdmin.register SalaryTable do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :normal_corporation, as: :select
+      f.input :start_date, as: :datepicker, hint: '请选择月份第一天代表该月。例如，9月工资表请选择9月1号'
       f.input :name, as: :string
+      f.input :normal_corporation, as: :select, collection: -> { NormalCorporation.as_filter }.call
+      f.input :status, as: :check_boxes, collection: ->{ SalaryTable.statuses_option }.call
+      f.input :lai_table, as: :file
+      f.input :daka_table, as: :file
       f.input :remark, as: :text
     end
 
@@ -74,10 +78,31 @@ ActiveAdmin.register SalaryTable do
 
   show do
     attributes_table do
-      resource.class.ordered_columns(without_foreign_keys: true).map(&:to_sym).map do |field|
-        row field
+      row :start_date do |obj|
+        obj.month
       end
-      row :corporation
+      row :name
+      row :normal_corporation do |obj|
+        nc = obj.normal_corporation
+        link_to nc.name, normal_corporation_path(nc)
+      end
+      row :status do |obj|
+        status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+      end
+
+      row :lai_table do |obj|
+        link_to (obj.lai_table_identifier || '无'), (obj.lai_table.try(:url) || '#')
+      end
+      row :daka_table do |obj|
+        link_to (obj.daka_table_identifier || '无'), (obj.daka_table.try(:url) || '#')
+      end
+
+      row :remark
+      row :created_at
+      row :updated_at
     end
+
+    active_admin_comments
   end
+
 end

@@ -5,8 +5,6 @@ ActiveAdmin.register NormalCorporation do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 1
 
-  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
-
   scope "全部" do |record|
     record.all
   end
@@ -83,6 +81,8 @@ ActiveAdmin.register NormalCorporation do
   remove_filter :guard_salary_items
   remove_filter :non_full_day_salary_tables
   remove_filter :non_full_day_salary_items
+
+  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
