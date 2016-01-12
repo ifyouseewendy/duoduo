@@ -8,6 +8,93 @@ ActiveAdmin.register SalaryItem do
     ]
   end
 
+  # Index
+  index do
+    selectable_column
+
+    custom_sortable = {
+      normal_staff: :normal_staff_id,
+      staff_account: :normal_staff_id
+    }
+
+    fields = SalaryItem.columns_based_on(view: params[:view], custom: params[:custom])
+    present_fields = fields.select{|key| collection.map{|obj| obj.send(key)}.any?(&:present?)}
+
+    present_fields.each do |field|
+      if custom_sortable.keys.include? field
+        column field, sortable: custom_sortable[field]
+      else
+        column field
+      end
+    end
+
+    actions
+  end
+
+  # preserve_default_filters!
+  # remove_filter :salary_tables
+  # remove_filter :normal_staffs
+
+  # Edit
+  permit_params :staff_name, :salary_deserve, :salary_table_id, :staff_identity_card
+
+  form partial: 'form'
+
+  controller do
+    def create
+      st = SalaryTable.find(params[:salary_table_id])
+      name = permitted_params[:salary_item][:staff_name]
+      salary = permitted_params[:salary_item][:salary_deserve].to_f
+      identity_card = permitted_params[:salary_item][:staff_identity_card]
+
+      begin
+        SalaryItem.create_by(
+          salary_table: st,
+          salary: salary,
+          name: name,
+          identity_card: identity_card
+        )
+
+        redirect_to salary_table_salary_items_path(st), notice: "成功创建基础工资条"
+      rescue => e
+        redirect_to new_salary_table_salary_item_path(st), alert: "创建失败，#{e.message}"
+      end
+    end
+  end
+
+  # Batch actions
+  batch_action :batch_edit, form: ->{ SalaryItem.batch_form_fields } do |ids|
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+
+    batch_action_collection.find(ids).each do |obj|
+      obj.update_by(inputs)
+    end
+
+    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+  end
+
+  batch_action :manipulate_insurance_fund, form: ->{ SalaryItem.manipulate_insurance_fund_fields } do |ids|
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+
+    batch_action_collection.find(ids).each do |obj|
+      obj.manipulate_insurance_fund(inputs)
+    end
+
+    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+  end
+
+  # Collection actions
+  collection_action :export_xlsx do
+    st = SalaryTable.find(params[:salary_table_id])
+
+    options = {}
+    options[:selected] = params[:selected].split('-') if params[:selected].present?
+    options[:columns] = params[:columns].split('-') if params[:columns].present?
+
+    file = st.export_xlsx(view: params[:view], options: options)
+    send_file file, filename: file.basename
+  end
+
   # Import
   action_item :import_new, only: [:index] do
     link_to '导入普通工资表', import_new_salary_table_salary_items_path(salary_table)
@@ -15,6 +102,15 @@ ActiveAdmin.register SalaryItem do
 
   collection_action :import_new do
     render 'import_new'
+  end
+
+  sidebar '参考', only: :import_new do
+    para "#{normal_corporation.name} 中包含 #{normal_corporation.normal_staffs.count} 名员工，分别为"
+    ul do
+      normal_corporation.normal_staffs.each do |staff|
+        li link_to(staff.name, normal_staff_path(staff))
+      end
+    end
   end
 
   collection_action :import_do, method: :post do
@@ -78,274 +174,4 @@ ActiveAdmin.register SalaryItem do
 
   end
 
-  sidebar '参考', only: :import_new do
-    para "#{normal_corporation.name} 中包含 #{normal_corporation.normal_staffs.count} 名员工，分别为"
-    ul do
-      normal_corporation.normal_staffs.each do |staff|
-        li link_to(staff.name, normal_staff_path(staff))
-      end
-    end
-  end
-
-  # Index
-  index do
-    selectable_column
-
-    if params[:view] == 'proof'
-      column :id
-      column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card }
-      column :staff_account, sortable: ->(obj){ obj.staff_account }
-      column :staff_category, sortable: ->(obj){ obj.staff_category }
-      column :staff_company, sortable: -> (obj){ obj.staff_company.id }
-      column :normal_staff, sortable: :normal_staff_id
-      column :salary_table, sortable: :salary_table_id
-      column :salary_deserve
-      column :annual_reward
-      column :pension_personal
-      column :pension_margin_personal
-      column :unemployment_personal
-      column :unemployment_margin_personal
-      column :medical_personal
-      column :medical_margin_personal
-      column :house_accumulation_personal
-      column :big_amount_personal
-      column :income_tax
-      column :salary_card_addition
-      column :medical_scan_addition
-      column :deduct_addition
-      column :physical_exam_addition
-      column :total_personal
-      column :salary_in_fact
-      column :pension_company
-      column :pension_margin_company
-      column :unemployment_company
-      column :unemployment_margin_company
-      column :medical_company
-      column :medical_margin_company
-      column :injury_company
-      column :injury_margin_company
-      column :birth_company
-      column :birth_margin_company
-      column :accident_company
-      column :house_accumulation_company
-      column :total_company
-      column :social_insurance_to_pre_deduct
-      column :medical_insurance_to_pre_deduct
-      column :house_accumulation_to_pre_deduct
-      column :social_insurance_to_salary_deserve
-      column :medical_insurance_to_salary_deserve
-      column :house_accumulation_to_salary_deserve
-      column :transfer_fund_to_person
-      column :transfer_fund_to_account
-      column :total_sum
-    elsif params[:view] == 'card'
-      column :staff_account, sortable: ->(obj){ obj.staff_account }
-      column :normal_staff, sortable: :normal_staff_id
-      column :salary_in_fact
-    elsif params[:view] == 'custom'
-      columns = params[:columns].split('-')
-
-      column :id if columns.include? 'id'
-      column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card } if columns.include? 'staff_identity_card'
-      column :staff_account, sortable: ->(obj){ obj.staff_account } if columns.include? 'staff_account'
-      column :staff_category, sortable: ->(obj){ obj.staff_category } if columns.include? 'staff_category'
-      column :staff_company, sortable: -> (obj){ obj.staff_company.id } if columns.include? 'staff_company'
-      column :normal_staff, sortable: :normal_staff_id if columns.include? 'normal_staff'
-      column :salary_table, sortable: :salary_table_id if columns.include? 'salary_table'
-
-      sortable_columns = %w(id staff_identity_card staff_account staff_category staff_company normal_staff salary_table)
-      (columns - sortable_columns).each{|col| column col.to_sym}
-    elsif params[:view] == 'whole'
-      column :id
-      column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card }
-      column :staff_account, sortable: ->(obj){ obj.staff_account }
-      column :staff_category, sortable: ->(obj){ obj.staff_category }
-      column :staff_company, sortable: -> (obj){ obj.staff_company.id }
-      column :normal_staff, sortable: :normal_staff_id
-      column :salary_table, sortable: :salary_table_id
-      column :salary_deserve
-      column :annual_reward
-      column :pension_personal
-      column :pension_margin_personal
-      column :unemployment_personal
-      column :unemployment_margin_personal
-      column :medical_personal
-      column :medical_margin_personal
-      column :house_accumulation_personal
-      column :big_amount_personal
-      column :income_tax
-      column :salary_card_addition
-      column :medical_scan_addition
-      column :deduct_addition
-      column :physical_exam_addition
-      column :total_personal
-      column :salary_in_fact
-      column :pension_company
-      column :pension_margin_company
-      column :unemployment_company
-      column :unemployment_margin_company
-      column :medical_company
-      column :medical_margin_company
-      column :injury_company
-      column :injury_margin_company
-      column :birth_company
-      column :birth_margin_company
-      column :accident_company
-      column :house_accumulation_company
-      column :total_company
-      column :social_insurance_to_pre_deduct
-      column :medical_insurance_to_pre_deduct
-      column :house_accumulation_to_pre_deduct
-      column :social_insurance_to_salary_deserve
-      column :medical_insurance_to_salary_deserve
-      column :house_accumulation_to_salary_deserve
-      column :transfer_fund_to_person
-      column :transfer_fund_to_account
-      column :admin_amount
-      column :total_sum
-      column :total_sum_with_admin_amount
-      column :created_at
-      column :updated_at
-      column :remark
-    else
-      keys = [
-        :id,
-        :staff_identity_card,
-        :staff_account,
-        :staff_category,
-        :staff_company,
-        :normal_staff,
-        :salary_table,
-        :salary_deserve,
-        :annual_reward,
-        :pension_personal,
-        :pension_margin_personal,
-        :unemployment_personal,
-        :unemployment_margin_personal,
-        :medical_personal,
-        :medical_margin_personal,
-        :house_accumulation_personal,
-        :big_amount_personal,
-        :income_tax,
-        :salary_card_addition,
-        :medical_scan_addition,
-        :deduct_addition,
-        :physical_exam_addition,
-        :total_personal,
-        :salary_in_fact,
-        :pension_company,
-        :pension_margin_company,
-        :unemployment_company,
-        :unemployment_margin_company,
-        :medical_company,
-        :medical_margin_company,
-        :injury_company,
-        :injury_margin_company,
-        :birth_company,
-        :birth_margin_company,
-        :accident_company,
-        :house_accumulation_company,
-        :total_company,
-        :social_insurance_to_pre_deduct,
-        :medical_insurance_to_pre_deduct,
-        :house_accumulation_to_pre_deduct,
-        :social_insurance_to_salary_deserve,
-        :medical_insurance_to_salary_deserve,
-        :house_accumulation_to_salary_deserve,
-        :transfer_fund_to_person,
-        :transfer_fund_to_account,
-        :admin_amount,
-        :total_sum,
-        :total_sum_with_admin_amount,
-        :created_at,
-        :updated_at,
-        :remark,
-      ]
-      valid_keys = keys.select{|key| collection.map{|obj| obj.send(key)}.any?(&:present?)}
-      valid_keys.each do |key|
-        case key
-        when :staff_identity_card
-          column :staff_identity_card, sortable: ->(obj){ obj.staff_identity_card }
-        when :staff_account
-          column :staff_account, sortable: ->(obj){ obj.staff_account }
-        when :staff_category
-          column :staff_category, sortable: ->(obj){ obj.staff_category }
-        when :staff_company
-          column :staff_company, sortable: -> (obj){ obj.staff_company.id }
-        when :normal_staff
-          column :normal_staff, sortable: :normal_staff_id
-        when :salary_table
-          column :salary_table, sortable: :salary_table_id
-        else
-          column key
-        end
-      end
-    end
-
-    actions
-  end
-
-  preserve_default_filters!
-  remove_filter :salary_tables
-  # remove_filter :normal_staffs
-
-  # Edit
-  permit_params :staff_name, :salary_deserve, :salary_table_id, :staff_identity_card
-
-  form partial: 'form'
-
-  controller do
-    def create
-      st = SalaryTable.find(params[:salary_table_id])
-      name = permitted_params[:salary_item][:staff_name]
-      salary = permitted_params[:salary_item][:salary_deserve].to_f
-      identity_card = permitted_params[:salary_item][:staff_identity_card]
-
-      begin
-        SalaryItem.create_by(
-          salary_table: st,
-          salary: salary,
-          name: name,
-          identity_card: identity_card
-        )
-
-        redirect_to salary_table_salary_items_path(st), notice: "成功创建基础工资条"
-      rescue => e
-        redirect_to new_salary_table_salary_item_path(st), alert: "创建失败，#{e.message}"
-      end
-    end
-  end
-
-  # Batch actions
-  batch_action :batch_edit, form: ->{ SalaryItem.batch_form_fields } do |ids|
-    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
-
-    batch_action_collection.find(ids).each do |obj|
-      obj.update_by(inputs)
-    end
-
-    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
-  end
-
-  batch_action :manipulate_insurance_fund, form: ->{ SalaryItem.manipulate_insurance_fund_fields } do |ids|
-    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
-
-    batch_action_collection.find(ids).each do |obj|
-      obj.manipulate_insurance_fund(inputs)
-    end
-
-    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
-  end
-
-  # Collection actions
-  collection_action :export_xlsx do
-    st = SalaryTable.find(params[:salary_table_id])
-
-    options = {}
-    options[:selected] = params[:selected].split('-') if params[:selected].present?
-    options[:columns] = params[:columns].split('-') if params[:columns].present?
-
-    file = st.export_xlsx(view: params[:view], options: options)
-    send_file file, filename: file.basename
-  end
 end
