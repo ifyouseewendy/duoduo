@@ -232,4 +232,10 @@ ActiveAdmin.register SalaryItem do
 
   end
 
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:normal_staff)
+    end
+  end
+
 end
