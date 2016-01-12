@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112075006) do
+ActiveRecord::Schema.define(version: 20160112075634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -665,6 +665,8 @@ ActiveRecord::Schema.define(version: 20160112075006) do
     t.decimal  "other_personal",               precision: 8, scale: 2
     t.decimal  "other_company",                precision: 8, scale: 2
     t.integer  "role",                                                 default: 0
+    t.text     "staff_name"
+    t.text     "staff_account"
   end
 
   add_index "salary_items", ["accident_company"], name: "index_salary_items_on_accident_company", using: :btree
@@ -701,6 +703,8 @@ ActiveRecord::Schema.define(version: 20160112075006) do
   add_index "salary_items", ["salary_deserve"], name: "index_salary_items_on_salary_deserve", using: :btree
   add_index "salary_items", ["salary_in_fact"], name: "index_salary_items_on_salary_in_fact", using: :btree
   add_index "salary_items", ["salary_table_id"], name: "index_salary_items_on_salary_table_id", using: :btree
+  add_index "salary_items", ["staff_account"], name: "index_salary_items_on_staff_account", using: :btree
+  add_index "salary_items", ["staff_name"], name: "index_salary_items_on_staff_name", using: :btree
   add_index "salary_items", ["total_company"], name: "index_salary_items_on_total_company", using: :btree
   add_index "salary_items", ["total_personal"], name: "index_salary_items_on_total_personal", using: :btree
   add_index "salary_items", ["total_sum"], name: "index_salary_items_on_total_sum", using: :btree
