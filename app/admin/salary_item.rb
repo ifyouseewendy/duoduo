@@ -8,6 +8,10 @@ ActiveAdmin.register SalaryItem do
     ]
   end
 
+  scope "全部" do |record|
+    record.all
+  end
+
   # Index
   index do
     selectable_column

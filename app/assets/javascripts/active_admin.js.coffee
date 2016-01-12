@@ -346,7 +346,7 @@ $(document).on 'ready', ->
           </div>
           """
 
-  $('body.salary_items .table_tools').append(html)
+  $('body.salary_items .table_tools .batch_actions_selector').after(html)
 
   $('.views_selector .dropdown_menu_button').on 'click', (e) ->
     e.stopPropagation()

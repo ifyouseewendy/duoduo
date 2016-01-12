@@ -52,10 +52,6 @@
   top: 40px;
 }
 
-.views_selector {
-  margin-left: 10px;
-}
-
 #utility_nav {
   .has_nested {
     margin-left: 113px;
@@ -296,6 +292,16 @@ body.engineering_customers table.index_table {
   .index_table{
     th.col-actions {
       min-width: 50px !important;
+    }
+  }
+
+  .table_tools {
+    .views_selector {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+    .scopes {
+      float: none !important;
     }
   }
 }
