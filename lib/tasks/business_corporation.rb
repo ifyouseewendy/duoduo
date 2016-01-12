@@ -141,6 +141,7 @@ class BusinessCorporation < DuoduoCli
             nc = NormalCorporation.new(full_name: full_name) if nc.nil?
             # raise "无法找到合作单位全称：#{full_name}" if nc.nil?
 
+            nc.sub_company = sub_company
             nc.status = 'active'
             nc.name = name
             nc.save!
@@ -158,10 +159,11 @@ class BusinessCorporation < DuoduoCli
     end
 
     def seed_internal_corporation
-      NormalCorporation.create!(
+      nc = NormalCorporation.new(
         name: '内部',
         status: 'active'
       )
+      nc.save(validate: false)
     end
 end
 
