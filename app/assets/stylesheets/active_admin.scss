@@ -17,6 +17,9 @@
 //
 //   .status_tag { background: #6090DB; }
 
+$table_red: rgba(255, 34, 34, 0.2);
+$table_blue: rgba(34, 112, 255, 0.18);
+
 .form_tag {
   display: inline
 }
@@ -108,7 +111,7 @@ body.engineering_customers table.index_table {
   }
 
   .due_date .col-contract_end_date{
-    background-color: rgba(255, 34, 34, 0.32);
+    background-color: $table_red;
   }
 }
 
@@ -214,7 +217,7 @@ body.engineering_customers table.index_table {
 
 .index_table {
   tfoot {
-    background-color: rgba(34, 112, 255, 0.18);
+    background-color: $table_blue;
   }
 }
 
@@ -292,6 +295,10 @@ body.engineering_customers table.index_table {
   .index_table{
     th.col-actions {
       min-width: 50px !important;
+    }
+
+    .transfer td{
+      background-color: $table_red;
     }
   }
 
