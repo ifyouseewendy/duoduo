@@ -9,6 +9,7 @@ ActiveAdmin.register SalaryItem do
   end
 
   config.per_page = 100
+  config.sort_order = 'nest_index_asc,role_asc'
 
   scope "全部" do |record|
     record.all
