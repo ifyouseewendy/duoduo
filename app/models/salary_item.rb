@@ -95,7 +95,7 @@ class SalaryItem < ActiveRecord::Base
         # 员工信息
         :id,
         :staff_account,
-        :normal_staff,
+        :staff_name,
         :salary_deserve,
         :annual_reward,
 
@@ -153,7 +153,7 @@ class SalaryItem < ActiveRecord::Base
     end
 
     def card_columns
-      [:staff_account, :normal_staff, :salary_in_fact]
+      [:staff_account, :staff_name, :salary_in_fact]
     end
 
     def proof_columns
@@ -225,13 +225,6 @@ class SalaryItem < ActiveRecord::Base
     end
   end # Class method ends
 
-  def staff_account
-    normal_staff.account
-  end
-
-  def staff_name
-  end
-
   def staff_identity_card
   end
 
@@ -297,6 +290,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def auto_init_fields
+    set_name_and_account
     set_insurance_fund
     set_additional_fee
   end
@@ -348,6 +342,11 @@ class SalaryItem < ActiveRecord::Base
       medical_scan_addition: 10,
       salary_card_addition: 10
     }
+  end
+
+  def set_name_and_account
+    self.staff_name = self.normal_staff.name
+    self.staff_account = self.normal_staff.account
   end
 
   def set_insurance_fund
