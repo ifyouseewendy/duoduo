@@ -333,55 +333,57 @@ $(document).on 'ready', ->
   query_string = url.split('?')[1]
 
   # Add View
-  html =  """
-          <div class='views_selector dropdown_menu'>
-            <a class='dropdown_menu_button' href='#'>视图</a>
-            <div class='dropdown_menu_list_wrapper' style='display: none;'><div class='dropdown_menu_nipple'></div>
-              <ul class='dropdown_menu_list'>
-                <li><a href='#{current_path}'>基础</a></li>
-                <li><a href='#{current_path}?view=proof'>帐用</a></li>
-                <li><a href='#{current_path}?view=card'>打卡</a></li>
-              </ul>
+  if $('.salary_items').length > 0
+    console.log(query_string)
+    html =  """
+            <div class='views_selector dropdown_menu'>
+              <a class='dropdown_menu_button' href='#'>视图</a>
+              <div class='dropdown_menu_list_wrapper' style='display: none;'><div class='dropdown_menu_nipple'></div>
+                <ul class='dropdown_menu_list'>
+                  <li><a href='#{current_path}'>基础</a></li>
+                  <li><a href='#{current_path}?view=proof'>帐用</a></li>
+                  <li><a href='#{current_path}?view=card'>打卡</a></li>
+                </ul>
+              </div>
             </div>
-          </div>
-          """
+            """
 
-  $('body.salary_items .table_tools .batch_actions_selector').after(html)
+    $('body.salary_items .table_tools .batch_actions_selector').after(html)
 
-  $('.views_selector .dropdown_menu_button').on 'click', (e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    list = $(@).next('.dropdown_menu_list_wrapper')
-    if list.css('display') == 'none'
-      list.css('top', '174px')
-      list.find('.dropdown_menu_nipple').css('left', '20px')
-      list.show();
-    else
-      list.hide();
+    $('.views_selector .dropdown_menu_button').on 'click', (e) ->
+      e.stopPropagation()
+      e.preventDefault()
+      list = $(@).next('.dropdown_menu_list_wrapper')
+      if list.css('display') == 'none'
+        list.css('top', '174px')
+        list.find('.dropdown_menu_nipple').css('left', '20px')
+        list.show();
+      else
+        list.hide();
 
-  $('.views_selector .custom a').on 'click', (e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    $('.views_selector .dropdown_menu_list_wrapper').hide();
+    $('.views_selector .custom a').on 'click', (e) ->
+      e.stopPropagation()
+      e.preventDefault()
+      $('.views_selector .dropdown_menu_list_wrapper').hide();
 
-    columns = {}
-    names = []
-    $('#index_table_salary_items th')[1..-2].each ->
-      col = $(this).attr('class').split(' ')[-1..][0].split('-')[1..-1]
-      name = $(this).find('a').text()
-      columns[col] = 'checkbox'
-      names.push(name)
+      columns = {}
+      names = []
+      $('#index_table_salary_items th')[1..-2].each ->
+        col = $(this).attr('class').split(' ')[-1..][0].split('-')[1..-1]
+        name = $(this).find('a').text()
+        columns[col] = 'checkbox'
+        names.push(name)
 
-    ActiveAdmin.modal_dialog_modified '请选择展示字段', columns, names,
-      (inputs)=>
-        columns = []
-        for key,val of inputs
-          columns.push key
+      ActiveAdmin.modal_dialog_modified '请选择展示字段', columns, names,
+        (inputs)=>
+          columns = []
+          for key,val of inputs
+            columns.push key
 
-        window.location = "#{current_path}?view=custom&columns=#{columns.join('-')}"
+          window.location = "#{current_path}?view=custom&columns=#{columns.join('-')}"
 
-  $(document).on 'click', ->
-    $('.views_selector .dropdown_menu_list_wrapper').hide()
+    $(document).on 'click', ->
+      $('.views_selector .dropdown_menu_list_wrapper').hide()
 
   # Export XLSX
   export_path = "#{current_path}/export_xlsx?#{query_string}"
