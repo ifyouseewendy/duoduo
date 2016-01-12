@@ -20,7 +20,14 @@ class BusinessSalary < DuoduoCli
   option :from, required: true
   def start
     load_rails
+
+    # Skip callbacks
+    SalaryItem.skip_callback(:create, :before, :auto_init_fields)
+    SalaryItem.skip_callback(:save, :after, :revise_fields)
+    SalaryItem.skip_callback(:destroy, :after, :revise_nest_index)
+
     clean_db(:business_salary)
+
     clean_logger
     init_logger
 
@@ -48,10 +55,6 @@ class BusinessSalary < DuoduoCli
     $NULL_ID = 222222222222222222
     zheqi_staff.destroy
     NormalStaff.where("identity_card like ?", '22222222222222%%%%').each(&:destroy)
-
-    # Skip callbacks
-    SalaryItem.skip_callback(:create, :before, :auto_init_fields)
-    SalaryItem.skip_callback(:save, :after, :revise_fields)
 
     files.each do |f|
       logger.info "--> Processing #{f.basename}"
@@ -193,6 +196,9 @@ class BusinessSalary < DuoduoCli
         end
       end
 
+      skip_total = false
+      counter = 0
+
       sheet[start_row..-1].each_with_index do |data, idx|
         if data.compact[0].to_s.delete(' ') == '合计'
           sum_row = start_row + idx
@@ -219,11 +225,15 @@ class BusinessSalary < DuoduoCli
             staff = zheqi_staff
             role = :transfer
           else
-            if stf = corporation.normal_staffs.where(account: account).first
-              staff = stf
-            else
+            if account.blank?
               staff = last_staff
               role = :transfer
+            elsif stf = corporation.normal_staffs.where(account: account).first
+              staff = stf
+            else
+              logger.error "#{file.basename} ; #{name} ; 姓名为空，并且找不到银行卡 #{account}"
+              skip_total = true
+              next
             end
           end
         elsif staff_name.index('喆琦')
@@ -268,6 +278,9 @@ class BusinessSalary < DuoduoCli
         last_staff = staff
 
         item.role = role
+        counter += 1 if role == :normal
+        item.nest_index = counter
+
         item.normal_staff = staff
         item.staff_name = staff.name
         item.staff_account = staff.account
@@ -277,7 +290,7 @@ class BusinessSalary < DuoduoCli
         items << item
       end
 
-      if sum_row.present?
+      if sum_row.present? && !skip_total
         summary = Hash[ fields.zip(sheet[sum_row]) ].reject{|k| %i(id bank_account name remark social_insurance_base medical_insurance_base).include? k}
         summary.each do |k, v|
           sum = items.map{|it| it.send(k).to_f }.sum.round(2)
