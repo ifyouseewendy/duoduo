@@ -8,6 +8,8 @@ ActiveAdmin.register SalaryItem do
     ]
   end
 
+  config.per_page = 100
+
   scope "全部" do |record|
     record.all
   end
@@ -153,7 +155,7 @@ ActiveAdmin.register SalaryItem do
 
   # Import
   action_item :import_new, only: [:index] do
-    link_to '导入普通工资表', import_new_salary_table_salary_items_path(salary_table)
+    link_to '导入基础工资表', import_new_salary_table_salary_items_path(salary_table)
   end
 
   collection_action :import_new do

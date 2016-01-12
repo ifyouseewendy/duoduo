@@ -41,7 +41,7 @@ ActiveAdmin.register NormalCorporation do
     column :salary_table_display, sortable: :id do |obj|
       ul do
         if obj.salary_tables.count > 0
-          li link_to("普通工资表", normal_corporation_salary_tables_path(obj), target: '_blank' )
+          li link_to("基础工资表", normal_corporation_salary_tables_path(obj), target: '_blank' )
         end
         if obj.guard_salary_tables.count > 0
           li link_to(" 保安工资表", normal_corporation_guard_salary_tables_path(obj), target: '_blank' )
@@ -156,7 +156,7 @@ ActiveAdmin.register NormalCorporation do
     ul do
       li link_to "员工列表", normal_corporation_normal_staffs_path(normal_corporation)
       if normal_corporation.salary_tables.count > 0
-        li link_to '普通工资表', normal_corporation_salary_tables_path(normal_corporation)
+        li link_to '基础工资表', normal_corporation_salary_tables_path(normal_corporation)
       end
       if normal_corporation.guard_salary_tables.count > 0
         li link_to '保安工资表', normal_corporation_guard_salary_tables_path(normal_corporation)
