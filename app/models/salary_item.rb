@@ -18,6 +18,8 @@ class SalaryItem < ActiveRecord::Base
   # update nest_index on table's other salary_items
   after_destroy :revise_nest_index
 
+  default_scope { order(nest_index: :asc).order(role: :asc) }
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -104,7 +106,7 @@ class SalaryItem < ActiveRecord::Base
     def whole_columns
       [
         # 员工信息
-        :id,
+        :nest_index,
         :staff_account,
         :staff_name,
         :salary_deserve,
