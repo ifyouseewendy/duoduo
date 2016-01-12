@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112092829) do
+ActiveRecord::Schema.define(version: 20160112094714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -667,6 +667,7 @@ ActiveRecord::Schema.define(version: 20160112092829) do
     t.integer  "role",                                                 default: 0
     t.text     "staff_name"
     t.text     "staff_account"
+    t.integer  "nest_index"
   end
 
   add_index "salary_items", ["accident_company"], name: "index_salary_items_on_accident_company", using: :btree
@@ -687,6 +688,7 @@ ActiveRecord::Schema.define(version: 20160112092829) do
   add_index "salary_items", ["medical_margin_personal"], name: "index_salary_items_on_medical_margin_personal", using: :btree
   add_index "salary_items", ["medical_personal"], name: "index_salary_items_on_medical_personal", using: :btree
   add_index "salary_items", ["medical_scan_addition"], name: "index_salary_items_on_medical_scan_addition", using: :btree
+  add_index "salary_items", ["nest_index"], name: "index_salary_items_on_nest_index", using: :btree
   add_index "salary_items", ["normal_staff_id"], name: "index_salary_items_on_normal_staff_id", using: :btree
   add_index "salary_items", ["other_company"], name: "index_salary_items_on_other_company", using: :btree
   add_index "salary_items", ["other_deduct_addition"], name: "index_salary_items_on_other_deduct_addition", using: :btree
@@ -720,6 +722,7 @@ ActiveRecord::Schema.define(version: 20160112092829) do
   add_index "salary_items", ["salary_table_id", "medical_margin_personal"], name: "idx_on_st_and_medical_margin_personal", using: :btree
   add_index "salary_items", ["salary_table_id", "medical_personal"], name: "idx_on_st_and_medical_personal", using: :btree
   add_index "salary_items", ["salary_table_id", "medical_scan_addition"], name: "idx_on_st_and_medical_scan_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "nest_index"], name: "index_salary_items_on_salary_table_id_and_nest_index", using: :btree
   add_index "salary_items", ["salary_table_id", "normal_staff_id"], name: "idx_on_st_and_normal_staff_id", using: :btree
   add_index "salary_items", ["salary_table_id", "other_company"], name: "idx_on_st_and_other_company", using: :btree
   add_index "salary_items", ["salary_table_id", "other_deduct_addition"], name: "idx_on_st_and_other_deduct_addition", using: :btree
