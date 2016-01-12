@@ -135,7 +135,8 @@ class BusinessSalary < DuoduoCli
     end
 
     def create_table(name:)
-      @table = corporation.salary_tables.find_or_create_by!(name: name)
+      date = get_start_date_from(name)
+      @table = corporation.salary_tables.find_or_create_by!(name: name, start_date: date)
       corporation.active!
     end
 
@@ -387,6 +388,10 @@ class BusinessSalary < DuoduoCli
               in_service: true,
               normal_corporation_id: NormalCorporation.internal.id
             )
+    end
+
+    def get_start_date_from(name)
+      Date.parse(name.match(/^\d{6}/)[0] + "01")
     end
 end
 
