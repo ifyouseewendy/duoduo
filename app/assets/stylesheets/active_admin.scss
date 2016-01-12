@@ -222,43 +222,58 @@ body.engineering_customers table.index_table {
   }
 }
 
-.normal_corporations .index_table{
-  th.col-full_name {
-    min-width: 100px !important;
-  }
-  th.col-remark {
-    min-width: 200px !important;
-  }
-  th.col-address {
-    min-width: 100px !important;
-  }
-  th.col-salary_table_display {
-    min-width: 80px !important;
-  }
-  td.col-salary_table_display {
-    li {
-      display: inline;
+.normal_corporations {
+  .index_table {
+    th.col-full_name {
+      min-width: 100px !important;
+    }
+    th.col-remark {
+      min-width: 200px !important;
+    }
+    th.col-address {
+      min-width: 100px !important;
+    }
+    th.col-salary_table_display {
+      min-width: 80px !important;
+    }
+    td.col-salary_table_display {
+      li {
+        display: inline;
+      }
     }
   }
-}
-
-.normal_staffs .index_table{
-  th.col-normal_corporation {
-    min-width: 80px !important;
-  }
-  th.col-address {
-    min-width: 150px !important;
-  }
-  th.col-remark {
-    min-width: 100px !important;
+  .download_links {
+    display: none;
   }
 }
 
-.labor_contracts .index_table{
-  th.col-normal_corporation {
-    min-width: 80px !important;
+.normal_staffs {
+  .index_table{
+    th.col-normal_corporation {
+      min-width: 80px !important;
+    }
+    th.col-address {
+      min-width: 150px !important;
+    }
+    th.col-remark {
+      min-width: 100px !important;
+    }
   }
-  th.col-work_type {
-    min-width: 60px !important;
+  .download_links {
+    display: none;
+  }
+}
+
+.labor_contracts {
+  .index_table{
+    th.col-normal_corporation {
+      min-width: 80px !important;
+    }
+    th.col-work_type {
+      min-width: 60px !important;
+    }
+  }
+  .download_links {
+    display: none;
   }
 }

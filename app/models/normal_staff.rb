@@ -85,7 +85,7 @@ class NormalStaff < ActiveRecord::Base
   def set_birth
     if changed.include? 'identity_card'
       self.birth = Date.parse(self.identity_card[6,8]) rescue nil
-      self.birth = nil if self.birth.try(:year) < 1910
+      self.birth = nil if self.birth.try(:year).to_i < 1910
     end
   end
 

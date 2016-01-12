@@ -25,7 +25,7 @@ zh-CN:
       staff: "员工信息"
       normal_staff: "员工信息"
       engineering_staff: "员工档案"
-      salary_table: "普通工资表"
+      salary_table: "基础工资表"
       salary_table_entrance: '工资表'
       guard_salary_table: "保安工资表"
       non_full_day_salary_table: "非全日制工资表"
@@ -92,7 +92,7 @@ zh-CN:
         sub_company: '吉易子公司'
         sub_company_id: '吉易子公司'
         normal_staffs: '员工列表'
-        salary_tables: '普通工资表'
+        salary_tables: '基础工资表'
         salary_table_display: '工资表'
         guard_salary_tables: '保安工资表'
         non_full_day_salary_tables: '非全日制工资表'
@@ -271,8 +271,8 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        salary_table: '普通工资表'
-        salary_table_id: '普通工资表'
+        salary_table: '基础工资表'
+        salary_table_id: '基础工资表'
         normal_staff: '员工姓名'
         normal_staff_id: '员工姓名'
         normal_staff_name: '员工姓名'
