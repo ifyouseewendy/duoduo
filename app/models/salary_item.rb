@@ -81,57 +81,95 @@ class SalaryItem < ActiveRecord::Base
       fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
 
-    def columns_based_on(view: nil, options: {})
-      all_fields = \
-        [
-          :id,
-          :staff_identity_card,
-          :staff_account,
-          :staff_category,
-          :staff_company_name,
-          :normal_staff_name,
-          :salary_table_name
-        ] + ordered_columns(without_base_keys: true, without_foreign_keys: true) - [:remark] + [:remark]
+    def columns_based_on(view: nil, custom: nil)
+      view ||= :whole
 
       case view.to_s
-      when 'proof'
-        all_fields - [:admin_amount, :total_sum_with_admin_amount]
-      when 'card'
-        [:staff_account, :normal_staff_name, :salary_in_fact]
+      when 'proof', 'card', 'whole'
+        self.send("#{view}_columns")
       when 'custom'
-        columns = options[:columns].map(&:to_sym)
-        columns -= :staff_company and columns += :staff_company_name if columns.include?(:staff_company)
-        columns -= :normal_staff and columns += :normal_staff_name if columns.include?(:normal_staff)
-        columns -= :salary_table and columns += :salary_table_name if columns.include?(:salary_table)
-        columns
+        custom.to_s.strip.split('-').map(&:to_sym)
       else
-        all_fields
+        raise "Unsupported view: #{view}"
       end
     end
-  end
 
-  def staff_identity_card
-    normal_staff.identity_card rescue ''
+    def whole_columns
+      [
+        # 员工信息
+        :id,
+        :staff_account,
+        :normal_staff,
+        :salary_deserve,
+        :annual_reward,
+
+        # 吉易账户
+        :pension_personal,
+        :pension_margin_personal,
+        :unemployment_personal,
+        :unemployment_margin_personal,
+        :medical_personal,
+        :medical_margin_personal,
+        :house_accumulation_personal,
+        :big_amount_personal,
+        :income_tax,
+        :physical_exam_addition,
+        :other_personal,
+
+        # 喆琦账户
+        :deduct_addition,
+        :medical_scan_addition,
+        :salary_card_addition,
+        :salary_deduct_addition,
+        :other_deduct_addition,
+
+        # 个人扣款
+        :total_personal,
+
+        # 实发工资
+        :salary_in_fact,
+
+        # 单位缴费
+        :pension_company,
+        :unemployment_company,
+        :medical_company,
+        :injury_company,
+        :birth_company,
+        :pension_margin_company,
+        :unemployment_margin_company,
+        :medical_margin_company,
+        :injury_margin_company,
+        :birth_margin_company,
+        :house_accumulation_company,
+        :accident_company,
+        :other_company,
+
+        :total_company,
+
+        # 管理费
+        :admin_amount,
+
+        # 劳务费合计
+        :total_sum_with_admin_amount,
+
+        :remark,
+      ]
+    end
+
+    def card_columns
+      [:staff_account, :normal_staff, :salary_in_fact]
+    end
+
+    def proof_columns
+      whole_columns\
+        - [:admin_amount, :total_sum_with_admin_amount, :remark]\
+        + [:total_amount, :remark]
+    end
+
   end
 
   def staff_account
     normal_staff.account
-  end
-
-  def staff_company
-    normal_staff.normal_corporation
-  end
-
-  def staff_company_name
-    staff_company.name
-  end
-
-  def staff_category
-    ''
-  end
-
-  def staff_name
-    normal_staff.name rescue ''
   end
 
   def auto_revise!
@@ -312,4 +350,5 @@ class SalaryItem < ActiveRecord::Base
       end
     end
   end
+
 end
