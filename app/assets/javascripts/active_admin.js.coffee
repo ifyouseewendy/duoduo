@@ -327,6 +327,9 @@ $(document).on 'ready', ->
       else
         $(@).siblings('input').val('')
 
+  if $('table.index_table').length > 0
+    $('table.index_table').floatThead();
+
   # URLs
   url = window.location.href.toString().split(window.location.host)[1]
   current_path = url.split('?')[0].replace('#', '')
