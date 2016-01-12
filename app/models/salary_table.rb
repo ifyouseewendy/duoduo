@@ -8,6 +8,8 @@ class SalaryTable < ActiveRecord::Base
 
   enum status: [:active, :archive]
 
+  validates_presence_of :start_date
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -17,6 +19,15 @@ class SalaryTable < ActiveRecord::Base
 
       names
     end
+
+    def dates_as_filter
+      self.select(:start_date).distinct.order(start_date: :desc).map{|st| [st.month, st.start_date.to_s] }
+    end
+
+    def statuses_option
+      statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+    end
+
   end
 
   def corporation
@@ -56,5 +67,13 @@ class SalaryTable < ActiveRecord::Base
       else "普通工资表"
       end
     "#{corporation.name}_#{name}_#{filename}_#{Time.stamp}.xlsx"
+  end
+
+  def status_i18n
+    I18n.t("activerecord.attributes.#{self.class.name.underscore}.statuses.#{status}")
+  end
+
+  def month
+    start_date.strftime("%Y年%m月")
   end
 end
