@@ -338,6 +338,8 @@ class SalaryItem < ActiveRecord::Base
     if (self.changed & ['admin_amount']).present?
       set_total_sum_with_admin_amount
     end
+
+    self.update_columns(self.attributes)
   end
 
   def init_addition_fee
@@ -361,7 +363,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def set_total_personal
-    self.total_personal = self.class.person_deduct_fields.map(&:to_f).sum.round(2)
+    self.total_personal = self.class.person_deduct_fields.map{|field| self.send(field).to_f}.sum.round(2)
   end
 
   def set_salary_in_fact
@@ -369,7 +371,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def set_total_company
-    self.total_company = self.class.company_deduct_fields.map(&:to_f).sum.round(2)
+    self.total_company = self.class.company_deduct_fields.map{|field| self.send(field).to_f}.sum.round(2)
   end
 
   def set_admin_amount
