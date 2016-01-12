@@ -41,6 +41,10 @@ class SalaryItem < ActiveRecord::Base
       names
     end
 
+    def columns_of(type)
+      self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
+    end
+
     def create_by(salary_table:, salary:, name:, identity_card: nil)
       staff = find_staff(salary_table: salary_table, name: name, identity_card: identity_card)
       raise "员工已录入工资条，姓名：#{staff.name}。为避免重复录入，请直接修改现有条目" if salary_table.salary_items.where(normal_staff_id: staff.id).count > 0
@@ -127,14 +131,14 @@ class SalaryItem < ActiveRecord::Base
 
         # 单位缴费
         :pension_company,
-        :unemployment_company,
-        :medical_company,
-        :injury_company,
-        :birth_company,
         :pension_margin_company,
+        :unemployment_company,
         :unemployment_margin_company,
+        :medical_company,
         :medical_margin_company,
+        :injury_company,
         :injury_margin_company,
+        :birth_company,
         :birth_margin_company,
         :house_accumulation_company,
         :accident_company,

@@ -58,7 +58,7 @@ ActiveAdmin.register SalaryItem do
   remove_filter :role
 
   # Edit
-  permit_params :staff_name, :salary_deserve, :salary_table_id, :staff_identity_card
+  permit_params { resource_class.whole_columns }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
@@ -71,6 +71,14 @@ ActiveAdmin.register SalaryItem do
         f.input :staff_identity_card, as: :string, hint: "非必须，存在同名时使用"
         f.input :salary_deserve, as: :number
       elsif request.url.split('/')[-1] == 'edit'
+        text_fields = SalaryItem.columns_of(:text)
+        (SalaryItem.whole_columns - [:id]).reject{|field| field.to_s.start_with?('total')}.each do |field|
+          if text_fields.include? field
+            f.input field, as: :string
+          else
+            f.input field
+          end
+        end
       end
    end
     f.actions
