@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112045814) do
+ActiveRecord::Schema.define(version: 20160112075006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -622,57 +622,49 @@ ActiveRecord::Schema.define(version: 20160112045814) do
   end
 
   create_table "salary_items", force: :cascade do |t|
-    t.decimal  "salary_deserve",                       precision: 8, scale: 2
-    t.decimal  "annual_reward",                        precision: 8, scale: 2
-    t.decimal  "pension_personal",                     precision: 8, scale: 2
-    t.decimal  "pension_margin_personal",              precision: 8, scale: 2
-    t.decimal  "unemployment_personal",                precision: 8, scale: 2
-    t.decimal  "unemployment_margin_personal",         precision: 8, scale: 2
-    t.decimal  "medical_personal",                     precision: 8, scale: 2
-    t.decimal  "medical_margin_personal",              precision: 8, scale: 2
-    t.decimal  "house_accumulation_personal",          precision: 8, scale: 2
-    t.decimal  "big_amount_personal",                  precision: 8, scale: 2
-    t.decimal  "income_tax",                           precision: 8, scale: 2
-    t.decimal  "salary_card_addition",                 precision: 8, scale: 2
-    t.decimal  "medical_scan_addition",                precision: 8, scale: 2
-    t.decimal  "physical_exam_addition",               precision: 8, scale: 2
-    t.decimal  "total_personal",                       precision: 8, scale: 2
-    t.decimal  "salary_in_fact",                       precision: 8, scale: 2
-    t.decimal  "pension_company",                      precision: 8, scale: 2
-    t.decimal  "pension_margin_company",               precision: 8, scale: 2
-    t.decimal  "unemployment_company",                 precision: 8, scale: 2
-    t.decimal  "unemployment_margin_company",          precision: 8, scale: 2
-    t.decimal  "medical_company",                      precision: 8, scale: 2
-    t.decimal  "medical_margin_company",               precision: 8, scale: 2
-    t.decimal  "injury_company",                       precision: 8, scale: 2
-    t.decimal  "injury_margin_company",                precision: 8, scale: 2
-    t.decimal  "birth_company",                        precision: 8, scale: 2
-    t.decimal  "birth_margin_company",                 precision: 8, scale: 2
-    t.decimal  "accident_company",                     precision: 8, scale: 2
-    t.decimal  "house_accumulation_company",           precision: 8, scale: 2
-    t.decimal  "total_company",                        precision: 8, scale: 2
-    t.decimal  "social_insurance_to_salary_deserve",   precision: 8, scale: 2
-    t.decimal  "medical_insurance_to_salary_deserve",  precision: 8, scale: 2
-    t.decimal  "house_accumulation_to_salary_deserve", precision: 8, scale: 2
-    t.decimal  "social_insurance_to_pre_deduct",       precision: 8, scale: 2
-    t.decimal  "medical_insurance_to_pre_deduct",      precision: 8, scale: 2
-    t.decimal  "house_accumulation_to_pre_deduct",     precision: 8, scale: 2
-    t.text     "transfer_fund_to_person"
-    t.text     "transfer_fund_to_account"
-    t.decimal  "admin_amount",                         precision: 8, scale: 2
-    t.decimal  "total_sum",                            precision: 8, scale: 2
-    t.decimal  "total_sum_with_admin_amount",          precision: 8, scale: 2
+    t.decimal  "salary_deserve",               precision: 8, scale: 2
+    t.decimal  "annual_reward",                precision: 8, scale: 2
+    t.decimal  "pension_personal",             precision: 8, scale: 2
+    t.decimal  "pension_margin_personal",      precision: 8, scale: 2
+    t.decimal  "unemployment_personal",        precision: 8, scale: 2
+    t.decimal  "unemployment_margin_personal", precision: 8, scale: 2
+    t.decimal  "medical_personal",             precision: 8, scale: 2
+    t.decimal  "medical_margin_personal",      precision: 8, scale: 2
+    t.decimal  "house_accumulation_personal",  precision: 8, scale: 2
+    t.decimal  "big_amount_personal",          precision: 8, scale: 2
+    t.decimal  "income_tax",                   precision: 8, scale: 2
+    t.decimal  "salary_card_addition",         precision: 8, scale: 2
+    t.decimal  "medical_scan_addition",        precision: 8, scale: 2
+    t.decimal  "physical_exam_addition",       precision: 8, scale: 2
+    t.decimal  "total_personal",               precision: 8, scale: 2
+    t.decimal  "salary_in_fact",               precision: 8, scale: 2
+    t.decimal  "pension_company",              precision: 8, scale: 2
+    t.decimal  "pension_margin_company",       precision: 8, scale: 2
+    t.decimal  "unemployment_company",         precision: 8, scale: 2
+    t.decimal  "unemployment_margin_company",  precision: 8, scale: 2
+    t.decimal  "medical_company",              precision: 8, scale: 2
+    t.decimal  "medical_margin_company",       precision: 8, scale: 2
+    t.decimal  "injury_company",               precision: 8, scale: 2
+    t.decimal  "injury_margin_company",        precision: 8, scale: 2
+    t.decimal  "birth_company",                precision: 8, scale: 2
+    t.decimal  "birth_margin_company",         precision: 8, scale: 2
+    t.decimal  "accident_company",             precision: 8, scale: 2
+    t.decimal  "house_accumulation_company",   precision: 8, scale: 2
+    t.decimal  "total_company",                precision: 8, scale: 2
+    t.decimal  "admin_amount",                 precision: 8, scale: 2
+    t.decimal  "total_sum",                    precision: 8, scale: 2
+    t.decimal  "total_sum_with_admin_amount",  precision: 8, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                                               null: false
-    t.datetime "updated_at",                                                               null: false
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
     t.integer  "salary_table_id"
     t.integer  "normal_staff_id"
-    t.decimal  "deduct_addition",                      precision: 8, scale: 2
-    t.decimal  "salary_deduct_addition",               precision: 8, scale: 2
-    t.decimal  "other_deduct_addition",                precision: 8, scale: 2
-    t.decimal  "other_personal",                       precision: 8, scale: 2
-    t.decimal  "other_company",                        precision: 8, scale: 2
-    t.integer  "role",                                                         default: 0
+    t.decimal  "deduct_addition",              precision: 8, scale: 2
+    t.decimal  "salary_deduct_addition",       precision: 8, scale: 2
+    t.decimal  "other_deduct_addition",        precision: 8, scale: 2
+    t.decimal  "other_personal",               precision: 8, scale: 2
+    t.decimal  "other_company",                precision: 8, scale: 2
+    t.integer  "role",                                                 default: 0
   end
 
   add_index "salary_items", ["accident_company"], name: "index_salary_items_on_accident_company", using: :btree
@@ -685,14 +677,10 @@ ActiveRecord::Schema.define(version: 20160112045814) do
   add_index "salary_items", ["deduct_addition"], name: "index_salary_items_on_deduct_addition", using: :btree
   add_index "salary_items", ["house_accumulation_company"], name: "index_salary_items_on_house_accumulation_company", using: :btree
   add_index "salary_items", ["house_accumulation_personal"], name: "index_salary_items_on_house_accumulation_personal", using: :btree
-  add_index "salary_items", ["house_accumulation_to_pre_deduct"], name: "index_salary_items_on_house_accumulation_to_pre_deduct", using: :btree
-  add_index "salary_items", ["house_accumulation_to_salary_deserve"], name: "index_salary_items_on_house_accumulation_to_salary_deserve", using: :btree
   add_index "salary_items", ["income_tax"], name: "index_salary_items_on_income_tax", using: :btree
   add_index "salary_items", ["injury_company"], name: "index_salary_items_on_injury_company", using: :btree
   add_index "salary_items", ["injury_margin_company"], name: "index_salary_items_on_injury_margin_company", using: :btree
   add_index "salary_items", ["medical_company"], name: "index_salary_items_on_medical_company", using: :btree
-  add_index "salary_items", ["medical_insurance_to_pre_deduct"], name: "index_salary_items_on_medical_insurance_to_pre_deduct", using: :btree
-  add_index "salary_items", ["medical_insurance_to_salary_deserve"], name: "index_salary_items_on_medical_insurance_to_salary_deserve", using: :btree
   add_index "salary_items", ["medical_margin_company"], name: "index_salary_items_on_medical_margin_company", using: :btree
   add_index "salary_items", ["medical_margin_personal"], name: "index_salary_items_on_medical_margin_personal", using: :btree
   add_index "salary_items", ["medical_personal"], name: "index_salary_items_on_medical_personal", using: :btree
@@ -713,14 +701,10 @@ ActiveRecord::Schema.define(version: 20160112045814) do
   add_index "salary_items", ["salary_deserve"], name: "index_salary_items_on_salary_deserve", using: :btree
   add_index "salary_items", ["salary_in_fact"], name: "index_salary_items_on_salary_in_fact", using: :btree
   add_index "salary_items", ["salary_table_id"], name: "index_salary_items_on_salary_table_id", using: :btree
-  add_index "salary_items", ["social_insurance_to_pre_deduct"], name: "index_salary_items_on_social_insurance_to_pre_deduct", using: :btree
-  add_index "salary_items", ["social_insurance_to_salary_deserve"], name: "index_salary_items_on_social_insurance_to_salary_deserve", using: :btree
   add_index "salary_items", ["total_company"], name: "index_salary_items_on_total_company", using: :btree
   add_index "salary_items", ["total_personal"], name: "index_salary_items_on_total_personal", using: :btree
   add_index "salary_items", ["total_sum"], name: "index_salary_items_on_total_sum", using: :btree
   add_index "salary_items", ["total_sum_with_admin_amount"], name: "index_salary_items_on_total_sum_with_admin_amount", using: :btree
-  add_index "salary_items", ["transfer_fund_to_account"], name: "index_salary_items_on_transfer_fund_to_account", using: :btree
-  add_index "salary_items", ["transfer_fund_to_person"], name: "index_salary_items_on_transfer_fund_to_person", using: :btree
   add_index "salary_items", ["unemployment_company"], name: "index_salary_items_on_unemployment_company", using: :btree
   add_index "salary_items", ["unemployment_margin_company"], name: "index_salary_items_on_unemployment_margin_company", using: :btree
   add_index "salary_items", ["unemployment_margin_personal"], name: "index_salary_items_on_unemployment_margin_personal", using: :btree
