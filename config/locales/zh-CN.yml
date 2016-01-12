@@ -211,7 +211,7 @@ zh-CN:
           archive: '存档'
         remark: '备注'
         corporation: '所属单位'
-        normal_corporation: '普通合作单位'
+        normal_corporation: '合作单位'
         engineering_corporation: '工程合作单位'
         salary_items: '工资条'
         invoices: '发票'

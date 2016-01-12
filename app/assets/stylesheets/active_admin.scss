@@ -277,3 +277,17 @@ body.engineering_customers table.index_table {
     display: none;
   }
 }
+
+.salary_tables {
+  .index_table{
+    th.col-start_date {
+      min-width: 65px !important;
+    }
+    th.col-name {
+      min-width: 180px !important;
+    }
+    th.col-actions {
+      min-width: 250px !important;
+    }
+  }
+}
