@@ -204,6 +204,7 @@ zh-CN:
       salary_table:
         id: '编号'
         name: '名称'
+        start_date: '日期'
         remark: '备注'
         corporation: '所属单位'
         normal_corporation: '普通合作单位'
