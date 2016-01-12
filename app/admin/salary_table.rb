@@ -90,6 +90,10 @@ ActiveAdmin.register SalaryTable do
         status_tag obj.status_i18n, (obj.active? ? :yes : :no)
       end
 
+      row :salary_items do |obj|
+        link_to '工资条', '#'
+      end
+
       row :lai_table do |obj|
         link_to (obj.lai_table_identifier || '无'), (obj.lai_table.try(:url) || '#')
       end
@@ -105,4 +109,10 @@ ActiveAdmin.register SalaryTable do
     active_admin_comments
   end
 
+
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:normal_corporation)
+    end
+  end
 end
