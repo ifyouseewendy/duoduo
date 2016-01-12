@@ -199,9 +199,11 @@ class BusinessSalary < DuoduoCli
           break
         end
 
+        next if data.compact.blank?
+
         stats = Hash[fields.zip(data)]
         staff_name = stats[:name].try(:delete, ' ')
-        account = stats[:bank_account]
+        account = stats[:bank_account].try(:delete, ' ')
 
         begin
           item = table.salary_items.new \
@@ -215,10 +217,15 @@ class BusinessSalary < DuoduoCli
         if staff_name.blank?
           if account.try(:index, '喆琦')
             staff = zheqi_staff
+            role = :transfer
           else
-            staff = last_staff
+            if stf = corporation.normal_staffs.where(account: account).first
+              staff = stf
+            else
+              staff = last_staff
+              role = :transfer
+            end
           end
-          role = :transfer
         elsif staff_name.index('喆琦')
           staff = zheqi_staff
           staff.update_attribute(:account, account) if account.present? && account.match(/^\d+$/)
