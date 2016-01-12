@@ -13,7 +13,7 @@ ActiveAdmin.register SalaryItem do
     selectable_column
 
     custom_sortable = {
-      normal_staff: :normal_staff_id,
+      staff_name: :staff_name,
       staff_account: :normal_staff_id
     }
 
@@ -22,7 +22,13 @@ ActiveAdmin.register SalaryItem do
 
     present_fields.each do |field|
       if custom_sortable.keys.include? field
-        column field, sortable: custom_sortable[field]
+        if field == :staff_name
+          column field, sortable: custom_sortable[field] do |obj|
+            link_to obj.staff_name, normal_staff_path(obj.normal_staff)
+          end
+        else
+          column field, sortable: custom_sortable[field]
+        end
       else
         column field
       end
@@ -32,8 +38,8 @@ ActiveAdmin.register SalaryItem do
   end
 
   filter :id
-  filter :normal_staff_account, as: :string
-  filter :normal_staff_name, as: :string
+  filter :staff_account
+  filter :staff_name
   filter :salary_deserve
   filter :income_tax
   filter :total_personal
@@ -97,15 +103,15 @@ ActiveAdmin.register SalaryItem do
   end
 
   # Batch actions
-  batch_action :batch_edit, form: ->{ SalaryItem.batch_form_fields } do |ids|
-    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
-
-    batch_action_collection.find(ids).each do |obj|
-      obj.update_by(inputs)
-    end
-
-    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
-  end
+  # batch_action :batch_edit, form: ->{ SalaryItem.batch_form_fields } do |ids|
+  #   inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+  #
+  #   batch_action_collection.find(ids).each do |obj|
+  #     obj.update_by(inputs)
+  #   end
+  #
+  #   redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+  # end
 
   # batch_action :manipulate_insurance_fund, form: ->{ SalaryItem.manipulate_insurance_fund_fields } do |ids|
   #   inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
