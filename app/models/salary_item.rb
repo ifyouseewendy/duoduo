@@ -15,6 +15,9 @@ class SalaryItem < ActiveRecord::Base
   # income_tax, other total fields
   after_save :revise_fields
 
+  # update nest_index on table's other salary_items
+  after_destroy :revise_nest_index
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -39,6 +42,10 @@ class SalaryItem < ActiveRecord::Base
       names -= %i(normal_staff_id salary_table_id) if without_foreign_keys
 
       names
+    end
+
+    def available_nest_index
+      ( salary_table.salary_items.order(nest_index: :desc).first.try(:nest_index) || 0 ) + 1
     end
 
     def columns_of(type)
@@ -297,6 +304,7 @@ class SalaryItem < ActiveRecord::Base
     set_name_and_account
     set_insurance_fund
     set_additional_fee
+    set_nest_index
   end
 
   def revise_fields
@@ -340,6 +348,24 @@ class SalaryItem < ActiveRecord::Base
     self.update_columns(self.attributes)
   end
 
+  def revise_nest_index
+    return if self.role.to_sym == :transfer
+
+    self.transfer_sibling.try(:delete)
+
+    self.salary_table.salary_items.where("nest_index > ?", self.nest_index).each do |si|
+      si.update_column(:nest_index, si.nest_index - 1)
+    end
+  end
+
+  def transfer_sibling
+    salary_table.salary_items.transfer.where(nest_index: self.nest_index).first
+  end
+
+  def normal_sibling
+    salary_table.salary_items.normal.where(nest_index: self.nest_index).first
+  end
+
   def init_addition_fee
     {
       big_amount_personal: 96,
@@ -359,6 +385,12 @@ class SalaryItem < ActiveRecord::Base
 
   def set_additional_fee
     init_addition_fee.each{|k,v| self.send("#{k}=", v)}
+  end
+
+  def set_nest_index
+    if self.role.to_sym == :normal
+      self.nest_index = self.class.available_nest_index
+    end
   end
 
   def set_income_tax
