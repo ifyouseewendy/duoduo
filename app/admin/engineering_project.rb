@@ -234,6 +234,7 @@ ActiveAdmin.register EngineeringProject do
             attributes_table_for oi do
               row :date
               row :amount
+              row :remark
             end
           end
         end
@@ -257,6 +258,7 @@ ActiveAdmin.register EngineeringProject do
               row :address do |obj|
                 obj.address.join(' ')
               end
+              row :remark
             end
           end
           panel "代发劳务费协议" do
