@@ -230,13 +230,13 @@ ActiveAdmin.register EngineeringSalaryTable do
 
         stats << stat
       end
+
+      total_amount = stats.map{|stat| stat.map{|ha| ha[:salary_in_fact].to_f}.sum}.sum.round(2)
+      raise "各表合计实发金额与工程劳务费不等" \
+        unless total_amount == project.project_amount.to_f.round(2)
     rescue => e
       redirect_to :back, alert: e.message and return
     end
-
-    total_amount = stats.map{|stat| stat.map{|ha| ha[:salary_in_fact].to_f}.sum}.sum.round(2)
-    raise "各表合计实发金额与工程劳务费不等" \
-      unless total_amount == project.project_amount.to_f.round(2)
 
     stats.each_with_index do |sheet_data, sheet_id|
       start_date, end_date = ranges[sheet_id]
