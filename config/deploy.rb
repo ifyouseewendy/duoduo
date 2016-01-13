@@ -62,9 +62,9 @@ task :deploy => :environment do
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
-    invoke :'whenever:update'
 
     to :launch do
+      invoke :'whenever:update'
       invoke :'deploy:link_files'
       invoke :'unicorn:restart'
     end
