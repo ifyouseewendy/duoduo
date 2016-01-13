@@ -13,6 +13,7 @@ class NormalStaff < ActiveRecord::Base
   scope :not_in_service, -> { where.not(in_service: true) }
   scope :in_contract, ->{ where(in_contract: true) }
   scope :not_in_contract, ->{ where.not(in_contract: true) }
+  scope :zheqi, -> { where(name: "喆琦") }
 
   enum gender: [:male, :female]
 

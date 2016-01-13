@@ -143,12 +143,21 @@ ActiveAdmin.register SalaryItem do
   batch_action :manipulate_insurance_fund, form: ->{ SalaryItem.manipulate_insurance_fund_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
-    require'pry';binding.pry
-    # batch_action_collection.find(ids).each do |obj|
-    #   obj.manipulate_insurance_fund(inputs)
-    # end
+    failed = []
+    batch_action_collection.find(ids).each do |obj|
+      begin
+        obj.manipulate_insurance_fund(inputs)
+      rescue => e
+        failed << "操作失败<#{obj.staff_name}>：#{e.message}"
+      end
+    end
 
-    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+    if failed.blank?
+      redirect_to :back, notice: "成功转移 #{ids.count} 条记录"
+    else
+      redirect_to :back, alert: failed.join('；')
+    end
+
   end
 
   # Collection actions

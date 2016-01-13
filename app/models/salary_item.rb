@@ -10,7 +10,7 @@ class SalaryItem < ActiveRecord::Base
   #   + SalaryItem#update_by
 
   # person/company insurance, and additional fees
-  before_create :auto_init_fields
+  before_create :auto_init_fields, if: -> { @skip_callbacks == true }
 
   # income_tax, other total fields
   after_save :revise_fields
@@ -420,20 +420,68 @@ class SalaryItem < ActiveRecord::Base
 
     self.admin_amount = \
       if corporation.by_rate_on_salary?
-        (self.salary_deserve + self.annual_reward)*rate
+        ( [salary_deserve, annual_reward].map(&:to_f).sum*rate ).round(2)
       elsif corporation.by_rate_on_salary_and_company?
-        self.total_sum*rate
+        ( total_sum.to_f*rate ).round(2)
       else
         rate
       end
   end
 
   def set_total_sum
-    self.total_sum = (self.salary_deserve + self.total_company).round(2)
+    self.total_sum = [salary_deserve, total_company].map(&:to_f).sum.round(2)
   end
 
   def set_total_sum_with_admin_amount
-    self.total_sum_with_admin_amount = total_sum + admin_amount
+    self.total_sum_with_admin_amount = [total_sum, admin_amount].map(&:to_f).sum.round(2)
+  end
+
+  def manipulate_insurance_fund(options)
+    # raise "操作失败<#{self.staff_name}>：无法在转移工资条上再做转移"\
+    #   if self.transfer?
+
+    fields = options.select{|k,v| v == 'checked'}.keys.map(&:to_sym)
+    raise "非法请求：#{fields.join(',')}"\
+      if (fields - self.class.company_deduct_fields).present?
+
+    salary_deserve = fields.map{|f| self.send(f)}.map(&:to_f).sum.round(2)
+
+    transfer_to, other_name, other_account = options.values_at(:transfer_to, :other_name, :other_account)
+    case transfer_to.to_sym
+    when :self
+      staff = self.normal_staff
+      staff_name = self.staff_name
+      staff_account = self.staff_account
+    when :zheqi
+      staff = NormalStaff.zheqi.first
+      staff_name = staff.name
+      staff_account = staff.account
+    when :other
+      staff = nil
+      staff_name = other_name.try(:delete, ' ')
+      staff_account = other_account.try(:delete, ' ')
+    end
+
+    attrs = {
+      nest_index: self.nest_index,
+      role: 'transfer',
+      normal_staff: staff,
+      staff_name: staff_name,
+      staff_account: staff_account,
+      salary_deserve: salary_deserve,
+    }
+
+    @skip_callbacks = true
+
+    self.class.transaction do
+      # Update self fields to nil
+      fields.each{|fi| self.send("#{fi}=", nil)}
+      self.save!
+
+      # Create new transfer
+      self.salary_table.salary_items.create!(attrs)
+    end
+
   end
 
 end
