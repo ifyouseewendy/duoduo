@@ -292,41 +292,7 @@ $(document).on 'ready', ->
               else
                 alert( data['message'] )
 
-  # Manipulate Insurance Fund
-  $('a[data-action=manipulate_insurance_fund]').on 'click', ->
-    $('.ui-dialog-title').text('请选择');
-
-    list = $('#dialog_confirm ul')
-    list.empty();
-
-    for key,val of $(this).data('inputs')
-      id = key.split('_')[0..-2].join('_')
-      name = key.split('_')[-1..-1].join()
-
-      if id == 'salary_deserve_to_insurance_fund'
-        list.append("<li><hr></li>")
-        list.append("<li class='reverse'><input type='checkbox' class='batch_update_protect_fild_flag' value='Y' id='batch_update_dialog_"+id+"'><label for='batch_update_dialog_"+id+"'> "+name+"</label></br><input name='"+id+"' class='' type='text' style='display:none;'></li>")
-      else
-        list.append("<li class='normal'><input type='checkbox' class='batch_update_protect_fild_flag' value='Y' id='batch_update_dialog_"+id+"'><label for='batch_update_dialog_"+id+"'> "+name+"</label></br><input name='"+id+"' class='' type='text' style='display:none;'></li>")
-
-    list.find('.normal .batch_update_protect_fild_flag').on 'click', ->
-      if $(@).is(':checked')
-        $(@).siblings('input').val('selected')
-        $(@).closest('li').siblings('.reverse').each ->
-          $(@).find('.batch_update_protect_fild_flag').prop('checked', false)
-          $(@).find('input[type=text]').val('')
-      else
-        $(@).siblings('input').val('')
-
-    list.find('.reverse .batch_update_protect_fild_flag').on 'click', ->
-      if $(@).is(':checked')
-        $(@).siblings('input').val('selected')
-        $(@).closest('li').siblings('.normal').each ->
-          $(@).find('.batch_update_protect_fild_flag').prop('checked', false)
-          $(@).find('input[type=text]').val('')
-      else
-        $(@).siblings('input').val('')
-
+  # Float thead for all table
   if $('table.index_table').length > 0
     $('table.index_table').floatThead();
 
@@ -335,8 +301,71 @@ $(document).on 'ready', ->
   current_path = url.split('?')[0].replace('#', '')
   query_string = url.split('?')[1]
 
-  # Add View
+
+  # Salary Item
   if $('.salary_items').length > 0
+    # Manipulate Insurance Fund
+    $('a[data-action=manipulate_insurance_fund]').on 'click', ->
+      $('.ui-dialog-title').text('请选择');
+
+      list = $('#dialog_confirm ul')
+      list.empty();
+
+      list.append("""
+      <li><a href='#' class='select_all'>全选</a> <a href='#' class='unselect_all'>取消全选</a></li>
+      <li><hr/></li>
+      """)
+
+      for key,val of $(this).data('inputs')
+        id = key.split('_')[0..-2].join('_')
+        name = key.split('_')[-1..-1].join()
+
+        list.append("<li class='flag_list'><input type='checkbox' class='batch_update_protect_fild_flag' checked='checked' name='"+id+"' value='checked'><label> "+name+"</label></br></li>")
+
+      list.append("""
+      <li><hr/></li>
+      <li class='transfer_to'>
+        转向： 
+        <input type="radio" name="transfer_to" value="self" class='normal_radio'> 个人
+        <input type="radio" name="transfer_to" value="zheqi" class='normal_radio'> 喆琦
+        <input type="radio" name="transfer_to" value="other" class='other_radio'> 其他
+        <ul class='transfer_to_other' style='display:none'>
+          <li><label>姓名</label><input type="text" name="other_name"> </li>
+          <li><label>卡号</label><input type="text" name="other_account"> </li>
+        </ul>
+      </li>
+      """)
+
+      transfer_to = list.find('.transfer_to')
+      transfer_to.find('.other_radio').on 'click', ->
+        transfer_to.find('.transfer_to_other').show()
+      transfer_to.find('.normal_radio').on 'click', ->
+        transfer_to.find('.transfer_to_other').hide()
+
+      list.find('.batch_update_protect_fild_flag').on 'click', ->
+        if $(@).is(':checked')
+          $(@).val('checked')
+        else
+          $(@).val('')
+
+      list.find('.select_all').on 'click', (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+
+        $.each $(this).closest('ul').find('.flag_list'), (idx, ele) ->
+          $(ele).find('.batch_update_protect_fild_flag').prop('checked', true)
+          $(ele).find('.batch_update_protect_fild_flag').val('checked')
+
+      list.find('.unselect_all').on 'click', (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+
+        $.each $(this).closest('ul').find('.flag_list'), (idx, ele) ->
+          $(ele).find('.batch_update_protect_fild_flag').prop('checked', false)
+          $(ele).find('.batch_update_protect_fild_flag').val('')
+
+
+    # Add View
     if query_string == "view=proof"
       button_name = '：帐用'
     else if query_string == "view=card"

@@ -311,4 +311,14 @@ body.engineering_customers table.index_table {
       float: none !important;
     }
   }
+  .ui-dialog {
+    max-height: 600px !important;
+    width: 600px !important;
+    top: 115px !important;
+
+    .flag_list {
+      width: 200px;
+      display: inline-block;
+    }
+  }
 }

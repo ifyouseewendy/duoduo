@@ -132,15 +132,16 @@ ActiveAdmin.register SalaryItem do
   #   redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
   # end
 
-  # batch_action :manipulate_insurance_fund, form: ->{ SalaryItem.manipulate_insurance_fund_fields } do |ids|
-  #   inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
-  #
-  #   batch_action_collection.find(ids).each do |obj|
-  #     obj.manipulate_insurance_fund(inputs)
-  #   end
-  #
-  #   redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
-  # end
+  batch_action :manipulate_insurance_fund, form: ->{ SalaryItem.manipulate_insurance_fund_fields } do |ids|
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+
+    require'pry';binding.pry
+    # batch_action_collection.find(ids).each do |obj|
+    #   obj.manipulate_insurance_fund(inputs)
+    # end
+
+    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+  end
 
   # Collection actions
   collection_action :export_xlsx do

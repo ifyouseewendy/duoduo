@@ -222,19 +222,23 @@ class SalaryItem < ActiveRecord::Base
       [
         # 单位缴费
         :pension_company,
-        :unemployment_company,
-        :medical_company,
-        :injury_company,
-        :birth_company,
         :pension_margin_company,
+        :unemployment_company,
         :unemployment_margin_company,
+        :medical_company,
         :medical_margin_company,
+        :injury_company,
         :injury_margin_company,
+        :birth_company,
         :birth_margin_company,
         :house_accumulation_company,
         :accident_company,
         :other_company,
       ]
+    end
+
+    def manipulate_insurance_fund_fields
+      company_deduct_fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
   end # Class method ends
 
