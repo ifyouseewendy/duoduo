@@ -97,7 +97,7 @@ ActiveAdmin.register EngineeringProject do
     resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
       + [{
         income_items_attributes: [:id, :date, :amount, :remark, :_destroy],
-        outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, persons: [], bank: [], address: [], account: [] ]
+        outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, each_amount: [], persons: [], bank: [], address: [], account: [] ]
       }]
   end
 
@@ -139,6 +139,7 @@ ActiveAdmin.register EngineeringProject do
             a.input :date, as: :datepicker
             a.input :amount, as: :number
             a.input :persons, as: :string, hint: '姓名需要以空格分隔，例如：张三 李四'
+            a.input :each_amount, as: :string, hint: '与姓名对应，以空格分隔'
             a.input :bank, as: :string, hint: '与姓名对应，以空格分隔'
             a.input :account, as: :string, hint: '与姓名对应，以空格分隔'
             a.input :address, as: :string, hint: '与姓名对应，以空格分隔'
@@ -242,6 +243,9 @@ ActiveAdmin.register EngineeringProject do
               row :amount
               row :persons do |obj|
                 obj.persons.join(' ')
+              end
+              row :each_amount do |obj|
+                obj.each_amount.join(' ')
               end
               row :bank do |obj|
                 obj.bank.join(' ')
@@ -420,6 +424,7 @@ ActiveAdmin.register EngineeringProject do
 
         params[:engineering_project][:outcome_items_attributes].each do |k, v|
           v[:persons] = v[:persons].split.map(&:strip)
+          v[:each_amount] = v[:each_amount].split.map(&:strip)
           v[:bank] = v[:bank].split.map(&:strip)
           v[:account] = v[:account].split.map(&:strip)
           v[:address] = v[:address].split.map(&:strip)

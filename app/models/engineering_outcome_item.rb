@@ -4,6 +4,7 @@ class EngineeringOutcomeItem < ActiveRecord::Base
   has_many :contract_files, class: EngineeringContractFile, dependent: :destroy, as: :engi_contract
 
   validates_presence_of :persons
+  validate :validate_amount
 
   default_scope { order('created_at DESC') }
 
@@ -37,6 +38,13 @@ class EngineeringOutcomeItem < ActiveRecord::Base
   def revise_fields
     if (changed & ['amount']).present?
       project.validate_outcome_amount
+    end
+  end
+
+  def validate_amount
+    sum = each_amount.map(&:to_f).sum.round(2)
+    if sum != 0 && sum != amount
+      errors.add(:each_amount, "回款金额（每人）之后不等于总回款金额")
     end
   end
 end
