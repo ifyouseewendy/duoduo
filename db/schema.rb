@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112105730) do
+ActiveRecord::Schema.define(version: 20160113140146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,6 +261,7 @@ ActiveRecord::Schema.define(version: 20160112105730) do
     t.text     "bank",                                            default: [],              array: true
     t.text     "address",                                         default: [],              array: true
     t.text     "account",                                         default: [],              array: true
+    t.text     "each_amount",                                     default: [],              array: true
   end
 
   add_index "engineering_outcome_items", ["engineering_project_id"], name: "index_engineering_outcome_items_on_engineering_project_id", using: :btree
