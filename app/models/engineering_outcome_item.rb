@@ -5,6 +5,7 @@ class EngineeringOutcomeItem < ActiveRecord::Base
 
   validates_presence_of :persons
   validate :validate_amount
+  validate :validate_count
 
   default_scope { order('created_at DESC') }
 
@@ -44,7 +45,17 @@ class EngineeringOutcomeItem < ActiveRecord::Base
   def validate_amount
     sum = each_amount.map(&:to_f).sum.round(2)
     if sum != 0 && sum != amount
-      errors.add(:each_amount, "回款金额（每人）之后不等于总回款金额")
+      errors.add(:each_amount, "回款金额（每人）之和不等于总回款金额")
+    end
+  end
+
+  def validate_count
+    fields = changed & ['each_amount', 'bank', 'account', 'address']
+
+    if fields.present?
+      fields.each do |field|
+        errors.add(field, "#{self.class.human_attribute_name(field)}个数与回款人数不等")
+      end
     end
   end
 end
