@@ -431,22 +431,30 @@ class EngineeringProject < ActiveRecord::Base
 
       outcome_item = EngineeringOutcomeItem.find(outcome_item_id)
 
-      set_amount = content[:amount].split(' ').map(&:to_f)
-      amount = \
-        if set_amount.count == 1
-          outcome_item.allocate(money: set_amount[0])
-        else
-          set_amount
-        end
+      # raise "操作失败：自定义回款金额之和（#{amount.sum.round(2)}）不等于当前回款记录中的回款金额（#{outcome_item.amount.to_f.round(2)}）" \
+      #   unless outcome_item.amount.to_f.round(2) == amount.sum.round(2)
 
-      raise "操作失败：自定义回款金额之和（#{amount.sum.round(2)}）不等于当前回款记录中的回款金额（#{outcome_item.amount.to_f.round(2)}）" \
-        unless outcome_item.amount.to_f.round(2) == amount.sum.round(2)
-
-      bank = content[:bank].split(' ').map(&:strip)
+      persons = content[:persons].split(' ').map(&:strip)
+      amount  = content[:amount].split(' ').map(&:to_f)
       account = content[:account].split(' ').map(&:strip)
+      bank    = content[:bank].split(' ').map(&:strip)
       address = content[:address].split(' ').map(&:strip)
 
-      outcome_item.persons.each_with_index do |person, idx|
+      raise "操作失败：未指定回款人" if persons.count == 0
+
+      raise "操作失败：回款金额无法与回款人一一对应" \
+        unless persons.count == amount.count
+
+      raise "操作失败：银行卡号无法与回款人一一对应" \
+        unless persons.count == account.count
+
+      raise "操作失败：银行名称无法与回款人一一对应" \
+        unless persons.count == bank.count
+
+      raise "操作失败：开户地址无法与回款人一一对应" \
+        unless address.present? && persons.count == address.count
+
+      persons.each_with_index do |person, idx|
         contract =  DocGenerator.generate_docx \
           gsub: {
             corp_name: content[:corp_name],
@@ -458,7 +466,6 @@ class EngineeringProject < ActiveRecord::Base
             address: address[idx]
           },
           file_path: template.path
-
 
         ext = contract.basename.to_s.split('.')[-1]
         to = contract.dirname.join("#{name}_代发劳务费协议_#{person}_#{Time.stamp}.#{ext}")

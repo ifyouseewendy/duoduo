@@ -10,25 +10,29 @@
         <%= text_field_tag :corp_name, project.corporation.try(:name) %>
       </li>
       <li>
-        <%= label_tag '回款金额' %>
-        <%= text_field_tag :amount, project.project_amount %>
-        <%= content_tag(:p, '默认为平均分配金额，如需为每个人指定回款款金额，请以空格分开', class:"inline-hints") %>
-      </li>
-      <li>
         <%= label_tag '回款人' %>
         <%= text_field_tag :persons, outcome_item.persons.join(' ') %>
+        <%= content_tag(:p, '多个回款人请以空格分开', class:"inline-hints") %>
       </li>
       <li>
-        <%= label_tag '银行名称' %>
-        <%= text_field_tag :bank, outcome_item.bank.join(' ') %>
+        <%= label_tag '回款金额' %>
+        <%= text_field_tag :amount, outcome_item.each_amount.join(' ') %>
+        <%= content_tag(:p, '需与回款人个数相同，请以空格分开', class:"inline-hints") %>
       </li>
       <li>
         <%= label_tag '银行卡号' %>
         <%= text_field_tag :account, outcome_item.account.join(' ') %>
+        <%= content_tag(:p, '需与回款人个数相同，请以空格分开', class:"inline-hints") %>
+      </li>
+      <li>
+        <%= label_tag '银行名称' %>
+        <%= text_field_tag :bank, outcome_item.bank.join(' ') %>
+        <%= content_tag(:p, '需与回款人个数相同，请以空格分开', class:"inline-hints") %>
       </li>
       <li>
         <%= label_tag '开户地址' %>
         <%= text_field_tag :address, outcome_item.address.join(' ') %>
+        <%= content_tag(:p, '需与回款人个数相同，请以空格分开；该字段可为空', class:"inline-hints") %>
       </li>
     </ol>
   <% end %>
