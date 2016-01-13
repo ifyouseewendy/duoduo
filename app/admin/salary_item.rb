@@ -25,7 +25,15 @@ ActiveAdmin.register SalaryItem do
     }
 
     fields = SalaryItem.columns_based_on(view: params[:view], custom: params[:custom])
-    present_fields = fields.select{|key| collection.map{|obj| obj.send(key)}.any?(&:present?)}
+    present_fields = fields.select do |key|
+      collection.map{|obj| obj.send(key)}.any? do |val|
+        if Numeric === val
+          val.nonzero?
+        else
+          val.present?
+        end
+      end
+    end
 
     present_fields.each do |field|
       if custom_sortable.keys.include? field
