@@ -326,13 +326,8 @@ $(document).on 'ready', ->
       <li><hr/></li>
       <li class='transfer_to'>
         转向： 
-        <input type="radio" name="transfer_to" value="self" class='normal_radio'> 个人
+        <input type="radio" name="transfer_to" value="self" class='normal_radio' checked='checked'> 个人
         <input type="radio" name="transfer_to" value="zheqi" class='normal_radio'> 喆琦
-        <input type="radio" name="transfer_to" value="other" class='other_radio'> 其他
-        <ul class='transfer_to_other' style='display:none'>
-          <li><label>姓名</label><input type="text" name="other_name"> </li>
-          <li><label>卡号</label><input type="text" name="other_account"> </li>
-        </ul>
       </li>
       """)
 
