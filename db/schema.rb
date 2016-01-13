@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160106131219) do
+ActiveRecord::Schema.define(version: 20160113140146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,16 +91,14 @@ ActiveRecord::Schema.define(version: 20160106131219) do
   add_index "big_contracts", ["sub_company_id"], name: "index_big_contracts_on_sub_company_id", using: :btree
 
   create_table "contract_files", force: :cascade do |t|
-    t.integer  "sub_company_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
     t.text     "contract"
-    t.integer  "role",                default: 0
-    t.integer  "engineering_corp_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.integer  "busi_contract_id"
+    t.string   "busi_contract_type"
   end
 
-  add_index "contract_files", ["engineering_corp_id"], name: "index_contract_files_on_engineering_corp_id", using: :btree
-  add_index "contract_files", ["sub_company_id"], name: "index_contract_files_on_sub_company_id", using: :btree
+  add_index "contract_files", ["busi_contract_type", "busi_contract_id"], name: "idx_busi_contract_id_and_type", using: :btree
 
   create_table "contract_templates", force: :cascade do |t|
     t.text     "contract"
@@ -263,6 +261,7 @@ ActiveRecord::Schema.define(version: 20160106131219) do
     t.text     "bank",                                            default: [],              array: true
     t.text     "address",                                         default: [],              array: true
     t.text     "account",                                         default: [],              array: true
+    t.text     "each_amount",                                     default: [],              array: true
   end
 
   add_index "engineering_outcome_items", ["engineering_project_id"], name: "index_engineering_outcome_items_on_engineering_project_id", using: :btree
@@ -459,16 +458,37 @@ ActiveRecord::Schema.define(version: 20160106131219) do
     t.date     "social_insurance_release_date"
     t.date     "medical_insurance_release_date"
     t.text     "remark"
-    t.integer  "sub_company_id"
     t.integer  "normal_corporation_id"
     t.integer  "normal_staff_id"
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
   end
 
+  add_index "labor_contracts", ["arrive_current_company_at"], name: "index_labor_contracts_on_arrive_current_company_at", using: :btree
+  add_index "labor_contracts", ["backup_date"], name: "index_labor_contracts_on_backup_date", using: :btree
+  add_index "labor_contracts", ["backup_place"], name: "index_labor_contracts_on_backup_place", using: :btree
+  add_index "labor_contracts", ["contract_end_date"], name: "index_labor_contracts_on_contract_end_date", using: :btree
+  add_index "labor_contracts", ["contract_start_date"], name: "index_labor_contracts_on_contract_start_date", using: :btree
+  add_index "labor_contracts", ["contract_type"], name: "index_labor_contracts_on_contract_type", using: :btree
+  add_index "labor_contracts", ["current_medical_insurance_start_date"], name: "index_labor_contracts_on_current_medical_insurance_start_date", using: :btree
+  add_index "labor_contracts", ["current_social_insurance_start_date"], name: "index_labor_contracts_on_current_social_insurance_start_date", using: :btree
+  add_index "labor_contracts", ["has_accident_insurance"], name: "index_labor_contracts_on_has_accident_insurance", using: :btree
+  add_index "labor_contracts", ["has_medical_insurance"], name: "index_labor_contracts_on_has_medical_insurance", using: :btree
+  add_index "labor_contracts", ["has_social_insurance"], name: "index_labor_contracts_on_has_social_insurance", using: :btree
+  add_index "labor_contracts", ["house_accumulation_base"], name: "index_labor_contracts_on_house_accumulation_base", using: :btree
+  add_index "labor_contracts", ["in_contract"], name: "index_labor_contracts_on_in_contract", using: :btree
+  add_index "labor_contracts", ["medical_insurance_base"], name: "index_labor_contracts_on_medical_insurance_base", using: :btree
+  add_index "labor_contracts", ["medical_insurance_card"], name: "index_labor_contracts_on_medical_insurance_card", using: :btree
+  add_index "labor_contracts", ["medical_insurance_release_date"], name: "index_labor_contracts_on_medical_insurance_release_date", using: :btree
+  add_index "labor_contracts", ["medical_insurance_serial"], name: "index_labor_contracts_on_medical_insurance_serial", using: :btree
   add_index "labor_contracts", ["normal_corporation_id"], name: "index_labor_contracts_on_normal_corporation_id", using: :btree
   add_index "labor_contracts", ["normal_staff_id"], name: "index_labor_contracts_on_normal_staff_id", using: :btree
-  add_index "labor_contracts", ["sub_company_id"], name: "index_labor_contracts_on_sub_company_id", using: :btree
+  add_index "labor_contracts", ["release_date"], name: "index_labor_contracts_on_release_date", using: :btree
+  add_index "labor_contracts", ["social_insurance_base"], name: "index_labor_contracts_on_social_insurance_base", using: :btree
+  add_index "labor_contracts", ["social_insurance_release_date"], name: "index_labor_contracts_on_social_insurance_release_date", using: :btree
+  add_index "labor_contracts", ["social_insurance_serial"], name: "index_labor_contracts_on_social_insurance_serial", using: :btree
+  add_index "labor_contracts", ["work_place"], name: "index_labor_contracts_on_work_place", using: :btree
+  add_index "labor_contracts", ["work_type"], name: "index_labor_contracts_on_work_type", using: :btree
 
   create_table "milestones", force: :cascade do |t|
     t.string   "name"
@@ -521,15 +541,16 @@ ActiveRecord::Schema.define(version: 20160106131219) do
     t.text     "telephone"
     t.money    "contract_amount",                   scale: 2
     t.integer  "admin_charge_type",                           default: 0
-    t.decimal  "admin_charge_amount", precision: 8, scale: 2
+    t.decimal  "admin_charge_amount", precision: 8, scale: 2, default: 0.0
     t.date     "expense_date"
     t.text     "remark"
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
     t.date     "contract_start_date"
     t.date     "contract_end_date"
     t.text     "full_name"
     t.integer  "sub_company_id"
+    t.integer  "status",                                      default: 0
   end
 
   add_index "normal_corporations", ["account"], name: "index_normal_corporations_on_account", using: :btree
@@ -539,11 +560,15 @@ ActiveRecord::Schema.define(version: 20160106131219) do
   add_index "normal_corporations", ["admin_charge_type"], name: "index_normal_corporations_on_admin_charge_type", using: :btree
   add_index "normal_corporations", ["contact"], name: "index_normal_corporations_on_contact", using: :btree
   add_index "normal_corporations", ["contract_amount"], name: "index_normal_corporations_on_contract_amount", using: :btree
+  add_index "normal_corporations", ["contract_end_date"], name: "index_normal_corporations_on_contract_end_date", using: :btree
+  add_index "normal_corporations", ["contract_start_date"], name: "index_normal_corporations_on_contract_start_date", using: :btree
   add_index "normal_corporations", ["corporate_name"], name: "index_normal_corporations_on_corporate_name", using: :btree
   add_index "normal_corporations", ["expense_date"], name: "index_normal_corporations_on_expense_date", using: :btree
   add_index "normal_corporations", ["license"], name: "index_normal_corporations_on_license", using: :btree
   add_index "normal_corporations", ["name"], name: "index_normal_corporations_on_name", using: :btree
   add_index "normal_corporations", ["organization_serial"], name: "index_normal_corporations_on_organization_serial", using: :btree
+  add_index "normal_corporations", ["status", "updated_at"], name: "index_normal_corporations_on_status_and_updated_at", using: :btree
+  add_index "normal_corporations", ["status"], name: "index_normal_corporations_on_status", using: :btree
   add_index "normal_corporations", ["sub_company_id"], name: "index_normal_corporations_on_sub_company_id", using: :btree
   add_index "normal_corporations", ["taxpayer_serial"], name: "index_normal_corporations_on_taxpayer_serial", using: :btree
   add_index "normal_corporations", ["telephone"], name: "index_normal_corporations_on_telephone", using: :btree
@@ -563,11 +588,12 @@ ActiveRecord::Schema.define(version: 20160106131219) do
     t.date     "social_insurance_start_date"
     t.boolean  "in_service"
     t.text     "remark"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.integer  "normal_corporation_id"
-    t.integer  "sub_company_id"
     t.integer  "nest_index"
+    t.boolean  "in_contract",                 default: false
+    t.integer  "sub_company_id"
   end
 
   add_index "normal_staffs", ["account"], name: "index_normal_staffs_on_account", using: :btree
@@ -578,6 +604,8 @@ ActiveRecord::Schema.define(version: 20160106131219) do
   add_index "normal_staffs", ["gender"], name: "index_normal_staffs_on_gender", using: :btree
   add_index "normal_staffs", ["grade"], name: "index_normal_staffs_on_grade", using: :btree
   add_index "normal_staffs", ["identity_card"], name: "index_normal_staffs_on_identity_card", using: :btree
+  add_index "normal_staffs", ["in_contract"], name: "index_normal_staffs_on_in_contract", using: :btree
+  add_index "normal_staffs", ["in_service", "in_contract"], name: "index_normal_staffs_on_in_service_and_in_contract", using: :btree
   add_index "normal_staffs", ["in_service"], name: "index_normal_staffs_on_in_service", using: :btree
   add_index "normal_staffs", ["name"], name: "index_normal_staffs_on_name", using: :btree
   add_index "normal_staffs", ["nation"], name: "index_normal_staffs_on_nation", using: :btree
@@ -595,70 +623,161 @@ ActiveRecord::Schema.define(version: 20160106131219) do
   end
 
   create_table "salary_items", force: :cascade do |t|
-    t.decimal  "salary_deserve",                       precision: 8, scale: 2
-    t.decimal  "annual_reward",                        precision: 8, scale: 2
-    t.decimal  "pension_personal",                     precision: 8, scale: 2
-    t.decimal  "pension_margin_personal",              precision: 8, scale: 2
-    t.decimal  "unemployment_personal",                precision: 8, scale: 2
-    t.decimal  "unemployment_margin_personal",         precision: 8, scale: 2
-    t.decimal  "medical_personal",                     precision: 8, scale: 2
-    t.decimal  "medical_margin_personal",              precision: 8, scale: 2
-    t.decimal  "house_accumulation_personal",          precision: 8, scale: 2
-    t.decimal  "big_amount_personal",                  precision: 8, scale: 2
-    t.decimal  "income_tax",                           precision: 8, scale: 2
-    t.decimal  "salary_card_addition",                 precision: 8, scale: 2
-    t.decimal  "medical_scan_addition",                precision: 8, scale: 2
-    t.decimal  "salary_pre_deduct_addition",           precision: 8, scale: 2
-    t.decimal  "insurance_pre_deduct_addition",        precision: 8, scale: 2
-    t.decimal  "physical_exam_addition",               precision: 8, scale: 2
-    t.decimal  "total_personal",                       precision: 8, scale: 2
-    t.decimal  "salary_in_fact",                       precision: 8, scale: 2
-    t.decimal  "pension_company",                      precision: 8, scale: 2
-    t.decimal  "pension_margin_company",               precision: 8, scale: 2
-    t.decimal  "unemployment_company",                 precision: 8, scale: 2
-    t.decimal  "unemployment_margin_company",          precision: 8, scale: 2
-    t.decimal  "medical_company",                      precision: 8, scale: 2
-    t.decimal  "medical_margin_company",               precision: 8, scale: 2
-    t.decimal  "injury_company",                       precision: 8, scale: 2
-    t.decimal  "injury_margin_company",                precision: 8, scale: 2
-    t.decimal  "birth_company",                        precision: 8, scale: 2
-    t.decimal  "birth_margin_company",                 precision: 8, scale: 2
-    t.decimal  "accident_company",                     precision: 8, scale: 2
-    t.decimal  "house_accumulation_company",           precision: 8, scale: 2
-    t.decimal  "total_company",                        precision: 8, scale: 2
-    t.decimal  "social_insurance_to_salary_deserve",   precision: 8, scale: 2
-    t.decimal  "medical_insurance_to_salary_deserve",  precision: 8, scale: 2
-    t.decimal  "house_accumulation_to_salary_deserve", precision: 8, scale: 2
-    t.decimal  "social_insurance_to_pre_deduct",       precision: 8, scale: 2
-    t.decimal  "medical_insurance_to_pre_deduct",      precision: 8, scale: 2
-    t.decimal  "house_accumulation_to_pre_deduct",     precision: 8, scale: 2
-    t.text     "transfer_fund_to_person"
-    t.text     "transfer_fund_to_account"
-    t.decimal  "admin_amount",                         precision: 8, scale: 2
-    t.decimal  "total_sum",                            precision: 8, scale: 2
-    t.decimal  "total_sum_with_admin_amount",          precision: 8, scale: 2
+    t.decimal  "salary_deserve",               precision: 8, scale: 2
+    t.decimal  "annual_reward",                precision: 8, scale: 2
+    t.decimal  "pension_personal",             precision: 8, scale: 2
+    t.decimal  "pension_margin_personal",      precision: 8, scale: 2
+    t.decimal  "unemployment_personal",        precision: 8, scale: 2
+    t.decimal  "unemployment_margin_personal", precision: 8, scale: 2
+    t.decimal  "medical_personal",             precision: 8, scale: 2
+    t.decimal  "medical_margin_personal",      precision: 8, scale: 2
+    t.decimal  "house_accumulation_personal",  precision: 8, scale: 2
+    t.decimal  "big_amount_personal",          precision: 8, scale: 2
+    t.decimal  "income_tax",                   precision: 8, scale: 2
+    t.decimal  "salary_card_addition",         precision: 8, scale: 2
+    t.decimal  "medical_scan_addition",        precision: 8, scale: 2
+    t.decimal  "physical_exam_addition",       precision: 8, scale: 2
+    t.decimal  "total_personal",               precision: 8, scale: 2
+    t.decimal  "salary_in_fact",               precision: 8, scale: 2
+    t.decimal  "pension_company",              precision: 8, scale: 2
+    t.decimal  "pension_margin_company",       precision: 8, scale: 2
+    t.decimal  "unemployment_company",         precision: 8, scale: 2
+    t.decimal  "unemployment_margin_company",  precision: 8, scale: 2
+    t.decimal  "medical_company",              precision: 8, scale: 2
+    t.decimal  "medical_margin_company",       precision: 8, scale: 2
+    t.decimal  "injury_company",               precision: 8, scale: 2
+    t.decimal  "injury_margin_company",        precision: 8, scale: 2
+    t.decimal  "birth_company",                precision: 8, scale: 2
+    t.decimal  "birth_margin_company",         precision: 8, scale: 2
+    t.decimal  "accident_company",             precision: 8, scale: 2
+    t.decimal  "house_accumulation_company",   precision: 8, scale: 2
+    t.decimal  "total_company",                precision: 8, scale: 2
+    t.decimal  "admin_amount",                 precision: 8, scale: 2
+    t.decimal  "total_sum",                    precision: 8, scale: 2
+    t.decimal  "total_sum_with_admin_amount",  precision: 8, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                                   null: false
-    t.datetime "updated_at",                                                   null: false
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
     t.integer  "salary_table_id"
     t.integer  "normal_staff_id"
+    t.decimal  "deduct_addition",              precision: 8, scale: 2
+    t.decimal  "salary_deduct_addition",       precision: 8, scale: 2
+    t.decimal  "other_deduct_addition",        precision: 8, scale: 2
+    t.decimal  "other_personal",               precision: 8, scale: 2
+    t.decimal  "other_company",                precision: 8, scale: 2
+    t.integer  "role",                                                 default: 0
+    t.text     "staff_name"
+    t.text     "staff_account"
+    t.integer  "nest_index"
   end
 
+  add_index "salary_items", ["accident_company"], name: "index_salary_items_on_accident_company", using: :btree
+  add_index "salary_items", ["admin_amount"], name: "index_salary_items_on_admin_amount", using: :btree
+  add_index "salary_items", ["annual_reward"], name: "index_salary_items_on_annual_reward", using: :btree
+  add_index "salary_items", ["big_amount_personal"], name: "index_salary_items_on_big_amount_personal", using: :btree
+  add_index "salary_items", ["birth_company"], name: "index_salary_items_on_birth_company", using: :btree
+  add_index "salary_items", ["birth_margin_company"], name: "index_salary_items_on_birth_margin_company", using: :btree
+  add_index "salary_items", ["created_at"], name: "index_salary_items_on_created_at", using: :btree
+  add_index "salary_items", ["deduct_addition"], name: "index_salary_items_on_deduct_addition", using: :btree
+  add_index "salary_items", ["house_accumulation_company"], name: "index_salary_items_on_house_accumulation_company", using: :btree
+  add_index "salary_items", ["house_accumulation_personal"], name: "index_salary_items_on_house_accumulation_personal", using: :btree
+  add_index "salary_items", ["income_tax"], name: "index_salary_items_on_income_tax", using: :btree
+  add_index "salary_items", ["injury_company"], name: "index_salary_items_on_injury_company", using: :btree
+  add_index "salary_items", ["injury_margin_company"], name: "index_salary_items_on_injury_margin_company", using: :btree
+  add_index "salary_items", ["medical_company"], name: "index_salary_items_on_medical_company", using: :btree
+  add_index "salary_items", ["medical_margin_company"], name: "index_salary_items_on_medical_margin_company", using: :btree
+  add_index "salary_items", ["medical_margin_personal"], name: "index_salary_items_on_medical_margin_personal", using: :btree
+  add_index "salary_items", ["medical_personal"], name: "index_salary_items_on_medical_personal", using: :btree
+  add_index "salary_items", ["medical_scan_addition"], name: "index_salary_items_on_medical_scan_addition", using: :btree
+  add_index "salary_items", ["nest_index"], name: "index_salary_items_on_nest_index", using: :btree
   add_index "salary_items", ["normal_staff_id"], name: "index_salary_items_on_normal_staff_id", using: :btree
+  add_index "salary_items", ["other_company"], name: "index_salary_items_on_other_company", using: :btree
+  add_index "salary_items", ["other_deduct_addition"], name: "index_salary_items_on_other_deduct_addition", using: :btree
+  add_index "salary_items", ["other_personal"], name: "index_salary_items_on_other_personal", using: :btree
+  add_index "salary_items", ["pension_company"], name: "index_salary_items_on_pension_company", using: :btree
+  add_index "salary_items", ["pension_margin_company"], name: "index_salary_items_on_pension_margin_company", using: :btree
+  add_index "salary_items", ["pension_margin_personal"], name: "index_salary_items_on_pension_margin_personal", using: :btree
+  add_index "salary_items", ["pension_personal"], name: "index_salary_items_on_pension_personal", using: :btree
+  add_index "salary_items", ["physical_exam_addition"], name: "index_salary_items_on_physical_exam_addition", using: :btree
+  add_index "salary_items", ["remark"], name: "index_salary_items_on_remark", using: :btree
+  add_index "salary_items", ["role"], name: "index_salary_items_on_role", using: :btree
+  add_index "salary_items", ["salary_card_addition"], name: "index_salary_items_on_salary_card_addition", using: :btree
+  add_index "salary_items", ["salary_deduct_addition"], name: "index_salary_items_on_salary_deduct_addition", using: :btree
+  add_index "salary_items", ["salary_deserve"], name: "index_salary_items_on_salary_deserve", using: :btree
+  add_index "salary_items", ["salary_in_fact"], name: "index_salary_items_on_salary_in_fact", using: :btree
+  add_index "salary_items", ["salary_table_id", "accident_company"], name: "idx_on_st_and_accident_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "admin_amount"], name: "idx_on_st_and_admin_amount", using: :btree
+  add_index "salary_items", ["salary_table_id", "annual_reward"], name: "idx_on_st_and_annual_reward", using: :btree
+  add_index "salary_items", ["salary_table_id", "big_amount_personal"], name: "idx_on_st_and_big_amount_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "birth_company"], name: "idx_on_st_and_birth_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "birth_margin_company"], name: "idx_on_st_and_birth_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "created_at"], name: "idx_on_st_and_created_at", using: :btree
+  add_index "salary_items", ["salary_table_id", "deduct_addition"], name: "idx_on_st_and_deduct_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "house_accumulation_company"], name: "idx_on_st_and_house_accumulation_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "house_accumulation_personal"], name: "idx_on_st_and_house_accumulation_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "income_tax"], name: "idx_on_st_and_income_tax", using: :btree
+  add_index "salary_items", ["salary_table_id", "injury_company"], name: "idx_on_st_and_injury_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "injury_margin_company"], name: "idx_on_st_and_injury_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_company"], name: "idx_on_st_and_medical_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_margin_company"], name: "idx_on_st_and_medical_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_margin_personal"], name: "idx_on_st_and_medical_margin_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_personal"], name: "idx_on_st_and_medical_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "medical_scan_addition"], name: "idx_on_st_and_medical_scan_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "nest_index", "role"], name: "index_salary_items_on_salary_table_id_and_nest_index_and_role", using: :btree
+  add_index "salary_items", ["salary_table_id", "nest_index"], name: "index_salary_items_on_salary_table_id_and_nest_index", using: :btree
+  add_index "salary_items", ["salary_table_id", "normal_staff_id"], name: "idx_on_st_and_normal_staff_id", using: :btree
+  add_index "salary_items", ["salary_table_id", "other_company"], name: "idx_on_st_and_other_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "other_deduct_addition"], name: "idx_on_st_and_other_deduct_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "other_personal"], name: "idx_on_st_and_other_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "pension_company"], name: "idx_on_st_and_pension_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "pension_margin_company"], name: "idx_on_st_and_pension_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "pension_margin_personal"], name: "idx_on_st_and_pension_margin_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "pension_personal"], name: "idx_on_st_and_pension_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "physical_exam_addition"], name: "idx_on_st_and_physical_exam_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "remark"], name: "idx_on_st_and_remark", using: :btree
+  add_index "salary_items", ["salary_table_id", "role"], name: "idx_on_st_and_role", using: :btree
+  add_index "salary_items", ["salary_table_id", "salary_card_addition"], name: "idx_on_st_and_salary_card_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "salary_deduct_addition"], name: "idx_on_st_and_salary_deduct_addition", using: :btree
+  add_index "salary_items", ["salary_table_id", "salary_deserve"], name: "idx_on_st_and_salary_deserve", using: :btree
+  add_index "salary_items", ["salary_table_id", "salary_in_fact"], name: "idx_on_st_and_salary_in_fact", using: :btree
+  add_index "salary_items", ["salary_table_id", "total_company"], name: "idx_on_st_and_total_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "total_personal"], name: "idx_on_st_and_total_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "total_sum"], name: "idx_on_st_and_total_sum", using: :btree
+  add_index "salary_items", ["salary_table_id", "total_sum_with_admin_amount"], name: "idx_on_st_and_total_sum_with_admin_amount", using: :btree
+  add_index "salary_items", ["salary_table_id", "unemployment_company"], name: "idx_on_st_and_unemployment_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "unemployment_margin_company"], name: "idx_on_st_and_unemployment_margin_company", using: :btree
+  add_index "salary_items", ["salary_table_id", "unemployment_margin_personal"], name: "idx_on_st_and_unemployment_margin_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "unemployment_personal"], name: "idx_on_st_and_unemployment_personal", using: :btree
+  add_index "salary_items", ["salary_table_id", "updated_at"], name: "idx_on_st_and_updated_at", using: :btree
   add_index "salary_items", ["salary_table_id"], name: "index_salary_items_on_salary_table_id", using: :btree
+  add_index "salary_items", ["staff_account"], name: "index_salary_items_on_staff_account", using: :btree
+  add_index "salary_items", ["staff_name"], name: "index_salary_items_on_staff_name", using: :btree
+  add_index "salary_items", ["total_company"], name: "index_salary_items_on_total_company", using: :btree
+  add_index "salary_items", ["total_personal"], name: "index_salary_items_on_total_personal", using: :btree
+  add_index "salary_items", ["total_sum"], name: "index_salary_items_on_total_sum", using: :btree
+  add_index "salary_items", ["total_sum_with_admin_amount"], name: "index_salary_items_on_total_sum_with_admin_amount", using: :btree
+  add_index "salary_items", ["unemployment_company"], name: "index_salary_items_on_unemployment_company", using: :btree
+  add_index "salary_items", ["unemployment_margin_company"], name: "index_salary_items_on_unemployment_margin_company", using: :btree
+  add_index "salary_items", ["unemployment_margin_personal"], name: "index_salary_items_on_unemployment_margin_personal", using: :btree
+  add_index "salary_items", ["unemployment_personal"], name: "index_salary_items_on_unemployment_personal", using: :btree
+  add_index "salary_items", ["updated_at"], name: "index_salary_items_on_updated_at", using: :btree
 
   create_table "salary_tables", force: :cascade do |t|
     t.text     "name"
     t.text     "remark"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "normal_corporation_id"
     t.text     "lai_table"
     t.text     "daka_table"
+    t.date     "start_date"
+    t.integer  "status",                default: 0
   end
 
   add_index "salary_tables", ["name"], name: "index_salary_tables_on_name", using: :btree
   add_index "salary_tables", ["normal_corporation_id"], name: "index_salary_tables_on_normal_corporation_id", using: :btree
+  add_index "salary_tables", ["start_date"], name: "index_salary_tables_on_start_date", using: :btree
+  add_index "salary_tables", ["status"], name: "index_salary_tables_on_status", using: :btree
 
   create_table "seal_items", force: :cascade do |t|
     t.integer  "nest_index"
@@ -703,8 +822,6 @@ ActiveRecord::Schema.define(version: 20160106131219) do
 
   add_foreign_key "big_contracts", "engineering_corps"
   add_foreign_key "big_contracts", "sub_companies"
-  add_foreign_key "contract_files", "engineering_corps"
-  add_foreign_key "contract_files", "sub_companies"
   add_foreign_key "contract_templates", "sub_companies"
   add_foreign_key "engineering_big_table_salary_items", "engineering_salary_tables"
   add_foreign_key "engineering_big_table_salary_items", "engineering_staffs"
@@ -727,13 +844,11 @@ ActiveRecord::Schema.define(version: 20160106131219) do
   add_foreign_key "guard_salary_tables", "normal_corporations"
   add_foreign_key "labor_contracts", "normal_corporations"
   add_foreign_key "labor_contracts", "normal_staffs"
-  add_foreign_key "labor_contracts", "sub_companies"
   add_foreign_key "non_full_day_salary_items", "non_full_day_salary_tables"
   add_foreign_key "non_full_day_salary_items", "normal_staffs"
   add_foreign_key "non_full_day_salary_tables", "normal_corporations"
   add_foreign_key "normal_corporations", "sub_companies"
   add_foreign_key "normal_staffs", "normal_corporations"
-  add_foreign_key "normal_staffs", "sub_companies"
   add_foreign_key "salary_items", "normal_staffs"
   add_foreign_key "salary_items", "salary_tables"
   add_foreign_key "salary_tables", "normal_corporations"

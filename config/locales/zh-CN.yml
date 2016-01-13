@@ -603,6 +603,7 @@ zh-CN:
       engineering_outcome_item:
         date: '回款日期'
         amount: '回款金额'
+        each_amount: '回款金额（每人）'
         persons: '回款人'
         bank: '银行名称'
         address: '开户地址'
