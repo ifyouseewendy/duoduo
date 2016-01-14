@@ -408,6 +408,18 @@ ActiveAdmin.register EngineeringStaff do
   end
 
   controller do
+    before_filter :set_page_title, only: [:index]
+
+    def set_page_title
+      if params['q'].present?
+        if params['q']['projects_id_eq'].present?
+          @page_title = '用工明细'
+        elsif params['q']['customer_id_eq'].present?
+          @page_title = '提供人员'
+        end
+      end
+    end
+
     def scoped_collection
       end_of_association_chain.includes(:customer)
     end
