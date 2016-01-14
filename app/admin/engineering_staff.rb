@@ -344,8 +344,12 @@ ActiveAdmin.register EngineeringStaff do
 
       Axlsx::Package.new do |p|
         p.workbook.add_worksheet do |sheet|
+          sheet.add_row ["提供人员表"]
           stat = columns.map{|col| model.human_attribute_name(col) }
           sheet.add_row stat
+
+          end_chr =  ('A'.ord + columns.count).chr
+          sheet.merge_cells "A1:#{end_chr}1"
         end
         p.serialize(filepath.to_s)
       end
@@ -368,6 +372,13 @@ ActiveAdmin.register EngineeringStaff do
 
     project_id = params[:engineering_staff][:project_id] rescue nil
     project = EngineeringProject.where(id: project_id).first
+
+    if project.present?
+      customer = project.customer
+    else
+      customer_id = params[:engineering_staff][:customer_id] rescue nil
+      customer = EngineeringCustomer.where(id: customer_id).first
+    end
 
     if project_id.present?
       columns = [:id, :name, :gender, :identity_card]
@@ -399,14 +410,13 @@ ActiveAdmin.register EngineeringStaff do
     stats.each_with_index do |stat, idx|
       begin
         if project.present?
-          customer = project.customer
           staff = customer.staffs.where(identity_card: stat[:identity_card]).first
           raise "无法在客户提供人员找到该身份证号" if staff.nil?
           staff.projects << project
         else
-          customer = EngineeringCustomer.where(nest_index: stat[:engineering_customer_id]).first
-          stat[:engineering_customer_id] = customer.id
-          staff = collection.create!(stat)
+          staff = collection.create!(stat.merge(
+            { engineering_customer_id: customer.id}
+          ))
         end
 
       rescue => e
