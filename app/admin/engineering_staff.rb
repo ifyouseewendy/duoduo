@@ -61,10 +61,10 @@ ActiveAdmin.register EngineeringStaff do
       end
     end
     column :customer, sortable: :id do |obj|
-      link_to obj.customer.display_name, engineering_customer_path(obj.customer)
+      link_to obj.customer.display_name, engineering_customer_path(obj.customer), target: '_blank'
     end
     column :projects, sortable: :id do |obj|
-      link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bstaffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bstaffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc", target: '_blank'
     end
     column :salary_item_detail, sortable: :updated_at do |obj|
       stats = []
@@ -76,7 +76,7 @@ ActiveAdmin.register EngineeringStaff do
       end
       ul do
         stats.each do |ar|
-          li( link_to ar[0], ar[1] )
+          li( link_to ar[0], ar[1], target: '_blank' )
         end
       end
     end
@@ -172,10 +172,10 @@ ActiveAdmin.register EngineeringStaff do
         end
       end
       row :customer do |obj|
-        link_to obj.customer.display_name, engineering_customer_path(obj.customer)
+        link_to obj.customer.display_name, engineering_customer_path(obj.customer), target: '_blank'
       end
       row :projects do |obj|
-        link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+        link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc", target: '_blank'
       end
 
       boolean_columns = resource.class.columns_of(:boolean)
