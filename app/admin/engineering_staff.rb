@@ -92,11 +92,16 @@ ActiveAdmin.register EngineeringStaff do
       end
     end
 
-    actions do |obj|
-      # text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      # item "加入项目", "#", class: "add_projects_link expand_table_action_width"
-      # text_node "&nbsp;&nbsp;".html_safe
-      # item "离开项目", "#", class: "remove_projects_link"
+    actions defaults: false do |obj|
+      text_node "&nbsp".html_safe
+      item "查看", "/engineering_staffs/#{obj.id}"
+      text_node "&nbsp".html_safe
+      item "编辑", "/engineering_staffs/#{obj.id}/edit"
+      project_view = params['q']['projects_id_eq'] rescue nil
+      unless project_view
+        text_node "&nbsp".html_safe
+        item "删除", "/engineering_staffs/#{obj.id}", method: :delete
+      end
     end
   end
 
