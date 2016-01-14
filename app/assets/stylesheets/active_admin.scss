@@ -50,9 +50,22 @@ $table_blue: rgba(34, 112, 255, 0.18);
 }
 
 .ui-dialog {
-  max-height: 420px;
+  max-height: 600px;
   overflow-y: auto;
-  top: 40px;
+  width: 410px !important;
+  top: 115px !important;
+
+  li {
+    height: 30px;
+  }
+  input[type=text] {
+    width: 150px;
+  }
+  .batch_edit_label {
+    display: inline-block;
+    width: 80px;
+    margin-left: 5px;
+  }
 }
 
 #utility_nav {
@@ -121,10 +134,23 @@ body.engineering_customers table.index_table {
 
 .engineering_projects {
   .ui-dialog {
-    max-height: 540px;
-    width: 400px !important;
+    max-height: 600px;
+    width: 410px !important;
     overflow-y: auto;
     top: 115px !important;
+
+    li {
+      height: 30px;
+    }
+
+    input[type=text] {
+      width: 150px;
+    }
+    .batch_edit_label {
+      display: inline-block;
+      width: 80px;
+      margin-left: 5px;
+    }
   }
 
   .index_table{
