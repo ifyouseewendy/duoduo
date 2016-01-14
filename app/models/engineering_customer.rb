@@ -67,9 +67,15 @@ class EngineeringCustomer < ActiveRecord::Base
       self.first.nest_index + 1
     end
 
-    def as_option
-      self.all.map do |ec|
-        [ec.display_name, ec.id, {'data-project-index': ec.available_project_nest_index}]
+    def as_option(available_project: true)
+      if available_project
+        self.select(:id, :nest_index, :name).map do |ec|
+          [ec.display_name, ec.id, {'data-project-index': ec.available_project_nest_index}]
+        end
+      else
+        self.select(:id, :nest_index, :name).map do |ec|
+          [ec.display_name, ec.id]
+        end
       end
     end
   end
