@@ -13,18 +13,18 @@ ActiveAdmin.register EngineeringCustomer do
     column :nest_index
     column :name
     column :projects, sortable: :id do |obj|
-      link_to "项目汇总", "/engineering_projects?q[customer_id_eq]=#{obj.id}"
+      link_to "项目汇总", "/engineering_projects?q[customer_id_eq]=#{obj.id}", target: '_blank'
     end
     column :staffs, sortable: :id do |obj|
       ul do
-        li( link_to "提供人员", "/engineering_staffs?q[customer_id_eq]=#{obj.id}" )
-        li( link_to "导入", "/engineering_staffs/import_new?customer_id=#{obj.id}" )
+        li( link_to "提供人员", "/engineering_staffs?q[customer_id_eq]=#{obj.id}", target: '_blank' )
+        li( link_to "导入", "/engineering_staffs/import_new?customer_id=#{obj.id}", target: '_blank' )
       end
     end
     column :sub_companies, sortable: :id do |obj|
       ul do
         obj.sub_companies.map do |sc|
-          li link_to(sc.name, sub_company_path(sc))
+          li link_to(sc.name, sub_company_path(sc), target: '_blank')
         end
       end
     end
@@ -67,18 +67,18 @@ ActiveAdmin.register EngineeringCustomer do
       row :nest_index
       row :name
       row :projects do |obj|
-        link_to "项目汇总", "/engineering_projects?q[customer_id_eq]=#{obj.id}"
+        link_to "项目汇总", "/engineering_projects?q[customer_id_eq]=#{obj.id}", target: '_blank'
       end
       row :staffs do |obj|
         ul do
-          li( link_to "提供人员", "/engineering_staffs?q[customer_id_eq]=#{obj.id}" )
-          li( link_to "导入", "/engineering_staffs/import_new" )
+          li( link_to "提供人员", "/engineering_staffs?q[customer_id_eq]=#{obj.id}", target: '_blank' )
+          li( link_to "导入", "/engineering_staffs/import_new?customer_id=#{obj.id}", target: '_blank' )
         end
       end
       row :sub_companies, sortable: :id do |obj|
         ul do
           obj.sub_companies.map do |sc|
-            li link_to(sc.name, sub_company_path(sc))
+            li link_to(sc.name, sub_company_path(sc), target: '_blank')
           end
         end
       end

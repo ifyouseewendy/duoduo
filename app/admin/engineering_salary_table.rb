@@ -36,7 +36,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     column :amount, footer: ->(data){ data[:amount] }
     column :project, sortable: :engineering_project_id do |obj|
       project = obj.project
-      link_to project.display_name, "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤"
+      link_to project.display_name, "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤", target: '_blank'
     end
     column :remark
     column :created_at
@@ -124,7 +124,7 @@ ActiveAdmin.register EngineeringSalaryTable do
       row :id
       row :name
       row :project do |obj|
-        link_to obj.project.name, engineering_project_path(obj.project)
+        link_to obj.project.name, engineering_project_path(obj.project), target: '_blank'
       end
       row :start_date
       row :end_date

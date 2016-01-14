@@ -43,17 +43,17 @@ ActiveAdmin.register EngineeringProject do
     column :nest_index
     column :name, footer: ->(data){ '合计' }
     column :customer, sortable: :id do |obj|
-      link_to obj.customer.display_name, "/engineering_customers?utf8=✓&q%5Bnest_index_equals%5D=#{obj.customer.nest_index}&commit=过滤"
+      link_to obj.customer.display_name, "/engineering_customers?utf8=✓&q%5Bnest_index_equals%5D=#{obj.customer.nest_index}&commit=过滤", target: '_blank'
     end
     column :sub_company, sortable: :id do |obj|
       sc = obj.sub_company
-      link_to sc.name, sub_company_path(sc)
+      link_to sc.name, sub_company_path(sc), target: '_blank'
     end
     column :corporation, sortable: :id do |obj|
       if obj.corporation.nil?
         link_to '', '无'
       else
-        link_to obj.corporation.name, engineering_corp_path(obj.corporation)
+        link_to obj.corporation.name, engineering_corp_path(obj.corporation), target: '_blank'
       end
     end
     column :status do |obj|
@@ -83,7 +83,7 @@ ActiveAdmin.register EngineeringProject do
       ul do
         li( link_to "查看", "/engineering_staffs?utf8=✓&q%5Bprojects_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
         li( link_to "添加", "#", class: "add_staffs_link" )
-        li( link_to "导入", "/engineering_staffs/import_new?project_id=#{obj.id}" )
+        li( link_to "导入", "/engineering_staffs/import_new?project_id=#{obj.id}", target: '_blank' )
         li( link_to "删除", "#", class: "remove_staffs_link" )
       end
     end
@@ -183,21 +183,21 @@ ActiveAdmin.register EngineeringProject do
           row :nest_index
           row :name
           row :staffs do |obj|
-            link_to "用工明细", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+            link_to "用工明细", "/engineering_staffs?utf8=✓&q%5Bengineering_projects_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc", target: '_blank'
           end
           row :customer do |obj|
-            link_to obj.customer.display_name, engineering_customer_path(obj.customer)
+            link_to obj.customer.display_name, engineering_customer_path(obj.customer), target: '_blank'
           end
           row :corporation do |obj|
             if obj.corporation.nil?
               link_to '', '#'
             else
-              link_to obj.corporation.name, engineering_corp_path(obj.corporation)
+              link_to obj.corporation.name, engineering_corp_path(obj.corporation), target: '_blank'
             end
           end
           row :sub_company do |obj|
             sc = obj.sub_company
-            link_to sc.name, sub_company_path(sc)
+            link_to sc.name, sub_company_path(sc), target: '_blank'
           end
           row :status do |obj|
             status_tag obj.status_i18n, (obj.active? ? :yes : :no)
