@@ -6,6 +6,10 @@ $(document).on 'ready', ->
 
   $( "#datepicker" ).datepicker( $.datepicker.regional['zh-CN'] )
 
+  # Confirm on all delete action
+  $('a[data-method=delete]').on 'click', ->
+    return confirm('请谨慎操作，确定删除？');
+
   # Individual Income Tax calculate
   $('.iit_form .submit').on 'click', ->
     $.ajax
