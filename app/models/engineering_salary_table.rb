@@ -44,6 +44,20 @@ class EngineeringSalaryTable < ActiveRecord::Base
       [:amount]
     end
 
+    def batch_fields
+      [
+        :remark
+      ]
+    end
+
+    def batch_form_fields
+      fields = batch_fields
+      hash = {
+      }
+      fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash
+    end
+
   end
 
   def audition_status
