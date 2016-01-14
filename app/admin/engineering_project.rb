@@ -9,6 +9,9 @@ ActiveAdmin.register EngineeringProject do
   scope "全部" do |record|
     record.all
   end
+  scope "存档" do |record|
+    record.archive
+  end
   scope "活动" do |record|
     record.active
   end
