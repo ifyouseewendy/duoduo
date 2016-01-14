@@ -203,7 +203,7 @@ module ActiveAdmin
           i18n: active_admin_config.resource_class,
           paginator: page_presenter[:paginator] != false,
           row_class: page_presenter[:row_class],
-          footer_fields: page_presenter[:footer_fields]
+          has_footer: page_presenter[:has_footer],
         }
 
         table_for collection, table_options do |t|
