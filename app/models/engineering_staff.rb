@@ -4,10 +4,6 @@ class EngineeringStaff < ActiveRecord::Base
     foreign_key: :engineering_customer_id, \
     required: true
 
-  # TODO
-  #
-  #   Temp comment out check_schedule on importing stage
-  #   Remember to check test/models/engineering_staff_test.rb:21
   has_and_belongs_to_many :projects, \
     class_name: EngineeringProject, \
     join_table: 'engineering_projects_staffs',
@@ -151,6 +147,7 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def check_schedule(project)
+    raise "<#{name}>已分配给项目<#{project.name}>，无法重复分配" if projects.pluck(:id).include?(project.id)
     raise "<#{name}>已分配项目与项目<#{project.name}>时间重叠" unless accept_schedule?(*project.range)
   end
 
