@@ -15,14 +15,7 @@ module ActiveAdmin
         @resource_class ||= @collection.klass if @collection.respond_to? :klass
         @columns        = []
         @row_class      = options.delete(:row_class)
-
-        if ( fields = options.delete(:footer_fields) ).present?
-          @has_footer = true
-          @footer_data = fields.reduce({}) do |ha, field|
-            ha[field] = @collection.klass.ransack(params[:q]).result.sum(field)
-            ha
-          end
-        end
+        @has_footer     = options.delete(:has_footer)
 
         build_table
         super(options)
@@ -84,7 +77,7 @@ module ActiveAdmin
 
       def build_table_footer(col)
         td class: col.html_class do
-          col.footer_proc(@footer_data)
+          col.footer_data
         end
 
       end
@@ -210,10 +203,8 @@ module ActiveAdmin
           end
         end
 
-        def footer_proc(footer_data)
-          if  @options[:footer].is_a?(Proc)
-            @options[:footer].call(footer_data)
-          end
+        def footer_data
+          @options[:footer]
         end
 
         #
