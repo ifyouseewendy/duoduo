@@ -370,61 +370,81 @@ ActiveAdmin.register EngineeringStaff do
     project = EngineeringProject.where(id: project_id).first
 
     if project_id.present?
-      columns = [:identity_card, :engineering_customer_id]
+      columns = [:id, :name, :gender, :identity_card]
     else
       columns = collection.ordered_columns(export:true)
     end
 
     gender_map = {'男' => 'male', '女' => 'female'}
+    gender_reverse_map = {'male' => '男', 'female' => '女'}
     stats = []
-    data.each_with_index do |row, id|
-      stat = {}
-      row.each_with_index do |v, idx|
-        key = columns[idx]
-        value = (String === v ? v.strip : v)
-        value = gender_map[value] if gender_map.keys.include? value
-        stat[key] = value
-      end
-
-      stats << stat
-    end
-
     failed = []
-    stats.each_with_index do |stat, idx|
-      if idx == 0
-        failed << stat.values
-      else
-        begin
-          customer = EngineeringCustomer.where(nest_index: stat[:engineering_customer_id]).first
-          if project.present?
-            staff = customer.staffs.where(identity_card: stat[:identity_card]).first
-            raise "无法在客户提供人员找到该身份证号" if staff.nil?
-            staff.projects << project
-          else
-            stat[:engineering_customer_id] = customer.id
-            staff = collection.create!(stat)
-          end
 
-        rescue => e
-          failed << (stat.values << e.message)
+    data.each_with_index do |row, id|
+      if id < 2
+        failed << row
+      else
+        stat = {}
+        row.each_with_index do |v, idx|
+          key = columns[idx]
+          value = (String === v ? v.strip : v)
+          value = gender_map[value] if gender_map.keys.include? value
+          stat[key] = value
         end
+
+        stats << stat
       end
     end
 
-    if failed.count > 1
+    stats.each_with_index do |stat, idx|
+      begin
+        if project.present?
+          customer = project.customer
+          staff = customer.staffs.where(identity_card: stat[:identity_card]).first
+          raise "无法在客户提供人员找到该身份证号" if staff.nil?
+          staff.projects << project
+        else
+          customer = EngineeringCustomer.where(nest_index: stat[:engineering_customer_id]).first
+          stat[:engineering_customer_id] = customer.id
+          staff = collection.create!(stat)
+        end
+
+      rescue => e
+        failed << (stat.values << e.message)
+      end
+    end
+
+    if failed.count > 2
       # generate new xls file
 
       filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
       filepath = Pathname("tmp/#{filename}.#{Time.stamp}.xlsx")
       Axlsx::Package.new do |p|
         p.workbook.add_worksheet do |sht|
-          failed.each{|stat| stat[0] = "'#{stat[0]}"; sht.add_row stat}
+          failed.each_with_index do |stat, fid|
+            if fid >= 2
+              id_card_idx = columns.index(:identity_card)
+              stat[id_card_idx] = "'#{stat[id_card_idx]}";
+
+              gender_idx = columns.index(:gender)
+              stat[gender_idx] = gender_reverse_map[ stat[gender_idx] ]
+            end
+
+            sht.add_row stat
+          end
+
+          end_chr =  ('A'.ord + failed[1].count).chr
+          sht.merge_cells "A1:#{end_chr}1"
         end
         p.serialize(filepath.to_s)
       end
       send_file filepath
     else
-      redirect_to send("#{collection.name.underscore.pluralize}_path"), notice: "成功导入 #{stats.count-1} 条记录"
+      if project.present?
+        redirect_to "/engineering_staffs?q[projects_id_eq]=#{project.id}", notice: "成功导入 #{stats.count} 条记录"
+      else
+        redirect_to "/engineering_staffs?q[customer_id_eq]=#{customer.id}", notice: "成功导入 #{stats.count} 条记录"
+      end
     end
 
   end
