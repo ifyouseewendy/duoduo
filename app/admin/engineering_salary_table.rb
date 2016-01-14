@@ -105,8 +105,8 @@ ActiveAdmin.register EngineeringSalaryTable do
       f.input :name, as: :string
       if request.url.split('/')[-1] == 'new'
         f.input :type, as: :radio, collection: ->{ EngineeringSalaryTable.new_record_types.map{|k| [k.model_name.human, k.to_s]} }.call
+        f.input :project, collection: ->{ EngineeringProject.as_filter }.call
       end
-      f.input :project, collection: ->{ EngineeringProject.as_filter }.call
       f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
       f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'
       f.input :amount, as: :number
