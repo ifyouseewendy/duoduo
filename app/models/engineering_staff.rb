@@ -29,6 +29,7 @@ class EngineeringStaff < ActiveRecord::Base
 
   default_scope { order(updated_at: :desc).order(enable: :desc) }
   scope :enabled, -> { where(enable: true) }
+  scope :disabled, -> { where.not(enable: true) }
   scope :by_project, ->(project_id){
     joins("join engineering_projects_staffs on engineering_staffs.id = engineering_projects_staffs.engineering_staff_id")\
       .where("engineering_projects_staffs.engineering_project_id = ?", project_id)

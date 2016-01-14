@@ -11,6 +11,9 @@ ActiveAdmin.register EngineeringStaff do
   scope "全部" do |record|
     record.all
   end
+  scope "不可用" do |record|
+    record.disabled
+  end
   scope "可用" do |record|
     record.enabled
   end
