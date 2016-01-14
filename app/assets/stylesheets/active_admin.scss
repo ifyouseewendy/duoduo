@@ -337,6 +337,21 @@ body.engineering_customers table.index_table {
 
 .salary_items {
   .index_table{
+    .col-salary_deserve {
+      border-left: 2px solid $table_red;
+      border-right: 2px solid $table_red;
+    }
+    .col-salary_in_fact {
+      border-left: 2px solid $table_red;
+      border-right: 2px solid $table_red;
+    }
+    .col-admin_amount {
+      border-left: 2px solid $table_red;
+      border-right: 2px solid $table_red;
+    }
+    .col-total_sum{
+      border-left: 2px solid $table_red;
+    }
     th.col-actions {
       min-width: 50px !important;
     }
