@@ -13,11 +13,17 @@ ActiveAdmin.register EngineeringProject do
     record.active
   end
 
-  index footer_fields: (@resource.sum_fields+[:income_amount, :outcome_amount]) do
+  index has_footer: true do
     selectable_column
 
+    sum_fields = resource_class.sum_fields+[:income_amount, :outcome_amount]
+    sum = sum_fields.reduce({}) do |ha, field|
+      ha[field] = collection.sum(field)
+      ha
+    end
+
     column :nest_index
-    column :name, footer: ->(data){ '合计' }
+    column :name, footer: '合计'
     column :customer, sortable: :id do |obj|
       link_to obj.customer.display_name, "/engineering_customers?utf8=✓&q%5Bnest_index_equals%5D=#{obj.customer.nest_index}&commit=过滤"
     end
@@ -38,7 +44,7 @@ ActiveAdmin.register EngineeringProject do
     (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name, :status]).each do |field|
       if resource_class.nest_fields.include? field
         opt = {}
-        opt = {footer: ->(data){ data[field]}} if [:outcome_amount, :income_amount].include?(field)
+        opt = {footer: sum[field]} if [:outcome_amount, :income_amount].include?(field)
         column field, opt do |obj|
           data = obj.send(field)
           if data.count > 1
@@ -49,7 +55,7 @@ ActiveAdmin.register EngineeringProject do
           end
         end
       elsif resource_class.sum_fields.include? field
-        column field, footer: ->(data){ data[field] }
+        column field, footer: sum[field]
       else
         column field
       end
