@@ -15,7 +15,7 @@ ActiveAdmin.register NormalCorporation do
     record.active
   end
 
-  config.sort_order = 'status_asc_and_updated_at_desc'
+  config.sort_order = 'status_asc,updated_at_desc'
 
   # scope "最近10条更新" do |record|
   #   record.updated_latest_10
