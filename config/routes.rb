@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   resources :engineering_salary_tables do
     collection do
+      post 'batch_action'
       post 'import_do'
       get 'import_new'
       get 'import_demo'
