@@ -76,10 +76,10 @@ class EngineeringProject < ActiveRecord::Base
     def batch_form_fields
       fields = batch_fields
       hash = {
-        'engineering_customer_id_客户' => EngineeringCustomer.as_option(available_project: false),
-        'engineering_corp_id_合作单位' => EngineeringCorp.pluck(:name, :id),
-        'sub_company_id_吉易子公司' => SubCompany.hr.pluck(:name, :id),
-        'status_状态' => [ ['活动', 'active'], ['存档', 'archive'] ],
+        'engineering_customer_id_所属客户'   => EngineeringCustomer.as_option(available_project: false),
+        'engineering_corp_id_合作单位'       => EngineeringCorp.pluck(:name, :id),
+        'sub_company_id_吉易子公司'          => SubCompany.hr.pluck(:name, :id),
+        'status_状态'                        => [ ['活动', 'active'], ['存档', 'archive'] ],
         'already_sign_dispatch_代发是否签署' => [ ['是', true], ['否', false] ],
       }
       fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
