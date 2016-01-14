@@ -33,7 +33,12 @@ ActiveAdmin.register SalaryItem do
       ha
     end
 
-    fields.each do |field|
+    fields.each_with_index do |field, idx|
+      if idx == 0
+        column :nest_index, footer: '合计'
+        next
+      end
+
       if custom_sortable.keys.include? field
         if field == :staff_name
           column field, sortable: custom_sortable[field] do |obj|
