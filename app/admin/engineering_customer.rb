@@ -13,11 +13,11 @@ ActiveAdmin.register EngineeringCustomer do
     column :nest_index
     column :name
     column :projects, sortable: :id do |obj|
-      link_to "项目汇总", engineering_customer_engineering_projects_path(obj) + "?q[customer_id_eq]=#{obj.id}"
+      link_to "项目汇总", "/engineering_projects?q[customer_id_eq]=#{obj.id}"
     end
     column :staffs, sortable: :id do |obj|
       ul do
-        li( link_to "查看", engineering_customer_engineering_staffs_path(obj) + "?q[customer_id_eq]=#{obj.id}" )
+        li( link_to "提供人员", "/engineering_staffs?q[customer_id_eq]=#{obj.id}" )
         li( link_to "导入", "/engineering_staffs/import_new" )
       end
     end
@@ -67,10 +67,13 @@ ActiveAdmin.register EngineeringCustomer do
       row :nest_index
       row :name
       row :projects do |obj|
-        link_to "项目汇总", engineering_customer_engineering_projects_path(obj)
+        link_to "项目汇总", "/engineering_projects?q[customer_id_eq]=#{obj.id}"
       end
       row :staffs do |obj|
-        link_to "员工列表", engineering_customer_engineering_staffs_path(obj)
+        ul do
+          li( link_to "提供人员", "/engineering_staffs?q[customer_id_eq]=#{obj.id}" )
+          li( link_to "导入", "/engineering_staffs/import_new" )
+        end
       end
       row :sub_companies, sortable: :id do |obj|
         ul do
