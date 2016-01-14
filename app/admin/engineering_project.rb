@@ -5,6 +5,27 @@ ActiveAdmin.register EngineeringProject do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 3
 
+  breadcrumb do
+    crumbs = []
+
+    if params['q'].present?
+      if (cid=params['q']['customer_id_eq']).present?
+        customer = EngineeringCustomer.where(id: cid).first
+        if customer.present?
+          crumbs << link_to('客户', '/engineering_customers')
+          crumbs << link_to(customer.display_name, "/engineering_customers?q[id_eq]=#{customer.id}")
+        end
+      elsif (sid=params['q']['staffs_id_eq']).present?
+        staff = EngineeringStaff.where(id: sid).first
+        if staff.present?
+          crumbs << link_to(staff.name, "/engineering_staffs?q[id_eq]=#{staff.id}")
+        end
+      end
+    end
+
+    crumbs
+  end
+
   # Index
   scope "全部" do |record|
     record.all
@@ -417,6 +438,17 @@ ActiveAdmin.register EngineeringProject do
 
   controller do
     before_action :wrap_params, only: :update
+    before_filter :set_page_title, only: [:index]
+
+    def set_page_title
+      if params['q'].present?
+        if params['q']['staffs_id_eq'].present?
+          @page_title = '所属项目'
+        end
+      else
+        @page_title = '项目汇总'
+      end
+    end
 
     def scoped_collection
       end_of_association_chain
@@ -440,4 +472,5 @@ ActiveAdmin.register EngineeringProject do
         end
       end
   end
+
 end
