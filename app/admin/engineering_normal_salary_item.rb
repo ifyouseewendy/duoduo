@@ -6,20 +6,28 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   config.per_page = 100
 
   breadcrumb do
+    crumbs = []
+
     if params['q'].present?
-      st = ->{ EngineeringSalaryTable.where(id: params['q']['salary_table_id_eq']).first }.call
-      if st.present?
-        project = st.project
-        [
-          link_to(project.name,  "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤", target: '_blank' ),
-          link_to(st.name, "/engineering_salary_tables?utf8=✓&q%5Bid_equals%5D=#{st.id}&commit=过滤", target: '_blank' )
-        ]
-      else
-        []
+      if (stid=params['q']['salary_table_id_eq']).present?
+        st = EngineeringSalaryTable.where(id: stid).first
+        if st.present?
+          project = st.project
+          if project.present?
+            customer = project.customer
+            if customer.present?
+              crumbs << link_to(customer.display_name, "/engineering_customers?q[id_eq]=#{customer.id}")
+            end
+            crumbs << link_to(project.display_name, "/engineering_projects?q[id_eq]=#{project.id}")
+          end
+          crumbs << link_to("工资表 #{st.name}", "/engineering_salary_tables?q[id_eq]=#{st.id}")
+        end
       end
     else
       []
     end
+
+    crumbs
   end
 
   index footer_fields: @resource.sum_fields do
