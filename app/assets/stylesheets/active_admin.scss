@@ -119,32 +119,41 @@ body.engineering_customers table.index_table {
   }
 }
 
-.engineering_projects .index_table{
-  th.col-name {
-    min-width: 250px !important;
+.engineering_projects {
+  .ui-dialog {
+    max-height: 540px;
+    width: 400px !important;
+    overflow-y: auto;
+    top: 115px !important;
   }
-  th.col-customer {
-    min-width: 100px !important;
-  }
-  th.col-sub_company {
-    min-width: 100px !important;
-  }
-  th.col-corporation {
-    min-width: 100px !important;
-  }
-  th.col-remark {
-    min-width: 100px !important;
-  }
-  td.col-staff_detail {
-    min-width: 110px !important;
-    li {
-      display: inline;
+
+  .index_table{
+    th.col-name {
+      min-width: 250px !important;
     }
-  }
-  td.col-salary_table_detail {
-    min-width: 100px !important;
-    li {
-      display: inline;
+    th.col-customer {
+      min-width: 100px !important;
+    }
+    th.col-sub_company {
+      min-width: 100px !important;
+    }
+    th.col-corporation {
+      min-width: 100px !important;
+    }
+    th.col-remark {
+      min-width: 100px !important;
+    }
+    td.col-staff_detail {
+      min-width: 110px !important;
+      li {
+        display: inline;
+      }
+    }
+    td.col-salary_table_detail {
+      min-width: 100px !important;
+      li {
+        display: inline;
+      }
     }
   }
 }

@@ -61,12 +61,26 @@ class EngineeringProject < ActiveRecord::Base
       statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
     end
 
+    def batch_fields
+      [
+        :start_date,
+        :project_start_date,
+        :project_end_date,
+        :project_amount,
+        :admin_amount,
+        :proof,
+        :remark
+      ]
+    end
+
     def batch_form_fields
-      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
+      fields = batch_fields
       hash = {
-        'engineering_customer_id_工程客户' => EngineeringCustomer.pluck(:name, :id),
-        'engineering_corp_id_工程单位' => EngineeringCorp.pluck(:name, :id),
-        'sub_company_id_吉易子公司' => SubCompany.hr.pluck(:name, :id)
+        'engineering_customer_id_客户' => EngineeringCustomer.as_option(available_project: false),
+        'engineering_corp_id_合作单位' => EngineeringCorp.pluck(:name, :id),
+        'sub_company_id_吉易子公司' => SubCompany.hr.pluck(:name, :id),
+        'status_状态' => [ ['活动', 'active'], ['存档', 'archive'] ],
+        'already_sign_dispatch_代发是否签署' => [ ['是', true], ['否', false] ],
       }
       fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
       hash
