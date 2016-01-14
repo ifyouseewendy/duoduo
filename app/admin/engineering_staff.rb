@@ -326,16 +326,29 @@ ActiveAdmin.register EngineeringStaff do
     filepath = dir.join(filename)
 
     if params[:project_id].present?
-      columns = [:identity_card, :engineering_customer_id]
+      columns = [:id, :name, :gender, :identity_card]
+
+      package = Axlsx::Package.new
+      package.workbook do |workbook|
+        workbook.add_worksheet do |sheet|
+          sheet.add_row ["用工明细表"]
+          stat = columns.map{|col| model.human_attribute_name(col) }
+          sheet.add_row stat
+
+          sheet.merge_cells "A1:D1"
+        end
+      end
+      package.serialize(filepath.to_s)
     else
       columns = model.ordered_columns(export: true)
-    end
-    Axlsx::Package.new do |p|
-      p.workbook.add_worksheet do |sheet|
-        stat = columns.map{|col| model.human_attribute_name(col) }
-        sheet.add_row stat
+
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet do |sheet|
+          stat = columns.map{|col| model.human_attribute_name(col) }
+          sheet.add_row stat
+        end
+        p.serialize(filepath.to_s)
       end
-      p.serialize(filepath.to_s)
     end
 
     send_file filepath
