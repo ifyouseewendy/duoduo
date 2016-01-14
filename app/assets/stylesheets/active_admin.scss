@@ -133,6 +133,13 @@ body.engineering_customers table.index_table {
 }
 
 .engineering_projects {
+  .ui-dialog {
+    max-height: 540px;
+    width: 400px !important;
+    overflow-y: auto;
+    top: 115px !important;
+  }
+
   .index_table{
     th.col-name {
       min-width: 250px !important;
