@@ -7,6 +7,34 @@ ActiveAdmin.register EngineeringStaff do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 4
 
+  breadcrumb do
+    crumbs = []
+
+    if params['q'].present?
+      if (pid=params['q']['projects_id_eq']).present?
+        project = EngineeringProject.where(id: pid).first
+        if project.present?
+          customer = project.customer
+          if customer.present?
+            crumbs << link_to('客户', '/engineering_customers')
+            crumbs << link_to(customer.display_name, "/engineering_customers?q[id_eq]=#{customer.id}")
+          end
+
+          crumbs << link_to('项目汇总', "/engineering_projects?q[customer_id_eq]=#{customer.try(:id)}")
+          crumbs << link_to(project.display_name, "/engineering_projects?q[id_eq]=#{project.id}")
+        end
+      elsif (cid=params['q']['customer_id_eq']).present?
+        customer = EngineeringCustomer.where(id: cid).first
+        if customer.present?
+          crumbs << link_to('客户', '/engineering_customers')
+          crumbs << link_to(customer.display_name, "/engineering_customers?q[id_eq]=#{customer.id}")
+        end
+      end
+    end
+
+    crumbs
+  end
+
   # Index
   scope "全部" do |record|
     record.all
