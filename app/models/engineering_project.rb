@@ -183,6 +183,13 @@ class EngineeringProject < ActiveRecord::Base
     if (changed & ['project_amount', 'admin_amount']).present?
       self.total_amount = project_amount + admin_amount
     end
+
+    if status_change == ['active', 'archive']
+      unless can_archive?
+        errors.add(:status, "校验失败：来款金额需等于费用合计，回款金额需等于劳务费")
+        return false
+      end
+    end
   end
 
   def set_fields(outcome_item)
@@ -192,7 +199,7 @@ class EngineeringProject < ActiveRecord::Base
     end
 
     if can_archive?
-      self.archive!
+      self.update_column(:status, 'archive')
     end
   end
 
