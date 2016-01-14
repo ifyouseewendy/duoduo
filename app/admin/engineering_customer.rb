@@ -18,7 +18,7 @@ ActiveAdmin.register EngineeringCustomer do
     column :staffs, sortable: :id do |obj|
       ul do
         li( link_to "提供人员", "/engineering_staffs?q[customer_id_eq]=#{obj.id}" )
-        li( link_to "导入", "/engineering_staffs/import_new" )
+        li( link_to "导入", "/engineering_staffs/import_new?customer_id=#{obj.id}" )
       end
     end
     column :sub_companies, sortable: :id do |obj|
