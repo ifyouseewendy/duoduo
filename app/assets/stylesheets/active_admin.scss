@@ -134,26 +134,6 @@ body.engineering_customers table.index_table {
 }
 
 .engineering_projects {
-  .ui-dialog {
-    max-height: 600px;
-    width: 410px !important;
-    overflow-y: auto;
-    top: 115px !important;
-
-    li {
-      height: 30px;
-    }
-
-    input[type=text] {
-      width: 150px;
-    }
-    .batch_edit_label {
-      display: inline-block;
-      width: 80px;
-      margin-left: 5px;
-    }
-  }
-
   .index_table{
     th.col-name {
       min-width: 250px !important;
@@ -240,6 +220,12 @@ body.engineering_customers table.index_table {
       display: none;
     }
   }
+
+  .ui-dialog {
+    .batch_edit_label {
+      width: 170px;
+    }
+  }
 }
 .engineering_normal_with_tax_salary_items {
   .action_items {
@@ -248,6 +234,11 @@ body.engineering_customers table.index_table {
   .index_table {
     .view_link {
       display: none;
+    }
+  }
+  .ui-dialog {
+    .batch_edit_label {
+      width: 170px;
     }
   }
 }

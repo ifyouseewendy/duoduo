@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   end
   resources :engineering_normal_with_tax_salary_items do
     collection do
+      post 'batch_action'
       post 'import_do'
       get 'import_new'
       get 'import_demo'
@@ -25,6 +26,7 @@ Rails.application.routes.draw do
   end
   resources :engineering_normal_salary_items do
     collection do
+      post 'batch_action'
       post 'import_do'
       get 'import_new'
       get 'import_demo'

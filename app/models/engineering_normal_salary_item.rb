@@ -131,7 +131,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
     if (changed & ['social_insurance', 'medical_insurance']).present?
       self.total_insurance = [self.social_insurance, self.medical_insurance].map(&:to_f).sum
     end
-    if (changed & ['salary_in_fact']).present?
+    if (changed & ['salary_in_fact', 'total_insurance']).present?
       self.salary_deserve = self.salary_in_fact.to_f - self.total_insurance.to_f
     end
   end
