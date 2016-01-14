@@ -240,6 +240,11 @@ class SalaryItem < ActiveRecord::Base
     def manipulate_insurance_fund_fields
       company_deduct_fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
+
+
+    def sum_fields
+      whole_columns - [:nest_index, :staff_account, :staff_name, :remark]
+    end
   end # Class method ends
 
   def staff_identity_card

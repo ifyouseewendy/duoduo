@@ -16,7 +16,7 @@ ActiveAdmin.register SalaryItem do
   end
 
   # Index
-  index row_class: ->(ele){ 'transfer' if ele.transfer? } do
+  index row_class: ->(ele){ 'transfer' if ele.transfer? }, has_footer: true  do
     selectable_column
 
     custom_sortable = {
@@ -25,7 +25,15 @@ ActiveAdmin.register SalaryItem do
     }
 
     # present_fields defined in helper
-    present_fields(collection, params).each do |field|
+    fields = present_fields(collection, params)
+    sum_fields = fields & resource_class.sum_fields
+
+    sum = sum_fields.reduce({}) do |ha, field|
+      ha[field] = collection.sum(field)
+      ha
+    end
+
+    fields.each do |field|
       if custom_sortable.keys.include? field
         if field == :staff_name
           column field, sortable: custom_sortable[field] do |obj|
@@ -35,7 +43,9 @@ ActiveAdmin.register SalaryItem do
           column field, sortable: custom_sortable[field]
         end
       else
-        column field
+        opt = {}
+        opt = {footer: sum[field]} if sum_fields.include?(field)
+        column field, opt
       end
     end
 
