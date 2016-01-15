@@ -71,22 +71,40 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
       elsif options[:salary_table_id].present?
         salary_table = EngineeringSalaryTable.find(options[:salary_table_id])
         collection = salary_table.salary_items
-        names += [salary_table.project.name, salary_table.name]
+        names += [salary_table.project.name, salary_table.month_display]
       end
 
-      collection = collection.includes(:staff).order('engineering_staffs.seal_index asc') if options[:order].present?
+      # collection = collection.includes(:staff).order('engineering_staffs.seal_index asc') if options[:order].present?
 
       names << Time.stamp
 
       filename = "#{names.join('_')}.xlsx"
       filepath = EXPORT_PATH.join filename
 
-      columns = columns_based_on(options: options)
+      columns = columns_based_on(options: options) - [:remark, :created_at, :updated_at] + [:blank_sign]
       Axlsx::Package.new do |p|
-        p.workbook.add_worksheet(name: name) do |sheet|
-          sheet.add_row columns.map{|col| self.human_attribute_name(col)}
+        wb = p.workbook
+        wrap_text = wb.styles.add_style({
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          border: {style: :thin, color: '00'}
+        })
 
-          collection.includes(:staff).each_with_index do |item,idx|
+        wb.add_worksheet(name: salary_table.month_display) do |sheet|
+          # Headers
+          sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
+            height: 60, b:true, sz: 16, style: wrap_text
+          sheet.add_row [ salary_table.month_display_zh + " 工资表" ], \
+            height: 30, b:true, style: wrap_text
+          sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
+            height: 60, b:true, style: wrap_text
+
+          end_col = ('A'.ord + columns.count - 1).chr
+          sheet.merge_cells("A1:#{end_col}1")
+          sheet.merge_cells("A2:#{end_col}2")
+
+          # Content
+          records = collection.includes(:staff).sort_by{|si| si.staff.seal_index.to_s}
+          records.each_with_index do |item,idx|
              stats = \
               columns.map do |col|
                 if [:staff].include? col
@@ -97,9 +115,10 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
                   item.send(col)
                 end
               end
-              sheet.add_row stats
+              sheet.add_row stats, style: wrap_text
           end
 
+          # Sum row
           stats = columns.reduce([]) do |ar, col|
             if sum_fields.include?(col)
               ar << collection.sum(col)
@@ -107,9 +126,14 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
               ar << nil
             end
           end
-
           stats[0] = '合计'
-          sheet.add_row stats
+          sheet.add_row stats, style: wrap_text
+
+          end_rol = 3 + collection.count + 1
+          sheet.merge_cells("A#{end_rol}:B#{end_rol}")
+
+          widths = Array.new(columns.count+1){10}
+          sheet.column_widths *widths
         end
         p.serialize(filepath.to_s)
       end
@@ -140,5 +164,9 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
     if (changed & ['salary_in_fact']).present?
       self.salary_table.validate_amount
     end
+  end
+
+  # Export placeholder
+  def blank_sign
   end
 end
