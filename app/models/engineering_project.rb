@@ -5,7 +5,8 @@ class EngineeringProject < ActiveRecord::Base
 
   has_and_belongs_to_many :staffs, \
     class_name: EngineeringStaff, \
-    join_table: 'engineering_projects_staffs'
+    join_table: 'engineering_projects_staffs',
+    before_add: :check_schedule
 
   has_many :salary_tables, class: EngineeringSalaryTable, dependent: :destroy
 
@@ -562,6 +563,11 @@ class EngineeringProject < ActiveRecord::Base
         account: oi.account
       )
     end
+  end
+
+  def check_schedule(staff)
+    raise "<#{staff.name}>已分配给项目<#{name}>，无法重复分配" if staffs.pluck(:id).include?(staff.id)
+    raise "<#{satff.name}>已分配项目与项目<#{name}>时间重叠" unless staff.accept_schedule?(*self.range)
   end
 
 end
