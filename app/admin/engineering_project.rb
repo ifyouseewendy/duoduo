@@ -381,13 +381,17 @@ ActiveAdmin.register EngineeringProject do
     staffs.each do |staff|
       begin
         project.staffs << staff
-        messages << "操作成功，<#{staff.name}>"
+        # messages << "操作成功，<#{staff.name}>"
       rescue => e
         messages << "操作失败，#{e.message}"
       end
     end
 
-    render json: {message: messages.join('；') }
+    if messages.blank?
+      render json: {message: '操作成功' }
+    else
+      render json: {message: messages.join('；') }
+    end
   end
 
   member_action :remove_staffs, method: :post do
