@@ -204,7 +204,7 @@ ActiveAdmin.register EngineeringStaff do
       begin
         obj.update_attributes!(inputs)
       rescue => _
-        failed << "操作失败<编号#{obj.nest_index}>: #{obj.errors.full_messages.join(', ')}"
+        failed << "操作失败<#{obj.name}>: #{obj.errors.full_messages.join(', ')}"
       end
     end
 
