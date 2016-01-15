@@ -134,6 +134,12 @@ body.engineering_customers table.index_table {
 }
 
 .engineering_projects {
+  .ui-dialog {
+    #dialog_confirm {
+      max-height: 400px !important;
+      overflow-y: auto;
+    }
+  }
   .index_table{
     th.col-name {
       min-width: 250px !important;
