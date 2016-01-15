@@ -340,8 +340,23 @@ body.engineering_customers table.index_table {
     th.col-normal_corporation {
       min-width: 120px !important;
     }
+    th.col-remark {
+      min-width: 200px !important;
+    }
+    td.col-salary_items_display {
+      min-width: 70px !important;
+      li {
+        display: inline;
+      }
+    }
+    td.col-attachment {
+      min-width: 70px !important;
+      li {
+        display: inline;
+      }
+    }
     th.col-actions {
-      min-width: 250px !important;
+      min-width: 100px !important;
     }
   }
 }

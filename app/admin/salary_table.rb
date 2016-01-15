@@ -49,17 +49,25 @@ ActiveAdmin.register SalaryTable do
 
     column :remark
 
+    column :salary_items_display, sortable: :start_date do |obj|
+      ul do
+        li( link_to "工资条", salary_table_salary_items_path(obj), target: '_blank' )
+        li( link_to "导入", "/salary_items/import_new?salary_table_id=#{obj.id}", target: '_blank' )
+      end
+    end
+
+    column :attachment, sortable: :start_date do |obj|
+      ul do
+        if obj.lai_table.present?
+          li( link_to '来表', obj.lai_table.url )
+        end
+        if obj.daka_table.present?
+          li( link_to '打卡表', obj.daka_table.url )
+        end
+      end
+    end
+
     actions do |st|
-      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      item "工资条", salary_table_salary_items_path(st), target: '_blank', class: "member_link"
-      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      if st.lai_table.present?
-        item '来表', st.lai_table.url
-        text_node "&nbsp;".html_safe
-      end
-      if st.daka_table.present?
-        item '打卡表', st.daka_table.url
-      end
       # item "发票", "/invoices?utf8=✓&q%5Binvoicable_id_eq%5D=#{st.id}&invoicable_type%5D=#{st.class.name}&commit=过滤&order=id_desc", class: "member_link expand_table_action_width"
     end
   end
