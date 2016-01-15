@@ -30,15 +30,21 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
     crumbs
   end
 
-  index footer_fields: @resource.sum_fields do
+  index has_footer: true do
     selectable_column
 
-    column :name, sortable: :updated_at, footer: ->(data){ '合计' } do |obj|
+    sum_fields = resource_class.sum_fields
+    sum = sum_fields.reduce({}) do |ha, field|
+      ha[field] = collection.sum(field)
+      ha
+    end
+
+    column :name, sortable: :updated_at, footer: '合计' do |obj|
       staff = obj.staff
       link_to staff.name, engineering_staff_path(staff)
     end
     resource_class.sum_fields.each do |field|
-      column field, footer: ->(data){ data[field] }
+      column field, footer: sum[field]
     end
 
     column :seal_index, sortable: 'engineering_staffs.seal_index' do |obj|
