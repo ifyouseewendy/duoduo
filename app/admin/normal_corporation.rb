@@ -41,7 +41,7 @@ ActiveAdmin.register NormalCorporation do
     column :salary_table_display, sortable: :id do |obj|
       ul do
         if obj.salary_tables.count > 0
-          li link_to("基础工资表", normal_corporation_salary_tables_path(obj), target: '_blank' )
+          li link_to("基础工资表", "/salary_tables?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank' )
         end
         if obj.guard_salary_tables.count > 0
           li link_to(" 保安工资表", normal_corporation_guard_salary_tables_path(obj), target: '_blank' )

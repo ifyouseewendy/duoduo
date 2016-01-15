@@ -5,6 +5,22 @@ ActiveAdmin.register SalaryTable do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 4
 
+  breadcrumb do
+    crumbs = []
+
+    if params['q'].present?
+      if (ncid=params['q']['normal_corporation_id_eq']).present?
+        nc = NormalCorporation.where(id: ncid).first
+        if nc.present?
+          crumbs << link_to('合作单位', "/normal_corporations")
+          crumbs << link_to(nc.name, "/normal_corporations?q[id_eq]=#{nc.id}")
+        end
+      end
+    end
+
+    crumbs
+  end
+
   scope "全部" do |record|
     record.all
   end
@@ -35,7 +51,7 @@ ActiveAdmin.register SalaryTable do
 
     actions do |st|
       text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      item "工资条", salary_table_salary_items_path(st), class: "member_link"
+      item "工资条", salary_table_salary_items_path(st), target: '_blank', class: "member_link"
       text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       if st.lai_table.present?
         item '来表', st.lai_table.url
