@@ -266,7 +266,15 @@ body.engineering_customers table.index_table {
 }
 
 .normal_corporations {
+  .ui-dialog {
+    .batch_edit_label {
+      width: 85px;
+    }
+  }
   .index_table {
+    th.col-name {
+      min-width: 100px !important;
+    }
     th.col-full_name {
       min-width: 100px !important;
     }

@@ -46,12 +46,21 @@ class NormalCorporation < ActiveRecord::Base
     end
 
     def batch_form_fields
-      fields = ordered_columns(without_base_keys: true, without_foreign_keys: true)
       hash = {
-        'sub_company_ids_吉易子公司' => SubCompany.select(:id, :name).reduce([]){|ar, sc| ar << [sc.name, sc.id] }
+        'sub_company_ids_吉易子公司' => SubCompany.select(:id, :name).reduce([]){|ar, sc| ar << [sc.name, sc.id] },
+        'status_状态' => statuses_option,
+        'admin_charge_type_管理费收取方式' => admin_charge_types_option,
+        'admin_charge_amount_管理费收取金额' => :text,
+        'full_name_单位全称' => :text,
       }
+      fields = [
+        :expense_date,
+        :contract_start_date,
+        :contract_end_date,
+        :remark
+      ]
+      # fields = ordered_columns(without_base_keys: true, without_foreign_keys: true) - [:name, :status, :admin_charge_type, :admin_charge_amount]
       fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
-      hash['admin_charge_type_管理费收取方式'] = NormalCorporation.admin_charge_types_option
       hash
     end
 
