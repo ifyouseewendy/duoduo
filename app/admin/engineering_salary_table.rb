@@ -24,16 +24,22 @@ ActiveAdmin.register EngineeringSalaryTable do
     crumbs
   end
 
-  index footer_fields: @resource.sum_fields do
+  index has_footer: true do
     selectable_column
 
-    column :name, footer: ->(data){ '合计' }
+    sum_fields = resource_class.sum_fields
+    sum = sum_fields.reduce({}) do |ha, field|
+      ha[field] = collection.sum(field)
+      ha
+    end
+
+    column :name, footer: '合计'
     column :type, sortable: :updated_at do |obj|
       obj.model_name.human.gsub('工资表', '')
     end
     column :start_date
     column :end_date
-    column :amount, footer: ->(data){ data[:amount] }
+    column :amount, footer: sum[:amount]
     column :project, sortable: :engineering_project_id do |obj|
       project = obj.project
       link_to project.display_name, "/engineering_projects?utf8=✓&q%5Bid_equals%5D=#{project.id}&commit=过滤", target: '_blank'
