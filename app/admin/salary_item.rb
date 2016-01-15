@@ -1,5 +1,7 @@
 ActiveAdmin.register SalaryItem do
-  belongs_to :salary_table
+  belongs_to :salary_table, optional: true
+
+  menu false
 
   breadcrumb do
     [
@@ -178,9 +180,9 @@ ActiveAdmin.register SalaryItem do
   end
 
   # Import
-  action_item :import_new, only: [:index] do
-    link_to '导入基础工资表', import_new_salary_table_salary_items_path(salary_table)
-  end
+  # action_item :import_new, only: [:index] do
+  #   link_to '导入基础工资表', import_new_salary_table_salary_items_path(salary_table)
+  # end
 
   collection_action :import_new do
     render 'import_new'

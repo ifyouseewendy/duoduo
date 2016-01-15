@@ -12,7 +12,7 @@ module ActiveAdmin::SalaryItemsHelper
   end
 
   def normal_corporation
-    @_normal_corporation ||= [salary_table, guard_salary_table, non_full_day_salary_table].detect{|st| st.try(:normal_corporation)}
+    @_normal_corporation ||= [salary_table, guard_salary_table, non_full_day_salary_table].detect{|st| st.try(:normal_corporation)}.try(:normal_corporation)
   end
 
   def present_fields(records, options = {})
