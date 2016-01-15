@@ -403,13 +403,17 @@ ActiveAdmin.register EngineeringProject do
     staffs.each do |staff|
       begin
         project.staffs.delete staff
-        messages << "操作成功，员工<#{staff.name}>已离开项目<#{project.name}>"
+        # messages << "操作成功，员工<#{staff.name}>已离开项目<#{project.name}>"
       rescue => e
         messages << "操作失败，#{e.message}"
       end
     end
 
-    render json: {message: messages.join('；') }
+    if messages.blank?
+      render json: {message: '操作成功' }
+    else
+      render json: {message: messages.join('；') }
+    end
   end
 
   member_action :available_staff_count do
