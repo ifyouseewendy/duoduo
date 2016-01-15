@@ -196,6 +196,7 @@ ActiveAdmin.register EngineeringSalaryTable do
       model = EngineeringNormalSalaryItem
       table_model = EngineeringNormalSalaryTable
     elsif params[collection.name.underscore][:type] == 'tax'
+      redirect_to :back, alert: '导入失败，暂时无法处理带个税工资表' and return
     end
 
     file = params[collection.name.underscore].try(:[], :file)
@@ -259,11 +260,12 @@ ActiveAdmin.register EngineeringSalaryTable do
 
     stats.each_with_index do |sheet_data, sheet_id|
       start_date, end_date = ranges[sheet_id]
+      total_amount = sheet_data.map{|ha| ha[:salary_in_fact].to_f}.sum.round(2)
       st = table_model.create!(
         project: project,
         start_date: start_date,
         end_date: end_date,
-        amount: sheet_data.map{|ha| ha[:salary_in_fact].to_f}.sum.round(2),
+        amount: total_amount,
         name: "#{start_date} ~ #{end_date}"
       )
 
@@ -297,6 +299,8 @@ ActiveAdmin.register EngineeringSalaryTable do
           send_file filepath and return
         end
       end
+
+      st.update_column(:amount, total_amount)
     end
 
     redirect_to "/engineering_projects/#{project.id}/engineering_salary_tables", notice: "成功导入工资表"
