@@ -161,7 +161,8 @@ class BusinessCorporation < DuoduoCli
     def seed_internal_corporation
       nc = NormalCorporation.new(
         name: '内部',
-        status: 'active'
+        status: 'active',
+        sub_company: SubCompany.where(name: '吉易人力资源').first
       )
       nc.save(validate: false)
     end
