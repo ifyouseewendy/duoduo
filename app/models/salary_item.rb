@@ -400,7 +400,7 @@ class SalaryItem < ActiveRecord::Base
 
   def set_nest_index
     if self.role.to_sym == :normal
-      self.nest_index = self.class.available_nest_index
+      self.nest_index = self.salary_table.available_nest_index
     end
   end
 

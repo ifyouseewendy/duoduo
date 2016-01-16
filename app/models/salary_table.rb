@@ -76,4 +76,9 @@ class SalaryTable < ActiveRecord::Base
   def month
     start_date.strftime("%Y年%m月")
   end
+
+  def available_nest_index
+    ( salary_items.order(nest_index: :desc).first.try(:nest_index) || 0 ) + 1
+  end
+
 end
