@@ -60,6 +60,20 @@ ActiveAdmin.register NormalStaff do
     column :labor_contracts, sortable: :id do |obj|
       link_to '劳务合同', "/labor_contracts?q[normal_staff_id_eq]=#{obj.id}", target: '_blank'
     end
+    column :salary_item_display, sortable: :id do |obj|
+      ul do
+        if obj.salary_items.count > 0
+          li link_to("基础工资条", "/salary_items?q[normal_staff_id_eq]=#{obj.id}", target: '_blank' )
+        end
+        if obj.guard_salary_items.count > 0
+          li link_to(" 保安工资条", "/guard_salary_items?q[normal_staff_id_eq]=#{obj.id}", target: '_blank' )
+        end
+        if obj.non_full_day_salary_items.count > 0
+          li link_to(" 非全日制工资条", "/non_full_day_salary_items?q[normal_staff_id_eq]=#{obj.id}", target: '_blank' )
+        end
+      end
+    end
+
     column :in_service
     column :in_contract, sortable: :in_contract do |obj|
       if obj.in_contract

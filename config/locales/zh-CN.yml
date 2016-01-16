@@ -180,6 +180,7 @@ zh-CN:
         updated_at: "更新时间"
         labor_contracts: '劳务合同'
         in_contract: '有劳务关系'
+        salary_item_display: '工资条'
       engineering_staff:
         id: '编号'
         name: '姓名'

@@ -50,10 +50,10 @@ ActiveAdmin.register NormalCorporation do
           li link_to("基础工资表", "/salary_tables?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank' )
         end
         if obj.guard_salary_tables.count > 0
-          li link_to(" 保安工资表", normal_corporation_guard_salary_tables_path(obj), target: '_blank' )
+          li link_to(" 保安工资表", "/guard_salary_tables?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank' )
         end
         if obj.non_full_day_salary_tables.count > 0
-          li link_to(" 非全日制工资表", normal_corporation_non_full_day_salary_tables_path(obj), target: '_blank' )
+          li link_to(" 非全日制工资表", "/non_full_day_salary_tables?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank' )
         end
       end
     end

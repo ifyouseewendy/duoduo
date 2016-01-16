@@ -309,6 +309,14 @@ body.engineering_customers table.index_table {
     th.col-remark {
       min-width: 100px !important;
     }
+    th.col-salary_item_display {
+      min-width: 80px !important;
+    }
+    td.col-salary_item_display {
+      li {
+        display: inline;
+      }
+    }
   }
   .download_links {
     display: none;
