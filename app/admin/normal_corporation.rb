@@ -28,7 +28,7 @@ ActiveAdmin.register NormalCorporation do
     column :name
     column :sub_company, sortable: :sub_company_id
     column :normal_staffs, sortable: :id do |obj|
-      link_to "员工列表", normal_corporation_normal_staffs_path(obj)
+      link_to "员工列表", "/normal_staffs?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank'
     end
 
     # column :stuff_count, sortable: ->(obj){ obj.stuff_count }

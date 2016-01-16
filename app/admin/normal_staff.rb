@@ -7,6 +7,22 @@ ActiveAdmin.register NormalStaff do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 2
 
+  breadcrumb do
+    crumbs = []
+
+    if params['q'].present?
+      if (ncid=params['q']['normal_corporation_id_eq']).present?
+        nc = NormalCorporation.where(id: ncid).first
+        if nc.present?
+          crumbs << link_to('合作单位', "/normal_corporations")
+          crumbs << link_to(nc.name, "/normal_corporations?q[id_eq]=#{nc.id}")
+        end
+      end
+    end
+
+    crumbs
+  end
+
   scope "全部" do |record|
     record.all
   end
