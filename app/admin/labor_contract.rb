@@ -8,6 +8,28 @@ ActiveAdmin.register LaborContract do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 3
 
+  breadcrumb do
+    crumbs = []
+
+    if params['q'].present?
+      if (nsid=params['q']['normal_staff_id_eq']).present?
+        ns = NormalStaff.where(id: nsid).first
+        if ns.present?
+          crumbs << link_to('员工信息', "/normal_staffs")
+          crumbs << link_to(ns.name, "/normal_staffs?q[id_eq]=#{ns.id}")
+        end
+      elsif (ncid=params['q']['normal_corporation_id_eq']).present?
+        nc = NormalCorporation.where(id: ncid).first
+        if nc.present?
+          crumbs << link_to('合作单位', "/normal_corporations")
+          crumbs << link_to(nc.name, "/normal_corporations?q[id_eq]=#{nc.id}")
+        end
+      end
+    end
+
+    crumbs
+  end
+
   scope "全部" do |record|
     record.all
   end
