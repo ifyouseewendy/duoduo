@@ -308,6 +308,12 @@ $(document).on 'ready', ->
 
   # Salary Item
   if $('.salary_items').length > 0
+
+    # Hide download and new button for staff's salary items
+    if query_string && query_string.indexOf('normal_staff_id_eq')
+      $('.download_links').hide()
+      $('.action_item').hide()
+
     # Manipulate Insurance Fund
     $('a[data-action=manipulate_insurance_fund]').on 'click', ->
       $('.ui-dialog-title').text('请选择');
