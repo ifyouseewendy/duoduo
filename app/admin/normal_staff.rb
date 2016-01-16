@@ -53,8 +53,6 @@ ActiveAdmin.register NormalStaff do
       corporation = obj.normal_corporation
       if corporation.present?
         link_to corporation.name || '#', "/normal_corporations?q[id_eq]=#{corporation.id}", target: '_blank'
-      else
-        # link_to '#', '#'
       end
     end
     column :labor_contracts, sortable: :id do |obj|
@@ -149,13 +147,24 @@ ActiveAdmin.register NormalStaff do
       row :normal_corporation do |obj|
         corporation = obj.normal_corporation
         if corporation.present?
-          link_to corporation.name || '#', normal_corporation_path(corporation)
-        else
-          # link_to '#', '#'
+          link_to corporation.name || '#', "/normal_corporations?q[id_eq]=#{corporation.id}", target: '_blank'
         end
       end
       row :labor_contracts do |obj|
-        link_to '劳务合同', "/labor_contracts?utf8=✓&q%5Bnormal_staff_id_equals%5D=#{obj.id}&commit=过滤"
+        link_to '劳务合同', "/labor_contracts?q[normal_staff_id_eq]=#{obj.id}", target: '_blank'
+      end
+      row :salary_item_display do |obj|
+        ul do
+          if obj.salary_items.count > 0
+            li link_to("基础工资条", "/salary_items?q[normal_staff_id_eq]=#{obj.id}", target: '_blank' )
+          end
+          if obj.guard_salary_items.count > 0
+            li link_to(" 保安工资条", "/guard_salary_items?q[normal_staff_id_eq]=#{obj.id}", target: '_blank' )
+          end
+          if obj.non_full_day_salary_items.count > 0
+            li link_to(" 非全日制工资条", "/non_full_day_salary_items?q[normal_staff_id_eq]=#{obj.id}", target: '_blank' )
+          end
+        end
       end
       row :in_service do |obj|
         if obj.in_service
