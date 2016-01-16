@@ -10,7 +10,7 @@ class SalaryItem < ActiveRecord::Base
   #   + SalaryItem#update_by
 
   # person/company insurance, and additional fees
-  before_create :auto_init_fields, if: -> { @skip_callbacks == true }
+  before_create :auto_init_fields, unless: -> { @skip_callbacks == true }
 
   # income_tax, other total fields
   after_save :revise_fields
