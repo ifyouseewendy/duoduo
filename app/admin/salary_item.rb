@@ -188,12 +188,13 @@ ActiveAdmin.register SalaryItem do
     render 'import_template'
   end
 
-  sidebar '参考', only: :import_new do
-    para "#{normal_corporation.name} 中包含 #{normal_corporation.normal_staffs.count} 名员工，分别为"
-    ul do
-      normal_corporation.normal_staffs.each do |staff|
-        li link_to(staff.name, normal_staff_path(staff))
+  sidebar "参考", only: :import_new do
+    para "#{normal_corporation.name}员工列表（ 共#{normal_corporation.normal_staffs.count}人）"
+    table_for normal_corporation.normal_staffs.order(name: :asc) do
+      column :name do |obj|
+        link_to obj.name, normal_staff_path(obj), target: '_blank'
       end
+      column :identity_card
     end
   end
 
