@@ -370,14 +370,14 @@ $(document).on 'ready', ->
     else if query_string == "view=card"
       button_name = '：打卡'
     else
-      button_name = '：基础'
+      button_name = '：全部'
 
     html =  """
             <div class='views_selector dropdown_menu'>
               <a class='dropdown_menu_button' href='#'>视图#{button_name}</a>
               <div class='dropdown_menu_list_wrapper' style='display: none;'><div class='dropdown_menu_nipple'></div>
                 <ul class='dropdown_menu_list'>
-                  <li><a href='#{current_path}'>基础</a></li>
+                  <li><a href='#{current_path}'>全部</a></li>
                   <li><a href='#{current_path}?view=proof'>帐用</a></li>
                   <li><a href='#{current_path}?view=card'>打卡</a></li>
                 </ul>
