@@ -129,14 +129,17 @@ ActiveAdmin.register LaborContract do
   show do
     attributes_table do
       row :id
-      row :normal_staff
+      row :normal_staff do |obj|
+        ns = obj.normal_staff
+        link_to ns.name, "/normal_staffs?q[id_eq]=#{ns.id}", target: '_blank'
+      end
       row :sub_company do |obj|
         sc = obj.normal_corporation.sub_company
-        link_to sc.name, sub_company_path(sc)
+        link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
       end
       row :normal_corporation do |obj|
         corp = obj.normal_corporation
-        link_to corp.name, normal_corporation_path(corp)
+        link_to corp.name, "/normal_corporations?q[id_eq]=#{corp.id}", target: '_blank'
       end
       row :in_contract do |obj|
         if obj.in_contract
