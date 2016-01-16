@@ -5,8 +5,8 @@ ActiveAdmin.register SalaryItem do
 
   breadcrumb do
     [
-      link_to(salary_table.corporation.name, normal_corporation_path(salary_table.corporation) ),
-      link_to(salary_table.name, salary_table_salary_items_path(salary_table) )
+      link_to(salary_table.corporation.name, "/normal_corporations?q[id_eq]=#{salary_table.corporation.id}" ),
+      link_to(salary_table.name, "/salary_tables?q[id_eq]=#{salary_table.id}" )
     ]
   end
 
