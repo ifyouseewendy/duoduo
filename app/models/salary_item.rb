@@ -156,7 +156,7 @@ class SalaryItem < ActiveRecord::Base
     end
 
     def card_columns
-      [:staff_account, :staff_name, :salary_in_fact]
+      [:nest_index, :staff_account, :staff_name, :salary_in_fact]
     end
 
     def proof_columns
@@ -233,7 +233,7 @@ class SalaryItem < ActiveRecord::Base
 
 
     def sum_fields
-      whole_columns - [:nest_index, :staff_account, :staff_name, :remark]
+      whole_columns - [:nest_index, :staff_account, :staff_name, :remark] + [:total_sum]
     end
   end # Class method ends
 
