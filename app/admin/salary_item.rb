@@ -185,7 +185,7 @@ ActiveAdmin.register SalaryItem do
   # end
 
   collection_action :import_new do
-    render 'import_new'
+    render 'import_template'
   end
 
   sidebar '参考', only: :import_new do
@@ -195,6 +195,25 @@ ActiveAdmin.register SalaryItem do
         li link_to(staff.name, normal_staff_path(staff))
       end
     end
+  end
+
+  collection_action :import_demo do
+    model = controller_name.classify.constantize
+
+    filename = I18n.t("activerecord.models.#{model.to_s.underscore}") + " - " + I18n.t("misc.import_demo.name") + '.xlsx'
+    dir = Pathname("tmp/import_demo")
+    dir.mkdir unless dir.exist?
+    filepath = dir.join(filename)
+
+    Axlsx::Package.new do |p|
+      p.workbook.add_worksheet do |sheet|
+        stat = model.ordered_columns(export: true).map{|col| model.human_attribute_name(col) }
+        sheet.add_row stat
+      end
+      p.serialize(filepath.to_s)
+    end
+
+    send_file filepath
   end
 
   collection_action :import_do, method: :post do
@@ -208,14 +227,17 @@ ActiveAdmin.register SalaryItem do
     xls = Roo::Spreadsheet.open(file.path)
     sheet = xls.sheet(0)
 
-    salary_table       = SalaryTable.find(params[:salary_table_id])
+    stid = params[:salary_item][:salary_table_id] rescue nil
+    salary_table = SalaryTable.where(id: stid).first
+    raise "未找到工资表：#{params[:salary_table_id]}，请确保导入页面是从工资表列表页的工资条导入跳转而来" if salary_table.nil?
+    corporation = salary_table.normal_corporation
 
-    if salary_table.salary_items.count == 0
-      records_count = (1..sheet.last_row).count
-      staffs_count = salary_table.normal_corporation.normal_staffs.count
-      redirect_to :back, alert: "导入失败，上传文件中条目数（#{records_count}）少于员工数（#{staffs_count}），请修改后重新上传" and return \
-        if records_count < staffs_count
-    end
+    # if salary_table.salary_items.count == 0
+    #   records_count = (1..sheet.last_row).count
+    #   staffs_count = salary_table.normal_corporation.normal_staffs.count
+    #   redirect_to :back, alert: "导入失败，上传文件中条目数（#{records_count}）少于员工数（#{staffs_count}），请修改后重新上传" and return \
+    #     if records_count < staffs_count
+    # end
 
     stats = \
       (1..sheet.last_row).reduce([]) do |ar, i|
@@ -229,10 +251,18 @@ ActiveAdmin.register SalaryItem do
       end
 
     failed = []
-    stats.each do |ha|
+    stats.each_with_index do |ha, i|
+      if i == 0
+        failed << ha.values
+        next
+      end
+
       begin
-        query = ha.merge({salary_table: salary_table})
-        SalaryItem.create_by(query)
+        staff = corporation.find_staff(name: ha[:name], identity_card: ha[:identity_card])
+        salary_table.salary_items.create!(
+          normal_staff: staff,
+          salary_deserve: ha[:salary]
+        )
       rescue => e
         failed << (ha.values << e.message)
       end
@@ -250,8 +280,6 @@ ActiveAdmin.register SalaryItem do
         p.serialize(filepath.to_s)
       end
       send_file filepath
-
-      # redirect_to import_new_salary_table_salary_items_path(salary_table), alert: "导入失败， #{failed.count} 条记录存在问题"
     else
       redirect_to salary_table_salary_items_path(salary_table), notice: "成功导入 #{stats.count} 条记录"
     end

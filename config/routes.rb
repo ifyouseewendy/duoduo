@@ -33,6 +33,15 @@ Rails.application.routes.draw do
       get 'export_xlsx'
     end
   end
+  resources :salary_items do
+    collection do
+      post 'batch_action'
+      post 'import_do'
+      get 'import_new'
+      get 'import_demo'
+      get 'export_xlsx'
+    end
+  end
 
   ActiveAdmin.routes(self)
 
