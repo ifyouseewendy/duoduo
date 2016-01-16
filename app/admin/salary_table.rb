@@ -41,7 +41,7 @@ ActiveAdmin.register SalaryTable do
     column :name
     column :normal_corporation, sortable: :normal_corporation_id do |obj|
       nc = obj.normal_corporation
-      link_to nc.name, normal_corporation_path(nc)
+      link_to nc.name, normal_corporation_path(nc), target: '_blank'
     end
     column :status do |obj|
       status_tag obj.status_i18n, (obj.active? ? :yes : :no)

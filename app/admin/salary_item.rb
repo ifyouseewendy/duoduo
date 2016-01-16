@@ -4,10 +4,25 @@ ActiveAdmin.register SalaryItem do
   menu false
 
   breadcrumb do
-    [
-      link_to(salary_table.corporation.name, "/normal_corporations?q[id_eq]=#{salary_table.corporation.id}" ),
-      link_to(salary_table.name, "/salary_tables?q[id_eq]=#{salary_table.id}" )
-    ]
+    crumbs = []
+
+    if (stid=params['salary_table_id']).present?
+      st = SalaryTable.where(id: stid).first
+      if st.present?
+        crumbs << link_to('工资表', "/salary_tables")
+        crumbs << link_to(st.name, "/salary_tables?q[id_eq]=#{st.id}")
+      end
+    elsif params['q'].present?
+      if (nsid=params['q']['normal_staff_id_eq']).present?
+        ns = NormalStaff.where(id: nsid).first
+        if ns.present?
+          crumbs << link_to('员工信息', "/normal_staffs")
+          crumbs << link_to(ns.name, "/normal_staffs?q[id_eq]=#{ns.id}")
+        end
+      end
+    end
+
+    crumbs
   end
 
   config.per_page = 100
@@ -57,9 +72,9 @@ ActiveAdmin.register SalaryItem do
     end
 
     actions defaults: false do |obj|
-      item "编辑", edit_salary_table_salary_item_path(params[:salary_table_id], obj.id)
+      item "编辑", "/salary_items/#{obj.id}/edit"
       text_node "&nbsp;".html_safe
-      item "删除", salary_table_salary_item_path(params[:salary_table_id], obj.id), method: :delete
+      item "删除", "/salary_items/#{obj.id}", method: :delete
     end
   end
 
