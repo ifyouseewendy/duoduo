@@ -352,6 +352,7 @@ zh-CN:
         remark: '备注'
         sub_company: '吉易子公司'
         sub_company_id: '吉易子公司'
+        sub_company_in: '吉易子公司'
         normal_corporation: '合作单位'
         normal_corporation_id: '合作单位'
         normal_staff: '所属员工'

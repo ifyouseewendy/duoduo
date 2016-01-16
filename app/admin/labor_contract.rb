@@ -1,5 +1,4 @@
 ActiveAdmin.register LaborContract do
-  belongs_to :sub_company, optional: true
   belongs_to :normal_corporation, optional: true
   belongs_to :normal_staff, optional: true
 
@@ -54,6 +53,7 @@ ActiveAdmin.register LaborContract do
 
   filter :id
   filter :normal_staff_name, as: :string
+  filter :sub_company_in, as: :select, collection: -> {SubCompany.pluck(:name, :id)}
   filter :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}
   filter :in_contract, as: :select, collection: ->{ [ ['活动', true], ['存档', false] ] }.call
   filter :contract_type, as: :select, collection: -> { LaborContract.contract_types_option }.call
@@ -62,6 +62,7 @@ ActiveAdmin.register LaborContract do
   filter :has_accident_insurance, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
   preserve_default_filters!
   remove_filter :normal_staff
+  remove_filter :sub_company
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 

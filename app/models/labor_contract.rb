@@ -96,6 +96,13 @@ class LaborContract < ActiveRecord::Base
     has_social_insurance || has_medical_insurance
   end
 
+  ransacker :sub_company, formatter: ->(qid) {
+    sub_company = SubCompany.find(qid)
+    LaborContract.where( normal_corporation_id: sub_company.normal_corporations.pluck(:id) ).pluck(:id)
+  } do |parent|
+      parent.table[:id]
+  end
+
   private
 
     def check_active_status
@@ -126,4 +133,5 @@ class LaborContract < ActiveRecord::Base
         end
       end
     end
+
 end
