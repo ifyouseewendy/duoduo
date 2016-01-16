@@ -326,6 +326,7 @@ zh-CN:
           temp_contract: '临时'
           none_full_day_contract: '非全日制'
           none_contract: '无协议'
+          nil: '未设置'
         in_contract: '状态'
         contract_start_date: '合同起始时间'
         contract_end_date: '合同终止时间'
