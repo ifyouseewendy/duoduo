@@ -84,6 +84,7 @@ zh-CN:
           by_rate_on_salary: "比例（应发）"
           by_rate_on_salary_and_company: "比例（应发+单位）"
           by_count: "固定"
+          nil: '未设置'
         admin_charge_amount: '管理费收取比例/金额'
         expense_date: '单位开支日期'
         stuff_count: '员工人数'

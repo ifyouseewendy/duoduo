@@ -120,6 +120,7 @@ class NormalCorporation < ActiveRecord::Base
   end
 
   def admin_charge_type_i18n
+    admin_charge_type ||= :nil
     I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{admin_charge_type}")
   end
 
