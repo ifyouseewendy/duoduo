@@ -36,14 +36,6 @@ ActiveAdmin.register NormalCorporation do
     column :labor_contracts, sortable: :id do |obj|
       link_to "劳务合同", "/labor_contracts?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank'
     end
-
-    # column :stuff_count, sortable: ->(obj){ obj.stuff_count }
-    # column :stuff_has_insurance_count, sortable: ->(obj){ obj.stuff_has_insurance_count }
-
-    # column :labor_contracts, sortable: :id do |obj|
-    #   link_to "劳务合同列表", "/labor_contracts?utf8=✓&q%5Bnormal_corporation_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
-    # end
-
     column :salary_table_display, sortable: :id do |obj|
       ul do
         if obj.salary_tables.count > 0
@@ -124,10 +116,36 @@ ActiveAdmin.register NormalCorporation do
     attributes_table do
       row :id
       row :name
-      row :sub_company
+      row :sub_company do |obj|
+        sc = obj.sub_company
+        link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+      end
+      row :normal_staffs do |obj|
+        link_to "员工列表", "/normal_staffs?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank'
+      end
+      row :labor_contracts do |obj|
+        link_to "劳务合同", "/labor_contracts?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank'
+      end
+      row :salary_table_display do |obj|
+        ul do
+          if obj.salary_tables.count > 0
+            li link_to("基础工资表", "/salary_tables?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank' )
+          end
+          if obj.guard_salary_tables.count > 0
+            li link_to(" 保安工资表", "/guard_salary_tables?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank' )
+          end
+          if obj.non_full_day_salary_tables.count > 0
+            li link_to(" 非全日制工资表", "/non_full_day_salary_tables?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank' )
+          end
+        end
+      end
       row :status do |obj|
         status_tag obj.status_i18n, (obj.active? ? :yes : :no)
       end
+      row :admin_charge_type do |obj|
+        obj.admin_charge_type_i18n
+      end
+      row :admin_charge_amount
       row :full_name
       row :license
       row :taxpayer_serial
@@ -138,10 +156,6 @@ ActiveAdmin.register NormalCorporation do
       row :account_bank
       row :contact
       row :telephone
-      row :admin_charge_type do |obj|
-        obj.admin_charge_type_i18n
-      end
-      row :admin_charge_amount
       row :expense_date
       row :contract_amount
       row :contract_start_date
