@@ -44,14 +44,17 @@ ActiveAdmin.register LaborContract do
     selectable_column
 
     column :id
-    column :normal_staff, sortable: :normal_staff_id
-    column :sub_company, sortable: :normal_corporation_id do |obj|
+    column :normal_staff, sortable: :normal_staff_id do |obj|
+      ns = obj.normal_staff
+      link_to ns.name, "/normal_staffs?q[id_eq]=#{ns.id}", target: '_blank'
+    end
+    column :sub_company, sortable: :sub_company_id do |obj|
       sc = obj.normal_corporation.sub_company
-      link_to sc.name, sub_company_path(sc)
+      link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
     end
     column :normal_corporation, sortable: :normal_corporation_id do |obj|
       corp = obj.normal_corporation
-      link_to corp.name, normal_corporation_path(corp)
+      link_to corp.name, "/normal_corporations?q[id_eq]=#{corp.id}", target: '_blank'
     end
     column :in_contract, sortable: :in_contract do |obj|
       if obj.in_contract

@@ -26,9 +26,15 @@ ActiveAdmin.register NormalCorporation do
 
     column :id
     column :name
-    column :sub_company, sortable: :sub_company_id
+    column :sub_company, sortable: :sub_company_id do |obj|
+      sc = obj.sub_company
+      link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+    end
     column :normal_staffs, sortable: :id do |obj|
       link_to "员工列表", "/normal_staffs?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank'
+    end
+    column :labor_contracts, sortable: :id do |obj|
+      link_to "劳务合同", "/labor_contracts?q[normal_corporation_id_eq]=#{obj.id}", target: '_blank'
     end
 
     # column :stuff_count, sortable: ->(obj){ obj.stuff_count }

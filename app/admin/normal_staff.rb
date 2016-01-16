@@ -45,17 +45,20 @@ ActiveAdmin.register NormalStaff do
     column :id
     column :name
     column :identity_card
-    column :sub_company, sortable: :sub_company_id
+    column :sub_company, sortable: :sub_company_id do |obj|
+      sc = obj.sub_company
+      link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+    end
     column :normal_corporation, sortable: :normal_corporation_id do |obj|
       corporation = obj.normal_corporation
       if corporation.present?
-        link_to corporation.name || '#', normal_corporation_path(corporation)
+        link_to corporation.name || '#', "/normal_corporations?q[id_eq]=#{corporation.id}", target: '_blank'
       else
         # link_to '#', '#'
       end
     end
     column :labor_contracts, sortable: :id do |obj|
-      link_to '劳务合同', "/labor_contracts?utf8=✓&q%5Bnormal_staff_id_equals%5D=#{obj.id}&commit=过滤"
+      link_to '劳务合同', "/labor_contracts?q[normal_staff_id_eq]=#{obj.id}", target: '_blank'
     end
     column :in_service
     column :in_contract, sortable: :in_contract do |obj|
