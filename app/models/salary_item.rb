@@ -21,33 +21,23 @@ class SalaryItem < ActiveRecord::Base
   default_scope { order(nest_index: :asc).order(role: :asc) }
 
   class << self
-    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
-      names = column_names.map(&:to_sym)
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
+      if export
+        [:staff_name, :salary_deserve, :identity_card]
+      else
+        names = column_names.map(&:to_sym)
 
-      # Fields added by later migration
-      polyfill = [:medical_insurance_to_salary_deserve, :house_accumulation_to_salary_deserve]
-      names -= polyfill
-      idx = names.index(:social_insurance_to_salary_deserve) + 1
-      names.insert(idx, *polyfill)
+        # Fields added by later migration
+        polyfill = [:total_sum_with_admin_amount]
+        names -= polyfill
+        idx = names.index(:total_sum) + 1
+        names.insert(idx, *polyfill)
 
-      polyfill = [:transfer_fund_to_person, :transfer_fund_to_account]
-      names -= polyfill
-      idx = names.index(:house_accumulation_to_pre_deduct) + 1
-      names.insert(idx, *polyfill)
+        names -= %i(id created_at updated_at) if without_base_keys
+        names -= %i(normal_staff_id salary_table_id) if without_foreign_keys
 
-      polyfill = [:total_sum_with_admin_amount]
-      names -= polyfill
-      idx = names.index(:total_sum) + 1
-      names.insert(idx, *polyfill)
-
-      names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(normal_staff_id salary_table_id) if without_foreign_keys
-
-      names
-    end
-
-    def available_nest_index
-      ( salary_table.salary_items.order(nest_index: :desc).first.try(:nest_index) || 0 ) + 1
+        names
+      end
     end
 
     def columns_of(type)
