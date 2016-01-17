@@ -35,6 +35,14 @@ class SalaryTable < ActiveRecord::Base
       statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
     end
 
+    def batch_form_fields
+      fields = [:remark]
+      hash = {
+        'status_状态' => [ ['活动', 'active'], ['存档', 'archive'] ],
+      }
+      fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
+      hash
+    end
   end
 
   def corporation

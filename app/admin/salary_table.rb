@@ -133,6 +133,25 @@ ActiveAdmin.register SalaryTable do
     active_admin_comments
   end
 
+  # Batch actions
+  batch_action :batch_edit, form: ->{ SalaryTable.batch_form_fields } do |ids|
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+
+    failed = []
+    batch_action_collection.find(ids).each do |obj|
+      begin
+        obj.update_attributes!(inputs)
+      rescue => _
+        failed << "操作失败<编号#{obj.nest_index}>: #{obj.errors.full_messages.join(', ')}"
+      end
+    end
+
+    if failed.present?
+      redirect_to :back, alert: failed.join('; ')
+    else
+      redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+    end
+  end
 
   controller do
     def scoped_collection
