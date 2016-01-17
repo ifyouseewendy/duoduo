@@ -66,6 +66,10 @@ $table_blue: rgba(34, 112, 255, 0.18);
     width: 80px;
     margin-left: 5px;
   }
+  #dialog_confirm {
+    max-height: 400px !important;
+    overflow-y: auto;
+  }
 }
 
 #utility_nav {
@@ -406,12 +410,20 @@ body.engineering_customers table.index_table {
   }
   .ui-dialog {
     max-height: 600px !important;
-    width: 600px !important;
+    width: 650px !important;
     top: 115px !important;
 
     .flag_list {
       width: 200px;
       display: inline-block;
+    }
+    .batch_edit_label {
+      width: 100px;
+    }
+
+    li {
+      display: inline-block;
+      margin: 10px 10px 10px 0;
     }
   }
 }
