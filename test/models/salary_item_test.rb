@@ -23,7 +23,9 @@ class SalaryItemTest < ActiveSupport::TestCase
     assert_equal staff_1.id, staff_2.id
   end
 
+  # Deprecated
   test "create_by" do
+    skip
     st = salary_tables(:one)
     item = SalaryItem.create_by(salary_table: st, salary: 1000, name: 'one')
 
@@ -37,6 +39,7 @@ class SalaryItemTest < ActiveSupport::TestCase
   end
 
   test "update_by without salary_deserve change" do
+    skip
     st = salary_tables(:one)
     item = SalaryItem.create_by(salary_table: st, salary: 1000, name: 'one')
 
@@ -72,6 +75,7 @@ class SalaryItemTest < ActiveSupport::TestCase
   end
 
   test "update_by with salary_deserve change" do
+    skip
     st = salary_tables(:one)
     item = SalaryItem.create_by(salary_table: st, salary: 1000, name: 'one')
 
