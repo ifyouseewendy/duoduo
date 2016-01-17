@@ -314,6 +314,12 @@ $(document).on 'ready', ->
       $('.download_links').hide()
       $('.action_item').hide()
 
+    # Insert some br to make it visible
+    $('a[data-action=batch_edit]').on 'click', ->
+      $('#dialog_confirm').find('input[name=annual_reward]').closest('li').after('<hr>')
+      $('#dialog_confirm').find('input[name=pension_company]').closest('li').before('<hr>')
+      $('#dialog_confirm').find('input[name=other_company]').closest('li').after('<hr>')
+
     # Manipulate Insurance Fund
     $('a[data-action=manipulate_insurance_fund]').on 'click', ->
       $('.ui-dialog-title').text('请选择');
@@ -323,7 +329,7 @@ $(document).on 'ready', ->
 
       list.append("""
       <li class='control'><a href='#' class='select_all'>全选</a> <a href='#' class='unselect_all'>取消全选</a></li>
-      <li class='control'><hr/></li>
+      <hr>
       """)
 
       for key,val of $(this).data('inputs')
@@ -333,7 +339,7 @@ $(document).on 'ready', ->
         list.append("<li class='flag_list'><input type='checkbox' class='batch_update_protect_fild_flag' checked='checked' name='"+id+"' value='checked'><label> "+name+"</label></br></li>")
 
       list.append("""
-      <li class='control'><hr/></li>
+      <hr/>
       <li class='control transfer_to'>
         转向： 
         <input type="radio" name="transfer_to" value="self" class='normal_radio' checked='checked'> 个人
