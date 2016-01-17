@@ -3,7 +3,7 @@ class EngineeringOutcomeItem < ActiveRecord::Base
   tracked \
     owner: ->(controller, model) { controller.try(:current_admin_user) || AdminUser.super_admin.first },
     params: {
-      name: ->(controller, model) { [model.class.model_name.human, model.try(:name)].compact.join(' - ') },
+      name: ->(controller, model) { [model.class.model_name.human].compact.join(' - ') },
     }
 
   belongs_to :project, class: EngineeringProject, foreign_key: :engineering_project_id
