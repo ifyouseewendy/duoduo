@@ -35,6 +35,7 @@ class IndividualIncomeTax < ActiveRecord::Base
 
       base = IndividualIncomeTaxBase.instance.base
       number = salary > base ? bonus : (bonus + salary - base)
+      number = 0 if number < 0
 
       iit = detect_rule_for(number / 12.0)
       number * iit.rate - iit.quick_subtractor
