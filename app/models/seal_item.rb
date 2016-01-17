@@ -1,4 +1,11 @@
 class SealItem < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked \
+    owner: ->(controller, model) { controller.try(:current_admin_user) || AdminUser.super_admin.first },
+    params: {
+      name: ->(controller, model) { [model.class.model_name.human, model.try(:name)].compact.join(' - ') },
+    }
+
   belongs_to :seal_table, required: true
 
   validates_uniqueness_of :nest_index, scope: :seal_table

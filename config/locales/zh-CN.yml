@@ -62,6 +62,10 @@ zh-CN:
       seal_table: '刻章表'
       seal_item: '刻章条目'
       public_activity/activity: '操作历史'
+      big_contract: '大协议'
+      contract_file: '业务合同'
+      engineering_contract_file: '工程协议'
+      contract_template: '文件模板'
     attributes:
       normal_corporation:
         id: '编号'
