@@ -3,6 +3,9 @@ require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
 require 'mina/whenever'
+require 'mina/rollbar'
+require 'dotenv'
+Dotenv.load
 
 set :domain, 'duoduo'
 set :deploy_to, '/home/deploy/apps/duoduo'
@@ -11,6 +14,8 @@ set :branch, 'production'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, ['config/database.yml','config/newrelic.yml','config/unicorn.rb', 'backups', 'log', 'tmp', '.env.production']
+
+set :rollbar_access_token, ENV['ROLLBAR_ACCESS_TOKEN']
 
 # set :user, 'deploy'    # Username in the server to SSH to.
 # set :port, '10080'     # SSH port number.
@@ -67,6 +72,7 @@ task :deploy => :environment do
       invoke :'whenever:update'
       invoke :'deploy:link_files'
       invoke :'unicorn:restart'
+      invoke :'rollbar:notify'
     end
   end
 end
