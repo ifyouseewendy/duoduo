@@ -12,7 +12,8 @@
       <% end %>
       <strong><%= link_to(owner.name, admin_user_path(owner)) %></strong>
       <%= t("activity.#{opt}") %>
-      <%= link_to(activity.parameters[:name], send("#{object.class.name.underscore}_path", object) ) %>
+      <% path = send("#{object.class.name.underscore}_path", object) rescue '#' %>
+      <%= link_to(activity.parameters[:name], path) %>
       <small class='time-ago'><%= time_ago_in_words(activity.created_at) %></small>
     </div>
 

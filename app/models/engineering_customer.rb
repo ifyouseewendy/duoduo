@@ -1,4 +1,11 @@
 class EngineeringCustomer < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked \
+    owner: ->(controller, model) { controller.try(:current_admin_user) || AdminUser.super_admin.first },
+    params: {
+      name: ->(controller, model) { [model.class.model_name.human, model.try(:name)].compact.join(' - ') },
+    }
+
   has_many :projects, class: EngineeringProject,  dependent: :destroy
   has_many :staffs,   class: EngineeringStaff,    dependent: :destroy
 
