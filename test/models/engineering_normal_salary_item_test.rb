@@ -13,7 +13,7 @@ class EngineeringNormalSalaryItemTest < ActiveSupport::TestCase
     item.social_insurance -= 10
     item.salary_in_fact += 10
 
-    assert_difference ->{ item.salary_deserve.to_f }, 10 do
+    assert_difference ->{ item.salary_deserve.to_f }, 20 do
       item.save!
     end
 
