@@ -461,6 +461,7 @@ $(document).on 'ready', ->
   $('.audition_items .download_links').hide();
   $('.comments .download_links').hide();
   $('.engineering_salary_tables .download_links').hide();
+  $('.salary_tables .download_links').hide();
 
   # Comments
   $('.comments .table_tools').hide();
