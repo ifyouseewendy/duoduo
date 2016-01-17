@@ -29,6 +29,7 @@ class EngineeringProject < ActiveRecord::Base
   }
 
   validates_uniqueness_of :nest_index, scope: :customer
+  validates_presence_of :project_start_date, :project_end_date, :project_amount, :admin_amount
 
   class << self
     def policy_class
@@ -200,13 +201,14 @@ class EngineeringProject < ActiveRecord::Base
     end
 
     if can_archive?
-      self.update_column(:status, 'archive')
+      self.status = 'archive'
+      # self.update_column(:status, 'archive')
     end
   end
 
   def can_archive?
-    income_amount.map(&:to_f).sum.round(2) == total_amount.round(2) \
-      && outcome_amount.map(&:to_f).sum.round(2) == project_amount.round(2)
+    income_amount.map(&:to_f).sum.round(2) == total_amount.to_f.round(2) \
+      && outcome_amount.map(&:to_f).sum.round(2) == project_amount.to_f.round(2)
   end
 
   def calc_range
