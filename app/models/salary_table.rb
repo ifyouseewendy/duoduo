@@ -1,4 +1,11 @@
 class SalaryTable < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked \
+    owner: ->(controller, model) { controller.try(:current_admin_user) || AdminUser.super_admin.first },
+    params: {
+      name: ->(controller, model) { [model.class.model_name.human, model.try(:name)].compact.join(' - ') },
+    }
+
   belongs_to :normal_corporation
   has_many :salary_items, dependent: :destroy
   has_many :invoices, dependent: :destroy, as: :invoicable

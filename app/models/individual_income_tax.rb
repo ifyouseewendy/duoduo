@@ -1,4 +1,11 @@
 class IndividualIncomeTax < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked \
+    owner: ->(controller, model) { controller.try(:current_admin_user) || AdminUser.super_admin.first },
+    params: {
+      name: ->(controller, model) { [model.class.model_name.human, model.try(:name)].compact.join(' - ') },
+    }
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
