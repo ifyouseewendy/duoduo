@@ -12,7 +12,7 @@ ActiveAdmin.register PublicActivity::Activity do
 
   filter :owner_id, as: :select, collection: ->{ AdminUser.pluck(:name, :id) }
   filter :key_cont, as: :select, collection: [['创建', 'create'], ['更新', 'update'], ['删除', 'destroy']]
-  filter :trackable_type
+  filter :trackable_type, as: :select, collection: -> { PublicActivity::Activity.pluck(:trackable_type).uniq.map{|k| [k.constantize.model_name.human, k]} }
   filter :created_at
   # preserve_default_filters!
   # remove_filter :trackable_type
