@@ -322,8 +322,8 @@ $(document).on 'ready', ->
       list.empty();
 
       list.append("""
-      <li><a href='#' class='select_all'>全选</a> <a href='#' class='unselect_all'>取消全选</a></li>
-      <li><hr/></li>
+      <li class='control'><a href='#' class='select_all'>全选</a> <a href='#' class='unselect_all'>取消全选</a></li>
+      <li class='control'><hr/></li>
       """)
 
       for key,val of $(this).data('inputs')
@@ -333,8 +333,8 @@ $(document).on 'ready', ->
         list.append("<li class='flag_list'><input type='checkbox' class='batch_update_protect_fild_flag' checked='checked' name='"+id+"' value='checked'><label> "+name+"</label></br></li>")
 
       list.append("""
-      <li><hr/></li>
-      <li class='transfer_to'>
+      <li class='control'><hr/></li>
+      <li class='control transfer_to'>
         转向： 
         <input type="radio" name="transfer_to" value="self" class='normal_radio' checked='checked'> 个人
         <input type="radio" name="transfer_to" value="zheqi" class='normal_radio'> 喆琦
@@ -346,6 +346,9 @@ $(document).on 'ready', ->
         transfer_to.find('.transfer_to_other').show()
       transfer_to.find('.normal_radio').on 'click', ->
         transfer_to.find('.transfer_to_other').hide()
+
+      list.find('.control').css('display', 'block')
+      list.find('.flag_list').css('display', 'inline-block').css('width', '300px')
 
       list.find('.batch_update_protect_fild_flag').on 'click', ->
         if $(@).is(':checked')
