@@ -3,7 +3,7 @@ class EngineeringContractFile < ActiveRecord::Base
   tracked \
     owner: ->(controller, model) { controller.try(:current_admin_user) || AdminUser.super_admin.first },
     params: {
-      name: ->(controller, model) { [model.class.model_name.human, model.try(:name)].compact.join(' - ') },
+      name: ->(controller, model) { [model.class.model_name.human, model.contract_identifier].compact.join(' - ') },
     }
 
   belongs_to :engi_contract, polymorphic: true
