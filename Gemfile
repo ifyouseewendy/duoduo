@@ -84,6 +84,8 @@ gem 'public_activity'
 
 # Monitor
 gem 'newrelic_rpm'
+gem 'rollbar', '~> 2.7.1'
+gem 'oj', '~> 2.12.14'
 
 group :development do
   gem 'quiet_assets'
