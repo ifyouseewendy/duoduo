@@ -3,7 +3,7 @@ class NonFullDaySalaryItem < ActiveRecord::Base
   tracked \
     owner: ->(controller, model) { controller.try(:current_admin_user) || AdminUser.super_admin.first },
     params: {
-      name: ->(controller, model) { [model.class.model_name.human, model.try(:name)].compact.join(' - ') },
+      name: ->(controller, model) { [model.class.model_name.human, model.try(:staff_name)].compact.join(' - ') },
     }
 
   belongs_to :non_full_day_salary_table
