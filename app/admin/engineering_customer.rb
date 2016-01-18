@@ -40,6 +40,8 @@ ActiveAdmin.register EngineeringCustomer do
   preserve_default_filters!
   remove_filter :projects
   remove_filter :staffs
+  remove_filter :activities
+  remove_filter :sub_company
 
   # New and Edit
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
