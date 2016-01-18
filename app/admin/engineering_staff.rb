@@ -420,13 +420,16 @@ ActiveAdmin.register EngineeringStaff do
           raise "无法在客户提供人员找到该身份证号" if staff.nil?
           staff.projects << project
         else
+          if (es=EngineeringStaff.where(identity_card: stat[:identity_card]).first).present?
+            raise "身份证号已被使用，出现在客户 #{es.customer.display_name} 下"
+          end
           staff = collection.create!(stat.merge(
             { engineering_customer_id: customer.id}
           ))
         end
 
       rescue => e
-        failed << (stat.values << e.message)
+        failed << (stat.values << e.message << e.backtrace)
       end
     end
 
