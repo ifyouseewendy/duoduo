@@ -116,10 +116,10 @@ ActiveAdmin.register EngineeringStaff do
   remove_filter :engineering_dong_fang_salary_items
   remove_filter :alias_name
   remove_filter :customer
-  remove_filter :projects
+  # remove_filter :projects
   remove_filter :activities
   # filter :customer
-  # filter :projects, as: :select, collection: ->{ EngineeringProject.as_filter }
+  filter :projects, as: :select, collection: ->{ EngineeringProject.as_filter }
 
   permit_params {
     resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) + [engineering_project_ids: []]
