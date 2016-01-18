@@ -247,13 +247,15 @@ ActiveAdmin.register EngineeringSalaryTable do
           stat << ha
         end
 
-        raise "表#{sheet_id+1} - 用工明细与工资表员工人数不等" \
-          unless project.staffs.count == stat.count - 1
+        # raise "表#{sheet_id+1} - 用工明细与工资表员工人数不等" \
+        #   unless project.staffs.count == stat.count - 1
 
         valid_names = project.staffs.map(&:name).to_set
         stat_names  = stat[1..-1].map{|ha| ha[:name].delete(' ')}.to_set
-        raise "表#{sheet_id+1} - 用工明细与工资表员工人员不符，未找到 #{(valid_names - stat_names).join(',')}" \
-          unless valid_names == stat_names
+        # raise "表#{sheet_id+1} - 用工明细与工资表员工人员不符，未找到 #{(valid_names - stat_names).join(',')}" \
+        #   unless valid_names == stat_names
+        raise "表#{sheet_id+1} - 未在用工明细中找到 #{(stat_names - valid_names).join(',')}" \
+          if (stat_names - valid_names).present?
 
         stats << stat
       end
