@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160118150919) do
+ActiveRecord::Schema.define(version: 20160118151813) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -430,21 +430,23 @@ ActiveRecord::Schema.define(version: 20160118150919) do
   add_index "invoice_settings", ["status"], name: "index_invoice_settings_on_status", using: :btree
 
   create_table "invoices", force: :cascade do |t|
-    t.date    "date"
-    t.text    "code"
-    t.text    "encoding"
-    t.integer "category",                              default: 0
-    t.integer "scope",                                 default: 0
-    t.text    "payer"
-    t.decimal "amount",        precision: 8, scale: 2
-    t.decimal "admin_amount",  precision: 8, scale: 2
-    t.decimal "total_amount",  precision: 8, scale: 2
-    t.text    "contact"
-    t.date    "income_date"
-    t.date    "refund_date"
-    t.text    "refund_person"
-    t.text    "remark"
-    t.integer "status",                                default: 0
+    t.date     "date"
+    t.text     "code"
+    t.text     "encoding"
+    t.integer  "category",                              default: 0
+    t.integer  "scope",                                 default: 0
+    t.text     "payer"
+    t.decimal  "amount",        precision: 8, scale: 2
+    t.decimal  "admin_amount",  precision: 8, scale: 2
+    t.decimal  "total_amount",  precision: 8, scale: 2
+    t.text     "contact"
+    t.date     "income_date"
+    t.date     "refund_date"
+    t.text     "refund_person"
+    t.text     "remark"
+    t.integer  "status",                                default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "invoices", ["admin_amount"], name: "index_invoices_on_admin_amount", using: :btree
