@@ -655,9 +655,9 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
       throw new Error "Unsupported input type: {#{name}: #{type}}"
 
     html += """
-      <li style='height:200px'>
-        <label style='float:left'>#{display_names[idx]}</label>
-        <select name="#{name}" class="current_staff_select" type="" checked='checked' multiple style='height:200px;width:100px;'>
+      <li style='height:230px'>
+        <label style='display:block; margin-bottom:10px'>#{display_names[idx]}</label>
+        <select name="#{name}" class="current_staff_select" type="" checked='checked' multiple style='height:200px;width:300px;'>
           <option selected disabled>请选择</option>
     """
 
@@ -673,11 +673,11 @@ ActiveAdmin.modal_dialog_project_add_staffs = (message, inputs, display_names, p
   # Other customers
   html += """
     <li style='height:200px'>
-      <label style='float:left'>其他客户可用员工 <a href='#' class='load_select'>(加载)</a></label>
+      <label style='float:left; margin-bottom:10px'>其他客户可用员工 <a href='#' class='load_select'>(加载)</a></label>
       <select name="" class="other_customer_select" type="" checked='checked' style='display:none;float:left;margin-right:10px;'>
         <option class='default_option' disabled>请选择</option>
       </select>
-      <select name '' class='other_staff_select' checked='checked' multiple style='display:none;height:200px;width:100px'>
+      <select name '' class='other_staff_select' checked='checked' multiple style='display:none;height:200px;width:300px'>
         <option disabled>请选择</option>
       </select>
     </li>

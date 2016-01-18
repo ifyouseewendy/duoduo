@@ -257,7 +257,7 @@ ActiveAdmin.register EngineeringStaff do
 
     customer = project.customer
     start_date, end_date = project.range
-    own_staffs = customer.free_staffs(start_date, end_date, exclude_project_id: project.id)
+    own_staffs = customer.free_staffs(start_date, end_date, exclude_project_id: project.id).sort_by{|fs| fs.remark}
 
     stats = {
       count: own_staffs.count,
@@ -268,7 +268,7 @@ ActiveAdmin.register EngineeringStaff do
     stats[:stat] = own_staffs.reduce([]) do |ar, ele|
       ar << {
         id: ele.id,
-        name: ele.name
+        name: "#{ele.name} - #{ele.remark}"
       }
     end
     render json: stats
