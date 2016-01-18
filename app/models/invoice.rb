@@ -6,7 +6,7 @@ class Invoice < ActiveRecord::Base
       name: ->(controller, model) { [model.class.model_name.human, model.try(:name)].compact.join(' - ') },
     }
 
-  belongs_to :invoicable, polymorphic: true
+  # belongs_to :invoicable, polymorphic: true
 
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)

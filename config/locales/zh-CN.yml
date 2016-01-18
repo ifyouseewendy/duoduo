@@ -364,7 +364,7 @@ zh-CN:
         status: '状态'
         statuses:
           active: '可用'
-          archive: '用完'
+          archive: '已用完'
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
