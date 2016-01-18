@@ -24,6 +24,7 @@ class EngineeringStaff < ActiveRecord::Base
   enum gender: [:male, :female]
 
   before_save :revise_fields
+  before_destroy :remove_salary_items
 
   validates_uniqueness_of :identity_card
   validates_presence_of :identity_card
@@ -199,5 +200,14 @@ class EngineeringStaff < ActiveRecord::Base
 
   def validate_seal_index
     self.update_attribute(:seal_index, query_seal_index)
+  end
+
+  def remove_salary_items
+    [
+      engineering_normal_salary_items,
+      engineering_normal_with_tax_salary_items,
+      engineering_big_table_salary_items,
+      engineering_dong_fang_salary_items
+    ].each(&:destroy_all)
   end
 end
