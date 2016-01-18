@@ -13,13 +13,13 @@ ActiveAdmin.register SubCompany do
     column :updated_at
 
     column :link do |obj|
-      link_to "普通合作单位", "/normal_corporations?utf8=✓&q%5Bsub_companies_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      link_to "业务合作单位", "/normal_corporations?q[sub_company_id_eq]=#{obj.id}", target: '_blank'
     end
     column :link do |obj|
-      link_to "普通员工信息", "/normal_staffs?utf8=✓&q%5Bsub_company_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      link_to "业务员工信息", "/normal_staffs?q[sub_company_id_eq]=#{obj.id}", target: '_blank'
     end
     column :link do |obj|
-      link_to "劳务合同", "/labor_contracts?utf8=✓&q%5Bsub_company_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc"
+      link_to "业务劳务合同", "/labor_contracts?q[sub_company_in]=#{obj.id}", target: '_blank'
     end
 
     column :link do |obj|
