@@ -8,6 +8,14 @@ class Invoice < ActiveRecord::Base
 
   # belongs_to :invoicable, polymorphic: true
 
+  enum category: [:normal, :vat_a, :vat_b]
+  enum status: [:work, :red, :cancel]
+  enum scope: [:engineer, :business]
+
+  validates_presence_of :date, :code, :encoding, :status, :category, :scope, :payer, :amount, :admin_amount
+
+  before_save :revise_fields
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -16,6 +24,18 @@ class Invoice < ActiveRecord::Base
       names -= %i() if without_foreign_keys
 
       names
+    end
+
+    def statuses_option
+      statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+    end
+
+    def categories_option
+      categories.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.categories.#{k}"), k]}
+    end
+
+    def scopes_option
+      scopes.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.scopes.#{k}"), k]}
     end
 
     def export_xlsx(options: {})
@@ -56,4 +76,43 @@ class Invoice < ActiveRecord::Base
     end
   end
 
+  def status_i18n
+    I18n.t("activerecord.attributes.#{self.class.name.underscore}.statuses.#{status}")
+  end
+
+  def status_tag
+    case status
+    when 'red'
+      :red
+    when 'cancel'
+      :no
+    else
+      :yes
+    end
+  end
+
+  def category_i18n
+    I18n.t("activerecord.attributes.#{self.class.name.underscore}.categories.#{category}")
+  end
+
+  def category_tag
+    case category
+    when 'vat_a'
+      :orange
+    when 'vat_b'
+      :red
+    else
+      :ok
+    end
+  end
+
+  def scope_i18n
+    I18n.t("activerecord.attributes.#{self.class.name.underscore}.scopes.#{scope}")
+  end
+
+  def revise_fields
+    if (changed & ['amount', 'admin_amount']).present?
+      self.total_amount = [amount, admin_amount].map(&:to_f).sum.round(2)
+    end
+  end
 end

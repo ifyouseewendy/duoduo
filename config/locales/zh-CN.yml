@@ -375,7 +375,7 @@ zh-CN:
         encoding: '发票编码'
         status: '状态'
         statuses:
-          normal: '正常'
+          work: '正常'
           red: '红充'
           cancel: '作废'
         category: '发票类型'
