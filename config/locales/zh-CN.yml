@@ -39,6 +39,7 @@ zh-CN:
       labor_contract: '劳务合同'
       sub_company: '吉易子公司'
       invoice: '发票'
+      invoice_setting: '发票管理'
       engineering_business: '工程'
       engineering_customer: '客户'
       engineering_project: '项目'
@@ -350,11 +351,33 @@ zh-CN:
         contract_templates: '合同模板'
         created_at: "创建时间"
         updated_at: "更新时间"
+      invoice_setting:
+        id: '序号'
+        category: '发票类型'
+        categories:
+          normal: '普通'
+          vat_a: '增值税 A'
+          vat_b: '增值税 A'
+        code: '发票代码'
+        start_encoding: '起始编码'
+        available_count: '可用数量'
+        status: '状态'
+        statuses:
+          active: '可用'
+          archive: '用完'
+        remark: '备注'
+        created_at: "创建时间"
+        updated_at: "更新时间"
       invoice:
         id: '序号'
         date: '开票日期'
         code: '发票代码'
         encoding: '发票编码'
+        status: '状态'
+        statuses:
+          normal: '正常'
+          red: '红充'
+          cancel: '作废'
         category: '发票类型'
         categories:
           normal: '普通'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160118135937) do
+ActiveRecord::Schema.define(version: 20160118140809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -410,6 +410,24 @@ ActiveRecord::Schema.define(version: 20160118135937) do
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
   end
+
+  create_table "invoice_settings", force: :cascade do |t|
+    t.integer  "category"
+    t.text     "code"
+    t.text     "start_encoding"
+    t.integer  "available_count"
+    t.integer  "status"
+    t.text     "remark"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "invoice_settings", ["available_count"], name: "index_invoice_settings_on_available_count", using: :btree
+  add_index "invoice_settings", ["category"], name: "index_invoice_settings_on_category", using: :btree
+  add_index "invoice_settings", ["code"], name: "index_invoice_settings_on_code", using: :btree
+  add_index "invoice_settings", ["remark"], name: "index_invoice_settings_on_remark", using: :btree
+  add_index "invoice_settings", ["start_encoding"], name: "index_invoice_settings_on_start_encoding", using: :btree
+  add_index "invoice_settings", ["status"], name: "index_invoice_settings_on_status", using: :btree
 
   create_table "invoices", force: :cascade do |t|
     t.date    "date"
