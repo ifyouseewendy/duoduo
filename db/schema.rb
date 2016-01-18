@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160118131522) do
+ActiveRecord::Schema.define(version: 20160118133923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -410,6 +410,38 @@ ActiveRecord::Schema.define(version: 20160118131522) do
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
   end
+
+  create_table "invoices_tables", force: :cascade do |t|
+    t.date    "date"
+    t.text    "code"
+    t.text    "encoding"
+    t.integer "category",                              default: 0
+    t.integer "scope",                                 default: 0
+    t.text    "payer"
+    t.decimal "amount",        precision: 8, scale: 2
+    t.decimal "admin_amount",  precision: 8, scale: 2
+    t.decimal "total_amount",  precision: 8, scale: 2
+    t.text    "contact"
+    t.date    "income_date"
+    t.date    "refund_date"
+    t.text    "refund_person"
+    t.text    "remark"
+  end
+
+  add_index "invoices_tables", ["admin_amount"], name: "index_invoices_tables_on_admin_amount", using: :btree
+  add_index "invoices_tables", ["amount"], name: "index_invoices_tables_on_amount", using: :btree
+  add_index "invoices_tables", ["category"], name: "index_invoices_tables_on_category", using: :btree
+  add_index "invoices_tables", ["code"], name: "index_invoices_tables_on_code", using: :btree
+  add_index "invoices_tables", ["contact"], name: "index_invoices_tables_on_contact", using: :btree
+  add_index "invoices_tables", ["date"], name: "index_invoices_tables_on_date", using: :btree
+  add_index "invoices_tables", ["encoding"], name: "index_invoices_tables_on_encoding", using: :btree
+  add_index "invoices_tables", ["income_date"], name: "index_invoices_tables_on_income_date", using: :btree
+  add_index "invoices_tables", ["payer"], name: "index_invoices_tables_on_payer", using: :btree
+  add_index "invoices_tables", ["refund_date"], name: "index_invoices_tables_on_refund_date", using: :btree
+  add_index "invoices_tables", ["refund_person"], name: "index_invoices_tables_on_refund_person", using: :btree
+  add_index "invoices_tables", ["remark"], name: "index_invoices_tables_on_remark", using: :btree
+  add_index "invoices_tables", ["scope"], name: "index_invoices_tables_on_scope", using: :btree
+  add_index "invoices_tables", ["total_amount"], name: "index_invoices_tables_on_total_amount", using: :btree
 
   create_table "labor_contracts", force: :cascade do |t|
     t.integer  "contract_type"

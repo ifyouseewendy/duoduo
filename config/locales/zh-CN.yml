@@ -17,19 +17,19 @@ zh-CN:
   activerecord:
     models:
       corporation: "合作单位"
-      normal_corporation: "合作单位"
+      normal_corporation: "普通合作单位"
       normal_business: "业务"
       engineering_corporation: "工程合作单位"
       project: "测试项目"
       sub_company: "吉易子公司"
       staff: "员工信息"
-      normal_staff: "员工信息"
+      normal_staff: "普通员工信息"
       engineering_staff: "员工档案"
-      salary_table: "基础工资表"
+      salary_table: "普通工资表"
       salary_table_entrance: '工资表'
       guard_salary_table: "保安工资表"
       non_full_day_salary_table: "非全日制工资表"
-      salary_item: '基础工资条'
+      salary_item: '普通工资条'
       guard_salary_item: '保安工资条'
       non_full_day_salary_item: '非全日制工资条'
       individual_income_tax: '个人所得税'
@@ -70,7 +70,7 @@ zh-CN:
       normal_corporation:
         id: '编号'
         name: '单位名称'
-        full_name: '单位全称'
+        full_name: '全称'
         license: '营业执照号'
         taxpayer_serial: '纳税人识别号'
         organization_serial: '组织代码证号'
@@ -85,27 +85,21 @@ zh-CN:
         contract_amount: '合同金额'
         admin_charge_type: '管理费收取方式'
         admin_charge_types:
-          by_rate_on_salary: "比例（应发）"
-          by_rate_on_salary_and_company: "比例（应发+单位）"
-          by_count: "固定"
-          nil: '未设置'
+          by_rate_on_salary: "每人固定比例（应发工资）"
+          by_rate_on_salary_and_company: "每人固定比例（应发工资+单位缴费）"
+          by_count: "每人固定金额"
         admin_charge_amount: '管理费收取比例/金额'
         expense_date: '单位开支日期'
         stuff_count: '员工人数'
         stuff_has_insurance_count: '参保人数'
         remark: '备注'
-        sub_company: '吉易子公司'
-        sub_company_id: '吉易子公司'
-        normal_staffs: '员工列表'
-        salary_tables: '基础工资表'
-        salary_table_display: '工资表'
+        sub_companies: '吉易子公司'
+        sub_companies_display: '吉易子公司'
+        normal_staffs: '普通员工列表'
+        salary_tables: '普通工资表'
         guard_salary_tables: '保安工资表'
         non_full_day_salary_tables: '非全日制工资表'
         labor_contracts: '劳务合同列表'
-        status: '状态'
-        statuses:
-          active: '活动'
-          archive: '存档'
         created_at: "创建时间"
         updated_at: "更新时间"
       engineering_corporation:
@@ -182,9 +176,6 @@ zh-CN:
         sub_company_id: '所属子公司'
         created_at: "创建时间"
         updated_at: "更新时间"
-        labor_contracts: '劳务合同'
-        in_contract: '有劳务关系'
-        salary_item_display: '工资条'
       engineering_staff:
         id: '编号'
         name: '姓名'
@@ -210,14 +201,9 @@ zh-CN:
       salary_table:
         id: '编号'
         name: '名称'
-        start_date: '日期'
-        status: '状态'
-        statuses:
-          active: '活动'
-          archive: '存档'
         remark: '备注'
         corporation: '所属单位'
-        normal_corporation: '合作单位'
+        normal_corporation: '普通合作单位'
         engineering_corporation: '工程合作单位'
         salary_items: '工资条'
         invoices: '发票'
@@ -225,22 +211,16 @@ zh-CN:
         updated_at: "更新时间"
         lai_table: '来表'
         daka_table: '打卡表'
-        salary_items_display: '工资条'
-        attachment: '附件'
       salary_item:
         id: '序号'
-        nest_index: '编号'
         identity_card: '身份证号'
         account: '工资卡号'
-        normal_staff_account: '工资卡号'
-        staff_account: '姓名'
         company_name: '公司名称'
         staff_category: '用工类别'
         staff_name: '姓名'
-        staff_identity_card: '身份证号'
         salary_table_name: '名称（月份）'
         salary_deserve: '应发工资'
-        annual_reward: '年终奖'
+        annual_reward: '年终一次性奖励'
         pension_personal: '养老保险（个人）'
         pension_margin_personal: '补养老保险差额'
         unemployment_personal: '失业保险（个人）'
@@ -250,29 +230,26 @@ zh-CN:
         house_accumulation_personal: '公积金（个人）'
         big_amount_personal: '大额'
         income_tax: '个税'
-        physical_exam_addition: '体检费'
-        other_personal: '其他（个人）'
-        deduct_addition: '扣款'
         salary_card_addition: '工资卡'
         medical_scan_addition: '医保扫描'
-        salary_deduct_addition: '暂扣工资'
-        other_deduct_addition: '其他（扣款）'
+        salary_pre_deduct_addition: '预扣工资款'
+        insurance_pre_deduct_addition: '预扣保险款'
+        physical_exam_addition: '体检费'
         total_personal: '合计（个人）'
         salary_in_fact: '实发工资'
-        pension_company: '养老保险（单位）'
+        pension_company: '养老保险（公司）'
         pension_margin_company: '补养老保险差额'
-        unemployment_company: '失业保险（单位）'
+        unemployment_company: '失业保险（公司）'
         unemployment_margin_company: '补失业保险差额'
-        medical_company: '医疗保险（单位）'
+        medical_company: '医疗保险（公司）'
         medical_margin_company: '补医疗保险差额'
-        injury_company: '工伤保险（单位）'
+        injury_company: '工伤保险（公司）'
         injury_margin_company: '补工伤保险差额'
-        birth_company: '生育保险（单位）'
+        birth_company: '生育保险（公司）'
         birth_margin_company: '补生育保险差额'
         accident_company: '意外险'
-        house_accumulation_company: '公积金（单位）'
-        other_company: '其他（单位）'
-        total_company: '合计（单位）'
+        house_accumulation_company: '公积金（公司）'
+        total_company: '合计（公司）'
         social_insurance_to_salary_deserve: '社保金额转到应发工资'
         social_insurance_to_pre_deduct: '社保金额转到预扣保险款'
         medical_insurance_to_salary_deserve: '医保金额转到应发工资'
@@ -288,8 +265,8 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
-        salary_table: '基础工资表'
-        salary_table_id: '基础工资表'
+        salary_table: '普通工资表'
+        salary_table_id: '普通工资表'
         normal_staff: '员工姓名'
         normal_staff_id: '员工姓名'
         normal_staff_name: '员工姓名'
@@ -324,7 +301,7 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
       labor_contract:
-        id: '编号'
+        id: '序号'
         contract_type: '合同类型'
         contract_types:
           normal_contract: '合同'
@@ -332,8 +309,7 @@ zh-CN:
           temp_contract: '临时'
           none_full_day_contract: '非全日制'
           none_contract: '无协议'
-          nil: '未设置'
-        in_contract: '状态'
+        in_contract: '有劳务关系'
         contract_start_date: '合同起始时间'
         contract_end_date: '合同终止时间'
         arrive_current_company_at: '到本单位时间'
@@ -358,12 +334,10 @@ zh-CN:
         remark: '备注'
         sub_company: '吉易子公司'
         sub_company_id: '吉易子公司'
-        sub_company_in: '吉易子公司'
         normal_corporation: '合作单位'
         normal_corporation_id: '合作单位'
         normal_staff: '所属员工'
         normal_staff_id: '所属员工'
-        normal_staff_name: '员工姓名'
         created_at: "创建时间"
         updated_at: "更新时间"
       sub_company:
@@ -378,19 +352,28 @@ zh-CN:
         updated_at: "更新时间"
       invoice:
         id: '序号'
-        release_date: '开票日期'
+        date: '开票日期'
+        code: '发票代码'
         encoding: '发票编码'
+        category: '发票类型'
+        categories:
+          normal: '普通'
+          vat_a: '增值税 A'
+          vat_b: '增值税 A'
+        scope: '用于'
+        scopes:
+          engineer: '工程'
+          business: '业务'
         payer: '付款方'
-        project_name: '项目'
-        amount: '金额'
+        amount: '劳务派遣费'
+        admin_amount: '管理费'
         total_amount: '总金额'
-        contact_person: '联系人'
+        contact: '联系人'
+        income_date: '来款日期'
         refund_person: '回款人'
+        refund_date: '回款日期'
         refund_bank: '回款银行'
         refund_account: '回款账号'
-        income_date: '来款日期'
-        refund_date: '回款日期'
-        salary_table: '工资表'
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
