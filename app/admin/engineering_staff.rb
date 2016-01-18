@@ -415,17 +415,24 @@ ActiveAdmin.register EngineeringStaff do
 
     stats.each_with_index do |stat, idx|
       begin
+        identity_card = stat[:identity_card].delete("'")
         if project.present?
-          staff = customer.staffs.where(identity_card: stat[:identity_card]).first
+          staff = customer.staffs.where(identity_card: identity_card).first
           raise "无法在客户提供人员找到该身份证号" if staff.nil?
           staff.projects << project
         else
-          if (es=EngineeringStaff.where(identity_card: stat[:identity_card]).first).present?
+          if (es=EngineeringStaff.where(identity_card: identity_card).first).present?
             raise "身份证号已被使用，出现在客户 #{es.customer.display_name} 下"
           end
-          staff = collection.create!(stat.merge(
+
+          staff = collection.new(stat.merge(
             { engineering_customer_id: customer.id}
           ))
+          staff.save
+
+          if staff.errors.present?
+            raise staff.errors.full_messages.join(', ')
+          end
         end
 
       rescue => e
@@ -443,7 +450,7 @@ ActiveAdmin.register EngineeringStaff do
           failed.each_with_index do |stat, fid|
             if fid >= 2
               id_card_idx = columns.index(:identity_card)
-              stat[id_card_idx] = "'#{stat[id_card_idx]}";
+              stat[id_card_idx] = "'#{stat[id_card_idx]}" unless stat[id_card_idx].start_with?("'")
 
               gender_idx = columns.index(:gender)
               stat[gender_idx] = gender_reverse_map[ stat[gender_idx] ]
