@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113140146) do
+ActiveRecord::Schema.define(version: 20160118131522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -410,28 +410,6 @@ ActiveRecord::Schema.define(version: 20160113140146) do
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
   end
-
-  create_table "invoices", force: :cascade do |t|
-    t.date     "release_date"
-    t.text     "encoding"
-    t.text     "payer"
-    t.text     "project_name"
-    t.string   "amount"
-    t.decimal  "total_amount",    precision: 8, scale: 2
-    t.text     "contact_person"
-    t.text     "refund_person"
-    t.text     "refund_bank"
-    t.text     "refund_account"
-    t.date     "income_date"
-    t.date     "refund_date"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
-    t.text     "remark"
-    t.integer  "invoicable_id"
-    t.string   "invoicable_type"
-  end
-
-  add_index "invoices", ["invoicable_type", "invoicable_id"], name: "index_invoices_on_invoicable_type_and_invoicable_id", using: :btree
 
   create_table "labor_contracts", force: :cascade do |t|
     t.integer  "contract_type"
