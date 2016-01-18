@@ -22,6 +22,7 @@ class SubCompanyTest < ActiveSupport::TestCase
   end
 
   def test_generate_docx
+    skip
     file_path = Rails.root.join('test').join('resources').join('origin.docx')
 
     docx = DocGenerator.generate_docx(
