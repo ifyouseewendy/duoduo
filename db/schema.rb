@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160118140809) do
+ActiveRecord::Schema.define(version: 20160118150919) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -444,6 +444,7 @@ ActiveRecord::Schema.define(version: 20160118140809) do
     t.date    "refund_date"
     t.text    "refund_person"
     t.text    "remark"
+    t.integer "status",                                default: 0
   end
 
   add_index "invoices", ["admin_amount"], name: "index_invoices_on_admin_amount", using: :btree
