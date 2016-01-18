@@ -3,6 +3,10 @@ ActiveAdmin.register EngineeringCorp do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 2
 
+  scope "全部" do |record|
+    record.all
+  end
+
   index row_class: ->elem { 'due_date' if elem.due? } do
     selectable_column
     column :name

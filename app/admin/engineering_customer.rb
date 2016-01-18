@@ -6,6 +6,9 @@ ActiveAdmin.register EngineeringCustomer do
 
   # Index
   config.sort_order = 'nest_index_desc'
+  scope "全部" do |record|
+    record.all
+  end
 
   index do
     selectable_column
