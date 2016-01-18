@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160118151813) do
+ActiveRecord::Schema.define(version: 20160118151925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -454,6 +454,7 @@ ActiveRecord::Schema.define(version: 20160118151813) do
   add_index "invoices", ["category"], name: "index_invoices_on_category", using: :btree
   add_index "invoices", ["code"], name: "index_invoices_on_code", using: :btree
   add_index "invoices", ["contact"], name: "index_invoices_on_contact", using: :btree
+  add_index "invoices", ["created_at"], name: "index_invoices_on_created_at", using: :btree
   add_index "invoices", ["date"], name: "index_invoices_on_date", using: :btree
   add_index "invoices", ["encoding"], name: "index_invoices_on_encoding", using: :btree
   add_index "invoices", ["income_date"], name: "index_invoices_on_income_date", using: :btree
@@ -463,6 +464,7 @@ ActiveRecord::Schema.define(version: 20160118151813) do
   add_index "invoices", ["remark"], name: "index_invoices_on_remark", using: :btree
   add_index "invoices", ["scope"], name: "index_invoices_on_scope", using: :btree
   add_index "invoices", ["total_amount"], name: "index_invoices_on_total_amount", using: :btree
+  add_index "invoices", ["updated_at"], name: "index_invoices_on_updated_at", using: :btree
 
   create_table "labor_contracts", force: :cascade do |t|
     t.integer  "contract_type"
