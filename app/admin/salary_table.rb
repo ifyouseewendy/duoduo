@@ -81,6 +81,7 @@ ActiveAdmin.register SalaryTable do
   remove_filter :salary_items
   remove_filter :lai_table
   remove_filter :daka_table
+  remove_filter :activities
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 

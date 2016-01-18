@@ -110,6 +110,7 @@ ActiveAdmin.register NormalStaff do
   remove_filter :guard_salary_items
   remove_filter :non_full_day_salary_items
   remove_filter :labor_contracts
+  remove_filter :activities
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: true) }
 

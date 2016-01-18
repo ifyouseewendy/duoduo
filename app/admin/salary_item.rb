@@ -93,6 +93,7 @@ ActiveAdmin.register SalaryItem do
   remove_filter :salary_table
   remove_filter :normal_staff
   remove_filter :role
+  remove_filter :activities
 
   # Edit
   permit_params { resource_class.whole_columns }
