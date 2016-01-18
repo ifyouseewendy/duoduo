@@ -77,7 +77,7 @@ ActiveAdmin.register SalaryTable do
   filter :normal_corporation, as: :select, collection: -> { NormalCorporation.as_filter }
   filter :status, as: :check_boxes, collection: ->{ SalaryTable.statuses_option }
   preserve_default_filters!
-  remove_filter :invoices
+  # remove_filter :invoices
   remove_filter :salary_items
   remove_filter :lai_table
   remove_filter :daka_table

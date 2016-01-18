@@ -224,6 +224,7 @@ ActiveAdmin.setup do |config|
         sub_menu.add label: '说明文档', url: 'https://quip.com/IbzYA17FOjCJ', priority: 10, html_options: { target: :blank }
       end
       menu.add label: I18n.t("activerecord.models.normal_business"), priority: 3
+      menu.add label: I18n.t("activerecord.models.invoice"), priority: 4
       menu.add label: I18n.t("activerecord.models.settings"), priority: 10
     end
 

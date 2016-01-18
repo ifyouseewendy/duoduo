@@ -1,7 +1,7 @@
 ActiveAdmin.register Invoice do
   menu \
-    parent: I18n.t("activerecord.models.normal_business"),
-    priority: 7
+    parent: I18n.t("activerecord.models.invoice"),
+    priority: 1
 
   config.filters = false
 

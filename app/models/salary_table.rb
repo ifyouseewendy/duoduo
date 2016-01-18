@@ -8,7 +8,7 @@ class SalaryTable < ActiveRecord::Base
 
   belongs_to :normal_corporation
   has_many :salary_items, dependent: :destroy
-  has_many :invoices, dependent: :destroy, as: :invoicable
+  # has_many :invoices, dependent: :destroy, as: :invoicable
 
   mount_uploader :lai_table, Attachment
   mount_uploader :daka_table, Attachment
