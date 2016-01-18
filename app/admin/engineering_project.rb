@@ -122,6 +122,7 @@ ActiveAdmin.register EngineeringProject do
   remove_filter :contract_files
   remove_filter :income_items
   remove_filter :outcome_items
+  remove_filter :activities
 
   permit_params do
     resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) \

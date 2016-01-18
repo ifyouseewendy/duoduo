@@ -19,6 +19,7 @@ ActiveAdmin.register EngineeringCorp do
   remove_filter :projects
   remove_filter :big_contracts
   remove_filter :sub_company
+  remove_filter :activities
 
   permit_params :name
 

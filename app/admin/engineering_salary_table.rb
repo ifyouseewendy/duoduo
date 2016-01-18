@@ -101,6 +101,7 @@ ActiveAdmin.register EngineeringSalaryTable do
   remove_filter :audition
   remove_filter :reference
   remove_filter :project
+  remove_filter :activities
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 

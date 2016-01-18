@@ -20,6 +20,7 @@ ActiveAdmin.register SealTable do
   preserve_default_filters!
   remove_filter :seal_items
   filter :seal_items_name, as: :string
+  remove_filter :activities
 
   permit_params { resource_class.column_names }
 

@@ -117,6 +117,7 @@ ActiveAdmin.register EngineeringStaff do
   remove_filter :alias_name
   remove_filter :customer
   remove_filter :projects
+  remove_filter :activities
   # filter :customer
   # filter :projects, as: :select, collection: ->{ EngineeringProject.as_filter }
 
