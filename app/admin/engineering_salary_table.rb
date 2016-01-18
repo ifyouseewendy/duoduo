@@ -267,6 +267,10 @@ ActiveAdmin.register EngineeringSalaryTable do
       redirect_to :back, alert: e.message and return
     end
 
+    if ranges.count != stats.count
+      redirect_to :back, alert: "项目工作量与导入工资表数目不等" and return
+    end
+
     stats.each_with_index do |sheet_data, sheet_id|
       start_date, end_date = ranges[sheet_id]
       total_amount = sheet_data.map{|ha| ha[:salary_in_fact].to_f}.sum.round(2)
