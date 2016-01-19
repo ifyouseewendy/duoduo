@@ -362,6 +362,7 @@ zh-CN:
         start_encoding: '起始编码'
         available_count: '可用数量'
         end_encoding: '结束编码'
+        used_count: '已用数量'
         status: '状态'
         statuses:
           active: '可用'
