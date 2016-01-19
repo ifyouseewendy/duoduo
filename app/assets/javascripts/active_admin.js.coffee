@@ -532,6 +532,35 @@ $(document).on 'ready', ->
     $('#invoice_category_input .choice').on 'click', ->
       set_code_and_encoding($(@))
 
+    set_contact_and_payer = (choice) ->
+      scope = choice.find('input').val()
+
+      if scope == 'business'
+        $.ajax
+          url: '/engineering_customers/display'
+          dataType: 'json'
+          success: (data, textStatus, jqXHR) =>
+            if data['status'] == 'ok'
+              contact = $('#invoice_contact')
+              contact.empty()
+              $.each data['data'], (id, ele) ->
+                contact.append("<option value=#{ele}>#{ele}</option>")
+      else
+        $.ajax
+          url: '/normal_corporations/display'
+          dataType: 'json'
+          success: (data, textStatus, jqXHR) =>
+            if data['status'] == 'ok'
+              contact = $('#invoice_contact')
+              contact.empty()
+              $.each data['data'], (id, ele) ->
+                contact.append("<option value=#{ele}>#{ele}</option>")
+
+    default_scope = $('#invoice_scope_input .choice')[0]
+    set_contact_and_payer( $(default_scope) )
+    $('#invoice_scope_input .choice').on 'click', ->
+      set_contact_and_payer( $(@) )
+
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""

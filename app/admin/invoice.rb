@@ -82,10 +82,10 @@ ActiveAdmin.register Invoice do
       f.input :code, as: :string
       f.input :encoding, as: :string
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option }.call
-      f.input :payer, as: :string
       f.input :amount, as: :number
       f.input :admin_amount, as: :number
-      f.input :contact, as: :string
+      f.input :contact, as: :select, collection: []
+      f.input :payer, as: :string
       f.input :income_date, as: :datepicker
       f.input :refund_date, as: :datepicker
       f.input :refund_person, as: :string

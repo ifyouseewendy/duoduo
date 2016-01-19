@@ -129,6 +129,10 @@ ActiveAdmin.register EngineeringCustomer do
     render json: stats
   end
 
+  collection_action :display do
+    render json: {status: 'ok', data: EngineeringCustomer.select(:nest_index, :name).map(&:display_name) }
+  end
+
   member_action :free_staffs do
     customer = EngineeringCustomer.find( params[:id] )
     project = EngineeringProject.find( params[:project_id] )

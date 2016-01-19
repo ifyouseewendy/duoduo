@@ -221,6 +221,16 @@ ActiveAdmin.register NormalCorporation do
     send_file file, filename: file.basename
   end
 
+  collection_action :display do
+    data = NormalCorporation.includes(:sub_company).select(:sub_company_id, :name).map do |nc|
+      name = nc.name
+      name = "#{nc.sub_company.name} - #{nc.name}" if nc.sub_company.present?
+      name
+    end
+
+    render json: {status: 'ok', data: data }
+  end
+
   controller do
     def scoped_collection
       end_of_association_chain.includes(:sub_company)
