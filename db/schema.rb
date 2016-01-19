@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119003628) do
+ActiveRecord::Schema.define(version: 20160119015435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -423,6 +423,7 @@ ActiveRecord::Schema.define(version: 20160119003628) do
   end
 
   add_index "invoice_settings", ["available_count"], name: "index_invoice_settings_on_available_count", using: :btree
+  add_index "invoice_settings", ["category", "code"], name: "index_invoice_settings_on_category_and_code", using: :btree
   add_index "invoice_settings", ["category"], name: "index_invoice_settings_on_category", using: :btree
   add_index "invoice_settings", ["code"], name: "index_invoice_settings_on_code", using: :btree
   add_index "invoice_settings", ["remark"], name: "index_invoice_settings_on_remark", using: :btree
