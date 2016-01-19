@@ -72,7 +72,7 @@ class InvoiceSetting < ActiveRecord::Base
   end
 
   def others
-    self.class.send(category).where(code: code).where.not(id: self.id)
+    self.class.send(category).where(code: code).where.not(id: self.id) rescue []
   end
 
   def uniq_encoding
