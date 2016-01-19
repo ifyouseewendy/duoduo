@@ -174,6 +174,9 @@ class EngineeringStaff < ActiveRecord::Base
         if self.birth + 18.years > Date.today
           errors.add(:birth, "员工未满十八周岁")
           return false
+        elsif self.birth < Date.parse('1957-01-01')
+          errors.add(:birth, "员工生日早于1957年")
+          return false
         end
       rescue => _
         errors.add(:birth, "无法通过身份证号获取生日信息，请检查身份证号：#{id_card}")
