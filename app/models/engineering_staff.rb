@@ -88,11 +88,8 @@ class EngineeringStaff < ActiveRecord::Base
       collection = self.all
       if options[:selected].present?
         collection = collection.where(id: options[:selected])
-      elsif options['projects_id_eq'].present?
-        collection = collection.by_project(options['projects_id_eq'])
-      elsif options['customer_id_eq'].present?
-        collection = collection.where(engineering_customer_id: options['customer_id_eq'])
       else
+        collection = collection.ransack(options).result
       end
 
       columns = columns_based_on(options: options)
