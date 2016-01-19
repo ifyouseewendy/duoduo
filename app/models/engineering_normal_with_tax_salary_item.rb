@@ -103,7 +103,8 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           format_code: '0.00'
         })
 
-        p.workbook.add_worksheet(name: salary_table.month_display) do |sheet|
+        sheet_name = salary_table.month_display
+        wb.add_worksheet(name: sheet_name) do |sheet|
           # Headers
           sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
             height: 60, b:true, sz: 18, style: wrap_without_border_text
@@ -148,6 +149,8 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
 
           widths = Array.new(columns.count+1){10}
           sheet.column_widths *widths
+
+          wb.add_defined_name("'#{sheet_name}'!$1:$3", :local_sheet_id => sheet.index, :name => '_xlnm.Print_Titles') 
         end
         p.serialize(filepath.to_s)
       end
