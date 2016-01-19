@@ -75,11 +75,12 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
 
       if options[:selected].present?
         collection = collection.where(id: options[:selected])
-      elsif options[:salary_table_id].present?
-        salary_table = EngineeringSalaryTable.find(options[:salary_table_id])
-        collection = salary_table.salary_items
-        names += [salary_table.project.name, salary_table.month_display]
+      else
+        collection = collection.ransack(options).result
       end
+
+      salary_table = collection.first.salary_table
+      names += [salary_table.project.name, salary_table.month_display]
 
       # collection = collection.includes(:staff).order('engineering_staffs.seal_index asc') if options[:order].present?
 
