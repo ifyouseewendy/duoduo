@@ -127,4 +127,8 @@ class Invoice < ActiveRecord::Base
       self.total_amount = [amount, admin_amount].map(&:to_f).sum.round(2)
     end
   end
+
+  # Form placeholder
+  def invoice_setting_id
+  end
 end

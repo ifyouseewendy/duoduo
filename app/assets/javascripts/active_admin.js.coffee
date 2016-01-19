@@ -510,8 +510,8 @@ $(document).on 'ready', ->
 
   # Invoices
   if $('.invoices').length > 0
-    $('#invoice_category_input .choice').on 'click', ->
-      category = $(@).find('input').val()
+    set_code_and_encoding = (choice) ->
+      category = choice.find('input').val()
       $.ajax
         url: '/invoice_settings/available'
         data:
@@ -523,9 +523,14 @@ $(document).on 'ready', ->
             $('#invoice_encoding').val( data['data']['encoding'] )
             $('#invoice_invoice_setting_id').val( data['data']['invoice_setting_id'] )
           else
-            label = $(@).find('label')
+            label = choice.find('label')
             label.find('span').remove()
             label.append("<span style='color:red'> #{data['message']}</span>")
+
+    default_choice = $('#invoice_category_input .choice')[0]
+    set_code_and_encoding( $(default_choice) )
+    $('#invoice_category_input .choice').on 'click', ->
+      set_code_and_encoding($(@))
 
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
