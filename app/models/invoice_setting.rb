@@ -12,6 +12,8 @@ class InvoiceSetting < ActiveRecord::Base
   validates_presence_of :category, :code, :start_encoding, :available_count, :status
   validate :uniq_encoding
 
+  scope :available, ->(category){ self.send(category).active.order(created_at: :asc) }
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
@@ -65,7 +67,7 @@ class InvoiceSetting < ActiveRecord::Base
     se
   end
 
-  def range
+  def range_integer
     Integer(start_encoding, 10)..Integer(end_encoding, 10)
   end
 
@@ -77,9 +79,23 @@ class InvoiceSetting < ActiveRecord::Base
     others.each do |is|
       # Range#overlaps use #cover, which use <=> comparison,
       # which is not accurate for string format numbers, like '99999' > '100000' # => true
-      if self.range.overlaps?(is.range)
+      if self.range_integer.overlaps?(is.range_integer)
         errors.add(:start_encoding, "编码范围与已存在发票（类型<#{category_i18n}>代码<#{code}>）的编码范围有重叠")
       end
     end
+  end
+
+  def next_encoding
+    last_encoding.nil? ? start_encoding : last_encoding.succ
+  end
+
+  def increment_used
+    if last_encoding.nil?
+      self.last_encoding = start_encoding
+    else
+      self.last_encoding = last_encoding.succ
+    end
+
+    self.used_count += 1
   end
 end
