@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119022700) do
+ActiveRecord::Schema.define(version: 20160119051858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -418,10 +418,10 @@ ActiveRecord::Schema.define(version: 20160119022700) do
     t.integer  "available_count"
     t.integer  "status"
     t.text     "remark"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.text     "last_encoding"
-    t.integer  "used_count"
+    t.integer  "used_count",      default: 0
   end
 
   add_index "invoice_settings", ["available_count"], name: "index_invoice_settings_on_available_count", using: :btree
