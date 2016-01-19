@@ -62,10 +62,10 @@ ActiveAdmin.register Invoice do
     actions
   end
 
-  filter :sub_company_name, as: :select, collection: -> { SubCompany.pluck(:name) }.call
-  filter :category, as: :select, collection: -> { @resource.categories_option }.call
-  filter :status, as: :select, collection: -> { @resource.statuses_option }.call
-  filter :scope, as: :select, collection: -> { @resource.scopes_option }.call
+  filter :sub_company_name, as: :select, collection: -> { SubCompany.pluck(:name) }
+  filter :category, as: :select, collection: -> { @resource.categories_option }
+  filter :status, as: :select, collection: -> { @resource.statuses_option }
+  filter :scope, as: :select, collection: -> { @resource.scopes_option }
   preserve_default_filters!
   remove_filter :activities
 
