@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160118151925) do
+ActiveRecord::Schema.define(version: 20160119003628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -433,20 +433,21 @@ ActiveRecord::Schema.define(version: 20160118151925) do
     t.date     "date"
     t.text     "code"
     t.text     "encoding"
-    t.integer  "category",                              default: 0
-    t.integer  "scope",                                 default: 0
+    t.integer  "category",                                 default: 0
+    t.integer  "scope",                                    default: 0
     t.text     "payer"
-    t.decimal  "amount",        precision: 8, scale: 2
-    t.decimal  "admin_amount",  precision: 8, scale: 2
-    t.decimal  "total_amount",  precision: 8, scale: 2
+    t.decimal  "amount",           precision: 8, scale: 2
+    t.decimal  "admin_amount",     precision: 8, scale: 2
+    t.decimal  "total_amount",     precision: 8, scale: 2
     t.text     "contact"
     t.date     "income_date"
     t.date     "refund_date"
     t.text     "refund_person"
     t.text     "remark"
-    t.integer  "status",                                default: 0
+    t.integer  "status",                                   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "sub_company_name"
   end
 
   add_index "invoices", ["admin_amount"], name: "index_invoices_on_admin_amount", using: :btree
@@ -463,6 +464,7 @@ ActiveRecord::Schema.define(version: 20160118151925) do
   add_index "invoices", ["refund_person"], name: "index_invoices_on_refund_person", using: :btree
   add_index "invoices", ["remark"], name: "index_invoices_on_remark", using: :btree
   add_index "invoices", ["scope"], name: "index_invoices_on_scope", using: :btree
+  add_index "invoices", ["sub_company_name"], name: "index_invoices_on_sub_company_name", using: :btree
   add_index "invoices", ["total_amount"], name: "index_invoices_on_total_amount", using: :btree
   add_index "invoices", ["updated_at"], name: "index_invoices_on_updated_at", using: :btree
 
