@@ -361,6 +361,7 @@ zh-CN:
         code: '发票代码'
         start_encoding: '起始编码'
         available_count: '可用数量'
+        end_encoding: '结束编码'
         status: '状态'
         statuses:
           active: '可用'

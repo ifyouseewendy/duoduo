@@ -55,4 +55,10 @@ class InvoiceSetting < ActiveRecord::Base
       :ok
     end
   end
+
+  def end_encoding
+    se = start_encoding.clone
+    (available_count-1).times{ se.succ! }
+    se
+  end
 end

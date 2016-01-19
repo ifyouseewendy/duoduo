@@ -34,6 +34,7 @@ ActiveAdmin.register InvoiceSetting do
     column :code
     column :start_encoding
     column :available_count
+    column :end_encoding
     column :status, sortable: :status do |obj|
       status_tag obj.status_i18n, obj.status_tag
     end
@@ -75,6 +76,7 @@ ActiveAdmin.register InvoiceSetting do
       row :code
       row :start_encoding
       row :available_count
+      row :end_encoding
       row :status do |obj|
         status_tag obj.status_i18n, obj.status_tag
       end
