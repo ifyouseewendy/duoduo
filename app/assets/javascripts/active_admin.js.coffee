@@ -532,7 +532,7 @@ $(document).on 'ready', ->
     $('#invoice_category_input .choice').on 'click', ->
       set_code_and_encoding($(@))
 
-    set_contact_and_payer = (choice) ->
+    set_contact = (choice) ->
       scope = choice.find('input').val()
 
       if scope == 'business'
@@ -547,7 +547,7 @@ $(document).on 'ready', ->
               names = data['data']['names']
               full_names = data['data']['full_names']
               $.each names, (idx, ele) ->
-                contact.append("<option value=#{ele} data-full-name=#{full_names[idx]}>#{ele}</option>")
+                contact.append("<option data-full-name=#{full_names[idx]} value='#{ele}'>#{ele}</option>")
       else
         $.ajax
           url: '/normal_corporations/display'
@@ -560,12 +560,18 @@ $(document).on 'ready', ->
               names = data['data']['names']
               full_names = data['data']['full_names']
               $.each names, (idx, ele) ->
-                contact.append("<option value=#{ele} data-full-name=#{full_names[idx]}>#{ele}</option>")
+                contact.append("<option data-full-name=#{full_names[idx]} value='#{ele}'>#{ele}</option>")
 
     default_scope = $('#invoice_scope_input .choice')[0]
     set_contact( $(default_scope) )
     $('#invoice_scope_input .choice').on 'click', ->
       set_contact( $(@) )
+
+    set_payer = (option) ->
+      alert(option.data('full-name'))
+      $('#invoice_payer').val( option.data('full-name') )
+    $('#invoice_contact').on 'change', ->
+      set_payer( $(@).children(":selected") )
 
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
