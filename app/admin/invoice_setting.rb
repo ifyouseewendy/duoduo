@@ -33,8 +33,9 @@ ActiveAdmin.register InvoiceSetting do
 
     column :code
     column :start_encoding
-    column :available_count
     column :end_encoding
+    column :available_count
+    column :used_count
     column :status, sortable: :status do |obj|
       status_tag obj.status_i18n, obj.status_tag
     end
@@ -45,9 +46,9 @@ ActiveAdmin.register InvoiceSetting do
     actions
   end
 
-  filter :category, as: :select, collection: -> { @resource.categories_option }
-  filter :code, as: :select, collection: -> { @resource.select(:code).pluck(:code).uniq }
-  filter :status, as: :select, collection: -> { @resource.statuses_option }
+  filter :category, as: :select, collection: -> { resource_class.categories_option }
+  filter :code, as: :select, collection: -> { resource_class.select(:code).pluck(:code).uniq }
+  filter :status, as: :select, collection: -> { resource_class.statuses_option }
   preserve_default_filters!
   remove_filter :activities
 
