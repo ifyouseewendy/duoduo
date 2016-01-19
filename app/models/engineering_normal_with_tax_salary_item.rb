@@ -91,6 +91,11 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
           border: {style: :thin, color: '00'}
         })
+        wrap_float_text = wb.styles.add_style({
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          border: {style: :thin, color: '00'},
+          format_code: '0.00'
+        })
 
         p.workbook.add_worksheet(name: salary_table.month_display) do |sheet|
           # Headers
@@ -118,7 +123,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
                   item.send(col)
                 end
               end
-              sheet.add_row stats, style: wrap_text
+              sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7 )
           end
 
           # Sum row
@@ -130,7 +135,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
             end
           end
           stats[0] = '合计'
-          sheet.add_row stats, style: wrap_text
+          sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7 )
 
           end_rol = 3 + collection.count + 1
           sheet.merge_cells("A#{end_rol}:B#{end_rol}")
