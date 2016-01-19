@@ -57,11 +57,20 @@ class EngineeringOutcomeItem < ActiveRecord::Base
   end
 
   def validate_count
-    fields = changed & ['each_amount', 'bank', 'account', 'address']
+    fields = changed & ['each_amount']
 
     if fields.present?
+      if each_amount.count != 0 && each_amount.count != persons.count
+        errors.add(:each_amount, "#{self.class.human_attribute_name(:each_amount)}个数与回款人数不等")
+      end
+    end
+
+    fields = changed & ['bank', 'account']
+    if fields.present?
       fields.each do |field|
-        errors.add(field, "#{self.class.human_attribute_name(field)}个数与回款人数不等")
+        if self.send(field).count != persons.count
+          errors.add(field, "#{self.class.human_attribute_name(field)}个数与回款人数不等")
+        end
       end
     end
   end
