@@ -404,6 +404,8 @@ ActiveAdmin.register EngineeringStaff do
         stat = {}
         row.each_with_index do |v, idx|
           key = columns[idx]
+          next if key.blank?
+
           value = (String === v ? v.strip : v)
           value = gender_map[value] if gender_map.keys.include? value
           stat[key] = value
@@ -416,14 +418,32 @@ ActiveAdmin.register EngineeringStaff do
     stats.each_with_index do |stat, idx|
       begin
         identity_card = stat[:identity_card].delete("'")
+
         if project.present?
           staff = customer.staffs.where(identity_card: identity_card).first
           raise "无法在客户提供人员找到该身份证号" if staff.nil?
           staff.projects << project
         else
-          if (es=EngineeringStaff.where(identity_card: identity_card).first).present?
-            raise "身份证号已被使用，出现在客户 #{es.customer.display_name} 下"
+          if identity_card.end_with?('!') or identity_card.end_with?('！')
+            name_check = false
+            identity_card = identity_card.delete('!').delete('！')
+          else
+            name_check = true
           end
+
+          if (es=EngineeringStaff.where(identity_card: identity_card).first).present?
+            raise "身份证号已被使用，出现在客户 #{es.customer.display_name} 中，姓名 #{es.name}"
+          end
+
+          if name_check
+            alike_staffs = customer.staffs.where(name: stat[:name]).where.not(identity_card: identity_card)
+            if alike_staffs.count > 0
+              display_staffs = alike_staffs.map{|st| "#{st.name} - #{st.identity_card}"}.join(', ')
+              raise "在当前客户下找到同名员工，请检查：#{display_staffs}。如果确定为两名不同员工，请在身份证号后面附加！以强制导入"
+            end
+          end
+
+          stat[:identity_card] = identity_card
 
           staff = collection.new(stat.merge(
             { engineering_customer_id: customer.id}
@@ -436,7 +456,7 @@ ActiveAdmin.register EngineeringStaff do
         end
 
       rescue => e
-        failed << (stat.values << e.message << e.backtrace)
+        failed << (stat.values << e.message << e.backtrace[0])
       end
     end
 
