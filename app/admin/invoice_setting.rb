@@ -90,4 +90,14 @@ ActiveAdmin.register InvoiceSetting do
     active_admin_comments
   end
 
+  collection_action :available do
+    is = InvoiceSetting.available(params[:category]).first
+
+    if is.blank?
+      # category = InvoiceSetting.new(category: params[:category]).category_i18n
+      render json: {status: 'failed', message: "已无该类型的发票可用，请到发票管理页添加"}
+    else
+      render json: {status: 'ok', data: { code: is.code, encoding: is.next_encoding, invoice_setting_id: is.id }}
+    end
+  end
 end

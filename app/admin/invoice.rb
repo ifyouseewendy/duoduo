@@ -90,6 +90,7 @@ ActiveAdmin.register Invoice do
       f.input :refund_date, as: :datepicker
       f.input :refund_person, as: :string
       f.input :remark, as: :text
+      f.input :invoice_setting_id, as: :hidden
     end
 
     f.actions

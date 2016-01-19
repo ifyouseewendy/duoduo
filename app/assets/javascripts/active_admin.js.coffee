@@ -508,6 +508,25 @@ $(document).on 'ready', ->
   # Import Introduction
   $('.normal_corporation .import_guide ol').append('<li>3. 字段"管理费收取方式"的有效值为：每人固定比例（应发工资），每人固定比例（应发工资+单位缴费），每人固定金额</li>')
 
+  # Invoices
+  if $('.invoices').length > 0
+    $('#invoice_category_input .choice').on 'click', ->
+      category = $(@).find('input').val()
+      $.ajax
+        url: '/invoice_settings/available'
+        data:
+          category: category
+        dataType: 'json'
+        success: (data, textStatus, jqXHR) =>
+          if data['status'] == 'ok'
+            $('#invoice_code').val( data['data']['code'] )
+            $('#invoice_encoding').val( data['data']['encoding'] )
+            $('#invoice_invoice_setting_id').val( data['data']['invoice_setting_id'] )
+          else
+            label = $(@).find('label')
+            label.find('span').remove()
+            label.append("<span style='color:red'> #{data['message']}</span>")
+
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
