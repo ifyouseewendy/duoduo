@@ -199,6 +199,7 @@ ActiveAdmin.register SalaryItem do
     options = {}
     options[:selected] = params[:selected].split('-') if params[:selected].present?
     options[:columns] = params[:columns].split('-') if params[:columns].present?
+    options.update(params[:q])
 
     file = st.export_xlsx(view: params[:view], options: options)
     send_file file, filename: file.basename

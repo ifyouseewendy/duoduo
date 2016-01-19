@@ -55,6 +55,7 @@ ActiveAdmin.register NonFullDaySalaryItem do
     options = {}
     options[:selected] = params[:selected].split('-') if params[:selected].present?
     options[:columns] = params[:columns].split('-') if params[:columns].present?
+    options.update(params[:q])
 
     file = st.export_xlsx(options: options)
     send_file file, filename: file.basename
