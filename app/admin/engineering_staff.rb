@@ -7,6 +7,8 @@ ActiveAdmin.register EngineeringStaff do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 4
 
+  config.per_page = 50
+
   breadcrumb do
     crumbs = []
 
