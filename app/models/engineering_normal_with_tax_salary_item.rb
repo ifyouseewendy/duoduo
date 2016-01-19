@@ -88,10 +88,16 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       Axlsx::Package.new do |p|
         wb = p.workbook
         wrap_text = wb.styles.add_style({
+          font_name: "新宋体",
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
           border: {style: :thin, color: '00'}
         })
+        wrap_without_border_text = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true}
+        })
         wrap_float_text = wb.styles.add_style({
+          font_name: "新宋体",
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
           border: {style: :thin, color: '00'},
           format_code: '0.00'
@@ -100,9 +106,9 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
         p.workbook.add_worksheet(name: salary_table.month_display) do |sheet|
           # Headers
           sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
-            height: 60, b:true, sz: 16, style: wrap_text
+            height: 60, b:true, sz: 18, style: wrap_without_border_text
           sheet.add_row [ salary_table.month_display_zh + " 工资表" ], \
-            height: 30, b:true, style: wrap_text
+            height: 30, b:true, sz: 14, style: wrap_without_border_text
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
             height: 60, b:true, style: wrap_text
 
@@ -123,7 +129,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
                   item.send(col)
                 end
               end
-              sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7 )
+              sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7+[wrap_text] ), height: 30
           end
 
           # Sum row
@@ -135,7 +141,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
             end
           end
           stats[0] = '合计'
-          sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7 )
+          sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7 ), height: 30
 
           end_rol = 3 + collection.count + 1
           sheet.merge_cells("A#{end_rol}:B#{end_rol}")
