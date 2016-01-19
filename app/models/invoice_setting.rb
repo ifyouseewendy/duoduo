@@ -9,6 +9,9 @@ class InvoiceSetting < ActiveRecord::Base
   enum category: [:normal, :vat_a, :vat_b]
   enum status: [:active, :archive]
 
+  validates_presence_of :category, :code, :start_encoding, :available_count, :status
+  validates_uniqueness_of :start_encoding, scope: :code
+
   class << self
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)

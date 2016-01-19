@@ -357,7 +357,7 @@ zh-CN:
         categories:
           normal: '普通'
           vat_a: '增值税 A'
-          vat_b: '增值税 A'
+          vat_b: '增值税 B'
         code: '发票代码'
         start_encoding: '起始编码'
         available_count: '可用数量'
@@ -384,7 +384,7 @@ zh-CN:
         categories:
           normal: '普通'
           vat_a: '增值税 A'
-          vat_b: '增值税 A'
+          vat_b: '增值税 B'
         scope: '用于'
         scopes:
           engineer: '工程'
