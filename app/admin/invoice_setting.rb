@@ -46,6 +46,7 @@ ActiveAdmin.register InvoiceSetting do
   end
 
   filter :category, as: :select, collection: -> { @resource.categories_option }.call
+  filter :code, as: :select, collection: -> { @resource.select(:code).pluck(:code).uniq }.call
   filter :status, as: :select, collection: -> { @resource.statuses_option }.call
   preserve_default_filters!
   remove_filter :activities
