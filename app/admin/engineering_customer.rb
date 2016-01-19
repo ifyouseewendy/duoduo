@@ -132,7 +132,7 @@ ActiveAdmin.register EngineeringCustomer do
     customer = EngineeringCustomer.find( params[:id] )
     project = EngineeringProject.find( params[:project_id] )
 
-    staffs = customer.free_staffs( *project.range ).sort_by{|fs| fs.remark}
+    staffs = customer.free_staffs( *project.range ).sort_by{|fs| fs.remark.to_s}
     stats = staffs.reduce([]) do |ar, ele|
       ar << {
         id: ele.id,
