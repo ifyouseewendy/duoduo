@@ -87,31 +87,52 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       columns = columns_based_on(options: options) - [:remark, :created_at, :updated_at] + [:blank_sign]
       Axlsx::Package.new do |p|
         wb = p.workbook
+        wrap_header_first = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          height: 25,
+          b: true,
+          sz: 18
+        })
+        wrap_header_second = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          height: 25,
+          b: true,
+          sz: 14
+        })
+        wrap_header_third = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          border: {style: :thin, color: '00'},
+          height: 60,
+          sz: 12
+        })
         wrap_text = wb.styles.add_style({
           font_name: "新宋体",
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
-          border: {style: :thin, color: '00'}
-        })
-        wrap_without_border_text = wb.styles.add_style({
-          font_name: "新宋体",
-          alignment: {horizontal: :center, vertical: :center, wrap_text: true}
+          border: {style: :thin, color: '00'},
+          height: 30,
+          sz: 12
         })
         wrap_float_text = wb.styles.add_style({
           font_name: "新宋体",
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
           border: {style: :thin, color: '00'},
-          format_code: '0.00'
+          height: 30,
+          format_code: '0.00',
+          sz: 12
         })
 
         sheet_name = salary_table.month_display
         wb.add_worksheet(name: sheet_name) do |sheet|
           # Headers
           sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
-            height: 60, b:true, sz: 18, style: wrap_without_border_text
+            style: wrap_header_first
           sheet.add_row [ salary_table.month_display_zh + " 工资表" ], \
-            height: 30, b:true, sz: 14, style: wrap_without_border_text
+            style: wrap_header_second
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
-            height: 60, b:true, style: wrap_text
+            style: wrap_header_third
 
           end_col = ('A'.ord + columns.count - 1).chr
           sheet.merge_cells("A1:#{end_col}1")
