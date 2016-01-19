@@ -543,8 +543,11 @@ $(document).on 'ready', ->
             if data['status'] == 'ok'
               contact = $('#invoice_contact')
               contact.empty()
-              $.each data['data'], (id, ele) ->
-                contact.append("<option value=#{ele}>#{ele}</option>")
+
+              names = data['data']['names']
+              full_names = data['data']['full_names']
+              $.each names, (idx, ele) ->
+                contact.append("<option value=#{ele} data-full-name=#{full_names[idx]}>#{ele}</option>")
       else
         $.ajax
           url: '/normal_corporations/display'
@@ -553,13 +556,16 @@ $(document).on 'ready', ->
             if data['status'] == 'ok'
               contact = $('#invoice_contact')
               contact.empty()
-              $.each data['data'], (id, ele) ->
-                contact.append("<option value=#{ele}>#{ele}</option>")
+
+              names = data['data']['names']
+              full_names = data['data']['full_names']
+              $.each names, (idx, ele) ->
+                contact.append("<option value=#{ele} data-full-name=#{full_names[idx]}>#{ele}</option>")
 
     default_scope = $('#invoice_scope_input .choice')[0]
-    set_contact_and_payer( $(default_scope) )
+    set_contact( $(default_scope) )
     $('#invoice_scope_input .choice').on 'click', ->
-      set_contact_and_payer( $(@) )
+      set_contact( $(@) )
 
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->

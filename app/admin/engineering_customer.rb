@@ -130,7 +130,23 @@ ActiveAdmin.register EngineeringCustomer do
   end
 
   collection_action :display do
-    render json: {status: 'ok', data: EngineeringCustomer.select(:nest_index, :name).map(&:display_name) }
+    names, full_names = [], []
+    EngineeringCustomer.select(:nest_index, :name, :id).each do |ec|
+      name = ec.display_name
+      full_name = nil
+
+      ec.projects.each do |ep|
+        if ep.corporation.try(:name).present?
+          full_name = ep.corporation.name
+          break
+        end
+      end
+
+      names << name
+      full_names << full_name
+    end
+
+    render json: {status: 'ok', data: { names: names, full_names: full_names } }
   end
 
   member_action :free_staffs do
