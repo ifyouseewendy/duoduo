@@ -34,21 +34,23 @@ ActiveAdmin.register Invoice do
   index do
     selectable_column
 
-    column :date
-    column :code
-    column :encoding
+    column :sub_company_name
     column :category, sortable: :category do |obj|
       status_tag obj.category_i18n, obj.category_tag
-    end
-    column :scope, sortable: :scope do |obj|
-      status_tag obj.scope_i18n
     end
     column :status, sortable: :status do |obj|
       status_tag obj.status_i18n, obj.status_tag
     end
+    column :date
+    column :code
+    column :encoding
+    column :scope, sortable: :scope do |obj|
+      obj.scope_i18n
+    end
     column :payer
     column :amount
     column :admin_amount
+    column :total_amount
     column :contact
     column :income_date
     column :refund_date
@@ -60,6 +62,7 @@ ActiveAdmin.register Invoice do
     actions
   end
 
+  filter :sub_company_name, as: :select, collection: -> { SubCompany.pluck(:name) }.call
   filter :category, as: :select, collection: -> { @resource.categories_option }.call
   filter :status, as: :select, collection: -> { @resource.statuses_option }.call
   filter :scope, as: :select, collection: -> { @resource.scopes_option }.call
@@ -72,12 +75,13 @@ ActiveAdmin.register Invoice do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
+      f.input :sub_company_name, as: :select, collection: -> { SubCompany.pluck(:name) }.call
+      f.input :category, as: :radio, collection: ->{ resource_class.categories_option }.call
+      f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
       f.input :date, as: :datepicker
       f.input :code, as: :string
       f.input :encoding, as: :string
-      f.input :category, as: :radio, collection: ->{ resource_class.categories_option }.call
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option }.call
-      f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
       f.input :payer, as: :string
       f.input :amount, as: :number
       f.input :admin_amount, as: :number
@@ -93,21 +97,23 @@ ActiveAdmin.register Invoice do
 
   show do
     attributes_table do
-      row :date
-      row :code
-      row :encoding
+      row :sub_company_name
       row :category do |obj|
         status_tag obj.category_i18n, obj.category_tag
-      end
-      row :scope do |obj|
-        status_tag obj.scope_i18n
       end
       row :status do |obj|
         status_tag obj.status_i18n, obj.status_tag
       end
+      row :date
+      row :code
+      row :encoding
+      row :scope do |obj|
+        obj.scope_i18n
+      end
       row :payer
       row :amount
       row :admin_amount
+      row :total_amount
       row :contact
       row :income_date
       row :refund_date

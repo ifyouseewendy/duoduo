@@ -370,6 +370,7 @@ zh-CN:
         updated_at: "更新时间"
       invoice:
         id: '序号'
+        sub_company_name: '吉易子公司'
         date: '开票日期'
         code: '发票代码'
         encoding: '发票编码'
