@@ -16,7 +16,9 @@
       </li>
       <li>
         <%= label_tag '回款金额' %>
-        <%= text_field_tag :amount, outcome_item.each_amount.join(' ') %>
+        <% default_amount = outcome_item.amount %>
+        <% default_amount = outcome_item.each_amount.join(' ') if outcome_item.each_amount.count > 1%>
+        <%= text_field_tag :amount, default_amount %>
         <%= content_tag(:p, '需与回款人个数相同，请以空格分开', class:"inline-hints") %>
       </li>
       <li>
