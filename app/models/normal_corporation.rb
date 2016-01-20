@@ -25,7 +25,15 @@ class NormalCorporation < ActiveRecord::Base
   scope :updated_in_7_days, ->{ where('updated_at > ?', Date.today - 7.days) }
   scope :updated_latest_10, ->{ order(updated_at: :desc).limit(10) }
 
-  enum admin_charge_type: [:by_rate_on_salary, :by_rate_on_salary_and_company, :by_count]
+  enum admin_charge_type: [
+    :unset,
+    :by_count,  # 固定
+    :by_rate_a, # 比例（应发）
+    :by_rate_b, # 比例（应发+单位缴费）
+    :by_rate_c, # 比例（劳务费合计）
+    :by_rate_d, # 比例（应发+意外险）
+    :by_rate_e, # 比例（应发+意外险+工伤+管理费+其他）
+  ]
   enum status: [:active, :archive]
 
   after_save :check_sub_company
@@ -127,7 +135,6 @@ class NormalCorporation < ActiveRecord::Base
   end
 
   def admin_charge_type_i18n
-    admin_charge_type ||= :nil
     I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{admin_charge_type}")
   end
 

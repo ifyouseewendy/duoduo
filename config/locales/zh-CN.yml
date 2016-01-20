@@ -86,18 +86,28 @@ zh-CN:
         contract_amount: '合同金额'
         admin_charge_type: '管理费收取方式'
         admin_charge_types:
-          by_rate_on_salary: "每人固定比例（应发工资）"
-          by_rate_on_salary_and_company: "每人固定比例（应发工资+单位缴费）"
-          by_count: "每人固定金额"
+          unset: '未设置'
+          by_count: '固定'
+          by_rate_a: '比例（应发）'
+          by_rate_b: '比例（应发+单位缴费）'
+          by_rate_c: '比例（劳务费合计）'
+          by_rate_d: '比例（应发+意外险）'
+          by_rate_e: '比例（应发+意外险+工伤+管理费+其他）'
+        status: '状态'
+        statuses:
+          active: '可用'
+          archive: '存档'
         admin_charge_amount: '管理费收取比例/金额'
         expense_date: '单位开支日期'
         stuff_count: '员工人数'
         stuff_has_insurance_count: '参保人数'
         remark: '备注'
         sub_companies: '吉易子公司'
+        sub_company: '吉易子公司'
         sub_companies_display: '吉易子公司'
         normal_staffs: '普通员工列表'
         salary_tables: '普通工资表'
+        salary_table_display: '普通工资表'
         guard_salary_tables: '保安工资表'
         non_full_day_salary_tables: '非全日制工资表'
         labor_contracts: '劳务合同列表'
