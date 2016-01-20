@@ -135,10 +135,13 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           sz: 12
         })
         margins = {left: 0.2, right: 0.2, top: 0.4, bottom: 0.4}
-        setup = {fit_to_width: 1}
+        # setup = {fit_to_width: 1}
 
         sheet_name = salary_table.month_display
-        wb.add_worksheet(name: sheet_name, page_margins: margins, page_setup: setup) do |sheet|
+        wb.add_worksheet(name: sheet_name, page_margins: margins) do |sheet|
+          # Fit to page printing
+          sheet.page_setup.fit_to width: 1
+
           # Headers
           sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
             height: 60, style: wrap_header_first
@@ -181,8 +184,9 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           end_rol = 3 + collection.count + 1
           sheet.merge_cells("A#{end_rol}:B#{end_rol}")
 
-          widths = Array.new(columns.count+1){10}
-          sheet.column_widths *widths
+          # widths = Array.new(columns.count+1){10}
+          # sheet.column_widths *widths
+          sheet.column_widths 5, 10
 
           wb.add_defined_name("'#{sheet_name}'!$1:$3", :local_sheet_id => sheet.index, :name => '_xlnm.Print_Titles') 
         end
