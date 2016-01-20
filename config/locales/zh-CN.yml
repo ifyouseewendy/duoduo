@@ -576,6 +576,8 @@ zh-CN:
         salary_table: '工资表'
         seal_index: '刻章'
         blank_sign: '领取人签章'
+        project_display: '项目'
+        customer_display: '客户'
       engineering_normal_with_tax_salary_item:
         id: '序号'
         name: '姓名'
@@ -595,6 +597,8 @@ zh-CN:
         salary_table: '工资表'
         seal_index: '刻章'
         blank_sign: '领取人签章'
+        project_display: '项目'
+        customer_display: '客户'
       engineering_big_table_salary_item:
         id: '编号'
         salary_deserve: '应发工资'

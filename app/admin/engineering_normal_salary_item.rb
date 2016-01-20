@@ -44,6 +44,22 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
       staff = obj.staff
       link_to staff.name, engineering_staff_path(staff)
     end
+
+    if params[:q][:staff_id_eq].present?
+      column :salary_table, sortable: :engineering_salary_table_id do |obj|
+        st = obj.salary_table
+        link_to st.start_date.to_s, "/engineering_salary_tables?q[id_eq]=#{st.id}", target: '_blank'
+      end
+      column :project_display, sortable: :id do |obj|
+        pr = obj.salary_table.project
+        link_to pr.display_name, "/engineering_projects?q[id_eq]=#{pr.id}", target: '_blank'
+      end
+      column :customer_display, sortable: :id do |obj|
+        cu = obj.salary_table.project.customer
+        link_to cu.display_name, "/engineering_customers?q[id_eq]=#{cu.id}", target: '_blank'
+      end
+    end
+
     resource_class.sum_fields.each do |field|
       column field, footer: sum[field]
     end

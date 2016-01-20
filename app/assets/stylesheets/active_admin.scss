@@ -231,8 +231,16 @@ body.engineering_customers table.index_table {
     .view_link {
       display: none;
     }
+    th.col-salary_table {
+      min-width: 60px !important;
+    }
+    th.col-project_display {
+      min-width: 120px !important;
+    }
+    th.col-customer_display {
+      min-width: 100px !important;
+    }
   }
-
   .ui-dialog {
     .batch_edit_label {
       width: 170px;
@@ -246,6 +254,15 @@ body.engineering_customers table.index_table {
   .index_table {
     .view_link {
       display: none;
+    }
+    th.col-salary_table {
+      min-width: 60px !important;
+    }
+    th.col-project_display {
+      min-width: 120px !important;
+    }
+    th.col-customer_display {
+      min-width: 100px !important;
     }
   }
   .ui-dialog {
