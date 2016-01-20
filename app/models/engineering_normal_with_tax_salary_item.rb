@@ -77,7 +77,16 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       salary_table = collection.first.salary_table
       names += [salary_table.project.name, salary_table.month_display]
 
-      # collection = collection.includes(:staff).order('engineering_staffs.seal_index asc') if options[:order].present?
+      if options[:order].present?
+        if options[:order].start_with?('engineering_staffs')
+          order = :asc
+          order = :desc if options[:order].end_with?('desc')
+
+          collection = collection.includes(:staff).order("engineering_staffs.seal_index #{order}")
+        else
+          collection = collection.order( options )
+        end
+      end
 
       names << Time.stamp
 
