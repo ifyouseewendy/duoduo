@@ -148,6 +148,8 @@ class BusinessStaff < DuoduoCli
         if name == '铁通'
           '铁通（百奕）'
         end
+      else
+        name
       end
     end
 
