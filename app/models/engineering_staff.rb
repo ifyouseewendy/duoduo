@@ -92,30 +92,79 @@ class EngineeringStaff < ActiveRecord::Base
         collection = collection.ransack(options).result
       end
 
-      columns = columns_based_on(options: options)
+      if options['projects_id_eq'].present?
+        project_used = true
+        header = '用工明细表'
+        columns = [:id, :name, :gender, :identity_card]
+      else
+        header = '提供人员表'
+        columns = columns_based_on(options: options)
+      end
 
       genders_i18n = {'female' => '女', 'male' => '男'}
       Axlsx::Package.new do |p|
-        p.workbook.add_worksheet(name: name) do |sheet|
-          sheet.add_row columns.map{|col| self.human_attribute_name(col)}
+        wb = p.workbook
+        wrap_header_first = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          b: true,
+          sz: 18
+        })
+        wrap_header_second = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          border: {style: :thin, color: '00'},
+          b: true,
+          sz: 16
+        })
+        wrap_text = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          border: {style: :thin, color: '00'},
+          height: 30,
+          sz: 12
+        })
+        margins = {left: 0.8, right: 0.8, top: 0.8, bottom: 0.8}
 
-          collection.each do |item|
-             stats = \
+        sheet_name = header
+        wb.add_worksheet(name: sheet_name, page_margins: margins) do |sheet|
+          # Fit to page printing
+          sheet.page_setup.fit_to :width => 1
+
+          # Headers
+          sheet.add_row [header], height: 60, style: wrap_header_first
+          sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
+            height: 30, style: wrap_header_second
+
+          end_col = ('A'.ord + columns.count - 1).chr
+          sheet.merge_cells("A1:#{end_col}1")
+
+          # Content
+          collection.each_with_index do |item, idx|
+            stats = \
               columns.map do |col|
                if [:customer].include? col
                   item.send(col).name
                elsif [:gender].include? col
                   genders_i18n[ item.send(col) ]
                elsif [:identity_card].include? col
-                  "'#{item.send(col)}"
+                  "#{item.send(col)}"
                elsif [:enable].include? col
                  item.send(col) ? '可用' : '不可用'
+               elsif [:id].include?(col)
+                 idx+1
                else
                  item.send(col)
                end
               end
-              sheet.add_row stats
+            sheet.add_row stats, style: ( [wrap_text]*columns.count ), height: 30
           end
+
+          if project_used
+            sheet.column_widths 20, 20, 20, 40
+          end
+
+          wb.add_defined_name("'#{sheet_name}'!$1:$2", :local_sheet_id => sheet.index, :name => '_xlnm.Print_Titles') 
         end
         p.serialize(filepath.to_s)
       end
