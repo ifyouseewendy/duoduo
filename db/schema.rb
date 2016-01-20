@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119053411) do
+ActiveRecord::Schema.define(version: 20160120102931) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,6 +229,7 @@ ActiveRecord::Schema.define(version: 20160119053411) do
     t.integer  "engineering_staff_id"
   end
 
+  add_index "engineering_normal_salary_items", ["created_at"], name: "index_engineering_normal_salary_items_on_created_at", using: :btree
   add_index "engineering_normal_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_normal_salary_items_of_table", using: :btree
   add_index "engineering_normal_salary_items", ["engineering_staff_id"], name: "index_engineering_normal_salary_items_on_engineering_staff_id", using: :btree
 
@@ -247,6 +248,7 @@ ActiveRecord::Schema.define(version: 20160119053411) do
     t.integer  "engineering_staff_id"
   end
 
+  add_index "engineering_normal_with_tax_salary_items", ["created_at"], name: "index_engineering_normal_with_tax_salary_items_on_created_at", using: :btree
   add_index "engineering_normal_with_tax_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_normal_with_tax_salary_items_of_table", using: :btree
   add_index "engineering_normal_with_tax_salary_items", ["engineering_staff_id"], name: "idx_engineering_normal_with_tax_salary_items_of_staff", using: :btree
 
