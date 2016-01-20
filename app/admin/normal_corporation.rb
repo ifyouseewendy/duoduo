@@ -70,6 +70,8 @@ ActiveAdmin.register NormalCorporation do
   filter :id
   filter :name
   filter :sub_company
+  filter :admin_charge_type, as: :select, collection: ->{ NormalCorporation.admin_charge_types_option }
+  filter :admin_charge_amount
   preserve_default_filters!
   remove_filter :contract_files
   remove_filter :normal_staffs
