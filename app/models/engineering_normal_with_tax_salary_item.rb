@@ -100,14 +100,14 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
         wrap_header_first = wb.styles.add_style({
           font_name: "新宋体",
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
-          height: 25,
+          height: 60,
           b: true,
           sz: 18
         })
         wrap_header_second = wb.styles.add_style({
           font_name: "新宋体",
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
-          height: 25,
+          height: 30,
           b: true,
           sz: 14
         })
@@ -136,6 +136,9 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
 
         sheet_name = salary_table.month_display
         wb.add_worksheet(name: sheet_name) do |sheet|
+          # Fit to page printing
+          sheet.page_setup.fit_to :width => 1
+
           # Headers
           sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
             style: wrap_header_first
@@ -173,7 +176,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
             end
           end
           stats[0] = '合计'
-          sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7 ), height: 30
+          sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7+[wrap_text] ), height: 30
 
           end_rol = 3 + collection.count + 1
           sheet.merge_cells("A#{end_rol}:B#{end_rol}")
