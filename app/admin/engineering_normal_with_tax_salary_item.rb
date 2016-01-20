@@ -4,7 +4,7 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
   menu false
 
   config.per_page = 100
-  config.sort_order = 'engineering_staffs.seal_index_asc'
+  config.sort_order = 'engineering_staffs.created_at_asc'
 
   breadcrumb do
     crumbs = []
