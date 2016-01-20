@@ -106,7 +106,7 @@ class BusinessSalary < DuoduoCli
               key = month.prepend('2015')
             else
               logger.error "#{file.basename} ; 无法解析工资表名称：#{name}"
-              next
+              raise "#{file.basename} ; 无法解析工资表名称：#{name}"
             end
           end
 
@@ -252,11 +252,20 @@ class BusinessSalary < DuoduoCli
           begin
             staff = SalaryItem.find_staff(salary_table: table, name: staff_name)
           rescue => e
-            logger.error "#{file.basename} ; #{name} ; #{e.message}"
+            if String === data[-1] && data[-1].match(/\d{10}/)
+              # 附加身份证号
+              staff = NormalStaff.where(identity_card: data[-1].strip).first
+            elsif (ns=NormalStaff.where(account: data[1]).first).present?
+              staff = ns
+            end
 
-            staff = corporation.normal_staffs.where(name: staff_name).first
+            # logger.error "#{file.basename} ; #{name} ; #{e.message}"
+
+            # staff = corporation.normal_staffs.where(name: staff_name).first
 
             if staff.blank?
+              logger.error "#{file.basename} ; #{name} ; 自动创建员工，#{e.message}"
+
               staff = corporation.normal_staffs.create!(name: staff_name, identity_card: $NULL_ID , in_service: true)
               $NULL_ID += 1
               staff.labor_contracts.create!(
@@ -265,7 +274,8 @@ class BusinessSalary < DuoduoCli
                 has_medical_insurance: true,
                 social_insurance_base: 1861.15,
                 medical_insurance_base: 3102.0,
-                normal_corporation_id: corporation.id
+                normal_corporation_id: corporation.id,
+                remark: '导入时创建'
               )
             end
           end
@@ -382,6 +392,7 @@ class BusinessSalary < DuoduoCli
 
       '扣款'             => :deduct_addition,
       '医保卡'           => :medical_scan_addition,
+      '医保扫描'         => :medical_scan_addition,
       '工资卡'           => :salary_card_addition,
       '暂扣工资'         => :salary_deduct_addition,
       '其他（扣款）'     => :other_deduct_addition,
