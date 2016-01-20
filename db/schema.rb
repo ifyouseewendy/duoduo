@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120103050) do
+ActiveRecord::Schema.define(version: 20160120103724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -232,6 +232,12 @@ ActiveRecord::Schema.define(version: 20160120103050) do
   add_index "engineering_normal_salary_items", ["created_at"], name: "index_engineering_normal_salary_items_on_created_at", using: :btree
   add_index "engineering_normal_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_normal_salary_items_of_table", using: :btree
   add_index "engineering_normal_salary_items", ["engineering_staff_id"], name: "index_engineering_normal_salary_items_on_engineering_staff_id", using: :btree
+  add_index "engineering_normal_salary_items", ["medical_insurance"], name: "index_engineering_normal_salary_items_on_medical_insurance", using: :btree
+  add_index "engineering_normal_salary_items", ["remark"], name: "index_engineering_normal_salary_items_on_remark", using: :btree
+  add_index "engineering_normal_salary_items", ["salary_deserve"], name: "index_engineering_normal_salary_items_on_salary_deserve", using: :btree
+  add_index "engineering_normal_salary_items", ["salary_in_fact"], name: "index_engineering_normal_salary_items_on_salary_in_fact", using: :btree
+  add_index "engineering_normal_salary_items", ["social_insurance"], name: "index_engineering_normal_salary_items_on_social_insurance", using: :btree
+  add_index "engineering_normal_salary_items", ["total_insurance"], name: "index_engineering_normal_salary_items_on_total_insurance", using: :btree
 
   create_table "engineering_normal_with_tax_salary_items", force: :cascade do |t|
     t.decimal  "salary_deserve",              precision: 8, scale: 2
@@ -251,6 +257,14 @@ ActiveRecord::Schema.define(version: 20160120103050) do
   add_index "engineering_normal_with_tax_salary_items", ["created_at"], name: "index_engineering_normal_with_tax_salary_items_on_created_at", using: :btree
   add_index "engineering_normal_with_tax_salary_items", ["engineering_salary_table_id"], name: "idx_engineering_normal_with_tax_salary_items_of_table", using: :btree
   add_index "engineering_normal_with_tax_salary_items", ["engineering_staff_id"], name: "idx_engineering_normal_with_tax_salary_items_of_staff", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["medical_insurance"], name: "idx_engi_si_with_tax_medical_insurance", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["remark"], name: "index_engineering_normal_with_tax_salary_items_on_remark", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["salary_deserve"], name: "idx_engi_si_with_tax_salary_deserve", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["salary_in_fact"], name: "idx_engi_si_with_tax_salary_in_fact", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["social_insurance"], name: "idx_engi_si_with_tax_social_insurance", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["tax"], name: "index_engineering_normal_with_tax_salary_items_on_tax", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["total_amount"], name: "idx_engi_si_with_tax_total_amount", using: :btree
+  add_index "engineering_normal_with_tax_salary_items", ["total_insurance"], name: "idx_engi_si_with_tax_total_insurance", using: :btree
 
   create_table "engineering_outcome_items", force: :cascade do |t|
     t.date     "date"
