@@ -78,13 +78,14 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
       names += [salary_table.project.name, salary_table.month_display]
 
       if options[:order].present?
-        if options[:order].start_with?('engineering_staffs')
-          order = :asc
-          order = :desc if options[:order].end_with?('desc')
+        order = :asc
+        order = :desc if options[:order].end_with?('desc')
 
+        if options[:order].start_with?('engineering_staffs')
           collection = collection.includes(:staff).order("engineering_staffs.seal_index #{order}")
         else
-          collection = collection.order( options )
+          key = options[:order].split("_")[0..-2].join('_')
+          collection = collection.order("#{key} #{order}")
         end
       end
 
@@ -148,8 +149,8 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           sheet.merge_cells("A2:#{end_col}2")
 
           # Content
-          records = collection.includes(:staff).sort_by{|si| si.staff.seal_index.to_s}
-          records.each_with_index do |item,idx|
+          # records = collection.includes(:staff).sort_by{|si| si.staff.seal_index.to_s}
+          collection.each_with_index do |item,idx|
              stats = \
               columns.map do |col|
                 if [:staff].include? col
