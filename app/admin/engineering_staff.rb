@@ -181,6 +181,21 @@ ActiveAdmin.register EngineeringStaff do
         link_to "所属项目", "/engineering_projects?utf8=✓&q%5Bengineering_staffs_id_eq%5D=#{obj.id}&commit=过滤&order=id_desc", target: '_blank'
       end
 
+      row :salary_item_detail do |obj|
+        stats = []
+        if obj.engineering_normal_salary_items.count > 0
+          stats << ["基础", "/engineering_normal_salary_items?utf8=✓&q%5Bstaff_id_eq%5D=#{obj.id}&commit=过滤"]
+        end
+        if obj.engineering_normal_with_tax_salary_items.count > 0
+          stats << ["基础（带个税）", "/engineering_normal_with_tax_salary_items?utf8=✓&q%5Bstaff_id_eq%5D=#{obj.id}&commit=过滤"]
+        end
+        ul do
+          stats.each do |ar|
+            li( link_to ar[0], ar[1], target: '_blank' )
+          end
+        end
+      end
+
       boolean_columns = resource.class.columns_of(:boolean)
       (resource.class.ordered_columns(without_foreign_keys: true) - [:id, :identity_card, :name, :enable, :alias_name]).map(&:to_sym).map do |field|
         if boolean_columns.include? field
