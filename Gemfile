@@ -49,6 +49,7 @@ gem 'dotenv-rails'
 
 # Deployment
 gem 'mina'
+gem 'mina-rollbar', require: false
 
 # Console
 gem 'pry-rails'
@@ -85,10 +86,6 @@ gem 'public_activity'
 # Monitor
 gem 'newrelic_rpm'
 
-gem 'rollbar', '~> 2.7.1'
-gem 'oj', '~> 2.12.14'
-gem 'mina-rollbar', require: false
-
 group :development do
   gem 'quiet_assets'
 
@@ -124,4 +121,7 @@ end
 
 group :production do
   gem 'rails_12factor'
+
+  gem 'rollbar', '~> 2.7.1'
+  gem 'oj', '~> 2.12.14'
 end
