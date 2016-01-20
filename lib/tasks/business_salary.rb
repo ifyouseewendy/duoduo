@@ -204,7 +204,7 @@ class BusinessSalary < DuoduoCli
       counter = 0
 
       sheet[start_row..-1].each_with_index do |data, idx|
-        if data.compact[0].to_s.delete(' ') == '合计'
+        if ['合计', '总计'].include? data.compact[0].to_s.delete(' ')
           sum_row = start_row + idx
           break
         end
@@ -217,7 +217,7 @@ class BusinessSalary < DuoduoCli
 
         begin
           item = table.salary_items.new \
-            stats.reject{|k| %i(id bank_account name social_insurance_base medical_insurance_base).include? k}
+            stats.reject{|k| %i(id bank_account name social_insurance_base medical_insurance_base identity_card null_field).include? k}
         rescue => e
           logger.error "#{file.basename} ; #{name} ; #{e.message}"
         end
@@ -305,7 +305,7 @@ class BusinessSalary < DuoduoCli
       end
 
       if sum_row.present? && !skip_total
-        summary = Hash[ fields.zip(sheet[sum_row]) ].reject{|k| %i(id bank_account name remark social_insurance_base medical_insurance_base).include? k}
+        summary = Hash[ fields.zip(sheet[sum_row]) ].reject{|k| %i(id bank_account name remark social_insurance_base medical_insurance_base identity_card null_field).include? k}
         summary.each do |k, v|
           sum = items.map{|it| it.send(k).to_f }.sum.round(2)
           if sum != v.to_f.round(2)
@@ -371,11 +371,13 @@ class BusinessSalary < DuoduoCli
       '序号'             => :id,
       '卡号'             => :bank_account,
       '工资卡号'         => :bank_account,
+      '身份证号'         => :identity_card,
       '姓名'             => :name,
       '社保基数'         => :social_insurance_base,
       '医保基数'         => :medical_insurance_base,
       '年终奖'           => :annual_reward,
       '应发工资'         => :salary_deserve,
+      '应发'             => :salary_deserve,
       '应发工资合计'     => :salary_deserve,
 
       '养老保险个人'     => :pension_personal,
@@ -391,6 +393,7 @@ class BusinessSalary < DuoduoCli
       '其他（个人）'     => :other_personal,
 
       '扣款'             => :deduct_addition,
+      '预扣款'           => :deduct_addition,
       '医保卡'           => :medical_scan_addition,
       '医保扫描'         => :medical_scan_addition,
       '工资卡'           => :salary_card_addition,
@@ -399,6 +402,7 @@ class BusinessSalary < DuoduoCli
 
       '个人缴费合计'     => :total_personal,
       '实发工资'         => :salary_in_fact,
+      '实发'             => :salary_in_fact,
       '实发工资合计'     => :salary_in_fact,
 
       '养老保险单位'     => :pension_company,
@@ -416,10 +420,13 @@ class BusinessSalary < DuoduoCli
       '其他（单位）'     => :other_company,
 
       '单位缴费合计'     => :total_company,
+      '单位保险合计'     => :total_company,
       '管理费'           => :admin_amount,
       '劳务费用合计'     => :total_sum_with_admin_amount,
 
       '备注'             => :remark,
+
+      '工作地'           => :null_field
     }
 
     def zheqi_staff
