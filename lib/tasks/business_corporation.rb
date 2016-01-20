@@ -85,8 +85,8 @@ class BusinessCorporation < DuoduoCli
           contract_start_date: contract_start_date,
           contract_end_date: contract_end_date,
           contract_amount: contract_amount,
-          admin_charge_type: admin_charge_type,
-          admin_charge_amount: admin_charge_amount,
+          admin_charge_type: 0,
+          admin_charge_amount: 0,
           expense_date: parse_chinese_date(expense_date),
           remark: remark,
         )
@@ -115,7 +115,7 @@ class BusinessCorporation < DuoduoCli
         next if idx == 0
 
         # 合作单位名称 合同中全称
-        company_name, name, _, full_name = row.map{|col| String === col ? col.strip.delete("\n") : col}
+        company_name, name, _, full_name, remark, admin_type, admin_amount = row.map{|col| String === col ? col.strip.delete("\n") : col}
         next if name.blank?
 
         sub_company = SubCompany.find_by_name(company_name)
@@ -125,13 +125,21 @@ class BusinessCorporation < DuoduoCli
           NormalCorporation.create!(
             sub_company: sub_company,
             status: 'active',
-            name: name
+            full_name: name,
+            name: name,
+            remark: remark,
+            admin_charge_type: admin_type.to_i,
+            admin_charge_amount: admin_amount
           )
         else
           # Ungly patch
           if special_full_names.include?(full_name)
             nc = NormalCorporation.where(full_name: full_name).first
-            nc.update_attribute(:status, 'active')
+            nc.update_columns(
+              admin_charge_type: admin_type.to_i,
+              admin_charge_amount: admin_amount,
+              status: 'active'
+            )
 
             NormalCorporation.create!(
               nc.attributes.reject{|k| k.to_s == 'id'}.merge({name: name})
@@ -144,6 +152,8 @@ class BusinessCorporation < DuoduoCli
             nc.sub_company = sub_company
             nc.status = 'active'
             nc.name = name
+            nc.admin_charge_type = admin_type.to_i
+            nc.admin_charge_amount = admin_amount
             nc.save!
           end
         end
