@@ -483,7 +483,7 @@ class EngineeringProject < ActiveRecord::Base
         unless persons.count == bank.count
 
       raise "操作失败：开户地址无法与回款人一一对应" \
-        unless address.present? && persons.count == address.count
+        unless address.blank? or persons.count == address.count
 
       persons.each_with_index do |person, idx|
         contract =  DocGenerator.generate_docx \
