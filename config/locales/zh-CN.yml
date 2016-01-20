@@ -560,7 +560,7 @@ zh-CN:
         end_date: '结束日期'
         salary_item_detail: '工资条'
       engineering_normal_salary_item:
-        id: '编号'
+        id: '序号'
         name: '姓名'
         salary_deserve: '应发工资'
         social_insurance: '社保养老失业保险单位22%'
@@ -572,7 +572,7 @@ zh-CN:
         updated_at: "更新时间"
         project: '项目'
         engineering_staff_id: '员工'
-        staff: '员工'
+        staff: '姓名'
         salary_table: '工资表'
         seal_index: '刻章'
         blank_sign: '领取人签章'

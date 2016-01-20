@@ -104,19 +104,56 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
       columns = columns_based_on(options: options) - [:remark, :created_at, :updated_at] + [:blank_sign]
       Axlsx::Package.new do |p|
         wb = p.workbook
-        wrap_text = wb.styles.add_style({
+        wrap_header_first = wb.styles.add_style({
+          font_name: "新宋体",
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
-          border: {style: :thin, color: '00'}
+          b: true,
+          sz: 18
         })
+        wrap_header_second = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          height: 30,
+          b: true,
+          sz: 14
+        })
+        wrap_header_third = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          border: {style: :thin, color: '00'},
+          height: 60,
+          sz: 12
+        })
+        wrap_text = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          border: {style: :thin, color: '00'},
+          height: 30,
+          sz: 12
+        })
+        wrap_float_text = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          border: {style: :thin, color: '00'},
+          height: 30,
+          format_code: '0.00',
+          sz: 12
+        })
+        margins = {left: 0.2, right: 0.2, top: 0.4, bottom: 0.4}
+        # setup = {fit_to_width: 1}
 
-        wb.add_worksheet(name: salary_table.month_display) do |sheet|
+        sheet_name = salary_table.month_display
+        wb.add_worksheet(name: sheet_name, page_margins: margins) do |sheet|
+          # Fit to page printing
+          sheet.page_setup.fit_to :width => 1
+
           # Headers
           sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
-            height: 60, b:true, sz: 16, style: wrap_text
+            height: 60, style: wrap_header_first
           sheet.add_row [ salary_table.month_display_zh + " 工资表" ], \
-            height: 30, b:true, style: wrap_text
+            height: 30, style: wrap_header_second
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
-            height: 60, b:true, style: wrap_text
+            height: 60, style: wrap_header_third
 
           end_col = ('A'.ord + columns.count - 1).chr
           sheet.merge_cells("A1:#{end_col}1")
@@ -124,7 +161,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
 
           # Content
           collection.each_with_index do |item,idx|
-             stats = \
+            stats = \
               columns.map do |col|
                 if [:staff].include? col
                   item.send(col).name
@@ -134,7 +171,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
                   item.send(col)
                 end
               end
-              sheet.add_row stats, style: wrap_text
+            sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*5+[wrap_text] ), height: 30
           end
 
           # Sum row
@@ -146,13 +183,16 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
             end
           end
           stats[0] = '合计'
-          sheet.add_row stats, style: wrap_text
+          sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*5+[wrap_text] ), height: 30
 
           end_rol = 3 + collection.count + 1
           sheet.merge_cells("A#{end_rol}:B#{end_rol}")
 
-          widths = Array.new(columns.count+1){10}
-          sheet.column_widths *widths
+          # widths = Array.new(columns.count+1){8}
+          # sheet.column_widths *widths
+          sheet.column_widths 5, 10
+
+          wb.add_defined_name("'#{sheet_name}'!$1:$3", :local_sheet_id => sheet.index, :name => '_xlnm.Print_Titles') 
         end
         p.serialize(filepath.to_s)
       end
