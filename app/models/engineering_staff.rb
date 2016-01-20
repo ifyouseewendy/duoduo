@@ -101,6 +101,14 @@ class EngineeringStaff < ActiveRecord::Base
         columns = columns_based_on(options: options)
       end
 
+      data_types = columns.reduce([]) do |ar, col|
+        if col == :identity_card
+          ar << :string
+        else
+          ar << nil
+        end
+      end
+
       genders_i18n = {'female' => '女', 'male' => '男'}
       Axlsx::Package.new do |p|
         wb = p.workbook
@@ -157,7 +165,7 @@ class EngineeringStaff < ActiveRecord::Base
                  item.send(col)
                end
               end
-            sheet.add_row stats, style: ( [wrap_text]*columns.count ), height: 30
+            sheet.add_row stats, style: ( [wrap_text]*columns.count ), height: 30, types: data_types
           end
 
           if project_used
