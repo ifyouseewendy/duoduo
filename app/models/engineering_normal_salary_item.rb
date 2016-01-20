@@ -92,6 +92,8 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
           key = options[:order].split("_")[0..-2].join('_')
           collection = collection.order("#{key} #{order}")
         end
+      else
+        collection = collection.includes(:staff).order('engineering_staffs.created_at asc')
       end
 
       names << Time.stamp
