@@ -31,7 +31,7 @@ class EngineeringStaff < ActiveRecord::Base
   validates_length_of :identity_card, is: 18, message: "身份证号必须为18位"
   validates_inclusion_of :gender, in: %w(male female)
 
-  default_scope { order(updated_at: :desc).order(enable: :desc) }
+  default_scope { order(created_at: :asc).order(enable: :desc) }
   scope :enabled, -> { where(enable: true) }
   scope :disabled, -> { where.not(enable: true) }
   scope :by_project, ->(project_id){

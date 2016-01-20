@@ -48,7 +48,7 @@ ActiveAdmin.register EngineeringStaff do
     record.enabled
   end
 
-  config.sort_order = 'updated_at_desc'
+  config.sort_order = 'created_at_asc'
 
   index do
     selectable_column
