@@ -66,7 +66,7 @@ ActiveAdmin.register EngineeringCorp do
     options = {}
     options[:selected] = params[:selected].split('-') if params[:selected].present?
     options[:columns] = params[:columns].split('-') if params[:columns].present?
-    options.update(params[:q])
+    options.update(params[:q]) if params[:q].present?
 
     file = EngineeringCorp.export_xlsx(options: options)
     send_file file, filename: file.basename
