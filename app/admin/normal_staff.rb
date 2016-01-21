@@ -7,6 +7,8 @@ ActiveAdmin.register NormalStaff do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 2
 
+  config.sort_order = 'created_at_asc'
+
   breadcrumb do
     crumbs = []
 

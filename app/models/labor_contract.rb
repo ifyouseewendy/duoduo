@@ -51,8 +51,8 @@ class LaborContract < ActiveRecord::Base
   end
 
   def contract_type_i18n
-    contract_type ||= :nil
-    I18n.t("activerecord.attributes.labor_contract.contract_types.#{contract_type}")
+    ct = contract_type || :nil
+    I18n.t("activerecord.attributes.labor_contract.contract_types.#{ct}")
   end
 
   def insurance_fund

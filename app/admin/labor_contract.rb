@@ -8,6 +8,8 @@ ActiveAdmin.register LaborContract do
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 3
 
+  config.sort_order = 'created_at_asc'
+
   breadcrumb do
     crumbs = []
 
@@ -33,7 +35,7 @@ ActiveAdmin.register LaborContract do
   scope "全部" do |record|
     record.all
   end
-  scope "存档" do |record|
+  scope "解除" do |record|
     record.archive
   end
   scope "活动" do |record|
@@ -60,7 +62,7 @@ ActiveAdmin.register LaborContract do
       if obj.in_contract
         status_tag '活动', 'yes'
       else
-        status_tag '存档', 'no'
+        status_tag '解除', 'no'
       end
     end
     column :contract_type do |obj|
@@ -80,7 +82,7 @@ ActiveAdmin.register LaborContract do
   filter :normal_staff_name, as: :string
   filter :sub_company_in, as: :select, collection: -> {SubCompany.pluck(:name, :id)}
   filter :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}
-  filter :in_contract, as: :select, collection: ->{ [ ['活动', true], ['存档', false] ] }.call
+  filter :in_contract, as: :select, collection: ->{ [ ['活动', true], ['解除', false] ] }.call
   filter :contract_type, as: :select, collection: -> { LaborContract.contract_types_option }.call
   filter :has_social_insurance, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
   filter :has_medical_insurance, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
@@ -98,7 +100,7 @@ ActiveAdmin.register LaborContract do
     f.inputs do
       f.input :normal_staff, as: :select, collection: []
       f.input :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}.call
-      f.input :in_contract, as: :radio, collection: ->{ [ ['活动', true], ['存档', false] ] }.call
+      f.input :in_contract, as: :radio, collection: ->{ [ ['活动', true], ['解除', false] ] }.call
       f.input :contract_type, as: :select, collection: ->{ LaborContract.contract_types_option }.call
       f.input :contract_start_date, as: :datepicker
       f.input :contract_end_date, as: :datepicker
@@ -146,7 +148,7 @@ ActiveAdmin.register LaborContract do
         if obj.in_contract
           status_tag '活动', 'yes'
         else
-          status_tag '存档', 'no'
+          status_tag '解除', 'no'
         end
       end
       row :contract_type do |obj|
