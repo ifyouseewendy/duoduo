@@ -265,6 +265,8 @@ class EngineeringProject < ActiveRecord::Base
             medical_insurance: EngineeringCompanyMedicalInsuranceAmount.query_amount(date: start_date)
           )
         end
+
+        st.update_column(:amount, amount)
       end
     end
   end
