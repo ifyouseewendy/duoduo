@@ -280,7 +280,7 @@ class BusinessSalary < DuoduoCli
             end
           end
 
-          staff.update_attribute(:account, account) if staff.account.nil? && account.present?
+          staff.update_attribute(:account, account) if staff.account.nil? && account.present? && account.match(/^\d+$/)
         end
 
         if (contract=staff.try(:labor_contract)) && (stats[:social_insurance_base].present? || stats[:medical_insurance_base].present?)
