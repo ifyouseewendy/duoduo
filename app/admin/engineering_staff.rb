@@ -437,8 +437,10 @@ ActiveAdmin.register EngineeringStaff do
         identity_card = stat[:identity_card].delete("'")
 
         if project.present?
-          staff = customer.staffs.where(identity_card: identity_card).first
-          raise "无法在客户提供人员找到该身份证号" if staff.nil?
+          # staff = customer.staffs.where(identity_card: identity_card).first
+          # raise "无法在客户提供人员找到该身份证号" if staff.nil?
+          staff = EngineeringStaff.where(identity_card: identity_card).first
+          raise "无法找到该身份证号" if staff.nil?
           staff.projects << project
         else
           if identity_card.end_with?('!') or identity_card.end_with?('！')
