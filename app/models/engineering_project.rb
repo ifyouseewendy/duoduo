@@ -490,7 +490,7 @@ class EngineeringProject < ActiveRecord::Base
           gsub: {
             corp_name: content[:corp_name],
             person: person,
-            amount: amount[idx].to_s,
+            amount: "%.2f" % amount[idx].to_f,
             money: RMB.new(amount[idx]).convert,
             bank: bank[idx],
             account: account[idx],
