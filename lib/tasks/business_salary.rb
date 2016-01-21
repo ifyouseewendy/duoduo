@@ -260,11 +260,16 @@ class BusinessSalary < DuoduoCli
             elsif ( maybe_staffs=NormalStaff.where(name: staff_name) ).count > 0
               # 员工曾属于某个合作单位
               staff = nil
-              maybe_staffs.each do |ms|
-                corp_ids = ms.labor_contracts.map(&:normal_corporation_id).uniq
-                if corp_ids.include? corporation.id
-                  staff = ms
-                  break
+
+              if maybe_staffs.count == 1
+                staff = maybe_staffs.first
+              else
+                maybe_staffs.each do |ms|
+                  corp_ids = ms.labor_contracts.map(&:normal_corporation_id).uniq
+                  if corp_ids.include? corporation.id
+                    staff = ms
+                    break
+                  end
                 end
               end
             end
@@ -436,7 +441,8 @@ class BusinessSalary < DuoduoCli
 
       '备注'             => :remark,
 
-      '工作地'           => :null_field
+      '工作地'           => :null_field,
+      '基本工资'         => :null_field,
     }
 
     def zheqi_staff
