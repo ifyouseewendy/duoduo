@@ -37,7 +37,7 @@ class LaborContract < ActiveRecord::Base
     end
 
     def contract_types_option
-      contract_types.keys.map{|k| [I18n.t("activerecord.attributes.labor_contract.contract_types.#{k}"), k]}
+      contract_types.map{|k,v| [I18n.t("activerecord.attributes.labor_contract.contract_types.#{k}"), v]}
     end
 
     def columns_of(type)

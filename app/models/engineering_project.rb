@@ -67,7 +67,7 @@ class EngineeringProject < ActiveRecord::Base
     end
 
     def statuses_option
-      statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+      statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
     end
 
     def batch_fields

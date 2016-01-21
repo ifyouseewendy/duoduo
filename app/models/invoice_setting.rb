@@ -25,11 +25,11 @@ class InvoiceSetting < ActiveRecord::Base
     end
 
     def statuses_option
-      statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+      statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
     end
 
     def categories_option
-      categories.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.categories.#{k}"), k]}
+      categories.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.categories.#{k}"), v]}
     end
   end
 
