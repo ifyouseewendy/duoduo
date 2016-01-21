@@ -431,12 +431,22 @@ class SalaryItem < ActiveRecord::Base
     rate = corporation.admin_charge_amount || 0
 
     self.admin_amount = \
-      if corporation.by_rate_on_salary?
-        ( [salary_deserve, annual_reward].map(&:to_f).sum*rate ).round(2)
-      elsif corporation.by_rate_on_salary_and_company?
-        ( total_sum.to_f*rate ).round(2)
-      else
+      if corporation.by_count?
         rate
+      elsif corporation.by_rate_a? # 比例（应发）
+        ( [salary_deserve, annual_reward].map(&:to_f).sum*rate ).round(2)
+      elsif corporation.by_rate_b? # 比例（应发+单位缴费）
+        ( [salary_deserve, annual_reward, total_company].map(&:to_f).sum*rate ).round(2)
+      elsif corporation.by_rate_c? # 比例（劳务费合计） (total_company + admin_amount) * rate = admin_amount
+        sum = [salary_deserve, annual_reward, total_company].map(&:to_f).sum
+        ( sum * rate / (1-rate.to_f) ).round(2)
+      elsif corporation.by_rate_d? # 比例（应发+意外险）
+        ( [salary_deserve, annual_reward, accident_company].map(&:to_f).sum*rate ).round(2)
+      elsif corporation.by_rate_e? # 比例（应发+意外险+工伤+管理费+其他）
+        sum = [salary_deserve, annual_reward, accident_company, injury_company, other_company].map(&:to_f).sum
+        ( sum * rate / (1-rate.to_f) ).round(2)
+      else
+        0
       end
   end
 
