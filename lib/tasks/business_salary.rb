@@ -257,6 +257,16 @@ class BusinessSalary < DuoduoCli
               staff = NormalStaff.where(identity_card: data[-1].strip).first
             elsif (ns=NormalStaff.where(account: data[1]).first).present?
               staff = ns
+            elsif ( maybe_staffs=NormalStaff.where(name: staff_name) ).count > 0
+              # 员工曾属于某个合作单位
+              staff = nil
+              maybe_staffs.each do |ms|
+                corp_ids = ms.labor_contracts.map(&:normal_corporation_id).uniq
+                if corp_ids.include? corporation.id
+                  staff = ms
+                  break
+                end
+              end
             end
 
             # logger.error "#{file.basename} ; #{name} ; #{e.message}"
