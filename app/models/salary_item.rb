@@ -420,7 +420,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def set_salary_in_fact
-    self.salary_in_fact = (self.salary_deserve - self.total_personal).round(2)
+    self.salary_in_fact = (self.salary_deserve.to_f + self.annual_reward.to_f - self.total_personal.to_f).round(2)
   end
 
   def set_total_company
@@ -451,7 +451,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def set_total_sum
-    self.total_sum = [salary_deserve, total_company].map(&:to_f).sum.round(2)
+    self.total_sum = [salary_deserve, annual_reward, total_company].map(&:to_f).sum.round(2)
   end
 
   def set_total_sum_with_admin_amount
