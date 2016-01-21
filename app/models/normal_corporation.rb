@@ -53,7 +53,7 @@ class NormalCorporation < ActiveRecord::Base
     end
 
     def as_filter
-      self.includes(:sub_company).select(:sub_company_id, :name, :id).map do |nc|
+      self.active.includes(:sub_company).select(:sub_company_id, :name, :id).order(sub_company_id: :asc, name: :asc).map do |nc|
         name = nc.name
         name = "#{nc.sub_company.name} - #{nc.name}" if nc.sub_company.present?
         [name, nc.id]
