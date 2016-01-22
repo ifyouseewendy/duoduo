@@ -6,7 +6,7 @@ class EngineeringProject < ActiveRecord::Base
       name: ->(controller, model) { [model.class.model_name.human, model.try(:display_name)].compact.join(' - ') },
     }
 
-  belongs_to :sub_company
+  belongs_to :sub_company, required: true
   belongs_to :customer, class: EngineeringCustomer, foreign_key: :engineering_customer_id
   belongs_to :corporation, class: EngineeringCorp, foreign_key: :engineering_corp_id
 

@@ -53,7 +53,9 @@ ActiveAdmin.register EngineeringProject do
     end
     column :sub_company, sortable: :id do |obj|
       sc = obj.sub_company
-      link_to sc.name, sub_company_path(sc), target: '_blank'
+      if sc.present?
+        link_to sc.name, sub_company_path(sc), target: '_blank'
+      end
     end
     column :corporation, sortable: :id do |obj|
       if obj.corporation.nil?
