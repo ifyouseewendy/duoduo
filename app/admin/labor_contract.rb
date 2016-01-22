@@ -50,7 +50,7 @@ ActiveAdmin.register LaborContract do
       ns = obj.normal_staff
       link_to ns.name, "/normal_staffs?q[id_eq]=#{ns.id}", target: '_blank'
     end
-    column :sub_company, sortable: :sub_company_id do |obj|
+    column :sub_company, sortable: :id do |obj|
       sc = obj.normal_corporation.sub_company
       link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
     end
