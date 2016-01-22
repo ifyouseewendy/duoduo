@@ -66,11 +66,11 @@ ActiveAdmin.register NormalCorporation do
     actions
   end
 
-  filter :status, as: :check_boxes, collection: ->{ NormalCorporation.statuses_option }
+  filter :status, as: :check_boxes, collection: ->{ NormalCorporation.statuses_option(filter: true) }
   filter :id
   filter :name
   filter :sub_company
-  filter :admin_charge_type, as: :select, collection: ->{ NormalCorporation.admin_charge_types_option }
+  filter :admin_charge_type, as: :select, collection: ->{ NormalCorporation.admin_charge_types_option(filter: true) }
   filter :admin_charge_amount
   preserve_default_filters!
   remove_filter :contract_files

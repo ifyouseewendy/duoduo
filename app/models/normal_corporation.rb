@@ -48,8 +48,12 @@ class NormalCorporation < ActiveRecord::Base
       names
     end
 
-    def admin_charge_types_option
-      admin_charge_types.map{|k,v| [I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{k}"), v]}
+    def admin_charge_types_option(filter: false)
+      if filter
+        admin_charge_types.map{|k,v| [I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{k}"), v]}
+      else
+        admin_charge_types.keys.map{|k| [I18n.t("activerecord.attributes.normal_corporation.admin_charge_types.#{k}"), k]}
+      end
     end
 
     def as_filter
@@ -83,8 +87,12 @@ class NormalCorporation < ActiveRecord::Base
       order(id: :asc).pluck(:name, :id)
     end
 
-    def statuses_option
-      statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
+    def statuses_option(filter: false)
+      if filter
+        statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
+      else
+        statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+      end
     end
 
     def export_xlsx(options: {})

@@ -31,8 +31,12 @@ class SalaryTable < ActiveRecord::Base
       self.select(:start_date).distinct.order(start_date: :desc).map{|st| [st.month, st.start_date.to_s] }
     end
 
-    def statuses_option
-      statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
+    def statuses_option(filter: false)
+      if filter
+        statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
+      else
+        statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+      end
     end
 
     def batch_form_fields

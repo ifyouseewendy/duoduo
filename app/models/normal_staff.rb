@@ -37,8 +37,12 @@ class NormalStaff < ActiveRecord::Base
       names
     end
 
-    def genders_option
-      genders.map{|k,v| [I18n.t("activerecord.attributes.normal_staff.genders.#{k}"), v]}
+    def genders_option(filter: false)
+      if filter
+        genders.map{|k,v| [I18n.t("activerecord.attributes.normal_staff.genders.#{k}"), v]}
+      else
+        genders.keys.map{|k| [I18n.t("activerecord.attributes.normal_staff.genders.#{k}"), k]}
+      end
     end
 
     def boolean_option

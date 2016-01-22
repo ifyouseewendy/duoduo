@@ -111,7 +111,7 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
-  filter :status, as: :check_boxes, collection: ->{ EngineeringProject.statuses_option }
+  filter :status, as: :check_boxes, collection: ->{ EngineeringProject.statuses_option(filter: true) }
   filter :customer
   filter :corporation
   filter :sub_company, as: :select, collection: ->{ SubCompany.hr.pluck(:name, :id) }

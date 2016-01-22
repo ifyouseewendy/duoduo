@@ -83,7 +83,7 @@ ActiveAdmin.register LaborContract do
   filter :sub_company_in, as: :select, collection: -> {SubCompany.pluck(:name, :id)}
   filter :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}
   filter :in_contract, as: :select, collection: ->{ [ ['活动', true], ['解除', false] ] }.call
-  filter :contract_type, as: :select, collection: -> { LaborContract.contract_types_option }.call
+  filter :contract_type, as: :select, collection: -> { LaborContract.contract_types_option(filter: true) }.call
   filter :has_social_insurance, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
   filter :has_medical_insurance, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
   filter :has_accident_insurance, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call

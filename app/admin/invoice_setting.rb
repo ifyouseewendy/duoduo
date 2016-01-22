@@ -46,9 +46,9 @@ ActiveAdmin.register InvoiceSetting do
     actions
   end
 
-  filter :category, as: :select, collection: -> { resource_class.categories_option }
+  filter :category, as: :select, collection: -> { resource_class.categories_option(filter: true) }
   filter :code, as: :select, collection: -> { resource_class.select(:code).pluck(:code).uniq }
-  filter :status, as: :select, collection: -> { resource_class.statuses_option }
+  filter :status, as: :select, collection: -> { resource_class.statuses_option(filter: true) }
   preserve_default_filters!
   remove_filter :activities
 

@@ -66,8 +66,12 @@ class EngineeringProject < ActiveRecord::Base
       self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
     end
 
-    def statuses_option
-      statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
+    def statuses_option(filter: false)
+      if filter
+        statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
+      else
+        statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+      end
     end
 
     def batch_fields

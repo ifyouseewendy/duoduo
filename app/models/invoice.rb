@@ -26,16 +26,28 @@ class Invoice < ActiveRecord::Base
       names
     end
 
-    def statuses_option
-      statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
+    def statuses_option(filter: false)
+      if filter
+        statuses.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), v]}
+      else
+        statuses.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.statuses.#{k}"), k]}
+      end
     end
 
-    def categories_option
-      categories.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.categories.#{k}"), v]}
+    def categories_option(filter: false)
+      if filter
+        categories.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.categories.#{k}"), v]}
+      else
+        categories.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.categories.#{k}"), k]}
+      end
     end
 
-    def scopes_option
-      scopes.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.scopes.#{k}"), v]}
+    def scopes_option(filter: false)
+      if filter
+        scopes.map{|k,v| [I18n.t("activerecord.attributes.#{self.name.underscore}.scopes.#{k}"), v]}
+      else
+        scopes.keys.map{|k| [I18n.t("activerecord.attributes.#{self.name.underscore}.scopes.#{k}"), k]}
+      end
     end
 
     def export_xlsx(options: {})

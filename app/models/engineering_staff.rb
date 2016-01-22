@@ -56,8 +56,12 @@ class EngineeringStaff < ActiveRecord::Base
       end
     end
 
-    def genders_option
-      genders.map{|k,v| [I18n.t("activerecord.attributes.engineering_staff.genders.#{k}"), v]}
+    def genders_option(filter: false)
+      if filter
+        genders.map{|k,v| [I18n.t("activerecord.attributes.engineering_staff.genders.#{k}"), v]}
+      else
+        genders.keys.map{|k| [I18n.t("activerecord.attributes.engineering_staff.genders.#{k}"), k]}
+      end
     end
 
     def columns_of(type)

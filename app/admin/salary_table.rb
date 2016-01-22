@@ -75,7 +75,7 @@ ActiveAdmin.register SalaryTable do
   filter :start_date, as: :select, collection: -> { SalaryTable.dates_as_filter }
   filter :name
   filter :normal_corporation, as: :select, collection: -> { NormalCorporation.as_filter }
-  filter :status, as: :check_boxes, collection: ->{ SalaryTable.statuses_option }
+  filter :status, as: :check_boxes, collection: ->{ SalaryTable.statuses_option(filter: true) }
   preserve_default_filters!
   # remove_filter :invoices
   remove_filter :salary_items
