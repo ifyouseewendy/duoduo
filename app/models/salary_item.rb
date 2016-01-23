@@ -367,9 +367,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def revise_nest_index
-    return if self.role.to_sym == :transfer
-
-    self.transfer_sibling.try(:delete)
+    return if siblings.count > 0
 
     self.salary_table.salary_items.where("nest_index > ?", self.nest_index).each do |si|
       si.update_column(:nest_index, si.nest_index - 1)
@@ -382,6 +380,10 @@ class SalaryItem < ActiveRecord::Base
 
   def normal_sibling
     salary_table.salary_items.normal.where(nest_index: self.nest_index).first
+  end
+
+  def siblings
+    salary_table.salary_items.where(nest_index: self.nest_index).where.not(id: self.id)
   end
 
   def init_addition_fee
