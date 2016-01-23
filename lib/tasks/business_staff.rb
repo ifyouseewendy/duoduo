@@ -263,7 +263,8 @@ class BusinessStaff < DuoduoCli
             contract_attrs_siping = contract_attrs.merge({
               in_contract: false,
               contract_start_date: contract_start_date,
-              contract_end_date: contract_end_date
+              contract_end_date: contract_end_date,
+              remark: '东方'
             })
             LaborContract.create!(contract_attrs_siping)
           end
@@ -276,7 +277,8 @@ class BusinessStaff < DuoduoCli
               contract_start_date: contract_start_date,
               contract_end_date: contract_end_date,
               social_insurance_serial: dongfang_gongzhuling_social_insurance_serial,
-              medical_insurance_serial: dongfang_gongzhuling_medical_insurance_serial
+              medical_insurance_serial: dongfang_gongzhuling_medical_insurance_serial,
+              remark: '公主岭'
             })
             LaborContract.create!(contract_attrs_gongzhuling)
           end
@@ -287,6 +289,7 @@ class BusinessStaff < DuoduoCli
               in_contract: false,
               contract_start_date: contract_start_date,
               contract_end_date: contract_end_date,
+              remark: '百奕'
             })
             LaborContract.create!(contract_attrs_gongzhuling)
           end
@@ -400,6 +403,7 @@ class BusinessStaff < DuoduoCli
               in_contract: false,
               contract_start_date: parse_date(dongfang_siping_contract_dates.split('-')[0]),
               contract_end_date: parse_date(dongfang_siping_contract_dates.split('-')[1]),
+              remark: '东方'
             })
             LaborContract.create!(contract_attrs_siping)
           end
@@ -411,7 +415,8 @@ class BusinessStaff < DuoduoCli
               contract_start_date: parse_date(dongfang_gongzhuling_contract_dates.split('-')[0]),
               contract_end_date: parse_date(dongfang_gongzhuling_contract_dates.split('-')[1]),
               social_insurance_serial: dongfang_gongzhuling_social_insurance_serial,
-              medical_insurance_serial: dongfang_gongzhuling_medical_insurance_serial
+              medical_insurance_serial: dongfang_gongzhuling_medical_insurance_serial,
+              remark: '公主岭'
             })
             LaborContract.create!(contract_attrs_gongzhuling)
           end
