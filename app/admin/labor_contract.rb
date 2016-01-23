@@ -58,6 +58,7 @@ ActiveAdmin.register LaborContract do
       corp = obj.normal_corporation
       link_to corp.name, "/normal_corporations?q[id_eq]=#{corp.id}", target: '_blank'
     end
+    column :remark
     column :in_contract, sortable: :in_contract do |obj|
       if obj.in_contract
         status_tag '活动', 'yes'
@@ -69,7 +70,7 @@ ActiveAdmin.register LaborContract do
       obj.contract_type_i18n
     end
 
-    displayed_columns = %i(id normal_staff_id normal_corporation_id in_contract contract_type)
+    displayed_columns = %i(id normal_staff_id normal_corporation_id in_contract contract_type remark)
 
     (resource_class.ordered_columns.map(&:to_sym) - displayed_columns).map do |field|
       column field
