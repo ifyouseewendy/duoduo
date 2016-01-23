@@ -230,7 +230,7 @@ class BusinessSalary < DuoduoCli
             role = :transfer
           else
             if account.blank?
-              staff = last_staff
+              staff = zheqi_staff
               role = :transfer
             elsif stf = corporation.normal_staffs.where(account: account).first
               staff = stf
@@ -246,10 +246,20 @@ class BusinessSalary < DuoduoCli
 
           role = :transfer
         elsif staff_name == last_staff.try(:name)
-          staff = last_staff
+          if account == last_staff.try(:account)
+            staff = last_staff
+          else
+            staff = zheqi_staff
+          end
+
           role = :transfer
         else
           begin
+            if account.try(:index, '喆琦')
+              role = :transfer
+              counter += 1 # Special case, only transfer, no normal
+            end
+
             staff = SalaryItem.find_staff(salary_table: table, name: staff_name)
           rescue => e
             if String === data[-1] && data[-1].match(/\d{10}/)
