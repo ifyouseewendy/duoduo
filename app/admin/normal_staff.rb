@@ -49,7 +49,9 @@ ActiveAdmin.register NormalStaff do
     column :identity_card
     column :sub_company, sortable: :sub_company_id do |obj|
       sc = obj.sub_company
-      link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+      if sc.present?
+        link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+      end
     end
     column :normal_corporation, sortable: :normal_corporation_id do |obj|
       corporation = obj.normal_corporation
