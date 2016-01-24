@@ -219,11 +219,20 @@ ActiveAdmin.register NormalStaff do
   batch_action :batch_edit, form: ->{ NormalStaff.batch_form_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
+    failed = []
     batch_action_collection.find(ids).each do |obj|
-      obj.update(inputs)
+      begin
+        obj.update_attributes!(inputs)
+      rescue => _
+        failed << "操作失败<#{obj.name}>: #{obj.errors.full_messages.join(', ')}"
+      end
     end
 
-    redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+    if failed.present?
+      redirect_to :back, alert: failed.join('; ')
+    else
+      redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+    end
   end
 
   controller do
