@@ -192,6 +192,26 @@ ActiveAdmin.register SalaryItem do
 
   end
 
+  batch_action :manipulate_personal_fund, form: ->{} do |ids|
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+
+    failed = []
+    batch_action_collection.find(ids).each do |obj|
+      begin
+        obj.manipulate_personal_fund(inputs)
+      rescue => e
+        failed << "操作失败<#{obj.staff_name}>：#{e.message}"
+      end
+    end
+
+    if failed.blank?
+      redirect_to :back, notice: "成功转移 #{ids.count} 条记录"
+    else
+      redirect_to :back, alert: failed.join('；')
+    end
+
+  end
+
   # Collection actions
   collection_action :export_xlsx do
     st = SalaryTable.find(params[:salary_table_id])
