@@ -357,8 +357,10 @@ class SalaryItem < ActiveRecord::Base
     end
 
     # admin_amount
-    if (self.changed & ['total_sum']).present?
-      set_admin_amount
+    unless (self.changed & ['admin_amount']).present?
+      if (self.changed & ['total_sum']).present?
+        set_admin_amount
+      end
     end
 
     if (self.changed & ['admin_amount']).present?
