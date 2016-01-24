@@ -60,7 +60,10 @@ ActiveAdmin.register NormalStaff do
       end
     end
     column :labor_contracts, sortable: :id do |obj|
-      link_to '劳务合同', "/labor_contracts?q[normal_staff_id_eq]=#{obj.id}", target: '_blank'
+      ul do
+        li link_to '劳务合同', "/labor_contracts?q[normal_staff_id_eq]=#{obj.id}", target: '_blank'
+        li link_to '新建', "/labor_contracts/new?q[normal_staff_id_eq]=#{obj.id}", target: '_blank'
+      end
     end
     column :salary_item_display, sortable: :id do |obj|
       ul do

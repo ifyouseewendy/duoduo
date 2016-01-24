@@ -333,6 +333,12 @@ body.engineering_customers table.index_table {
         display: inline;
       }
     }
+    td.col-labor_contracts {
+      min-width: 80px !important;
+      li {
+        display: inline;
+      }
+    }
   }
   .download_links {
     display: none;
