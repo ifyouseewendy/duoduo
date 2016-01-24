@@ -163,6 +163,9 @@ $(document).on 'ready', ->
     e.stopPropagation()
     e.preventDefault()
 
+    # Show flower
+    $(@).empty().html("<i class='fa fa-spinner fa-spin'></i>")
+
     project_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
     $.getJSON "/engineering_staffs/query_free?project_id=#{project_id}", (data) =>
@@ -174,6 +177,9 @@ $(document).on 'ready', ->
       columns['engineering_staff_ids'] = stats
 
       names = ["当前客户<#{data['customer']}>可用员工（#{data['count']}个）"]
+
+      # Hide flower
+      $(@).empty().text('添加')
 
       ActiveAdmin.modal_dialog_project_add_staffs "#{data['display_name']}", columns, names, project_id,
         (inputs)=>
@@ -197,6 +203,9 @@ $(document).on 'ready', ->
     e.stopPropagation()
     e.preventDefault()
 
+    # Show flower
+    $(@).empty().html("<i class='fa fa-spinner fa-spin'></i>")
+
     project_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
 
     $.getJSON "/engineering_staffs/query_project?project_id=#{project_id}", (data) =>
@@ -205,6 +214,9 @@ $(document).on 'ready', ->
       $.each data, (idx, ele) ->
         columns.push([ele['id'], 'checkbox'])
         names.push( ele['name'] )
+
+      # Hide flower
+      $(@).empty().text('删除')
 
       ActiveAdmin.modal_dialog_check_list '员工列表', columns, names,
         (inputs)=>
