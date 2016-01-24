@@ -471,3 +471,26 @@ class BusinessSalary < DuoduoCli
 end
 
 BusinessSalary.start(ARGV)
+
+# Data Repair
+#
+# # SalaryItem total_sum
+# SalaryItem.select(:total_sum_with_admin_amount, :admin_amount, :id).each do |si|
+#   sum = (si.total_sum_with_admin_amount.to_f - si.admin_amount.to_f).round(2)
+#   si.update_column(:total_sum, sum)
+# end
+#
+# # SalaryItem staff_account
+# sis = SalaryItem.transfer.select{|si| si.siblings.count == 0 }
+# sis.each do |si|
+#   si.update_column(:staff_account, '转到喆琦卡')
+# end
+#
+# # LaborContract social_insurance_serial, medical_insurance_serial, medical_insurance_card
+# LaborContract.all.each do |lc|
+#   serial = lc.medical_insurance_serial
+#   next if serial.blank?
+#   if serial.end_with?('.0')
+#     lc.update_column(:medical_insurance_serial, serial.to_i.to_s)
+#   end
+# end
