@@ -319,6 +319,8 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def auto_init_fields
+    return if self.transfer?
+
     set_name_and_account
     set_insurance_fund
     set_additional_fee
