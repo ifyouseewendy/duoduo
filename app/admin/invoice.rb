@@ -63,9 +63,9 @@ ActiveAdmin.register Invoice do
   end
 
   filter :sub_company_name, as: :select, collection: -> { SubCompany.pluck(:name) }
-  filter :category, as: :select, collection: -> { @resource.categories_option(filter: true) }
-  filter :status, as: :select, collection: -> { @resource.statuses_option(filter: true) }
-  filter :scope, as: :select, collection: -> { @resource.scopes_option(filter: true) }
+  filter :category, as: :select, collection: -> { resource_class.categories_option(filter: true) }
+  filter :status, as: :select, collection: -> { resource_class.statuses_option(filter: true) }
+  filter :scope, as: :select, collection: -> { resource_class.scopes_option(filter: true) }
   preserve_default_filters!
   remove_filter :activities
 
