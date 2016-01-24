@@ -96,7 +96,7 @@ ActiveAdmin.register SalaryItem do
   remove_filter :activities
 
   # Edit
-  permit_params { resource_class.whole_columns }
+  permit_params { resource_class.whole_columns + [:staff_identity_card] }
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
@@ -106,7 +106,7 @@ ActiveAdmin.register SalaryItem do
         st = SalaryTable.find(params[:salary_table_id])
         corp = st.corporation
         f.input :staff_name, as: :select, collection: ->{ corp.normal_staffs.pluck(:name, :id) }.call, hint: "合作单位<#{corp.name}>的员工列表"
-        f.input :staff_identity_card, as: :string, hint: "非必须，存在同名时使用"
+        f.input :staff_identity_card, as: :string, hint: "非必须，存在同名或者添加非当前合作单位员工时使用"
         f.input :salary_deserve, as: :number
       elsif request.url.split('/')[-1] == 'edit'
         text_fields = SalaryItem.columns_of(:text)
@@ -134,7 +134,7 @@ ActiveAdmin.register SalaryItem do
 
       begin
         if identity_card.present?
-          staff = staffs.where(identity_card: identity_card).first
+          staff = NormalStaff.where(identity_card: identity_card).first
           raise "未找到员工，身份证号：#{identity_card}" if staff.nil?
         else
           staff = staffs.where(id: staff_id).first
