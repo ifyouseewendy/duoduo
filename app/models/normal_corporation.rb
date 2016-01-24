@@ -183,4 +183,10 @@ class NormalCorporation < ActiveRecord::Base
     staff
   end
 
+  def due?
+    return false if contract_end_date.nil?
+
+    Date.today + 1.month >= contract_end_date
+  end
+
 end

@@ -21,7 +21,7 @@ ActiveAdmin.register NormalCorporation do
   #   record.updated_latest_10
   # end
 
-  index do
+  index row_class: ->elem { 'due_date' if elem.due? } do
     selectable_column
 
     column :id

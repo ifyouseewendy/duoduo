@@ -282,6 +282,9 @@ body.engineering_customers table.index_table {
 }
 
 .normal_corporations {
+  .due_date .col-contract_end_date{
+    background-color: $table_red;
+  }
   .ui-dialog {
     .batch_edit_label {
       width: 85px;
