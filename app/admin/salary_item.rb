@@ -294,7 +294,7 @@ ActiveAdmin.register SalaryItem do
         name.gsub!(/\s/, '')
 
         identity_card = identity_card.to_i.to_s if identity_card.is_a? Numeric
-        ar << { name: name, salary: salary, identity_card: identity_card }
+        ar << { name: name, salary: salary, identity_card: "'#{identity_card}" }
       end
 
     failed = []
@@ -305,7 +305,18 @@ ActiveAdmin.register SalaryItem do
       end
 
       begin
-        staff = corporation.find_staff(name: ha[:name], identity_card: ha[:identity_card])
+        if ha[:identity_card].present?
+          id_card = ha[:identity_card].delete("'")
+          staff = NormalStaff.where(identity_card: id_card).first
+
+          raise "未找到员工，身份证号#{id_card}" \
+            unless staff.present?
+          raise "通过身份证号找到员工姓名为#{staff.name}，而上传文件中为#{ha[:name]}" \
+            unless staff.name == ha[:name]
+        else
+          staff = corporation.find_staff(name: ha[:name])
+        end
+
         salary_table.salary_items.create!(
           normal_staff: staff,
           salary_deserve: ha[:salary]
@@ -315,7 +326,7 @@ ActiveAdmin.register SalaryItem do
       end
     end
 
-    if failed.count > 0
+    if failed.count > 1
       # generate new xls file
 
       filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
