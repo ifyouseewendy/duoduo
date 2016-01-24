@@ -464,6 +464,40 @@ class SalaryItem < ActiveRecord::Base
     self.total_sum_with_admin_amount = [total_sum, admin_amount].map(&:to_f).sum.round(2)
   end
 
+  def manipulate_personal_fund(options)
+    fields = self.class.person_deduct_fields
+
+    staff = NormalStaff.zheqi.first
+    staff_name = staff.name
+    staff_account = staff.account
+
+    attrs = {
+      nest_index: self.nest_index,
+      role: 'transfer',
+      normal_staff: staff,
+      staff_name: staff_name,
+      staff_account: staff_account,
+      salary_deserve: salary_deserve,
+    }
+
+    fields.each do |k|
+      attrs[k] = self.send(k)
+    end
+
+    admin_before = self.admin_amount
+
+    self.class.transaction do
+      # Update self fields to nil
+      fields.each{|fi| self.send("#{fi}=", nil)}
+      self.salary_deserve = 0
+      self.save!
+      self.update_attribute(:admin_amount, admin_before) # No change on admin_amount
+
+      # Create new transfer
+      self.salary_table.salary_items.create!( attrs.merge({admin_amount: 0}) )
+    end
+  end
+
   def manipulate_insurance_fund(options)
     # raise "操作失败<#{self.staff_name}>：无法在转移工资条上再做转移"\
     #   if self.transfer?
