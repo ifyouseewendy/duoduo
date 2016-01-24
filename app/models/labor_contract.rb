@@ -148,7 +148,7 @@ class LaborContract < ActiveRecord::Base
   private
 
     def check_active_status
-      if in_contract_change&.last == true
+      if in_contract_change.try(:last) == true
         other_active_contracts = normal_staff.labor_contracts.where.not(id: self.id).active
         if other_active_contracts.count > 0
           # callbacks skipped
