@@ -339,6 +339,16 @@ ActiveAdmin.register EngineeringSalaryTable do
     end
   end
 
+  member_action :destroy, method: :delete do
+    begin
+      obj = EngineeringSalaryTable.find(params[:id])
+      obj.destroy
+      redirect_to :back, notice: "成功删除工资表<#{obj.name}>"
+    rescue => e
+      redirect_to :back, alert: "删除失败，#{e.message}"
+    end
+  end
+
   controller do
     def scoped_collection
       end_of_association_chain.includes(:project)
