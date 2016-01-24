@@ -48,6 +48,31 @@ class LaborContract < ActiveRecord::Base
       self.columns_hash.select{|k,v| v.type == type }.keys.map(&:to_sym)
     end
 
+    def batch_form_fields
+      hash = {
+        'in_contract_有劳务关系' => [ ['活动', true], ['解除', false] ],
+        'has_social_insurance_社保' => [ ['有', true], ['无', false] ],
+        'social_insurance_base_社保基数' => :text,
+        'has_medical_insurance_医保' => [ ['有', true], ['无', false] ],
+        'medical_insurance_base_医保基数' => :text,
+        'has_accident_insurance_意外险' => [ ['有', true], ['无', false] ],
+        'house_accumulation_base_住房公积金基数' => :text,
+      }
+
+      fields = [
+        :backup_date,
+        :backup_place,
+        :work_place,
+        :work_type,
+        :release_date,
+        :social_insurance_release_date,
+        :medical_insurance_release_date,
+        :remark,
+      ]
+      fields.each{|fi| hash[ "#{fi}_#{human_attribute_name(fi)}" ] = :text }
+
+      hash
+    end
   end
 
   def name
@@ -117,7 +142,7 @@ class LaborContract < ActiveRecord::Base
   private
 
     def check_active_status
-      if in_contract_change.last == true
+      if in_contract_change&.last == true
         other_active_contracts = normal_staff.labor_contracts.where.not(id: self.id).active
         if other_active_contracts.count > 0
           # callbacks skipped

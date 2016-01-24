@@ -176,6 +176,26 @@ ActiveAdmin.register LaborContract do
     end
   end
 
+  # Batch actions
+  batch_action :batch_edit, form: ->{ LaborContract.batch_form_fields } do |ids|
+    inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
+
+    failed = []
+    batch_action_collection.find(ids).each do |obj|
+      begin
+        obj.update_attributes!(inputs)
+      rescue => e
+        failed << "操作失败<#{obj.name}>: #{obj.errors.full_messages.join(', ')} ; #{e.message}"
+      end
+    end
+
+    if failed.present?
+      redirect_to :back, alert: failed.join('; ')
+    else
+      redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+    end
+  end
+
   controller do
     def scoped_collection
       action = request.url.split('?').first.split('/').last rescue ''
