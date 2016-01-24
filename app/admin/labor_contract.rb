@@ -99,7 +99,7 @@ ActiveAdmin.register LaborContract do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :normal_staff, as: :select, collection: []
+      f.input :normal_staff_id, as: :hidden, input_html: {value: params[:q][:normal_staff_id_eq]}
       f.input :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}.call
       f.input :in_contract, as: :radio, collection: ->{ [ ['活动', true], ['解除', false] ] }.call
       f.input :contract_type, as: :select, collection: ->{ LaborContract.contract_types_option }.call
