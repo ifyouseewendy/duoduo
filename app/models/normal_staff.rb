@@ -59,7 +59,7 @@ class NormalStaff < ActiveRecord::Base
       hash['gender_性别'] = genders_option
       hash['has_social_insurance_是否参社保'] = boolean_option
       hash['has_medical_insurance_是否参医保'] = boolean_option
-      hash['in_service_在职'] = boolean_option
+      # hash['in_service_在职'] = boolean_option
       hash['in_contract_有劳务关系'] = boolean_option
       hash['normal_corporation_id_所属单位'] = NormalCorporation.reference_option
       hash
@@ -111,8 +111,8 @@ class NormalStaff < ActiveRecord::Base
   private
 
     def check_contracts_status
-      if in_service_change == [true, false]
-        labor_contracts.active.each(&:inactivate!)
-      end
+      # if in_service_change == [true, false]
+      #   labor_contracts.active.each(&:inactivate!)
+      # end
     end
 end

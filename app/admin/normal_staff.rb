@@ -28,12 +28,12 @@ ActiveAdmin.register NormalStaff do
   scope "全部" do |record|
     record.all
   end
-  scope "存档" do |record|
-    record.not_in_service
-  end
-  scope "在职" do |record|
-    record.in_service
-  end
+  # scope "存档" do |record|
+  #   record.not_in_service
+  # end
+  # scope "在职" do |record|
+  #   record.in_service
+  # end
   scope "有劳务关系" do |record|
     record.in_contract
   end
@@ -76,7 +76,7 @@ ActiveAdmin.register NormalStaff do
       end
     end
 
-    column :in_service
+    # column :in_service
     column :in_contract, sortable: :in_contract do |obj|
       if obj.in_contract
         status_tag '有', :yes
@@ -103,7 +103,7 @@ ActiveAdmin.register NormalStaff do
 
   filter :sub_company
   filter :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}
-  filter :in_service, as: :select, collection: ->{ [ ['在职', true], ['存档', false] ] }.call
+  # filter :in_service, as: :select, collection: ->{ [ ['在职', true], ['存档', false] ] }.call
   filter :in_contract, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
   filter :id
   filter :name
@@ -124,7 +124,7 @@ ActiveAdmin.register NormalStaff do
     f.inputs do
       f.input :name, as: :string
       f.input :identity_card, as: :string
-      f.input :in_service
+      # f.input :in_service
       f.input :in_contract
       f.input :account, as: :string
       f.input :account_bank, as: :string
@@ -171,13 +171,13 @@ ActiveAdmin.register NormalStaff do
           end
         end
       end
-      row :in_service do |obj|
-        if obj.in_service
-          status_tag '在职', :yes
-        else
-          status_tag '存档', :no
-        end
-      end
+      # row :in_service do |obj|
+      #   if obj.in_service
+      #     status_tag '在职', :yes
+      #   else
+      #     status_tag '存档', :no
+      #   end
+      # end
       row :in_contract do |obj|
         if obj.in_contract
           status_tag '有劳务关系', :yes
