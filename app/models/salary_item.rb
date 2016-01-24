@@ -499,15 +499,21 @@ class SalaryItem < ActiveRecord::Base
       salary_deserve: salary_deserve,
     }
 
-    @skip_callbacks = true
+    fields.each do |k|
+      attrs[k] = self.send(k)
+    end
+
+    admin_before = self.admin_amount
 
     self.class.transaction do
       # Update self fields to nil
       fields.each{|fi| self.send("#{fi}=", nil)}
       self.save!
 
+      admin_after = self.admin_amount
+
       # Create new transfer
-      self.salary_table.salary_items.create!(attrs)
+      self.salary_table.salary_items.create!( attrs.merge({admin_amount: admin_before-admin_after}) )
     end
 
   end
