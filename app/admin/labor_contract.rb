@@ -2,7 +2,7 @@ ActiveAdmin.register LaborContract do
   belongs_to :normal_corporation, optional: true
   belongs_to :normal_staff, optional: true
 
-  include ImportSupport
+  # include ImportSupport
 
   menu \
     parent: I18n.t("activerecord.models.normal_business"),

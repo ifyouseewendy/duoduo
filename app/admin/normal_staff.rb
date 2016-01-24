@@ -1,7 +1,7 @@
 ActiveAdmin.register NormalStaff do
   belongs_to :normal_corporation, optional: true
 
-  include ImportSupport
+  # include ImportSupport
 
   menu \
     parent: I18n.t("activerecord.models.normal_business"),
