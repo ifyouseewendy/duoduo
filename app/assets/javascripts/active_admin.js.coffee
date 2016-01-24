@@ -4,7 +4,12 @@ $(document).on 'ready', ->
   # Clean footer
   $('.footer').empty()
 
+  # Use localized datepicker
   $( "#datepicker" ).datepicker( $.datepicker.regional['zh-CN'] )
+
+  # Add spinner for upload
+  $('input[value=上传]').on 'click', (e)->
+    $(@).val('正在上传')
 
   # Confirm on all delete action
   $('a[data-method=delete]').on 'click', ->
