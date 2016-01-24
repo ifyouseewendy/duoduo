@@ -139,6 +139,12 @@ class LaborContract < ActiveRecord::Base
       parent.table[:id]
   end
 
+  def due?
+    return false if contract_end_date.nil?
+
+    Date.today + 1.month >= contract_end_date
+  end
+
   private
 
     def check_active_status

@@ -42,7 +42,7 @@ ActiveAdmin.register LaborContract do
     record.active
   end
 
-  index do
+  index row_class: ->elem { 'due_date' if elem.due? } do
     selectable_column
 
     column :id
