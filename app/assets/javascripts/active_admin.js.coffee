@@ -519,13 +519,17 @@ $(document).on 'ready', ->
         dataType: 'json'
         success: (data, textStatus, jqXHR) =>
           if data['status'] == 'ok'
+            $('#invoice_code').prop('disabled', false)
             $('#invoice_code').val( data['data']['code'] )
+            $('#invoice_encoding').prop('disabled', false)
             $('#invoice_encoding').val( data['data']['encoding'] )
             $('#invoice_invoice_setting_id').val( data['data']['invoice_setting_id'] )
           else
             label = choice.find('label')
             label.find('span').remove()
             label.append("<span style='color:red'> #{data['message']}</span>")
+            $('#invoice_code').prop('disabled', true).val('无可用发票')
+            $('#invoice_encoding').prop('disabled', true).val('')
 
     default_choice = $('#invoice_category_input .choice')[0]
     set_code_and_encoding( $(default_choice) )
