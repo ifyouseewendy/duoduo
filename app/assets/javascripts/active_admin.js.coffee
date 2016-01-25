@@ -546,11 +546,16 @@ $(document).on 'ready', ->
     set_contact = (choice) ->
       scope = choice.find('input').val()
 
+      label = choice.find('label')
+      label.append("<i class='fa fa-spinner fa-spin'></i>")
+
       if scope == 'engineer'
         $.ajax
           url: '/engineering_customers/display'
           dataType: 'json'
           success: (data, textStatus, jqXHR) =>
+            label.find('i').remove()
+
             if data['status'] == 'ok'
               contact = $('#invoice_contact')
               contact.empty()
@@ -565,6 +570,8 @@ $(document).on 'ready', ->
           url: '/normal_corporations/display'
           dataType: 'json'
           success: (data, textStatus, jqXHR) =>
+            label.find('i').remove()
+
             if data['status'] == 'ok'
               contact = $('#invoice_contact')
               contact.empty()
@@ -577,8 +584,8 @@ $(document).on 'ready', ->
 
     default_scope = $('#invoice_scope_input .choice')[0]
     set_contact( $(default_scope) )
-    $('#invoice_scope_input .choice').on 'click', ->
-      set_contact( $(@) )
+    $('#invoice_scope_input input').on 'change', ->
+      set_contact( $(@).closest('.choice') )
 
     set_payer = (option) ->
       $('#invoice_payer').val( option.data('full-name') )
