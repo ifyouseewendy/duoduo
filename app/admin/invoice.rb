@@ -47,11 +47,11 @@ ActiveAdmin.register Invoice do
     column :scope, sortable: :scope do |obj|
       obj.scope_i18n
     end
+    column :contact
     column :payer
     column :amount
     column :admin_amount
     column :total_amount
-    column :contact
     column :income_date
     column :refund_date
     column :refund_person
@@ -111,11 +111,11 @@ ActiveAdmin.register Invoice do
       row :scope do |obj|
         obj.scope_i18n
       end
+      row :contact
       row :payer
       row :amount
       row :admin_amount
       row :total_amount
-      row :contact
       row :income_date
       row :refund_date
       row :refund_person
@@ -130,15 +130,15 @@ ActiveAdmin.register Invoice do
 
 
   # Collection actions
-  collection_action :export_xlsx do
-    options = {}
-    options[:selected] = params[:selected].split('-') if params[:selected].present?
-    options[:columns] = params[:columns].split('-') if params[:columns].present?
-    options.update(params[:q]) if params[:q].present?
-
-    file = Invoice.export_xlsx(options: options)
-    send_file file, filename: file.basename
-  end
+  # collection_action :export_xlsx do
+  #   options = {}
+  #   options[:selected] = params[:selected].split('-') if params[:selected].present?
+  #   options[:columns] = params[:columns].split('-') if params[:columns].present?
+  #   options.update(params[:q]) if params[:q].present?
+  #
+  #   file = Invoice.export_xlsx(options: options)
+  #   send_file file, filename: file.basename
+  # end
 
   collection_action :create, method: :post do
     attrs = params.require(:invoice).permit( resource_class.ordered_columns )

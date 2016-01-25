@@ -463,4 +463,18 @@ body.engineering_customers table.index_table {
       border-right: 1px solid $main_grey;
     }
   }
+  .index_table {
+    th.col-category {
+      min-width: 80px !important;
+    }
+    th.col-contact {
+      min-width: 80px !important;
+    }
+    th.col-payer {
+      min-width: 100px !important;
+    }
+  }
+  .download_links {
+    display: none;
+  }
 }
