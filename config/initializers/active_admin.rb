@@ -220,9 +220,11 @@ ActiveAdmin.setup do |config|
   #   end
   config.namespace false do |default|
     default.build_menu do |menu|
-      menu.add label: I18n.t("activerecord.models.engineering_business"), priority: 2, if: ->{ current_active_admin_user.admin? or current_active_admin_user.finance? } do |sub_menu|
-        sub_menu.add label: '说明文档', url: 'https://quip.com/IbzYA17FOjCJ', priority: 10, html_options: { target: :blank }
-      end
+      menu.add label: I18n.t("activerecord.models.engineering_business"), priority: 2, \
+        if: ->{ current_active_admin_user.admin? or current_active_admin_user.finance? or current_active_admin_user.teller? } \
+        do |sub_menu|
+          sub_menu.add label: '说明文档', url: 'https://quip.com/IbzYA17FOjCJ', priority: 10, html_options: { target: :blank }
+        end
       menu.add label: I18n.t("activerecord.models.normal_business"), priority: 3
       menu.add label: I18n.t("activerecord.models.invoice"), priority: 4
       menu.add label: I18n.t("activerecord.models.settings"), priority: 10
