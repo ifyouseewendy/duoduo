@@ -1,7 +1,7 @@
 ActiveAdmin.register PublicActivity::Activity do
   menu \
     parent: I18n.t("activerecord.models.settings"),
-    priority: 6
+    priority: 2
 
   config.batch_actions = false
   config.clear_action_items!

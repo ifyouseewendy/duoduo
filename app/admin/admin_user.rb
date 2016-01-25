@@ -4,7 +4,8 @@ ActiveAdmin.register AdminUser do
 
   menu \
     parent: I18n.t("activerecord.models.settings"),
-    label: proc{ I18n.t("active_admin.admin_user.title") },
+    label: I18n.t("active_admin.admin_user.title"),
+    if: ->{ current_active_admin_user.admin? },
     priority: 1
 
   permit_params :name, :email, :password, :password_confirmation, :role

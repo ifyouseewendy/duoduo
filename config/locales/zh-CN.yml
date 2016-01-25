@@ -304,6 +304,7 @@ zh-CN:
         staff_category: '用工类别'
       individual_income_tax:
         id: '序号'
+        title: '个税计算器'
         grade: '级数'
         tax_range_start: '应纳税所得额大于'
         tax_range_end: '应纳税所得额小于等于'

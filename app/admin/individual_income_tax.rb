@@ -1,7 +1,8 @@
 ActiveAdmin.register IndividualIncomeTax do
   menu \
     parent: I18n.t("activerecord.models.settings"),
-    priority: 2
+    label: I18n.t("activerecord.attributes.individual_income_tax.title"),
+    priority: 3
 
   config.batch_actions = false
   config.clear_action_items!

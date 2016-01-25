@@ -2,8 +2,8 @@ ActiveAdmin.register InsuranceFundRate do
   actions :all, except: [:new, :create, :destroy]
 
   menu \
-    parent: I18n.t("activerecord.models.settings"),
-    priority: 3
+    parent: I18n.t("activerecord.models.normal_business"),
+    priority: 7
 
   config.batch_actions = false
   config.clear_action_items!
