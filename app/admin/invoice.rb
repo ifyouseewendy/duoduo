@@ -59,7 +59,11 @@ ActiveAdmin.register Invoice do
     column :created_at
     column :updated_at
 
-    actions
+    actions defaults: false do |obj|
+      item "查看", engineering_company_medical_insurance_amount_path(obj)
+      text_node "&nbsp;&nbsp;".html_safe
+      item "编辑", edit_engineering_company_medical_insurance_amount_path(obj)
+    end
   end
 
   filter :sub_company_name, as: :select, collection: -> { SubCompany.pluck(:name) }
