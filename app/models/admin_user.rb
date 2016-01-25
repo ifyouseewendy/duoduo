@@ -7,8 +7,8 @@ class AdminUser < ActiveRecord::Base
   enum role: [
     :is_super_admin,
     :is_finance_admin,
-    :is_finance_senior,
-    :is_finance_junior,
+    # :is_finance_senior,
+    # :is_finance_junior,
     :is_business_admin,
   ]
   enum status: [:active, :locked]
@@ -20,7 +20,7 @@ class AdminUser < ActiveRecord::Base
   class << self
 
     def finance_fields
-      @_finance_fields ||= [:is_finance_admin, :is_finance_senior, :is_finance_junior]
+      @_finance_fields ||= [:is_finance_admin]
     end
 
     def finance_enum_ids
@@ -68,11 +68,11 @@ class AdminUser < ActiveRecord::Base
   end
 
   def admin?
-    is_super_admin? or is_finance_admin? or is_business_admin?
+    is_super_admin?
   end
 
   def finance?
-    is_finance_admin? or is_finance_junior? or is_finance_senior?
+    is_finance_admin?
   end
 
   def business?
@@ -83,9 +83,9 @@ class AdminUser < ActiveRecord::Base
     is_super_admin? or is_finance_admin?
   end
 
-  def finance_normal?
-    is_finance_junior? or is_finance_senior?
-  end
+  # def finance_normal?
+  #   is_finance_junior? or is_finance_senior?
+  # end
 
   def email_required?
     false

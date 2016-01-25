@@ -700,11 +700,11 @@ zh-CN:
         updated_at: "更新时间"
         role: '角色'
         roles:
-          is_super_admin: '超级管理员'
-          is_finance_admin: '财务复核'
+          is_super_admin: '管理员'
+          is_finance_admin: '财务'
           is_finance_senior: '财务制作高级'
           is_finance_junior: '财务制作初级'
-          is_business_admin: '业务部'
+          is_business_admin: '业务'
       audition_item:
         id: '编号'
         name: '表名称'
