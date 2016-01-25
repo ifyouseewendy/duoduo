@@ -38,12 +38,12 @@ ActiveAdmin.register Invoice do
     column :category, sortable: :category do |obj|
       status_tag obj.category_i18n, obj.category_tag
     end
+    column :code
+    column :encoding
+    column :date
     column :status, sortable: :status do |obj|
       status_tag obj.status_i18n, obj.status_tag
     end
-    column :date
-    column :code
-    column :encoding
     column :scope, sortable: :scope do |obj|
       obj.scope_i18n
     end
@@ -76,11 +76,13 @@ ActiveAdmin.register Invoice do
 
     f.inputs do
       f.input :sub_company_name, as: :select, collection: -> { SubCompany.pluck(:name) }.call
-      f.input :category, as: :radio, collection: ->{ resource_class.categories_option }.call
-      f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
+      if request.url.split('/')[-1] == 'new'
+        f.input :category, as: :radio, collection: ->{ resource_class.categories_option }.call
+        f.input :code, as: :string
+        f.input :encoding, as: :string
+      end
       f.input :date, as: :datepicker
-      f.input :code, as: :string
-      f.input :encoding, as: :string
+      f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option }.call
       f.input :contact, as: :select, collection: []
       f.input :payer, as: :string
@@ -102,12 +104,12 @@ ActiveAdmin.register Invoice do
       row :category do |obj|
         status_tag obj.category_i18n, obj.category_tag
       end
+      row :code
+      row :encoding
+      row :date
       row :status do |obj|
         status_tag obj.status_i18n, obj.status_tag
       end
-      row :date
-      row :code
-      row :encoding
       row :scope do |obj|
         obj.scope_i18n
       end
