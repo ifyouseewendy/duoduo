@@ -489,7 +489,7 @@ ActiveAdmin.register EngineeringStaff do
           failed.each_with_index do |stat, fid|
             if fid >= 2
               id_card_idx = columns.index(:identity_card)
-              stat[id_card_idx] = "'#{stat[id_card_idx]}" unless stat[id_card_idx]&.start_with?("'")
+              stat[id_card_idx] = "'#{stat[id_card_idx]}" unless stat[id_card_idx].present? && stat[id_card_idx].start_with?("'")
 
               gender_idx = columns.index(:gender)
               stat[gender_idx] = gender_reverse_map[ stat[gender_idx] ]
