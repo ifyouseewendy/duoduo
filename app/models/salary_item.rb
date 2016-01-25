@@ -248,6 +248,17 @@ class SalaryItem < ActiveRecord::Base
       company_deduct_fields.each_with_object({}){|k, ha| ha[ "#{k}_#{human_attribute_name(k)}" ] = :text }
     end
 
+    def income_tax_fields
+      [
+        :pension_personal,
+        :pension_margin_personal,
+        :unemployment_personal,
+        :unemployment_margin_personal,
+        :medical_personal,
+        :medical_margin_personal,
+        :house_accumulation_personal,
+      ]
+    end
 
     def sum_fields
       whole_columns - [:nest_index, :staff_account, :staff_name, :remark] + [:total_sum]
@@ -331,7 +342,8 @@ class SalaryItem < ActiveRecord::Base
     # income_tax
     if (self.changed & ['income_tax']).present?
     else
-      if (self.changed & ['salary_deserve', 'annual_reward']).present?
+      fields = self.class.income_tax_fields.map(&:to_s) + ['salary_deserve', 'annual_reward']
+      if (self.changed & fields).present?
         set_income_tax
       end
     end
@@ -418,7 +430,11 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def set_income_tax
-    self.income_tax = IndividualIncomeTax.calculate(salary: salary_deserve, bonus: annual_reward).round(2)
+    fields = self.class.income_tax_fields
+    deduct = fields.map{|df| self.send(df).to_f}.sum.round(2)
+    salary = salary_deserve.to_f - deduct
+
+    self.income_tax = IndividualIncomeTax.calculate(salary: salary, bonus: annual_reward).round(2)
   end
 
   def set_total_personal
