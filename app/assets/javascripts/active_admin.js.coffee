@@ -535,7 +535,7 @@ $(document).on 'ready', ->
     set_contact = (choice) ->
       scope = choice.find('input').val()
 
-      if scope == 'business'
+      if scope == 'engineer'
         $.ajax
           url: '/engineering_customers/display'
           dataType: 'json'
