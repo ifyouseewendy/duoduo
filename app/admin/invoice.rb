@@ -6,13 +6,13 @@ ActiveAdmin.register Invoice do
   scope "全部" do |record|
     record.all
   end
-  scope "普通" do |record|
+  scope "通用机打发票" do |record|
     record.normal
   end
-  scope "增值税 A" do |record|
+  scope "增值税普通" do |record|
     record.vat_a
   end
-  scope "增值税 B" do |record|
+  scope "增值税专用" do |record|
     record.vat_b
   end
   scope "工程" do |record|

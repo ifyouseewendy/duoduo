@@ -384,9 +384,9 @@ zh-CN:
         id: '序号'
         category: '发票类型'
         categories:
-          normal: '普通'
-          vat_a: '增值税 A'
-          vat_b: '增值税 B'
+          normal: '通用机打发票'
+          vat_a: '增值税普通'
+          vat_b: '增值税专用'
         code: '发票代码'
         start_encoding: '起始编码'
         available_count: '可用数量'
@@ -412,9 +412,9 @@ zh-CN:
           cancel: '作废'
         category: '发票类型'
         categories:
-          normal: '普通'
-          vat_a: '增值税 A'
-          vat_b: '增值税 B'
+          normal: '通用机打发票'
+          vat_a: '增值税普通'
+          vat_b: '增值税专用'
         scope: '用于'
         scopes:
           engineer: '工程'
