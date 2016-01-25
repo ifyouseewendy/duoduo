@@ -83,9 +83,9 @@ ActiveAdmin.register Invoice do
       f.input :encoding, as: :string
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option }.call
       f.input :contact, as: :select, collection: []
+      f.input :payer, as: :string
       f.input :amount, as: :number
       f.input :admin_amount, as: :number
-      f.input :payer, as: :string
       f.input :income_date, as: :datepicker
       f.input :refund_date, as: :datepicker
       f.input :refund_person, as: :string
@@ -138,5 +138,20 @@ ActiveAdmin.register Invoice do
 
     file = Invoice.export_xlsx(options: options)
     send_file file, filename: file.basename
+  end
+
+  collection_action :create, method: :post do
+    attrs = params.require(:invoice).permit( resource_class.ordered_columns )
+
+    begin
+      Invoice.create! attrs.except(:invoice_setting_id)
+
+      is = InvoiceSetting.find( params[:invoice][:invoice_setting_id] )
+      is.increment_used!
+
+      redirect_to '/invoices', notice: '成功创建发票'
+    rescue => e
+      redirect_to :back, alert: "#{e.message}"
+    end
   end
 end
