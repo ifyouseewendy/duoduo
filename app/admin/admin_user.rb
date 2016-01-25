@@ -38,7 +38,16 @@ ActiveAdmin.register AdminUser do
   end
 
   sidebar '说明', only: [:index] do
-    span "该页面只有超级管理员有权限访问并操作"
+    span "该页面只有管理员权限才可访问或操作"
+  end
+
+  sidebar '角色权限说明', only: [:index] do
+    ul do
+      li "管理员 - 可见所有数据，并可做账户管理"
+      li "财务   - 可见工程数据或修改；可见业务数据，但不可改"
+      li "业务   - 可见业务数据或修改；不可见工程数据"
+      li "出纳   - 可见工程和业务数据，但不可改"
+    end
   end
 
   sidebar '锁定与删除', only: [:index] do
