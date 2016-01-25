@@ -93,7 +93,8 @@ ActiveAdmin.register AdminUser do
         name: name,
         email: "#{name}@jiyi.com",
         password: new_password,
-        password_confirmation: new_password
+        password_confirmation: new_password,
+        role: params[:admin_user][:role]
       )
 
       redirect_to admin_users_path, notice: "已创建用户：#{name}，初始密码为：#{new_password}，用户登录后可自行修改密码"
