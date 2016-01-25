@@ -509,7 +509,7 @@ $(document).on 'ready', ->
   $('.normal_corporation .import_guide ol').append('<li>3. 字段"管理费收取方式"的有效值为：每人固定比例（应发工资），每人固定比例（应发工资+单位缴费），每人固定金额</li>')
 
   # Invoices
-  if $('.invoices').length > 0
+  if $('.invoices.new').length > 0
     set_code_and_encoding = (choice) ->
       category = choice.find('input').val()
 
