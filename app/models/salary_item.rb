@@ -28,6 +28,10 @@ class SalaryItem < ActiveRecord::Base
   default_scope { order(nest_index: :asc).order(role: :asc) }
 
   class << self
+    def policy_class
+      BusinessPolicy
+    end
+
     def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
       if export
         [:staff_name, :salary_deserve, :identity_card]

@@ -14,6 +14,10 @@ class InsuranceFundRate < ActiveRecord::Base
   end
 
   class << self
+    def policy_class
+      BusinessPolicy
+    end
+
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 

@@ -18,6 +18,10 @@ class SalaryTable < ActiveRecord::Base
   validates_presence_of :start_date
 
   class << self
+    def policy_class
+      BusinessPolicy
+    end
+
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 

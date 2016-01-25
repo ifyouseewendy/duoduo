@@ -39,6 +39,10 @@ class NormalCorporation < ActiveRecord::Base
   after_save :check_sub_company
 
   class << self
+    def policy_class
+      BusinessPolicy
+    end
+
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 
