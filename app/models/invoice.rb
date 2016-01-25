@@ -17,6 +17,10 @@ class Invoice < ActiveRecord::Base
   before_save :revise_fields
 
   class << self
+    def policy_class
+      TellerPolicy
+    end
+
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 

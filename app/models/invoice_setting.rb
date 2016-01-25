@@ -15,6 +15,10 @@ class InvoiceSetting < ActiveRecord::Base
   scope :available, ->(category){ self.send(category).active.order(created_at: :asc) }
 
   class << self
+    def policy_class
+      TellerPolicy
+    end
+
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
       names = column_names.map(&:to_sym)
 
