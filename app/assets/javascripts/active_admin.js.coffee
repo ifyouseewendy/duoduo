@@ -548,6 +548,7 @@ $(document).on 'ready', ->
               full_names = data['data']['full_names']
               $.each names, (idx, ele) ->
                 contact.append("<option data-full-name=#{full_names[idx]} value='#{ele}'>#{ele}</option>")
+              $('#invoice_payer').val( full_names[0] )
       else
         $.ajax
           url: '/normal_corporations/display'
@@ -561,6 +562,7 @@ $(document).on 'ready', ->
               full_names = data['data']['full_names']
               $.each names, (idx, ele) ->
                 contact.append("<option data-full-name=#{full_names[idx]} value='#{ele}'>#{ele}</option>")
+              $('#invoice_payer').val( full_names[0] )
 
     default_scope = $('#invoice_scope_input .choice')[0]
     set_contact( $(default_scope) )
@@ -568,7 +570,6 @@ $(document).on 'ready', ->
       set_contact( $(@) )
 
     set_payer = (option) ->
-      alert(option.data('full-name'))
       $('#invoice_payer').val( option.data('full-name') )
     $('#invoice_contact').on 'change', ->
       set_payer( $(@).children(":selected") )
