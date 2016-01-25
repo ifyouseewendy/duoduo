@@ -594,6 +594,9 @@ $(document).on 'ready', ->
     $('#invoice_contact').on 'change', ->
       set_payer( $(@).children(":selected") )
 
+  if $('.admin_users').length > 0
+    $('.edit .actions .cancel').hide()
+
 # Cutsom Modal used in Custom View
 ActiveAdmin.modal_dialog_modified = (message, inputs, display_names, callback)->
   html = """<form id="dialog_confirm" title="#{message}"><ul>"""
