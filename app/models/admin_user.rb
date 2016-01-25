@@ -10,6 +10,7 @@ class AdminUser < ActiveRecord::Base
     # :is_finance_senior,
     # :is_finance_junior,
     :is_business_admin,
+    :is_teller
   ]
   enum status: [:active, :locked]
 
@@ -81,6 +82,10 @@ class AdminUser < ActiveRecord::Base
 
   def finance_admin?
     is_super_admin? or is_finance_admin?
+  end
+
+  def teller?
+    is_teller?
   end
 
   # def finance_normal?

@@ -705,6 +705,7 @@ zh-CN:
           is_finance_senior: '财务制作高级'
           is_finance_junior: '财务制作初级'
           is_business_admin: '业务'
+          is_teller: '出纳'
       audition_item:
         id: '编号'
         name: '表名称'
