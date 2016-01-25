@@ -533,8 +533,9 @@ $(document).on 'ready', ->
 
     default_choice = $('#invoice_category_input .choice')[0]
     set_code_and_encoding( $(default_choice) )
-    $('#invoice_category_input .choice').on 'click', ->
-      set_code_and_encoding($(@))
+
+    $('#invoice_category_input input').on 'change', ->
+      set_code_and_encoding( $(@).closest('.choice') )
 
     set_contact = (choice) ->
       scope = choice.find('input').val()
