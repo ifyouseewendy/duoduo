@@ -512,12 +512,18 @@ $(document).on 'ready', ->
   if $('.invoices').length > 0
     set_code_and_encoding = (choice) ->
       category = choice.find('input').val()
+
+      label = choice.find('label')
+      label.append("<i class='fa fa-spinner fa-spin'></i>")
+
       $.ajax
         url: '/invoice_settings/available'
         data:
           category: category
         dataType: 'json'
         success: (data, textStatus, jqXHR) =>
+          label.find('i').remove()
+
           if data['status'] == 'ok'
             $('#invoice_code').prop('disabled', false)
             $('#invoice_code').val( data['data']['code'] )
