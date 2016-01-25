@@ -8,6 +8,19 @@ class EngineeringPolicy
     @record = record
   end
 
+  def index?
+    return false if user.business?
+
+    true
+  end
+
+  def show?
+    return false if user.business?
+
+    return true if ActiveAdmin::Page === record
+    scope.where(:id => record.id).exists?
+  end
+
   def method_missing(method, *args, &block)
     user.super_admin? or user.finance?
   end
