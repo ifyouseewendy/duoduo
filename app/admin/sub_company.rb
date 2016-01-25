@@ -22,26 +22,23 @@ ActiveAdmin.register SubCompany do
       link_to "业务劳务合同", "/labor_contracts?q[sub_company_in]=#{obj.id}", target: '_blank'
     end
 
-    column :link do |obj|
-      if obj.has_engineering_relation
-        link_to "工程客户", "engineering_customers?q[sub_company_in]=#{obj.id}", target: '_blank'
+    unless current_active_admin_user.business?
+      column :link do |obj|
+        if obj.has_engineering_relation
+          link_to "工程客户", "engineering_customers?q[sub_company_in]=#{obj.id}", target: '_blank'
+        end
+      end
+      column :link do |obj|
+        if obj.has_engineering_relation
+          link_to "工程合作单位", "/engineering_corps?q[sub_company_in]=#{obj.id}", target: '_blank'
+        end
+      end
+      column :link do |obj|
+        if obj.has_engineering_relation
+          link_to "工程项目", "/engineering_projects?q[sub_company_id_eq]=#{obj.id}", target: '_blank'
+        end
       end
     end
-    column :link do |obj|
-      if obj.has_engineering_relation
-        link_to "工程合作单位", "/engineering_corps?q[sub_company_in]=#{obj.id}", target: '_blank'
-      end
-    end
-    column :link do |obj|
-      if obj.has_engineering_relation
-        link_to "工程项目", "/engineering_projects?q[sub_company_id_eq]=#{obj.id}", target: '_blank'
-      end
-    end
-    # column :link do |obj|
-    #   if obj.has_engineering_relation
-    #     link_to "工程员工档案", "/engineering_staffs?q[sub_company_id_eq]=#{obj.id}", target: '_blank'
-    #   end
-    # end
 
     actions do |obj|
     end
