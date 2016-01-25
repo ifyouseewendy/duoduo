@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120103724) do
+ActiveRecord::Schema.define(version: 20160125133438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -456,18 +456,18 @@ ActiveRecord::Schema.define(version: 20160120103724) do
     t.date     "date"
     t.text     "code"
     t.text     "encoding"
-    t.integer  "category",                                 default: 0
-    t.integer  "scope",                                    default: 0
+    t.integer  "category",                                  default: 0
+    t.integer  "scope",                                     default: 0
     t.text     "payer"
-    t.decimal  "amount",           precision: 8, scale: 2
-    t.decimal  "admin_amount",     precision: 8, scale: 2
-    t.decimal  "total_amount",     precision: 8, scale: 2
+    t.decimal  "amount",           precision: 12, scale: 2
+    t.decimal  "admin_amount",     precision: 12, scale: 2
+    t.decimal  "total_amount",     precision: 12, scale: 2
     t.text     "contact"
     t.date     "income_date"
     t.date     "refund_date"
     t.text     "refund_person"
     t.text     "remark"
-    t.integer  "status",                                   default: 0
+    t.integer  "status",                                    default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "sub_company_name"
