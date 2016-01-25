@@ -97,13 +97,16 @@ class InvoiceSetting < ActiveRecord::Base
     last_encoding.nil? ? start_encoding : last_encoding.succ
   end
 
-  def increment_used
-    if last_encoding.nil?
-      self.last_encoding = start_encoding
-    else
-      self.last_encoding = last_encoding.succ
-    end
+  def increment_used!
+    self.class.transaction do
+      self.last_encoding = next_encoding
+      self.used_count += 1
 
-    self.used_count += 1
+      if available_count == used_count
+        self.status = 'archive'
+      end
+
+      self.save!
+    end
   end
 end
