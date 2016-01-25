@@ -509,7 +509,7 @@ $(document).on 'ready', ->
   $('.normal_corporation .import_guide ol').append('<li>3. 字段"管理费收取方式"的有效值为：每人固定比例（应发工资），每人固定比例（应发工资+单位缴费），每人固定金额</li>')
 
   # Invoices
-  if $('.invoices.new').length > 0
+  if $('.invoices').length > 0
     set_code_and_encoding = (choice) ->
       category = choice.find('input').val()
 
@@ -538,7 +538,8 @@ $(document).on 'ready', ->
             $('#invoice_encoding').prop('disabled', true).val('')
 
     default_choice = $('#invoice_category_input .choice')[0]
-    set_code_and_encoding( $(default_choice) )
+    if default_choice
+      set_code_and_encoding( $(default_choice) )
 
     $('#invoice_category_input input').on 'change', ->
       set_code_and_encoding( $(@).closest('.choice') )
@@ -583,7 +584,8 @@ $(document).on 'ready', ->
               $('#invoice_payer').val( full_names[0] )
 
     default_scope = $('#invoice_scope_input .choice')[0]
-    set_contact( $(default_scope) )
+    if default_scope
+      set_contact( $(default_scope) )
     $('#invoice_scope_input input').on 'change', ->
       set_contact( $(@).closest('.choice') )
 
