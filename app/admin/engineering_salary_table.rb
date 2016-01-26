@@ -5,6 +5,11 @@ ActiveAdmin.register EngineeringSalaryTable do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 5
 
+  config.action_items.delete_if { |item|
+    # item is an ActiveAdmin::ActionItem
+    item.display_on?(:show)
+  }
+
   breadcrumb do
     crumbs = []
 
@@ -59,17 +64,21 @@ ActiveAdmin.register EngineeringSalaryTable do
 
       ul do
         li( link_to "查看", "/#{path}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
-        li( link_to "导入", "/#{path}/import_new?engineering_salary_table_id=#{obj.id}", target: '_blank' )
-        li( link_to "添加", "/#{path}/new?project_id=#{project_id}&salary_table_id=#{obj.id}", target: "_blank" )
+        unless obj.project.locked
+          li( link_to "导入", "/#{path}/import_new?engineering_salary_table_id=#{obj.id}", target: '_blank' )
+          li( link_to "添加", "/#{path}/new?project_id=#{project_id}&salary_table_id=#{obj.id}", target: "_blank" )
+        end
       end
     end
 
     actions defaults: false do |obj|
       item "查看", engineering_salary_table_path(obj)
-      text_node "&nbsp;&nbsp;".html_safe
-      item "编辑", edit_engineering_salary_table_path(obj)
-      text_node "&nbsp;&nbsp;".html_safe
-      item "删除", engineering_salary_table_path(obj), method: :delete
+      unless obj.project.locked
+        text_node "&nbsp;&nbsp;".html_safe
+        item "编辑", edit_engineering_salary_table_path(obj)
+        text_node "&nbsp;&nbsp;".html_safe
+        item "删除", engineering_salary_table_path(obj), method: :delete
+      end
 
       # text_node "&nbsp;&nbsp;|&nbsp;&nbsp;".html_safe
       #
@@ -104,6 +113,17 @@ ActiveAdmin.register EngineeringSalaryTable do
   remove_filter :activities
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
+
+  action_item :edit, only: [:show] do
+    unless resource.project.locked
+      link_to '编辑工资表', "/engineering_salary_tables/#{resource.id}/edit"
+    end
+  end
+  action_item :destroy, only: [:show] do
+    unless resource.project.locked
+      link_to '删除工资表', "/engineering_salary_tables/#{resource.id}", method: :delete
+    end
+  end
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
