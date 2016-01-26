@@ -50,6 +50,7 @@ gem 'dotenv-rails'
 
 # Deployment
 gem 'mina'
+gem 'mina-puma', :require => false
 
 # Console
 gem 'pry-rails'

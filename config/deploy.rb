@@ -4,6 +4,7 @@ require 'mina/git'
 require 'mina/rvm'
 require 'mina/whenever'
 require 'mina/rollbar'
+require 'mina/puma'
 require 'dotenv'
 Dotenv.load
 
@@ -13,7 +14,7 @@ set :repository, 'git@github.com:ifyouseewendy/duoduo.git'
 set :branch, 'production'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_paths, ['config/database.yml','config/newrelic.yml','config/unicorn.rb', 'backups', 'log', 'tmp', '.env.production']
+set :shared_paths, ['config/database.yml','config/newrelic.yml','config/unicorn.rb', 'backups', 'log', 'tmp/pids', 'tmp/sockets', '.env.production']
 
 set :rollbar_access_token, ENV['ROLLBAR_ACCESS_TOKEN']
 
@@ -49,8 +50,11 @@ task :setup => :environment do
   queue! %[touch "#{deploy_to}/#{shared_path}/config/unicorn.rb"]
   queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/unicorn.rb'."]
 
-  queue! %[mkdir -p "#{deploy_to}/#{shared_path}/tmp/pids"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/tmp/pids"]
+  # Puma needs a place to store its pid file and socket file.
+  queue! %(mkdir -p "#{deploy_to}/#{shared_path}/tmp/sockets")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/tmp/sockets")
+  queue! %(mkdir -p "#{deploy_to}/#{shared_path}/tmp/pids")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/tmp/pids")
 end
 
 desc "Deploys the current version to the server."
@@ -71,7 +75,8 @@ task :deploy => :environment do
     to :launch do
       invoke :'whenever:update'
       invoke :'deploy:link_files'
-      invoke :'unicorn:restart'
+      invoke :'puma:phased_restart'
+      # invoke :'unicorn:restart'
       invoke :'rollbar:notify'
     end
   end
