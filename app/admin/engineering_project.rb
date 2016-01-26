@@ -41,6 +41,12 @@ ActiveAdmin.register EngineeringProject do
   scope "活动" do |record|
     record.active
   end
+  scope "已锁定" do |record|
+    record.locked
+  end
+  scope "未锁定" do |record|
+    record.unlocked
+  end
 
   index has_footer: true do
     selectable_column
@@ -143,6 +149,7 @@ ActiveAdmin.register EngineeringProject do
   end
 
   filter :status, as: :check_boxes, collection: ->{ EngineeringProject.statuses_option(filter: true) }
+  filter :locked, as: :check_boxes, collection: [ ['已锁定', true], ['未锁定', false] ]
   filter :customer
   filter :corporation
   filter :sub_company, as: :select, collection: ->{ SubCompany.hr.pluck(:name, :id) }
@@ -250,6 +257,9 @@ ActiveAdmin.register EngineeringProject do
           end
           row :status do |obj|
             status_tag obj.status_i18n, (obj.active? ? :yes : :no)
+          end
+          row :locked do |obj|
+            status_tag obj.locked_i18n, obj.locked? ? :no : :yes
           end
 
           boolean_columns = resource.class.columns_of(:boolean)

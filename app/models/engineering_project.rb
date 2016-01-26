@@ -34,6 +34,8 @@ class EngineeringProject < ActiveRecord::Base
     joins("join engineering_projects_staffs on engineering_projects.id = engineering_projects_staffs.engineering_project_id")\
       .where("engineering_projects_staffs.engineering_staff_id = ?", staff_id)
   }
+  scope :locked, ->{ where(locked: true) }
+  scope :unlocked, ->{ where.not(locked: true) }
 
   validates_uniqueness_of :nest_index, scope: :customer
   validates_presence_of :project_start_date, :project_end_date, :project_amount, :admin_amount
