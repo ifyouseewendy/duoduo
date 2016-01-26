@@ -74,6 +74,10 @@ class EngineeringProject < ActiveRecord::Base
       end
     end
 
+    def locked_option
+      [ ['已锁定', true], ['未锁定', false] ]
+    end
+
     def batch_fields
       [
         :start_date,
@@ -170,6 +174,10 @@ class EngineeringProject < ActiveRecord::Base
 
   def status_i18n
     I18n.t("activerecord.attributes.#{self.class.name.underscore}.statuses.#{status}")
+  end
+
+  def locked_i18n
+    locked ? '已锁定' : '未锁定'
   end
 
   def revise_fields

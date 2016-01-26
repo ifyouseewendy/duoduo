@@ -67,7 +67,7 @@ ActiveAdmin.register EngineeringProject do
     column :status do |obj|
       status_tag obj.status_i18n, (obj.active? ? :yes : :no)
     end
-    (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name, :status]).each do |field|
+    (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name, :status, :locked]).each do |field|
       if resource_class.nest_fields.include? field
         opt = {}
         opt = {footer: sum[field]} if [:outcome_amount, :income_amount].include?(field)
@@ -87,29 +87,53 @@ ActiveAdmin.register EngineeringProject do
       end
     end
 
+    column :locked, sortable: :locked do |obj|
+      ul do
+        if obj.locked
+          li( status_tag obj.locked_i18n, :no )
+          if current_active_admin_user.admin?
+            text_node "&nbsp".html_safe
+            li( link_to '解锁', '#', class: 'unlock' )
+          end
+        else
+          li( status_tag obj.locked_i18n, :yes )
+          if current_active_admin_user.admin?
+            text_node "&nbsp".html_safe
+            li( link_to '锁定', '#', class: 'lock' )
+          end
+        end
+      end
+    end
+
     column :staff_detail, sortable: :updated_at do |obj|
       ul do
         li( link_to "查看", "/engineering_staffs?utf8=✓&q%5Bprojects_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
-        li( link_to "添加", "#", class: "add_staffs_link" )
-        li( link_to "导入", "/engineering_staffs/import_new?project_id=#{obj.id}", target: '_blank' )
-        li( link_to "删除", "#", class: "remove_staffs_link" )
+        unless obj.locked
+          li( link_to "添加", "#", class: "add_staffs_link" )
+          li( link_to "导入", "/engineering_staffs/import_new?project_id=#{obj.id}", target: '_blank' )
+          li( link_to "删除", "#", class: "remove_staffs_link" )
+        end
       end
     end
     column :salary_table_detail, sortable: :updated_at do |obj|
       ul do
         li( link_to "查看", "/engineering_salary_tables?utf8=✓&q%5Bproject_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
-        li( link_to "自动生成", auto_generate_salary_table_engineering_project_path(obj), target: '_blank' )
-        li( link_to "导入", "/engineering_salary_tables/import_new?project_id=#{obj.id}", target: '_blank' )
+        unless obj.locked
+          li( link_to "自动生成", auto_generate_salary_table_engineering_project_path(obj), target: '_blank' )
+          li( link_to "导入", "/engineering_salary_tables/import_new?project_id=#{obj.id}", target: '_blank' )
+        end
       end
     end
 
-    actions do |obj|
-      # text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-
-      # text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      # item "生成工资表", "#", class: "generate_salary_table_link expand_table_action_width_large"
-      # text_node "&nbsp;&nbsp;".html_safe
-      # item "查看工资表", engineering_project_engineering_salary_tables_path(obj)
+    actions defaults: false do |obj|
+      text_node "&nbsp".html_safe
+      item "查看", "/engineering_projects/#{obj.id}"
+      unless obj.locked
+        text_node "&nbsp".html_safe
+        item "编辑", "/engineering_projects/#{obj.id}/edit"
+        text_node "&nbsp".html_safe
+        item "删除", "/engineering_projects/#{obj.id}", method: :delete
+      end
     end
   end
 

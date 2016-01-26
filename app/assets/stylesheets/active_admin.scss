@@ -166,6 +166,15 @@ body.engineering_customers table.index_table {
         display: inline;
       }
     }
+    td.col-locked {
+      min-width: 80px !important;
+      li {
+        display: inline;
+      }
+    }
+    td.col-actions {
+      min-width: 80px !important;
+    }
   }
 }
 
