@@ -343,7 +343,7 @@ ActiveAdmin.register EngineeringSalaryTable do
     begin
       obj = EngineeringSalaryTable.find(params[:id])
       obj.destroy
-      redirect_to :back, notice: "成功删除工资表<#{obj.name}>"
+      redirect_to "/engineering_salary_tables?q[project_id_eq]=#{obj.project.id}", notice: "成功删除工资表<#{obj.name}>"
     rescue => e
       redirect_to :back, alert: "删除失败，#{e.message}"
     end
