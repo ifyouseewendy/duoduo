@@ -262,6 +262,11 @@ class EngineeringProject < ActiveRecord::Base
       dates.each_with_index do |ar, idx|
         start_date, end_date = ar
         amount = amounts[idx]
+
+        if self.salary_tables.where(start_date: start_date, end_date: end_date).count > 0
+          raise "已存在起止日期为 #{start_date} ~ #{end_date} 的工资表"
+        end
+
         st = self.salary_tables.create!(
           type: 'EngineeringNormalSalaryTable',
           start_date: start_date,
