@@ -5,6 +5,11 @@ ActiveAdmin.register EngineeringProject do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 3
 
+  config.action_items.delete_if { |item|
+    # item is an ActiveAdmin::ActionItem
+    item.display_on?(:show)
+  }
+
   breadcrumb do
     crumbs = []
 
@@ -156,6 +161,17 @@ ActiveAdmin.register EngineeringProject do
         income_items_attributes: [:id, :date, :amount, :remark, :_destroy],
         outcome_items_attributes: [:id, :date, :amount, :_destroy, :remark, each_amount: [], persons: [], bank: [], address: [], account: [] ]
       }]
+  end
+
+  action_item :edit, only: [:show] do
+    unless resource.locked
+      link_to '编辑项目', "/engineering_projects/#{resource.id}/edit"
+    end
+  end
+  action_item :destroy, only: [:show] do
+    unless resource.locked
+      link_to '删除项目', "/engineering_projects/#{resource.id}", method: :delete
+    end
   end
 
   form do |f|
