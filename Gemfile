@@ -43,6 +43,7 @@ gem 'carrierwave', github: 'carrierwaveuploader/carrierwave'
 # Server
 gem 'thin'
 gem 'unicorn', '~> 4.8.0'
+gem 'puma'
 
 # Env
 gem 'dotenv-rails'
