@@ -249,6 +249,9 @@ body.engineering_customers table.index_table {
     th.col-customer_display {
       min-width: 100px !important;
     }
+    th.col-actions {
+      min-width: 60px !important;
+    }
   }
   .ui-dialog {
     .batch_edit_label {
@@ -272,6 +275,9 @@ body.engineering_customers table.index_table {
     }
     th.col-customer_display {
       min-width: 100px !important;
+    }
+    th.col-actions {
+      min-width: 60px !important;
     }
   }
   .ui-dialog {

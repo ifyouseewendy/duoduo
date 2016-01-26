@@ -68,7 +68,17 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
       obj.staff.seal_index
     end
 
-    actions
+    actions defaults: false do |obj|
+      st = obj.salary_table
+      if st.project.locked
+        span "项目已锁定"
+      else st.project.locked
+        text_node "&nbsp;&nbsp;".html_safe
+        item "编辑", "/engineering_normal_salary_items/#{obj.id}/edit"
+        text_node "&nbsp;&nbsp;".html_safe
+        item "删除", "/engineering_normal_salary_items/#{obj.id}", method: :delete
+      end
+    end
   end
 
   # filter :salary_table # Too much to load, but without it, can filter right
