@@ -134,7 +134,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           format_code: '0.00',
           sz: 12
         })
-        margins = {left: 0.2, right: 0.2, top: 0.4, bottom: 0.4}
+        margins = {left: 0.1, right: 0.1, top: 0.1, bottom: 0.1}
         # setup = {fit_to_width: 1}
 
         sheet_name = salary_table.month_display
