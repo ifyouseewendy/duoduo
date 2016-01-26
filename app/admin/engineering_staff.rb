@@ -283,9 +283,10 @@ ActiveAdmin.register EngineeringStaff do
       display_name: project.display_name
     }
     stats[:stat] = own_staffs.reduce([]) do |ar, ele|
+      seal = ele.seal_index.present? ? "刻章#{ele.seal_index}" : '无刻章'
       ar << {
         id: ele.id,
-        name: "#{ele.name} - #{ele.remark}"
+        name: "#{ele.name} - #{ele.remark} - #{seal}"
       }
     end
     render json: stats
