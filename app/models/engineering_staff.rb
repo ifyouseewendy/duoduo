@@ -173,7 +173,7 @@ class EngineeringStaff < ActiveRecord::Base
           end
 
           if project_used
-            sheet.column_widths 20, 20, 20, 40
+            sheet.column_widths 15, 15, 15, 30
           end
 
           wb.add_defined_name("'#{sheet_name}'!$1:$2", :local_sheet_id => sheet.index, :name => '_xlnm.Print_Titles') 
