@@ -186,7 +186,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
 
           # widths = Array.new(columns.count+1){10}
           # sheet.column_widths *widths
-          sheet.column_widths 5, 10
+          sheet.column_widths 5, 10, 10, 12, 13, 12, 12, 12, 10, 17
 
           wb.add_defined_name("'#{sheet_name}'!$1:$3", :local_sheet_id => sheet.index, :name => '_xlnm.Print_Titles') 
         end
