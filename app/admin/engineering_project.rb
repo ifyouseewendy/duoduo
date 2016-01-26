@@ -506,6 +506,21 @@ ActiveAdmin.register EngineeringProject do
     end
   end
 
+  member_action :toggle_locked, method: :post do
+    project = EngineeringProject.find(params[:id])
+
+    begin
+      project.toggle(:locked)
+      project.save!
+
+      sleep(3)
+
+      render json: {status: 'succeed', message: '成功修改锁定状态'}
+    rescue => e
+      render json: {status: 'failed', message: e.message}
+    end
+  end
+
   controller do
     before_action :wrap_params, only: :update
     before_filter :set_page_title, only: [:index]

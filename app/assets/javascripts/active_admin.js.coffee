@@ -313,6 +313,23 @@ $(document).on 'ready', ->
               else
                 alert( data['message'] )
 
+  # Engineering Project, locked status change
+  if $('.engineering_projects').length > 0
+    $('.col-locked li a').on 'click', (e) ->
+      e.stopPropagation()
+      e.preventDefault()
+
+      $(@).html("<i class='fa fa-spinner fa-spin'></i>")
+      project_id = $(this).closest('tr').attr('id').split('_')[-1..][0]
+
+      $.ajax
+        url: "/engineering_projects/#{project_id}/toggle_locked"
+        type: 'post'
+        dataType: 'json'
+        success: (data, textStatus, jqXHR) ->
+          alert( data['message'] )
+          location.reload()
+
   # Float thead for all table
   if $('table.index_table').length > 0
     $('table.index_table').floatThead();
