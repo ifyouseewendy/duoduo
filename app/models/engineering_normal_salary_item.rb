@@ -133,7 +133,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
         })
         wrap_float_text = wb.styles.add_style({
           font_name: "新宋体",
-          alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+          alignment: {horizontal: :right, vertical: :center, wrap_text: true},
           border: {style: :thin, color: '00'},
           height: 30,
           format_code: '0.00',
