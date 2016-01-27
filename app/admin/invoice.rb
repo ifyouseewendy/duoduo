@@ -34,7 +34,7 @@ ActiveAdmin.register Invoice do
   index do
     selectable_column
 
-    column :sub_company
+    column :sub_company, sortable: :sub_company_id
     column :category, sortable: :category do |obj|
       status_tag obj.category_i18n, obj.category_tag
     end
@@ -120,7 +120,7 @@ ActiveAdmin.register Invoice do
 
   show do
     attributes_table do
-      row :sub_company_name
+      row :sub_company
       row :category do |obj|
         status_tag obj.category_i18n, obj.category_tag
       end

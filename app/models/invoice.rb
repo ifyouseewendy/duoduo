@@ -7,13 +7,13 @@ class Invoice < ActiveRecord::Base
     }
 
   # belongs_to :invoicable, polymorphic: true
-  belongs_to :sub_company
+  belongs_to :sub_company, required: true
 
   enum category: [:normal, :vat_a, :vat_b]
   enum status: [:work, :red, :cancel]
   enum scope: [:engineer, :business]
 
-  validates_presence_of :sub_company_name, :date, :code, :encoding, :status, :category, :scope, :payer, :amount
+  validates_presence_of :date, :code, :encoding, :status, :category, :scope, :payer, :amount
 
   before_save :revise_fields
 
