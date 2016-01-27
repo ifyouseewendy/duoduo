@@ -559,6 +559,9 @@ $(document).on 'ready', ->
         success: (data, textStatus, jqXHR) =>
           label.find('i').remove()
 
+          label = choice.find('label')
+          label.find('span').remove()
+
           if data['status'] == 'ok'
             $('#invoice_code').prop('disabled', false)
             $('#invoice_code').val( data['data']['code'] )
@@ -566,8 +569,6 @@ $(document).on 'ready', ->
             $('#invoice_encoding').val( data['data']['encoding'] )
             $('#invoice_invoice_setting_id').val( data['data']['invoice_setting_id'] )
           else
-            label = choice.find('label')
-            label.find('span').remove()
             label.append("<span style='color:red'> #{data['message']}</span>")
             $('#invoice_code').prop('disabled', true).val('无可用发票')
             $('#invoice_encoding').prop('disabled', true).val('')
