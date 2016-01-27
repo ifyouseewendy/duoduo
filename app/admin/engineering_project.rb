@@ -376,11 +376,20 @@ ActiveAdmin.register EngineeringProject do
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     failed = []
+
     batch_action_collection.find(ids).each do |obj|
-      begin
-        obj.update_attributes!(inputs)
-      rescue => _
-        failed << "操作失败<编号#{obj.nest_index}>: #{obj.errors.full_messages.join(', ')}"
+      if obj.locked
+        failed << "操作失败<编号#{obj.nest_index}>: 处于锁定状态"
+      end
+    end
+
+    if failed.blank?
+      batch_action_collection.find(ids).each do |obj|
+        begin
+          obj.update_attributes!(inputs)
+        rescue => _
+          failed << "操作失败<编号#{obj.nest_index}>: #{obj.errors.full_messages.join(', ')}"
+        end
       end
     end
 
