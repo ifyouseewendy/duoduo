@@ -319,7 +319,7 @@ ActiveAdmin.register EngineeringSalaryTable do
         end
 
         if failed
-          st.destroy
+          st.reload.destroy
 
           filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
           filepath = Pathname("tmp/#{filename}.#{Time.stamp}.xlsx")
