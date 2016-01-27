@@ -80,7 +80,7 @@ ActiveAdmin.register InvoiceSetting do
       f.input :code, as: :string
       f.input :start_encoding, as: :string
       f.input :available_count, as: :number
-      f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
+      f.input :status, as: :radio, collection: ->{ resource_class.statuses_option.tap{|col| col[0] << {checked: true}} }.call
       f.input :remark, as: :text
     end
 
