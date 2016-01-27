@@ -169,14 +169,53 @@ ActiveAdmin.register Invoice do
 
   collection_action :create, method: :post do
     attrs = params.require(:invoice).permit( resource_class.ordered_columns )
+    attrs = attrs.except(:invoice_setting_id, :batch_create, :batch_count, :batch_file)
 
     begin
-      Invoice.create! attrs.except(:invoice_setting_id)
+      is = InvoiceSetting.where( id: params[:invoice][:invoice_setting_id] ).first
+      raise "创建失败：已无可用类型的发票" if is.blank?
 
-      is = InvoiceSetting.find( params[:invoice][:invoice_setting_id] )
-      is.increment_used!
+      if params[:invoice][:batch_create] == '1'
+        # Batch create
+        batch_count = params[:invoice][:batch_count].to_i
+        raise "批量创建失败：请填写正确的的发票数量" if batch_count == 0
 
-      redirect_to '/invoices', notice: '成功创建发票'
+        available_count = is.available_count.to_i - is.used_count.to_i
+        raise "批量创建失败：可用发票数量不足，当前<#{is.sub_company.name}><#{is.category_i18n}>只剩下 #{available_count} 张" \
+          if batch_count > available_count
+
+        batch_file = params[:invoice][:batch_file]
+
+        raise '批量创建失败：请选择上传文件' if batch_file.blank?
+        raise '批量创建失败：请上传 xls(x) 类型的文件' \
+          unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? batch_file.content_type
+
+        xls = Roo::Spreadsheet.open(batch_file.path)
+        sheet = xls.sheet(0)
+        data = sheet.to_a.reject{|row| row.all?(&:blank?) }
+
+        raise "批量创建失败：上传文件中行数为<#{data.count}>，与要创建发票数目<#{batch_count}>不相等" \
+          if batch_count != data.count
+
+        encoding = attrs[:encoding]
+        is.class.transaction do
+          data.each do |row|
+            amount, admin_amount = row.map(&:to_f)
+
+            Invoice.create! attrs.merge({encoding: encoding, amount: amount, admin_amount: admin_amount})
+            is.increment_used!
+            encoding = encoding.succ
+          end
+        end
+
+        redirect_to '/invoices', notice: "成功批量创建#{batch_count}张发票，#{attrs[:encoding]} ~ #{is.last_encoding}"
+      else
+        Invoice.create! attrs
+
+        is.increment_used!
+
+        redirect_to '/invoices', notice: "成功创建发票 #{attrs[:encoding]}"
+      end
     rescue => e
       redirect_to :back, alert: "#{e.message}"
     end
