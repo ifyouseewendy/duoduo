@@ -6,6 +6,8 @@ class InvoiceSetting < ActiveRecord::Base
       name: ->(controller, model) { [model.class.model_name.human].compact.join(' - ') },
     }
 
+  belongs_to :sub_company
+
   enum category: [:normal, :vat_a, :vat_b]
   enum status: [:active, :archive]
 

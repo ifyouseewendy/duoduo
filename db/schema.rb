@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160126112426) do
+ActiveRecord::Schema.define(version: 20160127022803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -441,6 +441,7 @@ ActiveRecord::Schema.define(version: 20160126112426) do
     t.datetime "updated_at",                  null: false
     t.text     "last_encoding"
     t.integer  "used_count",      default: 0
+    t.integer  "sub_company_id"
   end
 
   add_index "invoice_settings", ["available_count"], name: "index_invoice_settings_on_available_count", using: :btree
@@ -452,6 +453,7 @@ ActiveRecord::Schema.define(version: 20160126112426) do
   add_index "invoice_settings", ["remark"], name: "index_invoice_settings_on_remark", using: :btree
   add_index "invoice_settings", ["start_encoding"], name: "index_invoice_settings_on_start_encoding", using: :btree
   add_index "invoice_settings", ["status"], name: "index_invoice_settings_on_status", using: :btree
+  add_index "invoice_settings", ["sub_company_id"], name: "index_invoice_settings_on_sub_company_id", using: :btree
   add_index "invoice_settings", ["used_count"], name: "index_invoice_settings_on_used_count", using: :btree
 
   create_table "invoices", force: :cascade do |t|
@@ -902,6 +904,7 @@ ActiveRecord::Schema.define(version: 20160126112426) do
   add_foreign_key "guard_salary_items", "guard_salary_tables"
   add_foreign_key "guard_salary_items", "normal_staffs"
   add_foreign_key "guard_salary_tables", "normal_corporations"
+  add_foreign_key "invoice_settings", "sub_companies"
   add_foreign_key "labor_contracts", "normal_corporations"
   add_foreign_key "labor_contracts", "normal_staffs"
   add_foreign_key "non_full_day_salary_items", "non_full_day_salary_tables"
