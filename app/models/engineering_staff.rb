@@ -144,7 +144,7 @@ class EngineeringStaff < ActiveRecord::Base
           sheet.page_setup.fit_to :width => 1
 
           # Headers
-          sheet.add_row [header], height: 60, style: wrap_header_first
+          sheet.add_row [header], height: 40, style: wrap_header_first
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
             height: 30, style: wrap_header_second
 
