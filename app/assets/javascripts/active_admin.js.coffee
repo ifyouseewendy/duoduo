@@ -667,6 +667,9 @@ $(document).on 'ready', ->
         $('#invoice_batch_count_input').hide()
         $('#invoice_batch_file_input').hide()
 
+    $('.new #invoice_submit_action input').on 'click', ->
+      $(@).prop('disabled', true).val('正在新建')
+      $(@).closest('form').submit()
 
   if $('.admin_users').length > 0
     $('.edit .actions .cancel').hide()

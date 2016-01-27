@@ -110,6 +110,8 @@ class InvoiceSetting < ActiveRecord::Base
 
       if available_count == used_count
         self.status = 'archive'
+      elsif available_count < used_count
+        raise "已无可用发票"
       end
 
       self.save!
