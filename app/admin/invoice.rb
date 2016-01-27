@@ -79,8 +79,23 @@ ActiveAdmin.register Invoice do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :sub_company_name, as: :select, collection: -> { SubCompany.pluck(:name) }.call
       if request.url.split('/')[-1] == 'new'
+        sub_company_collection = ->{
+          SubCompany.all.each_with_index.reduce([]) do |ar, (sc,idx)|
+            is = sc.last_invoice_setting
+            html = {
+              'data-category' => is[:category],
+              'data-code' => is[:code],
+              'data-encoding' => is[:encoding],
+            }
+            if idx == 0
+              html[:selected] = true
+            end
+
+            ar << [sc.name, sc.id, html]
+          end
+        }.call
+        f.input :sub_company, as: :select, collection: sub_company_collection
         f.input :category, as: :radio, collection: ->{ resource_class.categories_option }.call
         f.input :code, as: :string
         f.input :encoding, as: :string

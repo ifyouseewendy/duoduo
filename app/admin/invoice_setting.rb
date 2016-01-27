@@ -4,6 +4,7 @@ ActiveAdmin.register InvoiceSetting do
     priority: 2
 
   config.batch_actions = false
+  config.per_page = 50
 
   scope "全部" do |record|
     record.all
@@ -110,7 +111,8 @@ ActiveAdmin.register InvoiceSetting do
   end
 
   collection_action :available do
-    is = InvoiceSetting.available(params[:category]).first
+    sc = SubCompany.find( params[:sub_company_id] )
+    is = sc.invoice_settings.available(params[:category]).first
 
     if is.blank?
       # category = InvoiceSetting.new(category: params[:category]).category_i18n

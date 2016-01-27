@@ -525,7 +525,7 @@ $(document).on 'ready', ->
   # Import Introduction
   $('.normal_corporation .import_guide ol').append('<li>3. 字段"管理费收取方式"的有效值为：每人固定比例（应发工资），每人固定比例（应发工资+单位缴费），每人固定金额</li>')
 
-  # Invoices
+  # Invoice Settings
   if $('.invoice_settings').length > 0
     set_category = (option) ->
       category = option.data('category')
@@ -540,6 +540,7 @@ $(document).on 'ready', ->
     $('#invoice_setting_sub_company_id').on 'change', ->
       set_category( $(@).children(":selected") )
 
+  # Invoices
   if $('.invoices').length > 0
     set_code_and_encoding = (choice) ->
       category = choice.find('input').val()
@@ -547,10 +548,13 @@ $(document).on 'ready', ->
       label = choice.find('label')
       label.append("<i class='fa fa-spinner fa-spin'></i>")
 
+      sub_company_id = $('#invoice_sub_company_id option:selected').val()
+
       $.ajax
         url: '/invoice_settings/available'
         data:
           category: category
+          sub_company_id: sub_company_id
         dataType: 'json'
         success: (data, textStatus, jqXHR) =>
           label.find('i').remove()
@@ -568,12 +572,20 @@ $(document).on 'ready', ->
             $('#invoice_code').prop('disabled', true).val('无可用发票')
             $('#invoice_encoding').prop('disabled', true).val('')
 
-    default_choice = $('#invoice_category_input .choice')[0]
-    if default_choice
-      set_code_and_encoding( $(default_choice) )
-
     $('#invoice_category_input input').on 'change', ->
       set_code_and_encoding( $(@).closest('.choice') )
+
+    set_category = (option) ->
+      category = option.data('category')
+      $("#invoice_category_#{category}").prop('checked', true)
+      set_code_and_encoding( $("#invoice_category_#{category}").closest('.choice') )
+
+    default_option = $('#invoice_sub_company_id option:selected')
+    if default_option
+      set_category( default_option )
+
+    $('#invoice_sub_company_id').on 'change', ->
+      set_category( $(@).children(":selected") )
 
     set_contact = (choice) ->
       scope = choice.find('input').val()
