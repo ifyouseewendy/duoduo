@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160127022803) do
+ActiveRecord::Schema.define(version: 20160127032544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -460,21 +460,21 @@ ActiveRecord::Schema.define(version: 20160127022803) do
     t.date     "date"
     t.text     "code"
     t.text     "encoding"
-    t.integer  "category",                                  default: 0
-    t.integer  "scope",                                     default: 0
+    t.integer  "category",                                default: 0
+    t.integer  "scope",                                   default: 0
     t.text     "payer"
-    t.decimal  "amount",           precision: 12, scale: 2
-    t.decimal  "admin_amount",     precision: 12, scale: 2
-    t.decimal  "total_amount",     precision: 12, scale: 2
+    t.decimal  "amount",         precision: 12, scale: 2
+    t.decimal  "admin_amount",   precision: 12, scale: 2
+    t.decimal  "total_amount",   precision: 12, scale: 2
     t.text     "contact"
     t.date     "income_date"
     t.date     "refund_date"
     t.text     "refund_person"
     t.text     "remark"
-    t.integer  "status",                                    default: 0
+    t.integer  "status",                                  default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "sub_company_name"
+    t.integer  "sub_company_id"
   end
 
   add_index "invoices", ["admin_amount"], name: "index_invoices_on_admin_amount", using: :btree
@@ -491,7 +491,7 @@ ActiveRecord::Schema.define(version: 20160127022803) do
   add_index "invoices", ["refund_person"], name: "index_invoices_on_refund_person", using: :btree
   add_index "invoices", ["remark"], name: "index_invoices_on_remark", using: :btree
   add_index "invoices", ["scope"], name: "index_invoices_on_scope", using: :btree
-  add_index "invoices", ["sub_company_name"], name: "index_invoices_on_sub_company_name", using: :btree
+  add_index "invoices", ["sub_company_id"], name: "index_invoices_on_sub_company_id", using: :btree
   add_index "invoices", ["total_amount"], name: "index_invoices_on_total_amount", using: :btree
   add_index "invoices", ["updated_at"], name: "index_invoices_on_updated_at", using: :btree
 
@@ -905,6 +905,7 @@ ActiveRecord::Schema.define(version: 20160127022803) do
   add_foreign_key "guard_salary_items", "normal_staffs"
   add_foreign_key "guard_salary_tables", "normal_corporations"
   add_foreign_key "invoice_settings", "sub_companies"
+  add_foreign_key "invoices", "sub_companies"
   add_foreign_key "labor_contracts", "normal_corporations"
   add_foreign_key "labor_contracts", "normal_staffs"
   add_foreign_key "non_full_day_salary_items", "non_full_day_salary_tables"

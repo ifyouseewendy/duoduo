@@ -18,6 +18,7 @@ class SubCompany < ActiveRecord::Base
   mount_uploader :engi_protocol_template, ContractTemplateUploader
 
   has_many :invoice_settings
+  has_many :invoices
 
   # Validation
   validates_uniqueness_of :name
