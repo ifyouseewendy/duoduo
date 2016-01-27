@@ -434,6 +434,9 @@ zh-CN:
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
+        batch_create: '批量创建'
+        batch_count: '发票数量'
+        batch_file: '文件'
       guard_salary_table:
         id: '编号'
         name: '名称'

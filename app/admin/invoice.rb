@@ -105,14 +105,19 @@ ActiveAdmin.register Invoice do
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option }.call
       f.input :contact, as: :select, collection: []
       f.input :payer, as: :string
-      f.input :amount, as: :number
-      f.input :admin_amount, as: :number
-      f.input :total_amount, as: :number, input_html: {disabled: true}
+      f.input :amount, as: :number, hint: '批量创建时无须填写'
+      f.input :admin_amount, as: :number, hint: '批量创建时无须填写'
+      f.input :total_amount, as: :number, input_html: {disabled: true}, hint: '批量创建时无须填写'
       f.input :income_date, as: :datepicker
       f.input :refund_date, as: :datepicker
       f.input :refund_person, as: :string
       f.input :remark, as: :text
       f.input :invoice_setting_id, as: :hidden
+      if request.url.split('/')[-1] == 'new'
+        f.input :batch_create, as: :boolean
+        f.input :batch_count, as: :number
+        f.input :batch_file, as: :file, hint: '请上传两列信息，第一列劳务费，第二列管理费'
+      end
     end
 
     f.actions

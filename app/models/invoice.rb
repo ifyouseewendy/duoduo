@@ -147,4 +147,13 @@ class Invoice < ActiveRecord::Base
   # Form placeholder
   def invoice_setting_id
   end
+
+  def batch_create
+  end
+
+  def batch_count
+  end
+
+  def batch_file
+  end
 end

@@ -657,6 +657,17 @@ $(document).on 'ready', ->
         sum += parseFloat(admin_val)
       $('#invoice_total_amount').val(sum)
 
+    $('#invoice_batch_count_input').hide()
+    $('#invoice_batch_file_input').hide()
+    $('#invoice_batch_create').on 'change', ->
+      if $(@).prop('checked') == true
+        $('#invoice_batch_count_input').show()
+        $('#invoice_batch_file_input').show()
+      else
+        $('#invoice_batch_count_input').hide()
+        $('#invoice_batch_file_input').hide()
+
+
   if $('.admin_users').length > 0
     $('.edit .actions .cancel').hide()
 
