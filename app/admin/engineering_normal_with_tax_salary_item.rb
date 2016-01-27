@@ -143,11 +143,17 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
     failed = []
-    batch_action_collection.find(ids).each do |obj|
-      begin
-        obj.update_attributes!(inputs)
-      rescue => _
-        failed << "操作失败<编号#{obj.nest_index}>: #{obj.errors.full_messages.join(', ')}"
+
+    batch_action_collection.find(ids).any?{|obj| obj.salary_table.project.locked}
+    failed << "操作失败: 项目处于锁定状态"
+
+    if failed.blank?
+      batch_action_collection.find(ids).each do |obj|
+        begin
+          obj.update_attributes!(inputs)
+        rescue => _
+          failed << "操作失败<编号#{obj.nest_index}>: #{obj.errors.full_messages.join(', ')}"
+        end
       end
     end
 
