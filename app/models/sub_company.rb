@@ -56,7 +56,7 @@ class SubCompany < ActiveRecord::Base
   end
 
   def last_invoice_setting
-    is = invoice_settings.active.last
+    is = invoice_settings.last
     if is.present?
       { category: is.category, code: is.code }
     else

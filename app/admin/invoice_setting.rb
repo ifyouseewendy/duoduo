@@ -54,6 +54,7 @@ ActiveAdmin.register InvoiceSetting do
   filter :status, as: :select, collection: -> { resource_class.statuses_option(filter: true) }
   preserve_default_filters!
   remove_filter :activities
+  remove_filter :last_encoding
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
