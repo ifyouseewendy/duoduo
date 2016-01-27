@@ -383,6 +383,7 @@ zh-CN:
         updated_at: "更新时间"
       invoice_setting:
         id: '序号'
+        sub_company: '吉易子公司'
         category: '发票类型'
         categories:
           normal: '通用机打发票'

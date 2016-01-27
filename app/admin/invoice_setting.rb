@@ -27,6 +27,8 @@ ActiveAdmin.register InvoiceSetting do
   index do
     selectable_column
 
+    column :sub_company
+
     column :category, sortable: :category do |obj|
       status_tag obj.category_i18n, obj.category_tag
     end
@@ -46,6 +48,7 @@ ActiveAdmin.register InvoiceSetting do
     actions
   end
 
+  filter :sub_company, as: :select, collection: -> { SubCompany.pluck(:name, :id) }
   filter :category, as: :select, collection: -> { resource_class.categories_option(filter: true) }
   filter :code, as: :select, collection: -> { resource_class.select(:code).pluck(:code).uniq }
   filter :status, as: :select, collection: -> { resource_class.statuses_option(filter: true) }

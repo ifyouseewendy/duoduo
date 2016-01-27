@@ -25,7 +25,7 @@ class InvoiceSetting < ActiveRecord::Base
       names = column_names.map(&:to_sym)
 
       names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i() if without_foreign_keys
+      names -= %i(sub_company_id) if without_foreign_keys
 
       names
     end
