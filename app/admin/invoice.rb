@@ -62,9 +62,9 @@ ActiveAdmin.register Invoice do
     column :updated_at
 
     actions defaults: false do |obj|
-      item "查看", engineering_company_medical_insurance_amount_path(obj)
+      item "查看", "/invoices/#{obj.id}"
       text_node "&nbsp;&nbsp;".html_safe
-      item "编辑", edit_engineering_company_medical_insurance_amount_path(obj)
+      item "编辑", "/invoices/#{obj.id}/edit"
     end
   end
 
