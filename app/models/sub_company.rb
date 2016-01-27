@@ -56,6 +56,11 @@ class SubCompany < ActiveRecord::Base
   end
 
   def last_invoice_setting
-    invoice_settings.active.last.try(:category) || 'normal'
+    is = invoice_settings.active.last
+    if is.present?
+      { category: is.category, code: is.code }
+    else
+      { category: 'normal', code: '' }
+    end
   end
 end

@@ -63,7 +63,11 @@ ActiveAdmin.register InvoiceSetting do
     f.inputs do
       sub_company_collection = ->{
         SubCompany.all.each_with_index.reduce([]) do |ar, (sc,idx)|
-          html = {'data-category'=> sc.last_invoice_setting}
+          is = sc.last_invoice_setting
+          html = {
+            'data-category' => is[:category],
+            'data-code' => is[:code]
+          }
           if idx == 0
             html[:selected] = true
           end

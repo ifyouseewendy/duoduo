@@ -530,6 +530,8 @@ $(document).on 'ready', ->
     set_category = (option) ->
       category = option.data('category')
       $("#invoice_setting_category_#{category}").prop('checked', true)
+      code = option.data('code')
+      $('#invoice_setting_code').val( code )
 
     default_option = $('#invoice_setting_sub_company_id option:selected')
     if default_option
