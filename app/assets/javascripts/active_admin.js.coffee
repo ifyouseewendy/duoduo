@@ -581,7 +581,7 @@ $(document).on 'ready', ->
       set_code_and_encoding( $("#invoice_category_#{category}").closest('.choice') )
 
     default_option = $('#invoice_sub_company_id option:selected')
-    if default_option
+    if default_option.length > 0
       set_category( default_option )
 
     $('#invoice_sub_company_id').on 'change', ->

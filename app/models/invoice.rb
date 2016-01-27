@@ -91,6 +91,17 @@ class Invoice < ActiveRecord::Base
         ordered_columns(without_foreign_keys: true)
       end
     end
+
+    def batch_form_fields
+      hash = {
+        'status_状态' => statuses_option,
+        'scope_用于' => scopes_option,
+      }
+      [:date, :contact, :payer, :amount, :admin_amount, :income_date, :refund_date, :refund_person, :remark].each do |k|
+        hash[ "#{k}_#{human_attribute_name(k)}" ] = :text
+      end
+      hash
+    end
   end
 
   def status_i18n
