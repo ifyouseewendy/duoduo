@@ -526,6 +526,18 @@ $(document).on 'ready', ->
   $('.normal_corporation .import_guide ol').append('<li>3. 字段"管理费收取方式"的有效值为：每人固定比例（应发工资），每人固定比例（应发工资+单位缴费），每人固定金额</li>')
 
   # Invoices
+  if $('.invoice_settings').length > 0
+    set_category = (option) ->
+      category = option.data('category')
+      $("#invoice_setting_category_#{category}").prop('checked', true)
+
+    default_option = $('#invoice_setting_sub_company_id option:selected')
+    if default_option
+      set_category( default_option )
+
+    $('#invoice_setting_sub_company_id').on 'change', ->
+      set_category( $(@).children(":selected") )
+
   if $('.invoices').length > 0
     set_code_and_encoding = (choice) ->
       category = choice.find('input').val()

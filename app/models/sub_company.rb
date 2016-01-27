@@ -55,4 +55,7 @@ class SubCompany < ActiveRecord::Base
     EngineeringCorp.where(id: ids)
   end
 
+  def last_invoice_setting
+    invoice_settings.active.last.try(:category) || 'normal'
+  end
 end

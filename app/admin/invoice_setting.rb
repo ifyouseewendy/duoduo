@@ -61,6 +61,17 @@ ActiveAdmin.register InvoiceSetting do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
+      sub_company_collection = ->{
+        SubCompany.all.each_with_index.reduce([]) do |ar, (sc,idx)|
+          html = {'data-category'=> sc.last_invoice_setting}
+          if idx == 0
+            html[:selected] = true
+          end
+
+          ar << [sc.name, sc.id, html]
+        end
+      }.call
+      f.input :sub_company, as: :select, collection: sub_company_collection
       f.input :category, as: :radio, collection: ->{ resource_class.categories_option }.call
       f.input :code, as: :string
       f.input :start_encoding, as: :string
