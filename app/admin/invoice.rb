@@ -107,6 +107,7 @@ ActiveAdmin.register Invoice do
       f.input :payer, as: :string
       f.input :amount, as: :number
       f.input :admin_amount, as: :number
+      f.input :total_amount, as: :number, input_html: {disabled: true}
       f.input :income_date, as: :datepicker
       f.input :refund_date, as: :datepicker
       f.input :refund_person, as: :string

@@ -637,6 +637,26 @@ $(document).on 'ready', ->
     $('#invoice_contact').on 'change', ->
       set_payer( $(@).children(":selected") )
 
+    $('#invoice_amount').on 'change', ->
+      sum = 0
+      amount_val = $('#invoice_amount').val()
+      if amount_val
+        sum += parseFloat(amount_val)
+      admin_val = $('#invoice_admin_amount').val()
+      if admin_val
+        sum += parseFloat(admin_val)
+      $('#invoice_total_amount').val(sum)
+
+    $('#invoice_admin_amount').on 'change', ->
+      sum = 0
+      amount_val = $('#invoice_amount').val()
+      if amount_val
+        sum += parseFloat(amount_val)
+      admin_val = $('#invoice_admin_amount').val()
+      if admin_val
+        sum += parseFloat(admin_val)
+      $('#invoice_total_amount').val(sum)
+
   if $('.admin_users').length > 0
     $('.edit .actions .cancel').hide()
 
