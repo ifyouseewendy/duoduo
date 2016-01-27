@@ -307,7 +307,17 @@ ActiveAdmin.register EngineeringSalaryTable do
         next if data_id == 0
         begin
           name = data[:name].delete(' ')
-          staff = project.staffs.where(name: name).first
+
+          if project.staffs.where(name: name).count > 1
+            identity_card = data.values.last
+            if identity_card.to_s.match(/^\d{10}/)
+              staff = project.staffs.where(identity_card: identity_card).first
+            else
+              raise "发现同名员工，请在所有员工#{name}的最后一列附上身份证号"
+            end
+          else
+            staff = project.staffs.where(name: name).first
+          end
 
           model.create!(data.reject{|k| k == :id or k == :name or k.blank?}.merge({
             salary_table: st,
