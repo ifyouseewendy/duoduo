@@ -100,7 +100,7 @@ ActiveAdmin.register Invoice do
         f.input :code, as: :string
         f.input :encoding, as: :string
       end
-      f.input :date, as: :datepicker
+      f.input :date, as: :datepicker, input_html: { value: Date.today.to_s }
       f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option }.call
       f.input :contact, as: :select, collection: []
