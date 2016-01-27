@@ -4,7 +4,7 @@ ActiveAdmin.register InvoiceSetting do
     priority: 2
 
   config.batch_actions = false
-  config.per_page = 50
+  config.per_page = 20
 
   scope "全部" do |record|
     record.all

@@ -3,6 +3,8 @@ ActiveAdmin.register Invoice do
     parent: I18n.t("activerecord.models.invoice"),
     priority: 1
 
+  config.per_page = 30
+
   scope "全部" do |record|
     record.all
   end
