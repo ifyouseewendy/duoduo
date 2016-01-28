@@ -225,7 +225,7 @@ ActiveAdmin.register NormalCorporation do
     names, full_names = [], []
     NormalCorporation.where(sub_company_id: params[:sub_company_id]).includes(:sub_company).select(:sub_company_id, :name, :full_name).each do |nc|
       name = nc.name
-      name = "#{nc.sub_company.name} - #{nc.name}" if nc.sub_company.present?
+      # name = "#{nc.sub_company.name} - #{nc.name}" if nc.sub_company.present?
 
       names << name
       full_names << nc.full_name
