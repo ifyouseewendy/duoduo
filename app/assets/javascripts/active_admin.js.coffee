@@ -586,6 +586,7 @@ $(document).on 'ready', ->
       input.append("<i class='fa fa-spinner fa-spin'></i>")
 
       select = $('#invoice_project_id')
+      select.empty()
 
       if scope == 'engineer'
         $.ajax
@@ -597,12 +598,13 @@ $(document).on 'ready', ->
             input.find('i').remove()
 
             if data['status'] == 'ok'
-              select.empty()
 
               names = data['data']['names']
               ids = data['data']['ids']
               $.each names, (idx, ele) ->
                 select.append("<option value='#{ids[idx]}'>#{ele}</option>")
+
+              $('#invoice_project_type').val('EngineeringProject')
       else
         input.find('i').remove()
 
@@ -679,10 +681,10 @@ $(document).on 'ready', ->
       if default_option.length > 0
         set_category( default_option )
 
-    # Set default scope
-    default_scope = $('#invoice_scope_input input:checked').closest('.choice')
-    if default_scope
-      set_contact( $(default_scope) )
+      # Set default scope
+      default_scope = $('#invoice_scope_input input:checked').closest('.choice')
+      if default_scope
+        set_contact( $(default_scope) )
 
     # Change amount and admin_amount to cal sum
     $('#invoice_amount').on 'change', ->

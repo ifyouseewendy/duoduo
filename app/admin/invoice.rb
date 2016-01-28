@@ -117,8 +117,14 @@ ActiveAdmin.register Invoice do
       f.input :date, as: :datepicker, input_html: { value: Date.today.to_s }
       f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option}.call
-      f.input :contact, as: :select, collection: []
-      f.input :project, as: :select, collection: []
+      if request.url.split('/')[-1] == 'new'
+        f.input :contact, as: :select, collection: []
+        f.input :project_id, as: :select, collection: []
+      else
+        f.input :contact, as: :select, collection: [ resource.contact ]
+        f.input :project_id, as: :select, collection: [ [ resource.project.try(:display_name), resource.project_id ] ]
+      end
+      f.input :project_type, as: :hidden
       f.input :payer, as: :string
       f.input :management, as: :string
       f.input :amount, as: :number, hint: '批量创建时无须填写'

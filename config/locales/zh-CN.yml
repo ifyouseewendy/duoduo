@@ -426,6 +426,7 @@ zh-CN:
         payer: '付款方'
         management: '经营项目'
         project: '项目名称'
+        project_id: '项目名称'
         amount: '劳务派遣费'
         admin_amount: '管理费'
         total_amount: '总金额'
