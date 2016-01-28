@@ -163,4 +163,8 @@ class SalaryTable < ActiveRecord::Base
     end
   end
 
+  def display_name
+    name
+  end
+
 end

@@ -51,4 +51,9 @@ class NonFullDaySalaryTable < ActiveRecord::Base
 
     filepath
   end
+
+  def display_name
+    name
+  end
+
 end

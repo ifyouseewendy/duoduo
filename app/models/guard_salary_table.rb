@@ -51,4 +51,9 @@ class GuardSalaryTable < ActiveRecord::Base
 
     filepath
   end
+
+  def display_name
+    name
+  end
+
 end
