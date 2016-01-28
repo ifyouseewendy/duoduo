@@ -108,10 +108,15 @@ ActiveAdmin.register Invoice do
         f.input :category, as: :radio, collection: ->{ resource_class.categories_option }.call
         f.input :code, as: :string
         f.input :encoding, as: :string
+      else
+        f.input :sub_company, as: :select, input_html: {disabled: true}
+        f.input :category, as: :radio, collection: ->{ resource_class.categories_option }.call, input_html: {disabled: true}
+        f.input :code, as: :string, input_html: {disabled: true}
+        f.input :encoding, as: :string, input_html: {disabled: true}
       end
       f.input :date, as: :datepicker, input_html: { value: Date.today.to_s }
       f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
-      f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option.tap{|col| col[1] << {checked: true}} }.call
+      f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option}.call
       f.input :contact, as: :select, collection: []
       f.input :payer, as: :string
       f.input :project, as: :string
