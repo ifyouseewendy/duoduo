@@ -419,6 +419,7 @@ zh-CN:
           vat_b: '增值税专用'
         scope: '用于'
         scopes:
+          nil: ''
           engineer: '工程'
           business: '业务'
         payer: '付款方'

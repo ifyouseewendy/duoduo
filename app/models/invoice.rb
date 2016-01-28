@@ -135,12 +135,19 @@ class Invoice < ActiveRecord::Base
   end
 
   def scope_i18n
-    I18n.t("activerecord.attributes.#{self.class.name.underscore}.scopes.#{scope}")
+    scp = self.scope || :nil
+    I18n.t("activerecord.attributes.#{self.class.name.underscore}.scopes.#{scp}")
   end
 
   def revise_fields
     if (changed & ['amount', 'admin_amount']).present?
       self.total_amount = [amount, admin_amount].map(&:to_f).sum.round(2)
+    end
+
+    if changes['status'].present? && changes['status'][-1] == 'cancel'
+      [:scope, :contact, :payer, :amount, :admin_amount, :total_amount, :income_date, :refund_person, :refund_date].each do |key|
+        self.send("#{key}=", nil)
+      end
     end
   end
 
