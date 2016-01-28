@@ -24,6 +24,8 @@ class EngineeringProject < ActiveRecord::Base
   has_many :outcome_items, class: EngineeringOutcomeItem, dependent: :destroy, after_add: :set_fields
   accepts_nested_attributes_for :outcome_items, allow_destroy: true
 
+  has_many :invoices, as: :project
+
   before_save :revise_fields
   before_create :generate_outcome_items
 

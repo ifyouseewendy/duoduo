@@ -8,6 +8,7 @@ class Invoice < ActiveRecord::Base
 
   # belongs_to :invoicable, polymorphic: true
   belongs_to :sub_company, required: true
+  belongs_to :project, polymorphic: true
 
   enum category: [:normal, :vat_a, :vat_b]
   enum status: [:work, :red, :cancel, :archive]

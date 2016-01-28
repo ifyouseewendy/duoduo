@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128063020) do
+ActiveRecord::Schema.define(version: 20160128064006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -476,6 +476,8 @@ ActiveRecord::Schema.define(version: 20160128063020) do
     t.datetime "updated_at"
     t.integer  "sub_company_id"
     t.text     "management"
+    t.integer  "project_id"
+    t.string   "project_type"
   end
 
   add_index "invoices", ["admin_amount"], name: "index_invoices_on_admin_amount", using: :btree
@@ -489,6 +491,7 @@ ActiveRecord::Schema.define(version: 20160128063020) do
   add_index "invoices", ["income_date"], name: "index_invoices_on_income_date", using: :btree
   add_index "invoices", ["management"], name: "index_invoices_on_management", using: :btree
   add_index "invoices", ["payer"], name: "index_invoices_on_payer", using: :btree
+  add_index "invoices", ["project_type", "project_id"], name: "index_invoices_on_project_type_and_project_id", using: :btree
   add_index "invoices", ["refund_date"], name: "index_invoices_on_refund_date", using: :btree
   add_index "invoices", ["refund_person"], name: "index_invoices_on_refund_person", using: :btree
   add_index "invoices", ["remark"], name: "index_invoices_on_remark", using: :btree
