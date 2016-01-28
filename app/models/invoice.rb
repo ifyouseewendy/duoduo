@@ -12,7 +12,7 @@ class Invoice < ActiveRecord::Base
 
   enum category: [:normal, :vat_a, :vat_b]
   enum status: [:work, :red, :cancel, :archive]
-  enum scope: [:engineer, :business]
+  enum scope: [:business, :engineer]
 
   validates_presence_of :date, :code, :encoding, :status, :category, :scope, :payer
 
