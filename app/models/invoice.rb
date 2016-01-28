@@ -10,7 +10,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :sub_company, required: true
 
   enum category: [:normal, :vat_a, :vat_b]
-  enum status: [:work, :red, :cancel]
+  enum status: [:work, :red, :cancel, :archive]
   enum scope: [:engineer, :business]
 
   validates_presence_of :date, :code, :encoding, :status, :category, :scope, :payer
@@ -112,7 +112,7 @@ class Invoice < ActiveRecord::Base
     case status
     when 'red'
       :red
-    when 'cancel'
+    when 'cancel', 'archive'
       :no
     else
       :yes

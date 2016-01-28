@@ -32,6 +32,9 @@ ActiveAdmin.register Invoice do
   scope "作废" do |record|
     record.cancel
   end
+  scope "存档" do |record|
+    record.archive
+  end
 
   index do
     selectable_column
@@ -243,4 +246,9 @@ ActiveAdmin.register Invoice do
     end
   end
 
+  controller do
+    def scoped_collection
+      end_of_association_chain.includes(:sub_company)
+    end
+  end
 end

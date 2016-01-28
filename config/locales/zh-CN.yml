@@ -412,6 +412,7 @@ zh-CN:
           work: '正常'
           red: '红充'
           cancel: '作废'
+          archive: '存档'
         category: '发票类型'
         categories:
           normal: '通用机打发票'
