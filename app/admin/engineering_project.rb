@@ -434,6 +434,21 @@ ActiveAdmin.register EngineeringProject do
     render json: stats
   end
 
+  collection_action :query_by_customer do
+    nest_index = params[:customer_name].match(/^(\d+)/)[0] rescue nil
+    customer = EngineeringCustomer.where(nest_index: nest_index).first
+
+    names, ids = [], []
+    if customer.present?
+      customer.projects.reorder(nest_index: :desc).select(:id, :nest_index, :name).reduce([]) do |ar, ele|
+        names << ele.display_name
+        ids << ele.id
+      end
+    end
+
+    render json: { status: :ok, data: {names: names, ids: ids } }
+  end
+
   # Member actions
   member_action :add_staffs, method: :post do
     project = EngineeringProject.find(params[:id])
