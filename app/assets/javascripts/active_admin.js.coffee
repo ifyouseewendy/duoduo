@@ -686,6 +686,14 @@ $(document).on 'ready', ->
       if default_scope
         set_contact( $(default_scope) )
 
+    if $('.invoices.edit').length > 0
+      $('#invoice_contact_input').append(" <a href='#' class='load_contacts'>加载列表</a>")
+
+      $('#invoice_contact_input .load_contacts').on 'click', (e)->
+        e.stopPropagation()
+        e.preventDefault()
+        set_contact( $('#invoice_scope_input input:checked').closest('.choice') )
+
     # Change amount and admin_amount to cal sum
     $('#invoice_amount').on 'change', ->
       sum = 0
