@@ -136,13 +136,13 @@ ActiveAdmin.register Invoice do
       f.input :total_amount, as: :number, input_html: {disabled: true}, hint: '批量创建时无须填写'
       f.input :income_date, as: :datepicker
       f.input :refund_date, as: :datepicker
-      f.input :refund_person, as: :string
+      f.input :refund_person, as: :string, hint: '批量创建时无须填写'
       f.input :remark, as: :string
       f.input :invoice_setting_id, as: :hidden
       if request.url.split('/')[-1] == 'new'
         f.input :batch_create, as: :boolean
         f.input :batch_count, as: :number
-        f.input :batch_file, as: :file, hint: '请上传两列信息，第一列劳务费，第二列管理费'
+        f.input :batch_file, as: :file, hint: '请上传四列信息，劳务费，管理费，回款人，项目名称（只支持工程项目编号）'
       end
     end
 
@@ -230,9 +230,22 @@ ActiveAdmin.register Invoice do
         encoding = attrs[:encoding]
         is.class.transaction do
           data.each do |row|
-            amount, admin_amount = row.map(&:to_f)
+            amount, admin_amount, refund_person, nest_index = row.map do |cell|
+              if String === cell
+                cell.strip
+              else
+                cell.to_f
+              end
+            end
 
-            Invoice.create! attrs.merge({encoding: encoding, amount: amount, admin_amount: admin_amount})
+            if attrs[:scope] == 'engineer'
+              ec_nest_index = attrs[:contact].match(/^(\d+)/)[0] rescue nil
+              customer = EngineeringCustomer.where(nest_index: ec_nest_index).first
+              project = EngineeringProject.where(engineering_customer_id: customer.id, nest_index: nest_index).first
+            else
+              project = nil
+            end
+            Invoice.create! attrs.merge({encoding: encoding, amount: amount, admin_amount: admin_amount, refund_person: refund_person, project: project})
             is.increment_used!
             encoding = encoding.succ
           end
