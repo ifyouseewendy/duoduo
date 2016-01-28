@@ -94,11 +94,14 @@ class Invoice < ActiveRecord::Base
     end
 
     def batch_form_fields
+      contacts = NormalCorporation.includes(:sub_company).select(:name, :sub_company_id).map{|nc| ["#{nc.sub_company.name} - #{nc.name}", nc.name]}
+      contacts += EngineeringCustomer.select(:name, :nest_index).map{|ec| [ec.display_name, ec.display_name]}
       hash = {
         'status_状态' => statuses_option,
         'scope_用于' => scopes_option,
+        'contact_联系人' =>  contacts
       }
-      [:date, :contact, :payer, :amount, :admin_amount, :income_date, :refund_date, :refund_person, :remark].each do |k|
+      [:date, :payer, :amount, :admin_amount, :income_date, :refund_date, :refund_person, :remark].each do |k|
         hash[ "#{k}_#{human_attribute_name(k)}" ] = :text
       end
       hash

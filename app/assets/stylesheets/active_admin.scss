@@ -501,6 +501,9 @@ body.engineering_customers table.index_table {
   .download_links {
     display: none;
   }
+  .ui-dialog {
+    width: 560px !important;
+  }
 }
 
 .action_items {
