@@ -573,21 +573,10 @@ $(document).on 'ready', ->
             $('#invoice_code').prop('disabled', true).val('无可用发票')
             $('#invoice_encoding').prop('disabled', true).val('')
 
-    $('#invoice_category_input input').on 'change', ->
-      set_code_and_encoding( $(@).closest('.choice') )
-
     set_category = (option) ->
       category = option.data('category')
       $("#invoice_category_#{category}").prop('checked', true)
       set_code_and_encoding( $("#invoice_category_#{category}").closest('.choice') )
-
-    default_option = $('#invoice_sub_company_id option:selected')
-    if default_option.length > 0
-      set_category( default_option )
-
-    $('#invoice_sub_company_id').on 'change', ->
-      set_category( $(@).children(":selected") )
-      set_contact( $('#invoice_scope_input input:checked').closest('.choice') )
 
     set_contact = (choice) ->
       scope = choice.find('input').val()
@@ -631,17 +620,37 @@ $(document).on 'ready', ->
                 contact.append("<option data-full-name=#{full_names[idx]} value='#{ele}'>#{ele}</option>")
               $('#invoice_payer').val( full_names[0] )
 
-    default_scope = $('#invoice_scope_input input:checked').closest('.choice')
-    if default_scope
-      set_contact( $(default_scope) )
+    set_payer = (option) ->
+      $('#invoice_payer').val( option.data('full-name') )
+
+    # Change sub_company
+    $('#invoice_sub_company_id').on 'change', ->
+      set_category( $(@).children(":selected") )
+      set_contact( $('#invoice_scope_input input:checked').closest('.choice') )
+
+    # Change category
+    $('#invoice_category_input input').on 'change', ->
+      set_code_and_encoding( $(@).closest('.choice') )
+
+    # Change scope
     $('#invoice_scope_input input').on 'change', ->
       set_contact( $(@).closest('.choice') )
 
-    set_payer = (option) ->
-      $('#invoice_payer').val( option.data('full-name') )
+    # Change contact
     $('#invoice_contact').on 'change', ->
       set_payer( $(@).children(":selected") )
 
+    # Set default category
+    default_option = $('#invoice_sub_company_id option:selected')
+    if default_option.length > 0
+      set_category( default_option )
+
+    # Set default scope
+    default_scope = $('#invoice_scope_input input:checked').closest('.choice')
+    if default_scope
+      set_contact( $(default_scope) )
+
+    # Change amount and admin_amount to cal sum
     $('#invoice_amount').on 'change', ->
       sum = 0
       amount_val = $('#invoice_amount').val()
@@ -662,6 +671,7 @@ $(document).on 'ready', ->
         sum += parseFloat(admin_val)
       $('#invoice_total_amount').val(sum)
 
+    # Batch action
     $('#invoice_batch_count_input').hide()
     $('#invoice_batch_file_input').hide()
     $('#invoice_batch_create').on 'change', ->
@@ -672,6 +682,7 @@ $(document).on 'ready', ->
         $('#invoice_batch_count_input').hide()
         $('#invoice_batch_file_input').hide()
 
+    # Forbid multiple submits
     $('.new #invoice_submit_action input').on 'click', ->
       $(@).prop('disabled', true).val('正在新建')
       $(@).closest('form').submit()
