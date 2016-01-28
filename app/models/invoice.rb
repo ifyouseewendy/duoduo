@@ -13,7 +13,7 @@ class Invoice < ActiveRecord::Base
   enum status: [:work, :red, :cancel]
   enum scope: [:engineer, :business]
 
-  validates_presence_of :date, :code, :encoding, :status, :category, :scope, :payer, :amount
+  validates_presence_of :date, :code, :encoding, :status, :category, :scope, :payer
 
   before_save :revise_fields
 
