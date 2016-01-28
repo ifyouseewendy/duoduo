@@ -34,6 +34,7 @@ class SealItem < ActiveRecord::Base
 
   def revise_fields
     self.nest_index ||= seal_table.try(:latest_item_index)
+    self.name = self.name.strip
   end
 
   def revise_staff_seal_index
