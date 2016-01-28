@@ -16,6 +16,8 @@ ActiveAdmin.register EngineeringCompanyMedicalInsuranceAmount do
     end
     actions defaults: false do |obj|
       item "编辑", edit_engineering_company_medical_insurance_amount_path(obj)
+      text_node "&nbsp".html_safe
+      item "删除", engineering_company_medical_insurance_amount_path(obj), method: :delete
     end
   end
 
