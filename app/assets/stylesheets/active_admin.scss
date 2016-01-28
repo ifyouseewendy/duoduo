@@ -503,6 +503,15 @@ body.engineering_customers table.index_table {
     th.col-project {
       min-width: 100px !important;
     }
+    td.col-amount {
+      text-align: right
+    }
+    td.col-admin_amount {
+      text-align: right
+    }
+    td.col-total_amount {
+      text-align: right
+    }
   }
   .download_links {
     display: none;
