@@ -53,10 +53,14 @@ ActiveAdmin.register Invoice do
       obj.scope_i18n
     end
     column :contact
-    column :payer
     column :project, sortable: [:project_type, :project_id] do |obj|
-      link_to obj.project.try(:name), '#'
+      pr = obj.project
+      if pr.present?
+        link_to pr.try(:display_name), "#{pr.class.name.underscore.pluralize}?q[id_eq]=#{pr.id}", target: '_blank'
+      else
+      end
     end
+    column :payer
     column :management
     column :amount
     column :admin_amount
@@ -161,10 +165,10 @@ ActiveAdmin.register Invoice do
         obj.scope_i18n
       end
       row :contact
-      row :payer
       row :project do |obj|
         link_to obj.project.try(:name), '#'
       end
+      row :payer
       row :management
       row :amount
       row :admin_amount
