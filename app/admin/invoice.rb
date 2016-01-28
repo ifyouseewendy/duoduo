@@ -54,6 +54,7 @@ ActiveAdmin.register Invoice do
     end
     column :contact
     column :payer
+    column :management
     column :amount
     column :admin_amount
     column :total_amount
@@ -110,6 +111,7 @@ ActiveAdmin.register Invoice do
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option.tap{|col| col[1] << {checked: true}} }.call
       f.input :contact, as: :select, collection: []
       f.input :payer, as: :string
+      f.input :management, as: :string
       f.input :amount, as: :number, hint: '批量创建时无须填写'
       f.input :admin_amount, as: :number, hint: '批量创建时无须填写'
       f.input :total_amount, as: :number, input_html: {disabled: true}, hint: '批量创建时无须填写'
@@ -145,6 +147,7 @@ ActiveAdmin.register Invoice do
       end
       row :contact
       row :payer
+      row :management
       row :amount
       row :admin_amount
       row :total_amount
