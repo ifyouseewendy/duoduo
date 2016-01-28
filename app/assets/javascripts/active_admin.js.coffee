@@ -330,6 +330,10 @@ $(document).on 'ready', ->
           alert( data['message'] )
           location.reload()
 
+    # Check project invoices sum
+    $('.col-invoices .invoice-valid').closest('td').css('background-color', 'rgba(125, 255, 125, 0.309804)')
+    $('.col-invoices .invoice-invalid').closest('td').css('background-color', 'rgba(255, 0, 0, 0.18)')
+
   # Float thead for all table
   if $('table.index_table').length > 0
     $('table.index_table').floatThead();

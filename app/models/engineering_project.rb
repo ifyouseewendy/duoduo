@@ -602,4 +602,14 @@ class EngineeringProject < ActiveRecord::Base
     raise "<#{satff.name}>已分配项目与项目<#{name}>时间重叠" unless staff.accept_schedule?(*self.range)
   end
 
+  def has_equal_invoices?
+    project_amount_sum, admin_amount_sum = 0,0
+    invoices.each do |inv|
+      project_amount_sum += inv.amount.to_f
+      admin_amount_sum += inv.admin_amount.to_f
+    end
+
+    self.project_amount.to_f.round(2) == project_amount_sum.round(2) \
+      && self.admin_amount.to_f.round(2) == admin_amount_sum.round(2)
+  end
 end

@@ -175,6 +175,12 @@ body.engineering_customers table.index_table {
     td.col-actions {
       min-width: 80px !important;
     }
+    td.col-invoices {
+      // min-width: 80px !important;
+      li {
+        display: inline;
+      }
+    }
   }
 }
 

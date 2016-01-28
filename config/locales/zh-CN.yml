@@ -575,6 +575,7 @@ zh-CN:
         staff_detail: '用工明细'
         salary_table_detail: '工资表'
         locked: '锁定状态'
+        invoices: '发票'
       engineering_corp:
         id: '编号'
         name: '单位名称'

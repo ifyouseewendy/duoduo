@@ -78,7 +78,22 @@ ActiveAdmin.register EngineeringProject do
     column :status do |obj|
       status_tag obj.status_i18n, (obj.active? ? :yes : :no)
     end
-    (resource_class.ordered_columns(without_foreign_keys: true) - [:id, :nest_index, :name, :status, :locked]).each do |field|
+    column :start_date
+    column :project_start_date
+    column :project_end_date
+    column :project_range
+    column :invoices, sortable: :id do |obj|
+      if obj.invoices.present?
+        if obj.has_equal_invoices?
+          link_to '发票', "/invoices?q[project_type_eq]=EngineeringProject&&q[project_id_eq]=#{obj.id}", target: '_blank', class: 'invoice-valid'
+        else
+          link_to '发票', "/invoices?q[project_type_eq]=EngineeringProject&&q[project_id_eq]=#{obj.id}", target: '_blank', class: 'invoice-invalid'
+        end
+      end
+    end
+
+    displayed_columns = [:id, :nest_index, :name, :status, :start_date, :project_start_date, :project_end_date, :project_range, :locked]
+    (resource_class.ordered_columns(without_foreign_keys: true) - displayed_columns).each do |field|
       if resource_class.nest_fields.include? field
         opt = {}
         opt = {footer: sum[field]} if [:outcome_amount, :income_amount].include?(field)
