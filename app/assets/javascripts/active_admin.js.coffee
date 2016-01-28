@@ -627,7 +627,7 @@ $(document).on 'ready', ->
                 contact.append("<option data-full-name=#{full_names[idx]} value='#{ele}'>#{ele}</option>")
               $('#invoice_payer').val( full_names[0] )
 
-    default_scope = $('#invoice_scope_input .choice')[0]
+    default_scope = $('#invoice_scope_input input:checked').closest('.choice')
     if default_scope
       set_contact( $(default_scope) )
     $('#invoice_scope_input input').on 'change', ->

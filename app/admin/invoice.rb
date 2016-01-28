@@ -104,7 +104,7 @@ ActiveAdmin.register Invoice do
       end
       f.input :date, as: :datepicker, input_html: { value: Date.today.to_s }
       f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
-      f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option }.call
+      f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option.tap{|col| col[1] << {checked: true}} }.call
       f.input :contact, as: :select, collection: []
       f.input :payer, as: :string
       f.input :amount, as: :number, hint: '批量创建时无须填写'
