@@ -640,10 +640,11 @@ $(document).on 'ready', ->
     $('#invoice_contact').on 'change', ->
       set_payer( $(@).children(":selected") )
 
-    # Set default category
-    default_option = $('#invoice_sub_company_id option:selected')
-    if default_option.length > 0
-      set_category( default_option )
+    if $('.invoices.new').length > 0
+      # Set default category
+      default_option = $('#invoice_sub_company_id option:selected')
+      if default_option.length > 0
+        set_category( default_option )
 
     # Set default scope
     default_scope = $('#invoice_scope_input input:checked').closest('.choice')
