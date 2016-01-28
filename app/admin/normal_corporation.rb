@@ -223,13 +223,18 @@ ActiveAdmin.register NormalCorporation do
 
   collection_action :display do
     names, full_names = [], []
-    NormalCorporation.where(sub_company_id: params[:sub_company_id]).includes(:sub_company).select(:sub_company_id, :name, :full_name).each do |nc|
-      name = nc.name
-      # name = "#{nc.sub_company.name} - #{nc.name}" if nc.sub_company.present?
+    NormalCorporation\
+      .where(sub_company_id: params[:sub_company_id])\
+      .includes(:sub_company)\
+      .select(:sub_company_id, :name, :full_name)\
+      .sort_by(&:name)\
+      .each do |nc|
+        name = nc.name
+        # name = "#{nc.sub_company.name} - #{nc.name}" if nc.sub_company.present?
 
-      names << name
-      full_names << nc.full_name
-    end
+        names << name
+        full_names << nc.full_name
+      end
 
     render json: {status: 'ok', data: { names: names, full_names: full_names } }
   end
