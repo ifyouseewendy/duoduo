@@ -113,7 +113,7 @@ ActiveAdmin.register Invoice do
       f.input :income_date, as: :datepicker
       f.input :refund_date, as: :datepicker
       f.input :refund_person, as: :string
-      f.input :remark, as: :text
+      f.input :remark, as: :string
       f.input :invoice_setting_id, as: :hidden
       if request.url.split('/')[-1] == 'new'
         f.input :batch_create, as: :boolean
