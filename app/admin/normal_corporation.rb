@@ -234,6 +234,30 @@ ActiveAdmin.register NormalCorporation do
     render json: {status: 'ok', data: { names: names, full_names: full_names } }
   end
 
+  collection_action :query_salary_tables do
+    corp = NormalCorporation.where(name: params[:name]).first
+
+    names, ids = [], []
+    if corp.present?
+      corp.salary_tables.order(start_date: :desc).each do |st|
+        names << "基础 - #{st.name}"
+        ids << st.id
+      end
+
+      corp.guard_salary_tables.order(start_date: :desc).each do |st|
+        names << "保安 - #{st.name}"
+        ids << st.id
+      end
+
+      corp.non_full_day_salary_tables.order(start_date: :desc).each do |st|
+        names << "非全日制 - #{st.name}"
+        ids << st.id
+      end
+    end
+
+    render json: { status: :ok, data: {names: names, ids: ids } }
+  end
+
   controller do
     def scoped_collection
       end_of_association_chain.includes(:sub_company)

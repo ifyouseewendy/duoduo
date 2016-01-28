@@ -606,7 +606,22 @@ $(document).on 'ready', ->
 
               $('#invoice_project_type').val('EngineeringProject')
       else
-        input.find('i').remove()
+        $.ajax
+          url: '/normal_corporations/query_salary_tables'
+          data:
+            name: obj_name
+          dataType: 'json'
+          success: (data, textStatus, jqXHR) =>
+            input.find('i').remove()
+
+            if data['status'] == 'ok'
+
+              names = data['data']['names']
+              ids = data['data']['ids']
+              $.each names, (idx, ele) ->
+                select.append("<option value='#{ids[idx]}'>#{ele}</option>")
+
+              $('#invoice_project_type').val('EngineeringProject')
 
     set_contact = (choice) ->
       scope = choice.find('input').val()
