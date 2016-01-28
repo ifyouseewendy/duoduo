@@ -118,8 +118,8 @@ ActiveAdmin.register Invoice do
       f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option}.call
       f.input :contact, as: :select, collection: []
+      f.input :project, as: :select, collection: []
       f.input :payer, as: :string
-      f.input :project, as: :string
       f.input :management, as: :string
       f.input :amount, as: :number, hint: '批量创建时无须填写'
       f.input :admin_amount, as: :number, hint: '批量创建时无须填写'

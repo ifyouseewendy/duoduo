@@ -578,6 +578,34 @@ $(document).on 'ready', ->
       $("#invoice_category_#{category}").prop('checked', true)
       set_code_and_encoding( $("#invoice_category_#{category}").closest('.choice') )
 
+    load_projects = ->
+      scope = $('#invoice_scope_input input:checked').val()
+      obj_name = $('#invoice_contact_input option:selected').val()
+
+      input = $('#invoice_project_input')
+      input.append("<i class='fa fa-spinner fa-spin'></i>")
+
+      select = $('#invoice_project_id')
+
+      if scope == 'engineer'
+        $.ajax
+          url: '/engineering_projects/query_by_customer'
+          data:
+            customer_name: obj_name
+          dataType: 'json'
+          success: (data, textStatus, jqXHR) =>
+            input.find('i').remove()
+
+            if data['status'] == 'ok'
+              select.empty()
+
+              names = data['data']['names']
+              ids = data['data']['ids']
+              $.each names, (idx, ele) ->
+                select.append("<option value='#{ids[idx]}'>#{ele}</option>")
+      else
+        input.find('i').remove()
+
     set_contact = (choice) ->
       scope = choice.find('input').val()
       sub_company_id = $('#invoice_sub_company_id option:selected').val()
@@ -601,6 +629,8 @@ $(document).on 'ready', ->
               $.each names, (idx, ele) ->
                 contact.append("<option data-full-name=#{full_names[idx]} value='#{ele}'>#{ele}</option>")
               $('#invoice_payer').val( full_names[0] )
+
+              load_projects()
       else
         $.ajax
           url: '/normal_corporations/display'
@@ -619,6 +649,8 @@ $(document).on 'ready', ->
               $.each names, (idx, ele) ->
                 contact.append("<option data-full-name=#{full_names[idx]} value='#{ele}'>#{ele}</option>")
               $('#invoice_payer').val( full_names[0] )
+
+              load_projects()
 
     set_payer = (option) ->
       $('#invoice_payer').val( option.data('full-name') )
@@ -639,6 +671,7 @@ $(document).on 'ready', ->
     # Change contact
     $('#invoice_contact').on 'change', ->
       set_payer( $(@).children(":selected") )
+      load_projects()
 
     if $('.invoices.new').length > 0
       # Set default category
