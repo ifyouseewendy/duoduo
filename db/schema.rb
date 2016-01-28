@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128064006) do
+ActiveRecord::Schema.define(version: 20160128134438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -399,9 +399,11 @@ ActiveRecord::Schema.define(version: 20160128064006) do
     t.integer  "normal_corporation_id"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
+    t.date     "start_date"
   end
 
   add_index "guard_salary_tables", ["normal_corporation_id"], name: "index_guard_salary_tables_on_normal_corporation_id", using: :btree
+  add_index "guard_salary_tables", ["start_date"], name: "index_guard_salary_tables_on_start_date", using: :btree
 
   create_table "individual_income_tax_bases", force: :cascade do |t|
     t.integer  "base"
@@ -591,9 +593,11 @@ ActiveRecord::Schema.define(version: 20160128064006) do
     t.integer  "normal_corporation_id"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
+    t.date     "start_date"
   end
 
   add_index "non_full_day_salary_tables", ["normal_corporation_id"], name: "index_non_full_day_salary_tables_on_normal_corporation_id", using: :btree
+  add_index "non_full_day_salary_tables", ["start_date"], name: "index_non_full_day_salary_tables_on_start_date", using: :btree
 
   create_table "normal_corporations", force: :cascade do |t|
     t.text     "name"
