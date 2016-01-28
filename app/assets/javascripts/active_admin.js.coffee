@@ -587,9 +587,11 @@ $(document).on 'ready', ->
 
     $('#invoice_sub_company_id').on 'change', ->
       set_category( $(@).children(":selected") )
+      set_contact( $('#invoice_scope_input input:checked').closest('.choice') )
 
     set_contact = (choice) ->
       scope = choice.find('input').val()
+      sub_company_id = $('#invoice_sub_company_id option:selected').val()
 
       label = choice.find('label')
       label.append("<i class='fa fa-spinner fa-spin'></i>")
@@ -613,6 +615,8 @@ $(document).on 'ready', ->
       else
         $.ajax
           url: '/normal_corporations/display'
+          data:
+            sub_company_id: sub_company_id
           dataType: 'json'
           success: (data, textStatus, jqXHR) =>
             label.find('i').remove()

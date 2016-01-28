@@ -223,7 +223,7 @@ ActiveAdmin.register NormalCorporation do
 
   collection_action :display do
     names, full_names = [], []
-    NormalCorporation.includes(:sub_company).select(:sub_company_id, :name, :full_name).each do |nc|
+    NormalCorporation.where(sub_company_id: params[:sub_company_id]).includes(:sub_company).select(:sub_company_id, :name, :full_name).each do |nc|
       name = nc.name
       name = "#{nc.sub_company.name} - #{nc.name}" if nc.sub_company.present?
 
