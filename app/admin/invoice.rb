@@ -54,6 +54,9 @@ ActiveAdmin.register Invoice do
     end
     column :contact
     column :payer
+    column :project, sortable: [:project_type, :project_id] do |obj|
+      link_to obj.project.try(:name), '#'
+    end
     column :management
     column :amount
     column :admin_amount
@@ -111,6 +114,7 @@ ActiveAdmin.register Invoice do
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option.tap{|col| col[1] << {checked: true}} }.call
       f.input :contact, as: :select, collection: []
       f.input :payer, as: :string
+      f.input :project, as: :string
       f.input :management, as: :string
       f.input :amount, as: :number, hint: '批量创建时无须填写'
       f.input :admin_amount, as: :number, hint: '批量创建时无须填写'
@@ -147,6 +151,9 @@ ActiveAdmin.register Invoice do
       end
       row :contact
       row :payer
+      row :project do |obj|
+        link_to obj.project.try(:name), '#'
+      end
       row :management
       row :amount
       row :admin_amount
