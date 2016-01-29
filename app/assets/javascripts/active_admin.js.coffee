@@ -349,7 +349,6 @@ $(document).on 'ready', ->
 
     # Hide download and new button for staff's salary items
     if query_string && query_string.indexOf('normal_staff_id_eq')
-      $('.download_links').hide()
       $('.action_item').hide()
 
     # Insert some br to make it visible
