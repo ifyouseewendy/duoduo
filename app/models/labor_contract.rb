@@ -167,6 +167,11 @@ class LaborContract < ActiveRecord::Base
     Date.today + 1.month >= contract_end_date
   end
 
+  def copy_from(option)
+    attrs = self.attributes.except('id', 'created_at', 'updated_at').merge(option)
+    self.class.create!(attrs)
+  end
+
   private
 
     def check_active_status
@@ -197,5 +202,4 @@ class LaborContract < ActiveRecord::Base
         end
       end
     end
-
 end

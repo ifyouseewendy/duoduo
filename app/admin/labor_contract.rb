@@ -199,20 +199,20 @@ ActiveAdmin.register LaborContract do
   batch_action :batch_copy, form: ->{ LaborContract.batch_copy_fields } do |ids|
     inputs = JSON.parse(params['batch_action_inputs']).with_indifferent_access
 
-    require'pry';binding.pry
-    failed = []
+    failed, new_ids = [], []
     batch_action_collection.find(ids).each do |obj|
       begin
-        # obj.duplicate_from(inputs)
+        new_ids << obj.copy_from(inputs).try(:id)
       rescue => e
-        failed << "操作失败<#{obj.name}>: #{obj.errors.full_messages.join(', ')} ; #{e.message}"
+        failed << "部分记录操作失败<#{obj.name}>: #{obj.errors.full_messages.join(', ')} ; #{e.message}"
       end
     end
 
     if failed.present?
       redirect_to :back, alert: failed.join('; ')
     else
-      redirect_to :back, notice: "成功更新 #{ids.count} 条记录"
+      query = new_ids.map{|n_id| "q[id_in][]=#{n_id}"}.join('&')
+      redirect_to "/labor_contracts?#{query}", notice: "成功更新 #{ids.count} 条记录"
     end
   end
 

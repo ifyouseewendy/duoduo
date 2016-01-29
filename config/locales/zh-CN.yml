@@ -329,7 +329,7 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
       labor_contract:
-        id: '编号'
+        id: '合同编号'
         contract_type: '合同类型'
         contract_types:
           normal_contract: '合同'
