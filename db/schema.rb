@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160129130356) do
+ActiveRecord::Schema.define(version: 20160129131233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -676,6 +676,8 @@ ActiveRecord::Schema.define(version: 20160129130356) do
   add_index "normal_staffs", ["address"], name: "index_normal_staffs_on_address", using: :btree
   add_index "normal_staffs", ["age"], name: "index_normal_staffs_on_age", using: :btree
   add_index "normal_staffs", ["birth"], name: "index_normal_staffs_on_birth", using: :btree
+  add_index "normal_staffs", ["created_at", "in_contract"], name: "index_normal_staffs_on_created_at_and_in_contract", using: :btree
+  add_index "normal_staffs", ["created_at"], name: "index_normal_staffs_on_created_at", using: :btree
   add_index "normal_staffs", ["gender"], name: "index_normal_staffs_on_gender", using: :btree
   add_index "normal_staffs", ["grade"], name: "index_normal_staffs_on_grade", using: :btree
   add_index "normal_staffs", ["identity_card"], name: "index_normal_staffs_on_identity_card", using: :btree
@@ -689,6 +691,8 @@ ActiveRecord::Schema.define(version: 20160129130356) do
   add_index "normal_staffs", ["social_insurance_start_date"], name: "index_normal_staffs_on_social_insurance_start_date", using: :btree
   add_index "normal_staffs", ["sub_company_id"], name: "index_normal_staffs_on_sub_company_id", using: :btree
   add_index "normal_staffs", ["telephone"], name: "index_normal_staffs_on_telephone", using: :btree
+  add_index "normal_staffs", ["updated_at", "in_contract"], name: "index_normal_staffs_on_updated_at_and_in_contract", using: :btree
+  add_index "normal_staffs", ["updated_at"], name: "index_normal_staffs_on_updated_at", using: :btree
 
   create_table "projects", force: :cascade do |t|
     t.string   "name"
