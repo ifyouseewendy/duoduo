@@ -387,6 +387,9 @@ body.engineering_customers table.index_table {
   .action_items {
     display: none;
   }
+  .ui-dialog {
+    width: 560px !important;
+  }
 }
 
 .salary_tables {

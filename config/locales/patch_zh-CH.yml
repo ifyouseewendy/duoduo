@@ -12,6 +12,7 @@ zh-CN:
       labels:
         flag: "标记"
         batch_edit: '修改'
+        batch_copy: '拷贝'
         assign_project: '分配工程项目'
         manipulate_insurance_fund: '单位部分转移'
         manipulate_personal_fund: '个人部分转移'

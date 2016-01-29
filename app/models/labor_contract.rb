@@ -54,7 +54,7 @@ class LaborContract < ActiveRecord::Base
 
     def batch_form_fields
       hash = {
-        'in_contract_有劳务关系' => [ ['活动', true], ['解除', false] ],
+        'in_contract_状态' => [ ['活动', true], ['解除', false] ],
         'has_social_insurance_社保' => [ ['有', true], ['无', false] ],
         'social_insurance_base_社保基数' => :text,
         'has_medical_insurance_医保' => [ ['有', true], ['无', false] ],
@@ -75,6 +75,24 @@ class LaborContract < ActiveRecord::Base
       ]
       fields.each{|fi| hash[ "#{fi}_#{human_attribute_name(fi)}" ] = :text }
 
+      hash
+    end
+
+    def batch_copy_fields
+      corps = NormalCorporation\
+        .includes(:sub_company)\
+        .select(:sub_company_id, :id, :name, :full_name)\
+        .sort_by{|nc| [nc.sub_company_id, nc.name]}\
+        .reduce([]) do |ar, nc|
+          ar << ["#{nc.sub_company.name} - #{nc.name}", nc.id]
+        end
+      hash = {
+        'normal_corporation_id_合作单位' => corps,
+        'in_contract_状态' => [ ['活动', true], ['解除', false] ],
+        'contract_type_合同类型' => LaborContract.contract_types_option,
+        'contract_start_date_合同起始日期' => :text,
+        'contract_end_date_合同结束日期' => :text,
+      }
       hash
     end
   end

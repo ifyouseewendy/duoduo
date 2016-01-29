@@ -28,7 +28,7 @@ $(document).on 'ready', ->
         $('.iit_form .result').text("应缴税金：" + data['result']).show();
 
   # Batch Edit Fields
-  $('a[data-action=batch_edit]').on 'click', ->
+  $('a[data-action=batch_edit], a[data-action=batch_copy]').on 'click', ->
     $('.ui-dialog-title').text('批量修改字段');
 
     list = $('#dialog_confirm ul')
