@@ -3,11 +3,12 @@ ActiveAdmin.register NormalStaff do
 
   # include ImportSupport
 
+  config.per_page = 30
+  config.sort_order = 'updated_at_desc'
+
   menu \
     parent: I18n.t("activerecord.models.normal_business"),
     priority: 2
-
-  config.sort_order = 'created_at_asc'
 
   breadcrumb do
     crumbs = []
