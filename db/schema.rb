@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128134438) do
+ActiveRecord::Schema.define(version: 20160129115947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,22 +110,22 @@ ActiveRecord::Schema.define(version: 20160128134438) do
   add_index "contract_templates", ["sub_company_id"], name: "index_contract_templates_on_sub_company_id", using: :btree
 
   create_table "engineering_big_table_salary_items", force: :cascade do |t|
-    t.decimal  "salary_deserve",              precision: 8, scale: 2
-    t.decimal  "pension_personal",            precision: 8, scale: 2
-    t.decimal  "unemployment_personal",       precision: 8, scale: 2
-    t.decimal  "medical_personal",            precision: 8, scale: 2
-    t.decimal  "total_personal",              precision: 8, scale: 2
-    t.decimal  "salary_in_fact",              precision: 8, scale: 2
-    t.decimal  "pension_company",             precision: 8, scale: 2
-    t.decimal  "unemployment_company",        precision: 8, scale: 2
-    t.decimal  "medical_company",             precision: 8, scale: 2
-    t.decimal  "injury_company",              precision: 8, scale: 2
-    t.decimal  "birth_company",               precision: 8, scale: 2
-    t.decimal  "total_company",               precision: 8, scale: 2
-    t.decimal  "total_sum",                   precision: 8, scale: 2
+    t.decimal  "salary_deserve",              precision: 12, scale: 2
+    t.decimal  "pension_personal",            precision: 12, scale: 2
+    t.decimal  "unemployment_personal",       precision: 12, scale: 2
+    t.decimal  "medical_personal",            precision: 12, scale: 2
+    t.decimal  "total_personal",              precision: 12, scale: 2
+    t.decimal  "salary_in_fact",              precision: 12, scale: 2
+    t.decimal  "pension_company",             precision: 12, scale: 2
+    t.decimal  "unemployment_company",        precision: 12, scale: 2
+    t.decimal  "medical_company",             precision: 12, scale: 2
+    t.decimal  "injury_company",              precision: 12, scale: 2
+    t.decimal  "birth_company",               precision: 12, scale: 2
+    t.decimal  "total_company",               precision: 12, scale: 2
+    t.decimal  "total_sum",                   precision: 12, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
     t.integer  "engineering_salary_table_id"
     t.integer  "engineering_staff_id"
   end
@@ -145,18 +145,18 @@ ActiveRecord::Schema.define(version: 20160128134438) do
   create_table "engineering_company_medical_insurance_amounts", force: :cascade do |t|
     t.date     "start_date"
     t.date     "end_date"
-    t.decimal  "amount",     precision: 8, scale: 2
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.decimal  "amount",     precision: 12, scale: 2
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.text     "remark"
   end
 
   create_table "engineering_company_social_insurance_amounts", force: :cascade do |t|
     t.date     "start_date"
     t.date     "end_date"
-    t.decimal  "amount",     precision: 8, scale: 2
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.decimal  "amount",     precision: 12, scale: 2
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.text     "remark"
   end
 
@@ -194,10 +194,10 @@ ActiveRecord::Schema.define(version: 20160128134438) do
   add_index "engineering_customers", ["nest_index"], name: "index_engineering_customers_on_nest_index", using: :btree
 
   create_table "engineering_dong_fang_salary_items", force: :cascade do |t|
-    t.decimal  "salary_deserve",              precision: 8, scale: 2
+    t.decimal  "salary_deserve",              precision: 12, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
     t.integer  "engineering_salary_table_id"
     t.integer  "engineering_staff_id"
   end
@@ -217,14 +217,14 @@ ActiveRecord::Schema.define(version: 20160128134438) do
   add_index "engineering_income_items", ["engineering_project_id"], name: "index_engineering_income_items_on_engineering_project_id", using: :btree
 
   create_table "engineering_normal_salary_items", force: :cascade do |t|
-    t.decimal  "salary_deserve",              precision: 8, scale: 2
-    t.decimal  "social_insurance",            precision: 8, scale: 2
-    t.decimal  "medical_insurance",           precision: 8, scale: 2
-    t.decimal  "total_insurance",             precision: 8, scale: 2
-    t.decimal  "salary_in_fact",              precision: 8, scale: 2
+    t.decimal  "salary_deserve",              precision: 12, scale: 2
+    t.decimal  "social_insurance",            precision: 12, scale: 2
+    t.decimal  "medical_insurance",           precision: 12, scale: 2
+    t.decimal  "total_insurance",             precision: 12, scale: 2
+    t.decimal  "salary_in_fact",              precision: 12, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
     t.integer  "engineering_salary_table_id"
     t.integer  "engineering_staff_id"
   end
@@ -240,16 +240,16 @@ ActiveRecord::Schema.define(version: 20160128134438) do
   add_index "engineering_normal_salary_items", ["total_insurance"], name: "index_engineering_normal_salary_items_on_total_insurance", using: :btree
 
   create_table "engineering_normal_with_tax_salary_items", force: :cascade do |t|
-    t.decimal  "salary_deserve",              precision: 8, scale: 2
-    t.decimal  "social_insurance",            precision: 8, scale: 2
-    t.decimal  "medical_insurance",           precision: 8, scale: 2
-    t.decimal  "total_insurance",             precision: 8, scale: 2
-    t.decimal  "total_amount",                precision: 8, scale: 2
-    t.decimal  "tax",                         precision: 8, scale: 2
-    t.decimal  "salary_in_fact",              precision: 8, scale: 2
+    t.decimal  "salary_deserve",              precision: 12, scale: 2
+    t.decimal  "social_insurance",            precision: 12, scale: 2
+    t.decimal  "medical_insurance",           precision: 12, scale: 2
+    t.decimal  "total_insurance",             precision: 12, scale: 2
+    t.decimal  "total_amount",                precision: 12, scale: 2
+    t.decimal  "tax",                         precision: 12, scale: 2
+    t.decimal  "salary_in_fact",              precision: 12, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
     t.integer  "engineering_salary_table_id"
     t.integer  "engineering_staff_id"
   end
@@ -368,25 +368,25 @@ ActiveRecord::Schema.define(version: 20160128134438) do
   add_index "engineering_staffs", ["updated_at"], name: "index_engineering_staffs_on_updated_at", using: :btree
 
   create_table "guard_salary_items", force: :cascade do |t|
-    t.decimal  "income",                precision: 8, scale: 2
-    t.decimal  "salary_deserve",        precision: 8, scale: 2
-    t.decimal  "festival",              precision: 8, scale: 2
-    t.decimal  "overtime",              precision: 8, scale: 2
-    t.decimal  "dress_return",          precision: 8, scale: 2
-    t.decimal  "salary_deserve_total",  precision: 8, scale: 2
-    t.decimal  "physical_exam_deduct",  precision: 8, scale: 2
-    t.decimal  "dress_deduct",          precision: 8, scale: 2
-    t.decimal  "work_exam_deduct",      precision: 8, scale: 2
-    t.decimal  "other_deduct",          precision: 8, scale: 2
-    t.decimal  "total_deduct",          precision: 8, scale: 2
-    t.decimal  "salary_in_fact",        precision: 8, scale: 2
-    t.decimal  "accident_insurance",    precision: 8, scale: 2
-    t.decimal  "total",                 precision: 8, scale: 2
-    t.decimal  "balance",               precision: 8, scale: 2
+    t.decimal  "income",                precision: 12, scale: 2
+    t.decimal  "salary_deserve",        precision: 12, scale: 2
+    t.decimal  "festival",              precision: 12, scale: 2
+    t.decimal  "overtime",              precision: 12, scale: 2
+    t.decimal  "dress_return",          precision: 12, scale: 2
+    t.decimal  "salary_deserve_total",  precision: 12, scale: 2
+    t.decimal  "physical_exam_deduct",  precision: 12, scale: 2
+    t.decimal  "dress_deduct",          precision: 12, scale: 2
+    t.decimal  "work_exam_deduct",      precision: 12, scale: 2
+    t.decimal  "other_deduct",          precision: 12, scale: 2
+    t.decimal  "total_deduct",          precision: 12, scale: 2
+    t.decimal  "salary_in_fact",        precision: 12, scale: 2
+    t.decimal  "accident_insurance",    precision: 12, scale: 2
+    t.decimal  "total",                 precision: 12, scale: 2
+    t.decimal  "balance",               precision: 12, scale: 2
     t.integer  "normal_staff_id"
     t.integer  "guard_salary_table_id"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.text     "remark"
   end
 
@@ -415,21 +415,21 @@ ActiveRecord::Schema.define(version: 20160128134438) do
     t.integer  "grade"
     t.integer  "tax_range_start"
     t.integer  "tax_range_end"
-    t.decimal  "rate",            precision: 8, scale: 2
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.decimal  "rate",            precision: 12, scale: 2
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
   end
 
   create_table "insurance_fund_rates", force: :cascade do |t|
     t.text     "name"
-    t.decimal  "pension",            precision: 8, scale: 4
-    t.decimal  "unemployment",       precision: 8, scale: 4
-    t.decimal  "medical",            precision: 8, scale: 4
-    t.decimal  "injury",             precision: 8, scale: 4
-    t.decimal  "birth",              precision: 8, scale: 4
-    t.decimal  "house_accumulation", precision: 8, scale: 2
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.decimal  "pension",            precision: 12, scale: 2
+    t.decimal  "unemployment",       precision: 12, scale: 2
+    t.decimal  "medical",            precision: 12, scale: 2
+    t.decimal  "injury",             precision: 12, scale: 2
+    t.decimal  "birth",              precision: 12, scale: 2
+    t.decimal  "house_accumulation", precision: 12, scale: 2
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
   end
 
   create_table "invoice_settings", force: :cascade do |t|
@@ -513,9 +513,9 @@ ActiveRecord::Schema.define(version: 20160128134438) do
     t.boolean  "has_accident_insurance"
     t.date     "current_social_insurance_start_date"
     t.date     "current_medical_insurance_start_date"
-    t.decimal  "social_insurance_base",                precision: 8, scale: 2
-    t.decimal  "medical_insurance_base",               precision: 8, scale: 2
-    t.decimal  "house_accumulation_base",              precision: 8, scale: 2
+    t.decimal  "social_insurance_base",                precision: 12, scale: 2
+    t.decimal  "medical_insurance_base",               precision: 12, scale: 2
+    t.decimal  "house_accumulation_base",              precision: 12, scale: 2
     t.text     "social_insurance_serial"
     t.text     "medical_insurance_serial"
     t.text     "medical_insurance_card"
@@ -529,8 +529,8 @@ ActiveRecord::Schema.define(version: 20160128134438) do
     t.text     "remark"
     t.integer  "normal_corporation_id"
     t.integer  "normal_staff_id"
-    t.datetime "created_at",                                                   null: false
-    t.datetime "updated_at",                                                   null: false
+    t.datetime "created_at",                                                    null: false
+    t.datetime "updated_at",                                                    null: false
   end
 
   add_index "labor_contracts", ["arrive_current_company_at"], name: "index_labor_contracts_on_arrive_current_company_at", using: :btree
@@ -568,19 +568,19 @@ ActiveRecord::Schema.define(version: 20160128134438) do
 
   create_table "non_full_day_salary_items", force: :cascade do |t|
     t.text     "month"
-    t.decimal  "work_hour",                    precision: 8, scale: 2
-    t.decimal  "work_wage",                    precision: 8, scale: 2
-    t.decimal  "salary_deserve",               precision: 8, scale: 2
-    t.decimal  "tax",                          precision: 8, scale: 2
-    t.decimal  "other",                        precision: 8, scale: 2
-    t.decimal  "salary_in_fact",               precision: 8, scale: 2
-    t.decimal  "accident_insurance",           precision: 8, scale: 2
-    t.decimal  "admin_amount",                 precision: 8, scale: 2
-    t.decimal  "total",                        precision: 8, scale: 2
+    t.decimal  "work_hour",                    precision: 12, scale: 2
+    t.decimal  "work_wage",                    precision: 12, scale: 2
+    t.decimal  "salary_deserve",               precision: 12, scale: 2
+    t.decimal  "tax",                          precision: 12, scale: 2
+    t.decimal  "other",                        precision: 12, scale: 2
+    t.decimal  "salary_in_fact",               precision: 12, scale: 2
+    t.decimal  "accident_insurance",           precision: 12, scale: 2
+    t.decimal  "admin_amount",                 precision: 12, scale: 2
+    t.decimal  "total",                        precision: 12, scale: 2
     t.integer  "normal_staff_id"
     t.text     "remark"
-    t.datetime "created_at",                                           null: false
-    t.datetime "updated_at",                                           null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.integer  "non_full_day_salary_table_id"
   end
 
@@ -610,18 +610,18 @@ ActiveRecord::Schema.define(version: 20160128134438) do
     t.text     "account_bank"
     t.text     "contact"
     t.text     "telephone"
-    t.money    "contract_amount",                   scale: 2
-    t.integer  "admin_charge_type",                           default: 0
-    t.decimal  "admin_charge_amount", precision: 8, scale: 2, default: 0.0
+    t.money    "contract_amount",                    scale: 2
+    t.integer  "admin_charge_type",                            default: 0
+    t.decimal  "admin_charge_amount", precision: 12, scale: 2, default: 0.0
     t.date     "expense_date"
     t.text     "remark"
-    t.datetime "created_at",                                                null: false
-    t.datetime "updated_at",                                                null: false
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
     t.date     "contract_start_date"
     t.date     "contract_end_date"
     t.text     "full_name"
     t.integer  "sub_company_id"
-    t.integer  "status",                                      default: 0
+    t.integer  "status",                                       default: 0
   end
 
   add_index "normal_corporations", ["account"], name: "index_normal_corporations_on_account", using: :btree
@@ -694,49 +694,49 @@ ActiveRecord::Schema.define(version: 20160128134438) do
   end
 
   create_table "salary_items", force: :cascade do |t|
-    t.decimal  "salary_deserve",               precision: 8, scale: 2
-    t.decimal  "annual_reward",                precision: 8, scale: 2
-    t.decimal  "pension_personal",             precision: 8, scale: 2
-    t.decimal  "pension_margin_personal",      precision: 8, scale: 2
-    t.decimal  "unemployment_personal",        precision: 8, scale: 2
-    t.decimal  "unemployment_margin_personal", precision: 8, scale: 2
-    t.decimal  "medical_personal",             precision: 8, scale: 2
-    t.decimal  "medical_margin_personal",      precision: 8, scale: 2
-    t.decimal  "house_accumulation_personal",  precision: 8, scale: 2
-    t.decimal  "big_amount_personal",          precision: 8, scale: 2
-    t.decimal  "income_tax",                   precision: 8, scale: 2
-    t.decimal  "salary_card_addition",         precision: 8, scale: 2
-    t.decimal  "medical_scan_addition",        precision: 8, scale: 2
-    t.decimal  "physical_exam_addition",       precision: 8, scale: 2
-    t.decimal  "total_personal",               precision: 8, scale: 2
-    t.decimal  "salary_in_fact",               precision: 8, scale: 2
-    t.decimal  "pension_company",              precision: 8, scale: 2
-    t.decimal  "pension_margin_company",       precision: 8, scale: 2
-    t.decimal  "unemployment_company",         precision: 8, scale: 2
-    t.decimal  "unemployment_margin_company",  precision: 8, scale: 2
-    t.decimal  "medical_company",              precision: 8, scale: 2
-    t.decimal  "medical_margin_company",       precision: 8, scale: 2
-    t.decimal  "injury_company",               precision: 8, scale: 2
-    t.decimal  "injury_margin_company",        precision: 8, scale: 2
-    t.decimal  "birth_company",                precision: 8, scale: 2
-    t.decimal  "birth_margin_company",         precision: 8, scale: 2
-    t.decimal  "accident_company",             precision: 8, scale: 2
-    t.decimal  "house_accumulation_company",   precision: 8, scale: 2
-    t.decimal  "total_company",                precision: 8, scale: 2
-    t.decimal  "admin_amount",                 precision: 8, scale: 2
-    t.decimal  "total_sum",                    precision: 8, scale: 2
-    t.decimal  "total_sum_with_admin_amount",  precision: 8, scale: 2
+    t.decimal  "salary_deserve",               precision: 12, scale: 2
+    t.decimal  "annual_reward",                precision: 12, scale: 2
+    t.decimal  "pension_personal",             precision: 12, scale: 2
+    t.decimal  "pension_margin_personal",      precision: 12, scale: 2
+    t.decimal  "unemployment_personal",        precision: 12, scale: 2
+    t.decimal  "unemployment_margin_personal", precision: 12, scale: 2
+    t.decimal  "medical_personal",             precision: 12, scale: 2
+    t.decimal  "medical_margin_personal",      precision: 12, scale: 2
+    t.decimal  "house_accumulation_personal",  precision: 12, scale: 2
+    t.decimal  "big_amount_personal",          precision: 12, scale: 2
+    t.decimal  "income_tax",                   precision: 12, scale: 2
+    t.decimal  "salary_card_addition",         precision: 12, scale: 2
+    t.decimal  "medical_scan_addition",        precision: 12, scale: 2
+    t.decimal  "physical_exam_addition",       precision: 12, scale: 2
+    t.decimal  "total_personal",               precision: 12, scale: 2
+    t.decimal  "salary_in_fact",               precision: 12, scale: 2
+    t.decimal  "pension_company",              precision: 12, scale: 2
+    t.decimal  "pension_margin_company",       precision: 12, scale: 2
+    t.decimal  "unemployment_company",         precision: 12, scale: 2
+    t.decimal  "unemployment_margin_company",  precision: 12, scale: 2
+    t.decimal  "medical_company",              precision: 12, scale: 2
+    t.decimal  "medical_margin_company",       precision: 12, scale: 2
+    t.decimal  "injury_company",               precision: 12, scale: 2
+    t.decimal  "injury_margin_company",        precision: 12, scale: 2
+    t.decimal  "birth_company",                precision: 12, scale: 2
+    t.decimal  "birth_margin_company",         precision: 12, scale: 2
+    t.decimal  "accident_company",             precision: 12, scale: 2
+    t.decimal  "house_accumulation_company",   precision: 12, scale: 2
+    t.decimal  "total_company",                precision: 12, scale: 2
+    t.decimal  "admin_amount",                 precision: 12, scale: 2
+    t.decimal  "total_sum",                    precision: 12, scale: 2
+    t.decimal  "total_sum_with_admin_amount",  precision: 12, scale: 2
     t.text     "remark"
-    t.datetime "created_at",                                                       null: false
-    t.datetime "updated_at",                                                       null: false
+    t.datetime "created_at",                                                        null: false
+    t.datetime "updated_at",                                                        null: false
     t.integer  "salary_table_id"
     t.integer  "normal_staff_id"
-    t.decimal  "deduct_addition",              precision: 8, scale: 2
-    t.decimal  "salary_deduct_addition",       precision: 8, scale: 2
-    t.decimal  "other_deduct_addition",        precision: 8, scale: 2
-    t.decimal  "other_personal",               precision: 8, scale: 2
-    t.decimal  "other_company",                precision: 8, scale: 2
-    t.integer  "role",                                                 default: 0
+    t.decimal  "deduct_addition",              precision: 12, scale: 2
+    t.decimal  "salary_deduct_addition",       precision: 12, scale: 2
+    t.decimal  "other_deduct_addition",        precision: 12, scale: 2
+    t.decimal  "other_personal",               precision: 12, scale: 2
+    t.decimal  "other_company",                precision: 12, scale: 2
+    t.integer  "role",                                                  default: 0
     t.text     "staff_name"
     t.text     "staff_account"
     t.integer  "nest_index"
