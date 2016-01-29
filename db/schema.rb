@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160129115947) do
+ActiveRecord::Schema.define(version: 20160129130356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -539,6 +539,8 @@ ActiveRecord::Schema.define(version: 20160129115947) do
   add_index "labor_contracts", ["contract_end_date"], name: "index_labor_contracts_on_contract_end_date", using: :btree
   add_index "labor_contracts", ["contract_start_date"], name: "index_labor_contracts_on_contract_start_date", using: :btree
   add_index "labor_contracts", ["contract_type"], name: "index_labor_contracts_on_contract_type", using: :btree
+  add_index "labor_contracts", ["created_at", "in_contract"], name: "index_labor_contracts_on_created_at_and_in_contract", using: :btree
+  add_index "labor_contracts", ["created_at"], name: "index_labor_contracts_on_created_at", using: :btree
   add_index "labor_contracts", ["current_medical_insurance_start_date"], name: "index_labor_contracts_on_current_medical_insurance_start_date", using: :btree
   add_index "labor_contracts", ["current_social_insurance_start_date"], name: "index_labor_contracts_on_current_social_insurance_start_date", using: :btree
   add_index "labor_contracts", ["has_accident_insurance"], name: "index_labor_contracts_on_has_accident_insurance", using: :btree
@@ -556,6 +558,8 @@ ActiveRecord::Schema.define(version: 20160129115947) do
   add_index "labor_contracts", ["social_insurance_base"], name: "index_labor_contracts_on_social_insurance_base", using: :btree
   add_index "labor_contracts", ["social_insurance_release_date"], name: "index_labor_contracts_on_social_insurance_release_date", using: :btree
   add_index "labor_contracts", ["social_insurance_serial"], name: "index_labor_contracts_on_social_insurance_serial", using: :btree
+  add_index "labor_contracts", ["updated_at", "in_contract"], name: "index_labor_contracts_on_updated_at_and_in_contract", using: :btree
+  add_index "labor_contracts", ["updated_at"], name: "index_labor_contracts_on_updated_at", using: :btree
   add_index "labor_contracts", ["work_place"], name: "index_labor_contracts_on_work_place", using: :btree
   add_index "labor_contracts", ["work_type"], name: "index_labor_contracts_on_work_type", using: :btree
 
