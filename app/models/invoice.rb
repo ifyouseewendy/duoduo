@@ -101,7 +101,7 @@ class Invoice < ActiveRecord::Base
         'scope_用于' => scopes_option,
         'contact_联系人' =>  contacts
       }
-      [:date, :payer, :amount, :admin_amount, :income_date, :refund_date, :refund_person, :remark].each do |k|
+      [:date, :payer, :management, :amount, :admin_amount, :income_date, :refund_date, :refund_person, :remark].each do |k|
         hash[ "#{k}_#{human_attribute_name(k)}" ] = :text
       end
       hash
