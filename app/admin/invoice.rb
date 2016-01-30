@@ -74,8 +74,10 @@ ActiveAdmin.register Invoice do
 
     actions defaults: false do |obj|
       item "查看", "/invoices/#{obj.id}"
-      text_node "&nbsp;&nbsp;".html_safe
-      item "编辑", "/invoices/#{obj.id}/edit"
+      unless obj.archive?
+        text_node "&nbsp;&nbsp;".html_safe
+        item "编辑", "/invoices/#{obj.id}/edit"
+      end
     end
   end
 
