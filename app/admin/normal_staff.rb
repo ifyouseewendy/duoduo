@@ -21,6 +21,8 @@ ActiveAdmin.register NormalStaff do
           crumbs << link_to(nc.name, "/normal_corporations?q[id_eq]=#{nc.id}")
         end
       end
+    elsif params[:action] == 'show'
+      crumbs << link_to('员工信息', "/normal_staffs")
     end
 
     crumbs
