@@ -545,6 +545,9 @@ $(document).on 'ready', ->
 
   # Invoices
   if $('.invoices').length > 0
+    # Hide batch destroy action
+    $('.batch_action[data-action=destroy]').closest('li').hide()
+
     set_code_and_encoding = (choice) ->
       category = choice.find('input').val()
 
