@@ -129,7 +129,7 @@ ActiveAdmin.register NormalStaff do
       f.input :name, as: :string
       f.input :identity_card, as: :string
       # f.input :in_service
-      f.input :in_contract
+      # f.input :in_contract
       f.input :account, as: :string
       f.input :account_bank, as: :string
       if request.url.split('/')[-1] == 'edit'
