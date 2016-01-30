@@ -116,8 +116,10 @@ class Invoice < ActiveRecord::Base
     case status
     when 'red'
       :red
-    when 'cancel', 'archive'
+    when 'archive'
       :no
+    when 'cancel'
+      :cancel
     else
       :yes
     end
