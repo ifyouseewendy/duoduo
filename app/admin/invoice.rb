@@ -118,7 +118,11 @@ ActiveAdmin.register Invoice do
         f.input :code, as: :string, input_html: {disabled: true}
         f.input :encoding, as: :string, input_html: {disabled: true}
       end
-      f.input :date, as: :datepicker, input_html: { value: Date.today.to_s }
+      if request.url.split('/')[-1] == 'new'
+        f.input :date, as: :datepicker, input_html: { value: Date.today.to_s }
+      else
+        f.input :date, as: :datepicker
+      end
       f.input :status, as: :radio, collection: ->{ resource_class.statuses_option }.call
       f.input :scope, as: :radio, collection: ->{ resource_class.scopes_option}.call
       if request.url.split('/')[-1] == 'new'
