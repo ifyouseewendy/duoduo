@@ -2,6 +2,12 @@ workers Integer(ENV['WEB_CONCURRENCY'] || 4)
 threads_count = Integer(ENV['MAX_THREADS'] || 1) # Not sure for thread safe
 threads threads_count, threads_count
 
+# Default as mina-puma set. Without setting here, `mina puma:stop/start` will
+# start up a server using tcp default to port 9292
+pidfile "tmp/pids/puma.pid"
+state_path "tmp/sockets/puma.state"
+bind "unix://tmp/sockets/puma.sock"
+
 stdout_redirect 'log/puma.stdout.log', 'log/puma.stderr.log', true
 
 prune_bundler true
