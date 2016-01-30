@@ -205,16 +205,16 @@ ActiveAdmin.register NormalStaff do
     end
   end
 
-  sidebar '劳务合同', only: [:show] do
-    ul do
-      lc = normal_staff.labor_contract
-      if lc.present?
-        li link_to lc.name, normal_staff_labor_contract_path(normal_staff, lc), class: 'current_contract'
-      end
-
-      li link_to "全部合同", normal_staff_labor_contracts_path(normal_staff)
-    end
-  end
+  # sidebar '劳务合同', only: [:show] do
+  #   ul do
+  #     lc = normal_staff.labor_contract
+  #     if lc.present?
+  #       li link_to lc.name, normal_staff_labor_contract_path(normal_staff, lc), class: 'current_contract'
+  #     end
+  #
+  #     li link_to "全部合同", normal_staff_labor_contracts_path(normal_staff)
+  #   end
+  # end
 
   # Batch actions
   batch_action :batch_edit, form: ->{ NormalStaff.batch_form_fields } do |ids|
