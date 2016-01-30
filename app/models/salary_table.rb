@@ -58,13 +58,23 @@ class SalaryTable < ActiveRecord::Base
   end
 
   def export_xlsx(view: nil, options: {})
-    filename = filename_by(view: view)
+    staff_view = options['normal_staff_id_eq'].present?
+    if staff_view
+      collection = SalaryItem.ransack(options).result
+      staff_name = collection.first.staff_name
+      sheet_name = staff_name
+      filename = "#{staff_name}_#{Time.stamp}.xlsx"
+    else
+      collection = salary_items.order(nest_index: :asc)
+      sheet_name = name
+      filename = filename_by(view: view)
+    end
+
     filepath = EXPORT_PATH.join filename
 
-    collection = salary_items.order(nest_index: :asc)
     collection = collection.where(id: options[:selected]) if options[:selected].present?
 
-    columns = present_fields(view: view, custom: options[:custom])
+    columns = present_fields(collection: collection, view: view, custom: options[:custom])
 
     Axlsx::Package.new do |p|
       wb = p.workbook
@@ -73,18 +83,23 @@ class SalaryTable < ActiveRecord::Base
         border: {style: :thin, color: '00'}
       })
 
-      wb.add_worksheet(name: name) do |sheet|
+      wb.add_worksheet(name: sheet_name) do |sheet|
         # Headers
-        sheet.add_row [ corporation.full_name || corporation.name ], \
-          height: 60, b:true, sz: 16, style: wrap_text
-        sheet.add_row [ start_date.to_s ], \
-          height: 30, b:true, style: wrap_text
-        sheet.add_row columns.map{|col| SalaryItem.human_attribute_name(col)}, \
-          height: 60, b:true, style: wrap_text
+        if staff_view
+          sheet.add_row columns.map{|col| SalaryItem.human_attribute_name(col)}, \
+            height: 60, b:true, style: wrap_text
+        else
+          sheet.add_row [ corporation.full_name || corporation.name ], \
+            height: 60, b:true, sz: 16, style: wrap_text
+          sheet.add_row [ start_date.to_s ], \
+            height: 30, b:true, style: wrap_text
+          sheet.add_row columns.map{|col| SalaryItem.human_attribute_name(col)}, \
+            height: 60, b:true, style: wrap_text
 
-        end_col = ('A'.ord + columns.count - 1).chr
-        sheet.merge_cells("A1:#{end_col}1")
-        sheet.merge_cells("A2:#{end_col}2")
+          end_col = ('A'.ord + columns.count - 1).chr
+          sheet.merge_cells("A1:#{end_col}1")
+          sheet.merge_cells("A2:#{end_col}2")
+        end
 
         # Content
         collection.each do |item|
@@ -150,10 +165,10 @@ class SalaryTable < ActiveRecord::Base
     ( salary_items.order(nest_index: :desc).first.try(:nest_index) || 0 ) + 1
   end
 
-  def present_fields(view: , custom: )
+  def present_fields(collection:, view: , custom: )
     fields = SalaryItem.columns_based_on(view: view, custom: custom)
     fields.select do |key|
-      salary_items.map{|obj| obj.send(key)}.any? do |val|
+      collection.map{|obj| obj.send(key)}.any? do |val|
         if Numeric === val
           val.nonzero?
         else

@@ -227,7 +227,11 @@ ActiveAdmin.register SalaryItem do
 
   # Collection actions
   collection_action :export_xlsx do
-    st = SalaryTable.find(params[:salary_table_id])
+    st = SalaryTable.where(id: params[:salary_table_id]).first
+    staff_view = params[:q][:normal_staff_id_eq].present? rescue nil
+    if st.nil? && staff_view
+      st = SalaryTable.first
+    end
 
     options = {}
     options[:selected] = params[:selected].split('-') if params[:selected].present?
