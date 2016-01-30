@@ -287,6 +287,7 @@ zh-CN:
         transfer_fund_to_person: '资金去向（人）'
         transfer_fund_to_account: '资金去向（账户）'
         admin_amount: '管理费'
+        other_amount: '其他（费用）'
         total_sum: '劳务费用合计'
         total_sum_with_admin_amount: '劳务费用合计（含管理）'
         remark: '备注'
