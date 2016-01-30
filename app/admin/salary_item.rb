@@ -87,6 +87,7 @@ ActiveAdmin.register SalaryItem do
   filter :salary_in_fact
   filter :total_company
   filter :admin_amount
+  filter :other_amount
   filter :total_sum
   filter :total_sum_with_admin_amount
   preserve_default_filters!

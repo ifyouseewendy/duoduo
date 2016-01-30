@@ -168,6 +168,7 @@ class SalaryItem < ActiveRecord::Base
 
         # 管理费
         :admin_amount,
+        :other_amount,
 
         # 劳务费合计
         :total_sum_with_admin_amount,
@@ -182,7 +183,7 @@ class SalaryItem < ActiveRecord::Base
 
     def proof_columns
       whole_columns\
-        - [:admin_amount, :total_sum_with_admin_amount, :remark]\
+        - [:admin_amount, :other_amount, :total_sum_with_admin_amount, :remark]\
         + [:total_sum, :remark]
     end
 
@@ -326,7 +327,7 @@ class SalaryItem < ActiveRecord::Base
 
     self.admin_amount = attributes[:admin_amount] if attributes.has_key?(:admin_amount)
 
-    if self.changed & ['admin_amount']
+    if self.changed & ['admin_amount', 'other_amount']
       set_total_sum_with_admin_amount
     end
 
@@ -379,7 +380,7 @@ class SalaryItem < ActiveRecord::Base
       end
     end
 
-    if (self.changed & ['admin_amount']).present?
+    if (self.changed & ['admin_amount', 'other_amount']).present?
       set_total_sum_with_admin_amount
     end
 
@@ -481,7 +482,7 @@ class SalaryItem < ActiveRecord::Base
   end
 
   def set_total_sum_with_admin_amount
-    self.total_sum_with_admin_amount = [total_sum, admin_amount].map(&:to_f).sum.round(2)
+    self.total_sum_with_admin_amount = [total_sum, admin_amount, other_amount].map(&:to_f).sum.round(2)
   end
 
   def manipulate_personal_fund(options)
