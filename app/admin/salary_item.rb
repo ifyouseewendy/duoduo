@@ -36,6 +36,18 @@ ActiveAdmin.register SalaryItem do
   index row_class: ->(ele){ 'transfer' if ele.transfer? }, has_footer: true  do
     selectable_column
 
+    staff_view = params[:q][:normal_staff_id_eq].present? rescue nil
+    if staff_view
+      column :corporation_display, sortable: :salary_table_id do |obj|
+        corp = obj.salary_table.normal_corporation
+        link_to corp.name, "/normal_corporations?q[id_eq]=#{corp.id}", target: '_blank'
+      end
+      column :salary_table_display, sortable: :salary_table_id do |obj|
+        st = obj.salary_table
+        link_to st.name, "/salary_tables?q[id_eq]=#{st.id}", target: '_blank'
+      end
+    end
+
     custom_sortable = {
       staff_name: :staff_name,
       staff_account: :normal_staff_id

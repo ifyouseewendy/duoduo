@@ -303,6 +303,8 @@ zh-CN:
         staff_company: '所属单位'
         staff_company_name: '所属单位'
         staff_category: '用工类别'
+        corporation_display: '合作单位'
+        salary_table_display: '工资表'
       individual_income_tax:
         id: '序号'
         title: '个税计算器'

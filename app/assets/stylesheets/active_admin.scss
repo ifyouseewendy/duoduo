@@ -444,9 +444,14 @@ body.engineering_customers table.index_table {
     th.col-actions {
       min-width: 50px !important;
     }
-
     .transfer td{
       background-color: $table_red;
+    }
+    th.col-corporation_display {
+      min-width: 80px !important;
+    }
+    th.col-salary_table_display {
+      min-width: 150px !important;
     }
   }
 
