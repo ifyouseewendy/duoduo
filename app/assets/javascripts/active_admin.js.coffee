@@ -417,21 +417,31 @@ $(document).on 'ready', ->
 
 
     # Add View
-    if query_string == "view=proof"
+    if query_string && query_string.indexOf("view=proof") != -1
       button_name = '：帐用'
-    else if query_string == "view=card"
+    else if query_string && query_string.indexOf("view=card") != -1
       button_name = '：打卡'
     else
       button_name = '：全部'
+
+    button_query_string_parts = []
+
+    if query_string
+      $.each query_string.split('&'), (idx, ele) ->
+        console.log(ele)
+        if ele.indexOf('view=') == -1
+          button_query_string_parts.push ele
+
+    button_query_string = button_query_string_parts.join('&')
 
     html =  """
             <div class='views_selector dropdown_menu'>
               <a class='dropdown_menu_button' href='#'>视图#{button_name}</a>
               <div class='dropdown_menu_list_wrapper' style='display: none;'><div class='dropdown_menu_nipple'></div>
                 <ul class='dropdown_menu_list'>
-                  <li><a href='#{current_path}'>全部</a></li>
-                  <li><a href='#{current_path}?view=proof'>帐用</a></li>
-                  <li><a href='#{current_path}?view=card'>打卡</a></li>
+                  <li><a href='#{current_path}?#{button_query_string}'>全部</a></li>
+                  <li><a href='#{current_path}?#{button_query_string}&view=proof'>帐用</a></li>
+                  <li><a href='#{current_path}?#{button_query_string}&view=card'>打卡</a></li>
                 </ul>
               </div>
             </div>
