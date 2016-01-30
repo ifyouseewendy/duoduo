@@ -259,6 +259,8 @@ ActiveAdmin.register Invoice do
               end
             end
 
+            admin_amount = nil if admin_amount.zero? || admin_amount.blank?
+
             if attrs[:scope] == 'engineer'
               ec_nest_index = attrs[:contact].match(/^(\d+)/)[0] rescue nil
               customer = EngineeringCustomer.where(nest_index: ec_nest_index).first
