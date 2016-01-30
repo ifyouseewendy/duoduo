@@ -4,6 +4,10 @@ ActiveAdmin.register Invoice do
     priority: 1
 
   config.per_page = 30
+  config.action_items.delete_if { |item|
+    # item is an ActiveAdmin::ActionItem
+    item.display_on?(:show)
+  }
 
   scope "全部" do |record|
     record.all
@@ -89,6 +93,17 @@ ActiveAdmin.register Invoice do
   remove_filter :activities
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
+
+  action_item :edit, only: [:show] do
+    unless resource.archive?
+      link_to '编辑发票', "/invoices/#{resource.id}/edit"
+    end
+  end
+  action_item :destroy, only: [:show] do
+    unless resource.archive?
+      link_to '删除发票', "/invoices/#{resource.id}", method: :delete
+    end
+  end
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
