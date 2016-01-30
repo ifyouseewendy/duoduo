@@ -76,25 +76,69 @@ class SalaryTable < ActiveRecord::Base
 
     columns = present_fields(collection: collection, view: view, custom: options[:custom])
 
+    data_types = columns.reduce([]) do |ar, col|
+      if col == :staff_account
+        ar << :string
+      else
+        ar << nil
+      end
+    end
+
     Axlsx::Package.new do |p|
       wb = p.workbook
-      wrap_text = wb.styles.add_style({
+      wrap_header_first = wb.styles.add_style({
+        font_name: "新宋体",
         alignment: {horizontal: :center, vertical: :center, wrap_text: true},
-        border: {style: :thin, color: '00'}
+        b: true,
+        sz: 18
       })
+      wrap_header_second = wb.styles.add_style({
+        font_name: "新宋体",
+        alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+        height: 30,
+        b: true,
+        sz: 12
+      })
+      wrap_header_third = wb.styles.add_style({
+        font_name: "新宋体",
+        alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+        border: {style: :thin, color: '00'},
+        height: 60,
+        sz: 10
+      })
+      wrap_text = wb.styles.add_style({
+        font_name: "新宋体",
+        alignment: {horizontal: :center, vertical: :center, wrap_text: true},
+        border: {style: :thin, color: '00'},
+        height: 30,
+        sz: 10
+      })
+      wrap_float_text = wb.styles.add_style({
+        font_name: "新宋体",
+        alignment: {horizontal: :right, vertical: :center, wrap_text: true},
+        border: {style: :thin, color: '00'},
+        height: 30,
+        format_code: '0.00',
+        sz: 10
+      })
+      margins = {left: 0.1, right: 0.1, top: 0.1, bottom: 0.1}
+      setup = {fit_to_width: 1, orientation: :landscape}
 
-      wb.add_worksheet(name: sheet_name) do |sheet|
+      wb.add_worksheet(name: sheet_name, page_margins: margins, page_setup: setup) do |sheet|
+        # Fit to page printing
+        # sheet.page_setup.fit_to :width => 1
+
         # Headers
         if staff_view
           sheet.add_row columns.map{|col| SalaryItem.human_attribute_name(col)}, \
-            height: 60, b:true, style: wrap_text
+            height: 60, b:true, style: wrap_header_third
         else
           sheet.add_row [ corporation.full_name || corporation.name ], \
-            height: 60, b:true, sz: 16, style: wrap_text
+            height: 60, b:true, sz: 16, style: wrap_header_first
           sheet.add_row [ start_date.to_s ], \
-            height: 30, b:true, style: wrap_text
+            height: 30, b:true, style: wrap_header_second
           sheet.add_row columns.map{|col| SalaryItem.human_attribute_name(col)}, \
-            height: 60, b:true, style: wrap_text
+            height: 60, b:true, style: wrap_header_third
 
           end_col = ('A'.ord + columns.count - 1).chr
           sheet.merge_cells("A1:#{end_col}1")
@@ -104,13 +148,9 @@ class SalaryTable < ActiveRecord::Base
         # Content
         collection.each do |item|
           data = columns.map do |col|
-            if :staff_account == col
-              "'#{item.send(col).to_s}"
-            else
-              item.send(col).to_s
-            end
+            item.send(col).to_s
           end
-          sheet.add_row data, style: wrap_text
+          sheet.add_row data, style: ([wrap_text]*3 + [wrap_float_text]*(columns.count-3)), height: 30, types: data_types
         end
 
         # Sum row
@@ -122,7 +162,7 @@ class SalaryTable < ActiveRecord::Base
           end
         end
         stats[0] = '合计'
-        sheet.add_row stats, style: wrap_text
+        sheet.add_row stats, style: ([wrap_text]*1 + [wrap_float_text]*(columns.count-1)), height: 30
 
         end_rol = 3 + collection.count + 1
         sheet.merge_cells("A#{end_rol}:C#{end_rol}")
@@ -134,6 +174,8 @@ class SalaryTable < ActiveRecord::Base
         # Set First column width
         # widths = [3, 20, 8] + Array.new(columns.count+1-3){8}
         sheet.column_widths 5
+
+        wb.add_defined_name("'#{sheet_name}'!$1:$3", :local_sheet_id => sheet.index, :name => '_xlnm.Print_Titles') 
       end
       p.serialize(filepath.to_s)
     end
