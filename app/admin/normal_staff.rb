@@ -62,6 +62,7 @@ ActiveAdmin.register NormalStaff do
         link_to corporation.name || '#', "/normal_corporations?q[id_eq]=#{corporation.id}", target: '_blank'
       end
     end
+    column :nest_index
     column :labor_contracts, sortable: :id do |obj|
       ul do
         li link_to '劳务合同', "/labor_contracts?q[normal_staff_id_eq]=#{obj.id}", target: '_blank'
@@ -113,9 +114,9 @@ ActiveAdmin.register NormalStaff do
   filter :in_contract, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
   filter :id
   filter :name
+  filter :nest_index
   filter :identity_card
   preserve_default_filters!
-  remove_filter :nest_index
   remove_filter :salary_items
   remove_filter :guard_salary_items
   remove_filter :non_full_day_salary_items
@@ -161,6 +162,7 @@ ActiveAdmin.register NormalStaff do
           link_to corporation.name || '#', "/normal_corporations?q[id_eq]=#{corporation.id}", target: '_blank'
         end
       end
+      row :nest_index
       row :labor_contracts do |obj|
         link_to '劳务合同', "/labor_contracts?q[normal_staff_id_eq]=#{obj.id}", target: '_blank'
       end
