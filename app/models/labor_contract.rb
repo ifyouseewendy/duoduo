@@ -19,6 +19,7 @@ class LaborContract < ActiveRecord::Base
   after_save :check_active_status
   after_save :check_relationship
   after_save :check_staff_in_contract
+  after_save :set_nest_index
 
   class << self
     def policy_class
@@ -199,6 +200,14 @@ class LaborContract < ActiveRecord::Base
           if normal_staff.labor_contracts.active.count == 0 && normal_staff.in_contract
             normal_staff.update_attribute(:in_contract, false)
           end
+        end
+      end
+    end
+
+    def set_nest_index
+      if changed.include? 'nest_index'
+        if self.in_contract
+          normal_staff.update_attribute(:nest_index, self.nest_index)
         end
       end
     end
