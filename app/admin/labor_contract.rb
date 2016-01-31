@@ -61,6 +61,7 @@ ActiveAdmin.register LaborContract do
       corp = obj.normal_corporation
       link_to corp.name, "/normal_corporations?q[id_eq]=#{corp.id}", target: '_blank'
     end
+    column :nest_index
     column :remark
     column :in_contract, sortable: :in_contract do |obj|
       if obj.in_contract
@@ -86,6 +87,7 @@ ActiveAdmin.register LaborContract do
   filter :normal_staff_name, as: :string
   filter :sub_company_in, as: :select, collection: -> {SubCompany.pluck(:name, :id)}
   filter :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}
+  filter :nest_index
   filter :in_contract, as: :select, collection: ->{ [ ['活动', true], ['解除', false] ] }.call
   filter :contract_type, as: :select, collection: -> { LaborContract.contract_types_option(filter: true) }.call
   filter :has_social_insurance, as: :select, collection: ->{ [ ['有', true], ['无', false] ] }.call
@@ -102,8 +104,13 @@ ActiveAdmin.register LaborContract do
     f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
-      f.input :normal_staff_id, as: :hidden, input_html: {value: params[:q][:normal_staff_id_eq]}
+      if request.url.split('/')[-1] == 'new'
+        f.input :normal_staff_id, as: :hidden, input_html: {value: params[:q][:normal_staff_id_eq]}
+      else
+        f.input :normal_staff_id, as: :hidden
+      end
       f.input :normal_corporation, as: :select, collection: -> {NormalCorporation.as_filter}.call
+      f.input :nest_index
       f.input :in_contract, as: :radio, collection: ->{ [ ['活动', true], ['解除', false] ] }.call
       f.input :contract_type, as: :select, collection: ->{ LaborContract.contract_types_option }.call
       f.input :contract_start_date, as: :datepicker
@@ -148,6 +155,7 @@ ActiveAdmin.register LaborContract do
         corp = obj.normal_corporation
         link_to corp.name, "/normal_corporations?q[id_eq]=#{corp.id}", target: '_blank'
       end
+      row :nest_index
       row :in_contract do |obj|
         if obj.in_contract
           status_tag '活动', 'yes'
