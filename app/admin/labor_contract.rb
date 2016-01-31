@@ -74,7 +74,7 @@ ActiveAdmin.register LaborContract do
       obj.contract_type_i18n
     end
 
-    displayed_columns = %i(id normal_staff_id normal_corporation_id in_contract contract_type remark)
+    displayed_columns = %i(id normal_staff_id normal_corporation_id in_contract contract_type remark nest_index)
 
     (resource_class.ordered_columns.map(&:to_sym) - displayed_columns).map do |field|
       column field
