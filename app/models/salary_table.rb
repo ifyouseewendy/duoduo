@@ -206,7 +206,7 @@ class SalaryTable < ActiveRecord::Base
   end
 
   def available_nest_index
-    ( salary_items.order(nest_index: :desc).first.try(:nest_index) || 0 ) + 1
+    ( salary_items.reorder(nest_index: :desc).first.try(:nest_index) || 0 ) + 1
   end
 
   def present_fields(collection:, view: , custom: )
