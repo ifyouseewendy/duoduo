@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131032632) do
+ActiveRecord::Schema.define(version: 20160131051013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -687,6 +687,7 @@ ActiveRecord::Schema.define(version: 20160131032632) do
   add_index "normal_staffs", ["in_service"], name: "index_normal_staffs_on_in_service", using: :btree
   add_index "normal_staffs", ["name"], name: "index_normal_staffs_on_name", using: :btree
   add_index "normal_staffs", ["nation"], name: "index_normal_staffs_on_nation", using: :btree
+  add_index "normal_staffs", ["nest_index"], name: "index_normal_staffs_on_nest_index", using: :btree
   add_index "normal_staffs", ["normal_corporation_id"], name: "index_normal_staffs_on_normal_corporation_id", using: :btree
   add_index "normal_staffs", ["remark"], name: "index_normal_staffs_on_remark", using: :btree
   add_index "normal_staffs", ["social_insurance_start_date"], name: "index_normal_staffs_on_social_insurance_start_date", using: :btree
