@@ -311,7 +311,7 @@ ActiveAdmin.register SalaryItem do
         name.gsub!(/\s/, '')
 
         identity_card = identity_card.to_i.to_s if identity_card.is_a? Numeric
-        ar << { name: name, salary: salary, identity_card: "'#{identity_card}" }
+        ar << { name: name, salary: salary, identity_card: "#{identity_card}" }
       end
 
     failed = []
@@ -350,7 +350,7 @@ ActiveAdmin.register SalaryItem do
       filepath = Pathname("tmp/#{filename}_#{Time.stamp}.xlsx")
       Axlsx::Package.new do |p|
         p.workbook.add_worksheet do |sheet|
-          failed.each{|stat| sheet.add_row stat}
+          failed.each{|stat| sheet.add_row stat, types: [:string, :string, :string]}
         end
         p.serialize(filepath.to_s)
       end
