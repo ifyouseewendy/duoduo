@@ -182,8 +182,15 @@ ActiveAdmin.register SalaryTable do
   end
 
   controller do
+    after_action :set_audition, only: :create
+
     def scoped_collection
       end_of_association_chain.includes(:normal_corporation)
+    end
+
+    def set_audition
+      resource.audition[:make_table] = current_active_admin_user.name
+      resource.save!
     end
   end
 end
