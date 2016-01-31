@@ -159,11 +159,13 @@ ActiveAdmin.register SalaryTable do
     audition = st.audition
     display = st.audition_display
 
+    admin = current_active_admin_user.admin?
     data = SalaryTable::AUDITION_STAGE.reduce([]) do |ar, k|
       ar << {
         key: k,
         value: audition[k.to_s],
-        display: display[k]
+        display: display[k],
+        hide: !admin
       }
     end
     render json: { status: :ok, data: data }

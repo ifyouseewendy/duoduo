@@ -499,7 +499,10 @@ $(document).on 'ready', ->
           """
           $.each data['data'], (idx, ele) ->
             if ele['value'] == null
-              value = "<a href='#' class='activate'>确定</a>"
+              if ele['hide']
+                value = ''
+              else
+                value = "<a href='#' class='activate'>确定</a>"
             else
               value = "#{ele['value']}"
             html += """
