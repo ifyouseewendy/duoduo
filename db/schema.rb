@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131051013) do
+ActiveRecord::Schema.define(version: 20160131051517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -532,6 +532,7 @@ ActiveRecord::Schema.define(version: 20160131051013) do
     t.integer  "normal_staff_id"
     t.datetime "created_at",                                                    null: false
     t.datetime "updated_at",                                                    null: false
+    t.integer  "nest_index"
   end
 
   add_index "labor_contracts", ["arrive_current_company_at"], name: "index_labor_contracts_on_arrive_current_company_at", using: :btree
@@ -553,6 +554,7 @@ ActiveRecord::Schema.define(version: 20160131051013) do
   add_index "labor_contracts", ["medical_insurance_card"], name: "index_labor_contracts_on_medical_insurance_card", using: :btree
   add_index "labor_contracts", ["medical_insurance_release_date"], name: "index_labor_contracts_on_medical_insurance_release_date", using: :btree
   add_index "labor_contracts", ["medical_insurance_serial"], name: "index_labor_contracts_on_medical_insurance_serial", using: :btree
+  add_index "labor_contracts", ["nest_index"], name: "index_labor_contracts_on_nest_index", using: :btree
   add_index "labor_contracts", ["normal_corporation_id"], name: "index_labor_contracts_on_normal_corporation_id", using: :btree
   add_index "labor_contracts", ["normal_staff_id"], name: "index_labor_contracts_on_normal_staff_id", using: :btree
   add_index "labor_contracts", ["release_date"], name: "index_labor_contracts_on_release_date", using: :btree
