@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160130113450) do
+ActiveRecord::Schema.define(version: 20160131032632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -846,13 +847,14 @@ ActiveRecord::Schema.define(version: 20160130113450) do
   create_table "salary_tables", force: :cascade do |t|
     t.text     "name"
     t.text     "remark"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.integer  "normal_corporation_id"
     t.text     "lai_table"
     t.text     "daka_table"
     t.date     "start_date"
     t.integer  "status",                default: 0
+    t.hstore   "audition",              default: {}
   end
 
   add_index "salary_tables", ["name"], name: "index_salary_tables_on_name", using: :btree
