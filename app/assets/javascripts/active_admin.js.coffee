@@ -484,6 +484,31 @@ $(document).on 'ready', ->
     $(document).on 'click', ->
       $('.views_selector .dropdown_menu_list_wrapper').hide()
 
+    # Add progress bar
+    html = """
+      <div class="progress-wrap">
+        <table class="progress-bar">
+          <tr>
+            <th>制表：</th>
+            <td class='audition_make'><a href='#'>确定</a></td>
+          </tr>
+          <tr>
+            <th>复核：</th>
+            <td class='audition_first'><a href='#'>确定</a></td>
+          </tr>
+          <tr>
+            <th>审核：</th>
+            <td class='audition_second'><a href='#'>确定</a></td>
+          </tr>
+          <tr>
+            <th>财务：</th>
+            <td class='audition_finance'><a href='#'>确定</a></td>
+          </tr>
+        </table>
+      </div>
+    """
+    $('.table_tools').append(html)
+
   # Export XLSX
   export_path = "#{current_path}/export_xlsx?#{query_string}"
   html =  """

@@ -425,6 +425,9 @@ body.engineering_customers table.index_table {
 }
 
 .salary_items {
+  .quan-bu {
+    border-right: 0;
+  }
   .index_table{
     .col-salary_deserve {
       border-left: 2px solid $table_red;
@@ -475,6 +478,22 @@ body.engineering_customers table.index_table {
     li {
       display: inline-block;
       margin: 10px 10px 10px 0;
+    }
+  }
+  .progress-wrap {
+    float: left;
+    margin-left: 10px;
+    border: 1px solid $table_red;
+
+    .progress-bar {
+      margin: 0;
+      tr {
+        display: inline-block;
+        border-left: 1px solid $table_red;
+        th, td {
+          padding-bottom: 0;
+        }
+      }
     }
   }
 }
