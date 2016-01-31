@@ -40,8 +40,14 @@ ActiveAdmin.register Invoice do
     record.archive
   end
 
-  index do
+  index has_footer: true do
     selectable_column
+
+    sum_fields = resource_class.sum_fields
+    sum = sum_fields.reduce({}) do |ha, field|
+      ha[field] = collection.sum(field)
+      ha
+    end
 
     column :sub_company, sortable: :sub_company_id
     column :category, sortable: :category do |obj|
@@ -66,9 +72,11 @@ ActiveAdmin.register Invoice do
     end
     column :payer
     column :management
-    column :amount
-    column :admin_amount
-    column :total_amount
+    [:amount, :admin_amount, :total_amount].each do |field|
+      column field, sortable: field, footer: sum[field] do |obj|
+        obj.send(field)
+      end
+    end
     column :income_date
     column :refund_date
     column :refund_person

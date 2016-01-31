@@ -106,6 +106,10 @@ class Invoice < ActiveRecord::Base
       end
       hash
     end
+
+    def sum_fields
+      [:amount, :admin_amount, :total_amount]
+    end
   end
 
   def status_i18n
