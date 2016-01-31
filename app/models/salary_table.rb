@@ -17,6 +17,8 @@ class SalaryTable < ActiveRecord::Base
 
   validates_presence_of :start_date
 
+  before_create :set_audition
+
   class << self
     def policy_class
       BusinessPolicy
@@ -224,4 +226,17 @@ class SalaryTable < ActiveRecord::Base
     name
   end
 
+  AUDITION_STAGE = [:make_table, :audit_first, :audit_second, :audit_finance]
+  def set_audition
+    AUDITION_STAGE.each{|k| self.audition[k] = nil}
+  end
+
+  def audition_display
+    {
+      make_table: '制表',
+      audit_first: '复核',
+      audit_second: '审核',
+      audit_finance: '财务',
+    }
+  end
 end
