@@ -154,6 +154,21 @@ ActiveAdmin.register SalaryTable do
     end
   end
 
+  member_action :audition_state do
+    st = SalaryTable.find(params[:id])
+    audition = st.audition
+    display = st.audition_display
+
+    data = SalaryTable::AUDITION_STAGE.reduce([]) do |ar, k|
+      ar << {
+        key: k,
+        value: audition[k.to_s],
+        display: display[k]
+      }
+    end
+    render json: { status: :ok, data: data }
+  end
+
   controller do
     def scoped_collection
       end_of_association_chain.includes(:normal_corporation)
