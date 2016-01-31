@@ -498,7 +498,6 @@ $(document).on 'ready', ->
               <table class="progress-bar">
           """
           $.each data['data'], (idx, ele) ->
-            console.log(ele)
             if ele['value'] == null
               value = "<a href='#' class='activate'>确定</a>"
             else
@@ -510,6 +509,18 @@ $(document).on 'ready', ->
               </tr>
             """
           $('.table_tools').append(html)
+
+          $('.progress-bar .activate').on 'click', (e)->
+            e.stopPropagation()
+            e.preventDefault()
+            state = $(@).closest('td').attr('class')
+            $.ajax
+              url: "/salary_tables/#{salary_table_id}/toggle_audition_state"
+              data:
+                state: state
+              success: (data, textStatus, jqXHR) ->
+                alert( data['message'] )
+                location.reload()
 
   # Export XLSX
   export_path = "#{current_path}/export_xlsx?#{query_string}"

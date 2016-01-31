@@ -169,6 +169,16 @@ ActiveAdmin.register SalaryTable do
     render json: { status: :ok, data: data }
   end
 
+  member_action :toggle_audition_state do
+    st = SalaryTable.find(params[:id])
+    state = params[:state]
+
+    st.audition[state.to_s.strip] = current_active_admin_user.name
+    st.save!
+
+    render json: { status: :ok, message: '操作成功' }
+  end
+
   controller do
     def scoped_collection
       end_of_association_chain.includes(:normal_corporation)
