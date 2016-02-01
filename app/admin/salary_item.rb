@@ -363,7 +363,7 @@ ActiveAdmin.register SalaryItem do
       end
       send_file filepath
     else
-      redirect_to salary_table_salary_items_path(salary_table), notice: "成功导入 #{stats.count} 条记录"
+      redirect_to salary_table_salary_items_path(salary_table), notice: "成功导入 #{stats.count-1} 条记录"
     end
 
   end

@@ -364,7 +364,7 @@ ActiveAdmin.register NonFullDaySalaryItem do
       end
       send_file filepath
     else
-      redirect_to non_full_day_salary_table_non_full_day_salary_items_path(non_full_day_salary_table), notice: "成功导入 #{stats.count} 条记录"
+      redirect_to non_full_day_salary_table_non_full_day_salary_items_path(non_full_day_salary_table), notice: "成功导入 #{stats.count-1} 条记录"
     end
 
   end
