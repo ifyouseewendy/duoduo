@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160201021600) do
+ActiveRecord::Schema.define(version: 20160201021703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -596,14 +596,26 @@ ActiveRecord::Schema.define(version: 20160201021600) do
     t.decimal  "other_amount",                 precision: 12, scale: 2
   end
 
+  add_index "non_full_day_salary_items", ["accident_insurance"], name: "index_non_full_day_salary_items_on_accident_insurance", using: :btree
+  add_index "non_full_day_salary_items", ["admin_amount"], name: "index_non_full_day_salary_items_on_admin_amount", using: :btree
+  add_index "non_full_day_salary_items", ["created_at"], name: "index_non_full_day_salary_items_on_created_at", using: :btree
   add_index "non_full_day_salary_items", ["department"], name: "index_non_full_day_salary_items_on_department", using: :btree
   add_index "non_full_day_salary_items", ["exam"], name: "index_non_full_day_salary_items_on_exam", using: :btree
   add_index "non_full_day_salary_items", ["nest_index"], name: "index_non_full_day_salary_items_on_nest_index", using: :btree
   add_index "non_full_day_salary_items", ["non_full_day_salary_table_id"], name: "index_non_full_day_salary_items_on_non_full_day_salary_table_id", using: :btree
   add_index "non_full_day_salary_items", ["normal_staff_id"], name: "index_non_full_day_salary_items_on_normal_staff_id", using: :btree
+  add_index "non_full_day_salary_items", ["other"], name: "index_non_full_day_salary_items_on_other", using: :btree
   add_index "non_full_day_salary_items", ["other_amount"], name: "index_non_full_day_salary_items_on_other_amount", using: :btree
+  add_index "non_full_day_salary_items", ["remark"], name: "index_non_full_day_salary_items_on_remark", using: :btree
+  add_index "non_full_day_salary_items", ["salary_deserve"], name: "index_non_full_day_salary_items_on_salary_deserve", using: :btree
+  add_index "non_full_day_salary_items", ["salary_in_fact"], name: "index_non_full_day_salary_items_on_salary_in_fact", using: :btree
   add_index "non_full_day_salary_items", ["station"], name: "index_non_full_day_salary_items_on_station", using: :btree
+  add_index "non_full_day_salary_items", ["tax"], name: "index_non_full_day_salary_items_on_tax", using: :btree
+  add_index "non_full_day_salary_items", ["total"], name: "index_non_full_day_salary_items_on_total", using: :btree
+  add_index "non_full_day_salary_items", ["updated_at"], name: "index_non_full_day_salary_items_on_updated_at", using: :btree
+  add_index "non_full_day_salary_items", ["work_hour"], name: "index_non_full_day_salary_items_on_work_hour", using: :btree
   add_index "non_full_day_salary_items", ["work_insurance"], name: "index_non_full_day_salary_items_on_work_insurance", using: :btree
+  add_index "non_full_day_salary_items", ["work_wage"], name: "index_non_full_day_salary_items_on_work_wage", using: :btree
 
   create_table "non_full_day_salary_tables", force: :cascade do |t|
     t.text     "name"
