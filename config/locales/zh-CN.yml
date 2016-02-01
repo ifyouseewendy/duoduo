@@ -497,11 +497,13 @@ zh-CN:
         corporation: '所属单位'
         normal_corporation: '普通合作单位'
         non_full_day_salary_items: '工资条'
+        salary_items: '工资条'
         invoices: '发票'
         created_at: "创建时间"
         updated_at: "更新时间"
         lai_table: '来表'
         daka_table: '打卡表'
+        salary_items_display: '工资条'
         attachment: '附件'
       non_full_day_salary_item:
         id: '编号'
