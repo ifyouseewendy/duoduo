@@ -13,6 +13,7 @@ class NonFullDaySalaryItem < ActiveRecord::Base
 
   before_create :auto_init_fields, unless: -> { @skip_callbacks == true }
 
+  before_save :set_work_wage
   # income_tax, other total fields
   after_save :revise_fields
 
@@ -384,5 +385,12 @@ class NonFullDaySalaryItem < ActiveRecord::Base
 
   def salary_table
     non_full_day_salary_table
+  end
+
+  def set_work_wage
+    return if self.normal_staff.nil?
+
+    last_work_wage = self.normal_staff.non_full_day_salary_items.order(created_at: :desc).first.try(:work_wage)
+    self.work_wage = last_work_wage
   end
 end
