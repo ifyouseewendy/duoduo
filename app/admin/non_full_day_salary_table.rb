@@ -54,7 +54,7 @@ ActiveAdmin.register NonFullDaySalaryTable do
 
     column :salary_items_display, sortable: :start_date do |obj|
       ul do
-        li( link_to "工资条", non_full_day_salary_table_non_full_day_salary_items_path(obj), target: '_blank' )
+        li( link_to "工资条", "/non_full_day_salary_tables/#{obj.id}/non_full_day_salary_items", target: '_blank' )
         li( link_to "导入", "/non_full_day_salary_items/import_new?salary_table_id=#{obj.id}", target: '_blank' )
       end
     end
