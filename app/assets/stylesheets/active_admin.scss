@@ -428,6 +428,9 @@ body.engineering_customers table.index_table {
   .quan-bu {
     border-right: 0;
   }
+  .index_as_table .panel {
+    width: 960px;
+  }
   .index_table{
     .col-salary_deserve {
       border-left: 2px solid $table_red;

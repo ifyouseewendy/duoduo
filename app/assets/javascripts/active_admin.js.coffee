@@ -484,12 +484,12 @@ $(document).on 'ready', ->
     $(document).on 'click', ->
       $('.views_selector .dropdown_menu_list_wrapper').hide()
 
-    # Add progress bar
     parts = current_path.split('/')
     if parts[1] == 'salary_tables' or parts[1] == 'non_full_day_salary_tables'
       salary_table_id = parts[2]
       salary_table_path = parts[1]
 
+      # Add progress bar
       $.ajax
         url: "/#{salary_table_path}/#{salary_table_id}/audition_state"
         success: (data, textStatus, jqXHR) =>
@@ -524,6 +524,28 @@ $(document).on 'ready', ->
               success: (data, textStatus, jqXHR) ->
                 alert( data['message'] )
                 location.reload()
+
+      # Editable remark
+      panel_contents = $('.index_as_table .panel .panel_contents')
+      $('.index_as_table .panel').append("<div class='edit_div'><a href='#' class='edit'>编辑</a></div>")
+      $('.index_as_table .panel .edit').on 'click', (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+
+        content = panel_contents.text()
+        panel_contents.empty().append("<input type='text' value=#{content}></input>")
+        $('.index_as_table .panel .edit_div').append("&nbsp<a href='#' class='submit'>保存</a>")
+        $('.index_as_table .panel .submit').on 'click', (e) ->
+          new_content = panel_contents.find('input').val()
+          $.ajax
+            url: "/#{salary_table_path}/#{salary_table_id}/update_remark"
+            data:
+              remark: new_content
+            success: (data, textStatus, jqXHR) =>
+              panel_contents.empty().text(new_content)
+              $('.index_as_table .panel .edit_div .submit').remove()
+              alert( data['message'] )
+
 
   # Export XLSX
   export_path = "#{current_path}/export_xlsx?#{query_string}"
