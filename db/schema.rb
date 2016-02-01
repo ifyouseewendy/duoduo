@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160201023454) do
+ActiveRecord::Schema.define(version: 20160201023715) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -582,7 +582,6 @@ ActiveRecord::Schema.define(version: 20160201023454) do
     t.decimal  "salary_in_fact",               precision: 12, scale: 2
     t.decimal  "accident_insurance",           precision: 12, scale: 2
     t.decimal  "admin_amount",                 precision: 12, scale: 2
-    t.decimal  "total",                        precision: 12, scale: 2
     t.integer  "normal_staff_id"
     t.text     "remark"
     t.datetime "created_at",                                            null: false
@@ -615,7 +614,6 @@ ActiveRecord::Schema.define(version: 20160201023454) do
   add_index "non_full_day_salary_items", ["staff_name"], name: "index_non_full_day_salary_items_on_staff_name", using: :btree
   add_index "non_full_day_salary_items", ["station"], name: "index_non_full_day_salary_items_on_station", using: :btree
   add_index "non_full_day_salary_items", ["tax"], name: "index_non_full_day_salary_items_on_tax", using: :btree
-  add_index "non_full_day_salary_items", ["total"], name: "index_non_full_day_salary_items_on_total", using: :btree
   add_index "non_full_day_salary_items", ["updated_at"], name: "index_non_full_day_salary_items_on_updated_at", using: :btree
   add_index "non_full_day_salary_items", ["work_hour"], name: "index_non_full_day_salary_items_on_work_hour", using: :btree
   add_index "non_full_day_salary_items", ["work_insurance"], name: "index_non_full_day_salary_items_on_work_insurance", using: :btree
