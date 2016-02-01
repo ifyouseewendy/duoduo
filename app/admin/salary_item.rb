@@ -41,6 +41,13 @@ ActiveAdmin.register SalaryItem do
 
   # Index
   index row_class: ->(ele){ 'transfer' if ele.transfer? }, has_footer: true  do
+    if (stid=params['salary_table_id']).present?
+      panel "备注" do
+        st = SalaryTable.where(id: stid).first
+        st.try(:remark)
+      end
+    end
+
     selectable_column
 
     staff_view = params[:q][:normal_staff_id_eq].present? rescue nil
