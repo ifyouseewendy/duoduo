@@ -345,7 +345,7 @@ $(document).on 'ready', ->
 
 
   # Salary Item
-  if $('.salary_items').length > 0
+  if $('.salary_items, .non_full_day_salary_items').length > 0
 
     # Hide download and new button for staff's salary items
     if query_string && query_string.indexOf('normal_staff_id_eq')
@@ -447,7 +447,7 @@ $(document).on 'ready', ->
             </div>
             """
 
-    $('body.salary_items .table_tools .batch_actions_selector').after(html)
+    $('.table_tools .batch_actions_selector').after(html)
 
     $('.views_selector .dropdown_menu_button').on 'click', (e) ->
       e.stopPropagation()
