@@ -502,6 +502,7 @@ zh-CN:
         updated_at: "更新时间"
         lai_table: '来表'
         daka_table: '打卡表'
+        attachment: '附件'
       non_full_day_salary_item:
         id: '编号'
         salary_table_id: '外键'
