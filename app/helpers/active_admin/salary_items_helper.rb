@@ -16,7 +16,7 @@ module ActiveAdmin::SalaryItemsHelper
   end
 
   def present_fields(records, options = {})
-    fields = SalaryItem.columns_based_on(view: options[:view], custom: options[:custom])
+    fields = records.first.class.columns_based_on(view: options[:view], custom: options[:custom])
     fields.select do |key|
       records.map{|obj| obj.send(key)}.any? do |val|
         if Numeric === val
