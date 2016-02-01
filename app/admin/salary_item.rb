@@ -20,6 +20,13 @@ ActiveAdmin.register SalaryItem do
           crumbs << link_to(ns.name, "/normal_staffs?q[id_eq]=#{ns.id}")
         end
       end
+    elsif params[:action] == 'show'
+      si = SalaryItem.where(id: params[:id]).first
+      if si.present?
+        st = si.salary_table
+        crumbs << link_to(st.name, "/salary_tables?q[id_eq]=#{st.id}")
+        crumbs << link_to('工资条', "/salary_tables/#{st.id}/salary_items")
+      end
     end
 
     crumbs
