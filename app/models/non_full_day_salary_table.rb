@@ -7,7 +7,7 @@ class NonFullDaySalaryTable < ActiveRecord::Base
     }
 
   belongs_to :normal_corporation
-  has_many :salary_items, class: NonFullDaySalaryItem, dependent: :destroy
+  has_many :non_full_day_salary_items, dependent: :destroy
   # has_many :invoices, dependent: :destroy, as: :invoicable
 
   mount_uploader :lai_table, Attachment
@@ -238,5 +238,9 @@ class NonFullDaySalaryTable < ActiveRecord::Base
       audit_second: '审核',
       audit_finance: '财务',
     }
+  end
+
+  def salary_items
+    non_full_day_salary_items
   end
 end
