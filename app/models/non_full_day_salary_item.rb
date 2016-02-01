@@ -48,7 +48,6 @@ class NonFullDaySalaryItem < ActiveRecord::Base
       fields = whole_columns - \
         [
           :nest_index,
-          :staff_account,
           :staff_name,
           :salary_in_fact,
           :total_sum,
