@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160201013350) do
+ActiveRecord::Schema.define(version: 20160201021027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -589,10 +589,22 @@ ActiveRecord::Schema.define(version: 20160201013350) do
     t.datetime "created_at",                                            null: false
     t.datetime "updated_at",                                            null: false
     t.integer  "non_full_day_salary_table_id"
+    t.integer  "nest_index"
+    t.text     "department"
+    t.text     "station"
+    t.decimal  "exam",                         precision: 12, scale: 2
+    t.decimal  "work_insurance",               precision: 12, scale: 2
+    t.decimal  "other_amount",                 precision: 12, scale: 2
   end
 
+  add_index "non_full_day_salary_items", ["department"], name: "index_non_full_day_salary_items_on_department", using: :btree
+  add_index "non_full_day_salary_items", ["exam"], name: "index_non_full_day_salary_items_on_exam", using: :btree
+  add_index "non_full_day_salary_items", ["nest_index"], name: "index_non_full_day_salary_items_on_nest_index", using: :btree
   add_index "non_full_day_salary_items", ["non_full_day_salary_table_id"], name: "index_non_full_day_salary_items_on_non_full_day_salary_table_id", using: :btree
   add_index "non_full_day_salary_items", ["normal_staff_id"], name: "index_non_full_day_salary_items_on_normal_staff_id", using: :btree
+  add_index "non_full_day_salary_items", ["other_amount"], name: "index_non_full_day_salary_items_on_other_amount", using: :btree
+  add_index "non_full_day_salary_items", ["station"], name: "index_non_full_day_salary_items_on_station", using: :btree
+  add_index "non_full_day_salary_items", ["work_insurance"], name: "index_non_full_day_salary_items_on_work_insurance", using: :btree
 
   create_table "non_full_day_salary_tables", force: :cascade do |t|
     t.text     "name"
