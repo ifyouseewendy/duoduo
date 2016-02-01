@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160201051231) do
+ActiveRecord::Schema.define(version: 20160201052444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -584,15 +584,15 @@ ActiveRecord::Schema.define(version: 20160201051231) do
     t.decimal  "admin_amount",                 precision: 12, scale: 2
     t.integer  "normal_staff_id"
     t.text     "remark"
-    t.datetime "created_at",                                            null: false
-    t.datetime "updated_at",                                            null: false
+    t.datetime "created_at",                                                        null: false
+    t.datetime "updated_at",                                                        null: false
     t.integer  "non_full_day_salary_table_id"
     t.integer  "nest_index"
     t.text     "department"
     t.text     "station"
     t.decimal  "work_insurance",               precision: 12, scale: 2
     t.decimal  "other_amount",                 precision: 12, scale: 2
-    t.integer  "role"
+    t.integer  "role",                                                  default: 0
     t.text     "staff_name"
     t.text     "staff_account"
     t.decimal  "total_sum",                    precision: 12, scale: 2
