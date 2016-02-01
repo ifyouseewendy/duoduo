@@ -183,6 +183,13 @@ ActiveAdmin.register SalaryTable do
     render json: { status: :ok, message: '操作成功' }
   end
 
+  member_action :update_remark do
+    st = SalaryTable.find(params[:id])
+    st.remark = params[:remark]
+    st.save!
+    render json: { status: :ok, message: '操作成功' }
+  end
+
   controller do
     after_action :set_audition, only: :create
 
