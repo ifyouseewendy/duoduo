@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131051517) do
+ActiveRecord::Schema.define(version: 20160201011510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -601,6 +601,9 @@ ActiveRecord::Schema.define(version: 20160131051517) do
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.date     "start_date"
+    t.text     "lai_table"
+    t.text     "daka_table"
+    t.integer  "status"
   end
 
   add_index "non_full_day_salary_tables", ["normal_corporation_id"], name: "index_non_full_day_salary_tables_on_normal_corporation_id", using: :btree

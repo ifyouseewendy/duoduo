@@ -487,6 +487,12 @@ zh-CN:
       non_full_day_salary_table:
         id: '编号'
         name: '名称'
+        start_date: '日期'
+        status: '状态'
+        statuses:
+          active: '活动'
+          archive: '存档'
+        invoices: '发票'
         remark: '备注'
         corporation: '所属单位'
         normal_corporation: '普通合作单位'
@@ -494,6 +500,8 @@ zh-CN:
         invoices: '发票'
         created_at: "创建时间"
         updated_at: "更新时间"
+        lai_table: '来表'
+        daka_table: '打卡表'
       non_full_day_salary_item:
         id: '编号'
         salary_table_id: '外键'
