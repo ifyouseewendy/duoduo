@@ -94,7 +94,7 @@ ActiveAdmin.register SalaryTable do
       f.input :start_date, as: :datepicker, hint: '请选择月份第一天代表该月。例如，9月工资表请选择9月1号'
       f.input :name, as: :string
       f.input :normal_corporation, as: :select, collection: -> { NormalCorporation.as_filter }.call
-      f.input :status, as: :check_boxes, collection: ->{ SalaryTable.statuses_option }.call
+      f.input :status, as: :radio, collection: ->{ SalaryTable.statuses_option }.call
       f.input :lai_table, as: :file
       f.input :daka_table, as: :file
       f.input :remark, as: :text
@@ -118,7 +118,7 @@ ActiveAdmin.register SalaryTable do
       end
 
       row :salary_items do |obj|
-        link_to '工资条', '#'
+        link_to "工资条", salary_table_salary_items_path(obj), target: '_blank'
       end
 
       row :lai_table do |obj|
