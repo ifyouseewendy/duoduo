@@ -486,13 +486,13 @@ $(document).on 'ready', ->
 
     # Add progress bar
     parts = current_path.split('/')
-    console.log(parts)
-    if parts[1] == 'salary_tables'
+    if parts[1] == 'salary_tables' or parts[1] == 'non_full_day_salary_tables'
       salary_table_id = parts[2]
+      salary_table_path = parts[1]
 
       $.ajax
-        url: "/salary_tables/#{salary_table_id}/audition_state"
-        success: (data, textStatus, jqXHR) ->
+        url: "/#{salary_table_path}/#{salary_table_id}/audition_state"
+        success: (data, textStatus, jqXHR) =>
           html = """
             <div class="progress-wrap">
               <table class="progress-bar">
@@ -518,7 +518,7 @@ $(document).on 'ready', ->
             e.preventDefault()
             state = $(@).closest('td').attr('class')
             $.ajax
-              url: "/salary_tables/#{salary_table_id}/toggle_audition_state"
+              url: "/#{salary_table_path}/#{salary_table_id}/toggle_audition_state"
               data:
                 state: state
               success: (data, textStatus, jqXHR) ->
@@ -550,6 +550,7 @@ $(document).on 'ready', ->
   $('.comments .download_links').hide();
   $('.engineering_salary_tables .download_links').hide();
   $('.salary_tables .download_links').hide();
+  $('.non_full_day_salary_tables .download_links').hide();
   $('.invoice_settings .download_links').hide();
 
   # Comments
