@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160201023838) do
+ActiveRecord::Schema.define(version: 20160201051231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -603,6 +603,7 @@ ActiveRecord::Schema.define(version: 20160201023838) do
   add_index "non_full_day_salary_items", ["admin_amount"], name: "index_non_full_day_salary_items_on_admin_amount", using: :btree
   add_index "non_full_day_salary_items", ["created_at"], name: "index_non_full_day_salary_items_on_created_at", using: :btree
   add_index "non_full_day_salary_items", ["department"], name: "index_non_full_day_salary_items_on_department", using: :btree
+  add_index "non_full_day_salary_items", ["nest_index", "role"], name: "index_non_full_day_salary_items_on_nest_index_and_role", using: :btree
   add_index "non_full_day_salary_items", ["nest_index"], name: "index_non_full_day_salary_items_on_nest_index", using: :btree
   add_index "non_full_day_salary_items", ["non_full_day_salary_table_id"], name: "index_non_full_day_salary_items_on_non_full_day_salary_table_id", using: :btree
   add_index "non_full_day_salary_items", ["normal_staff_id"], name: "index_non_full_day_salary_items_on_normal_staff_id", using: :btree
