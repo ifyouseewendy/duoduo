@@ -531,6 +531,8 @@ zh-CN:
         admin_amount: '管理费'
         other_amount: '管理费（其他）'
         total: '劳务费用合计'
+        total_sum: '劳务费用合计'
+        total_sum_with_admin_amount: '劳务费用合计（含管理）'
         remark: '备注'
         created_at: "创建时间"
         updated_at: "更新时间"
