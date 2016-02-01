@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160201011510) do
+ActiveRecord::Schema.define(version: 20160201012000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -606,8 +606,13 @@ ActiveRecord::Schema.define(version: 20160201011510) do
     t.integer  "status"
   end
 
+  add_index "non_full_day_salary_tables", ["created_at"], name: "index_non_full_day_salary_tables_on_created_at", using: :btree
+  add_index "non_full_day_salary_tables", ["name"], name: "index_non_full_day_salary_tables_on_name", using: :btree
   add_index "non_full_day_salary_tables", ["normal_corporation_id"], name: "index_non_full_day_salary_tables_on_normal_corporation_id", using: :btree
+  add_index "non_full_day_salary_tables", ["remark"], name: "index_non_full_day_salary_tables_on_remark", using: :btree
   add_index "non_full_day_salary_tables", ["start_date"], name: "index_non_full_day_salary_tables_on_start_date", using: :btree
+  add_index "non_full_day_salary_tables", ["status"], name: "index_non_full_day_salary_tables_on_status", using: :btree
+  add_index "non_full_day_salary_tables", ["updated_at"], name: "index_non_full_day_salary_tables_on_updated_at", using: :btree
 
   create_table "normal_corporations", force: :cascade do |t|
     t.text     "name"
