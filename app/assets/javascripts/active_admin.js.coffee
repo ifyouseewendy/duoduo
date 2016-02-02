@@ -345,7 +345,7 @@ $(document).on 'ready', ->
 
 
   # Salary Item
-  if $('.salary_items, .non_full_day_salary_items').length > 0
+  if $('.salary_items, .non_full_day_salary_items, .guard_salary_items').length > 0
 
     # Hide download and new button for staff's salary items
     if query_string && query_string.indexOf('normal_staff_id_eq')
@@ -485,7 +485,7 @@ $(document).on 'ready', ->
       $('.views_selector .dropdown_menu_list_wrapper').hide()
 
     parts = current_path.split('/')
-    if parts[1] == 'salary_tables' or parts[1] == 'non_full_day_salary_tables'
+    if parts[1] == 'salary_tables' or parts[1] == 'non_full_day_salary_tables' or parts[1] == 'guard_salary_tables'
       salary_table_id = parts[2]
       salary_table_path = parts[1]
 
@@ -600,6 +600,7 @@ $(document).on 'ready', ->
   $('.engineering_salary_tables .download_links').hide();
   $('.salary_tables .download_links').hide();
   $('.non_full_day_salary_tables .download_links').hide();
+  $('.guard_salary_tables .download_links').hide();
   $('.invoice_settings .download_links').hide();
 
   # Comments
