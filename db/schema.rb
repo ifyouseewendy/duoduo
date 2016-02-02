@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160202014812) do
+ActiveRecord::Schema.define(version: 20160202014954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -407,8 +407,12 @@ ActiveRecord::Schema.define(version: 20160202014812) do
     t.hstore   "audition",              default: {}
   end
 
+  add_index "guard_salary_tables", ["created_at"], name: "index_guard_salary_tables_on_created_at", using: :btree
+  add_index "guard_salary_tables", ["name"], name: "index_guard_salary_tables_on_name", using: :btree
   add_index "guard_salary_tables", ["normal_corporation_id"], name: "index_guard_salary_tables_on_normal_corporation_id", using: :btree
   add_index "guard_salary_tables", ["start_date"], name: "index_guard_salary_tables_on_start_date", using: :btree
+  add_index "guard_salary_tables", ["status"], name: "index_guard_salary_tables_on_status", using: :btree
+  add_index "guard_salary_tables", ["updated_at"], name: "index_guard_salary_tables_on_updated_at", using: :btree
 
   create_table "individual_income_tax_bases", force: :cascade do |t|
     t.integer  "base"
