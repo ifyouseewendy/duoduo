@@ -291,7 +291,7 @@ class NonFullDaySalaryItem < ActiveRecord::Base
   end
 
   def set_total_sum_with_admin_amount
-    self.total_sum_with_admin_amount = [total_sum, work_insurance, accident_insurance, admin_amount, other_amount].map(&:to_f).sum.round(2)
+    self.total_sum_with_admin_amount = [total_sum, admin_amount, other_amount].map(&:to_f).sum.round(2)
   end
 
   def manipulate_personal_fund(options)
@@ -390,6 +390,6 @@ class NonFullDaySalaryItem < ActiveRecord::Base
     return if self.normal_staff.nil?
 
     last_work_wage = self.normal_staff.non_full_day_salary_items.order(created_at: :desc).first.try(:work_wage)
-    self.work_wage = last_work_wage
+    self.work_wage ||= last_work_wage
   end
 end
