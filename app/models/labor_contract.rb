@@ -137,8 +137,8 @@ class LaborContract < ActiveRecord::Base
       stats[:medical_company]       = medical_insurance_base * company_rate.medical
     end
 
-    stats[:house_accumulation_personal] = personal_rate.house_accumulation
-    stats[:house_accumulation_company] = company_rate.house_accumulation
+    stats[:house_accumulation_personal] = house_accumulation_base * personal_rate.house_accumulation
+    stats[:house_accumulation_company] = house_accumulation_base * company_rate.house_accumulation
 
     stats
   end
