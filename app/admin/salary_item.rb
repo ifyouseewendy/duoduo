@@ -375,6 +375,16 @@ ActiveAdmin.register SalaryItem do
 
   end
 
+  member_action :destroy, method: :delete do
+    begin
+      obj = SalaryItem.find(params[:id])
+      obj.destroy
+      redirect_to :back, notice: "成功删除工资条"
+    rescue => e
+      redirect_to :back, alert: "删除失败，#{e.message}"
+    end
+  end
+
   controller do
     # def scoped_collection
     #   end_of_association_chain.includes(:normal_staff)
