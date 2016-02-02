@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160202021754) do
+ActiveRecord::Schema.define(version: 20160202022752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -395,6 +395,33 @@ ActiveRecord::Schema.define(version: 20160202021754) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "guard_salary_items", ["accident_insurance"], name: "index_guard_salary_items_on_accident_insurance", using: :btree
+  add_index "guard_salary_items", ["balance"], name: "index_guard_salary_items_on_balance", using: :btree
+  add_index "guard_salary_items", ["created_at"], name: "index_guard_salary_items_on_created_at", using: :btree
+  add_index "guard_salary_items", ["dress_deduct"], name: "index_guard_salary_items_on_dress_deduct", using: :btree
+  add_index "guard_salary_items", ["duty"], name: "index_guard_salary_items_on_duty", using: :btree
+  add_index "guard_salary_items", ["exam"], name: "index_guard_salary_items_on_exam", using: :btree
+  add_index "guard_salary_items", ["festival"], name: "index_guard_salary_items_on_festival", using: :btree
+  add_index "guard_salary_items", ["guard_salary_table_id"], name: "index_guard_salary_items_on_guard_salary_table_id", using: :btree
+  add_index "guard_salary_items", ["income"], name: "index_guard_salary_items_on_income", using: :btree
+  add_index "guard_salary_items", ["nest_index", "role"], name: "index_guard_salary_items_on_nest_index_and_role", using: :btree
+  add_index "guard_salary_items", ["nest_index"], name: "index_guard_salary_items_on_nest_index", using: :btree
+  add_index "guard_salary_items", ["normal_staff_id"], name: "index_guard_salary_items_on_normal_staff_id", using: :btree
+  add_index "guard_salary_items", ["overtime"], name: "index_guard_salary_items_on_overtime", using: :btree
+  add_index "guard_salary_items", ["physical_exam_deduct"], name: "index_guard_salary_items_on_physical_exam_deduct", using: :btree
+  add_index "guard_salary_items", ["pre_deduct"], name: "index_guard_salary_items_on_pre_deduct", using: :btree
+  add_index "guard_salary_items", ["remark"], name: "index_guard_salary_items_on_remark", using: :btree
+  add_index "guard_salary_items", ["role"], name: "index_guard_salary_items_on_role", using: :btree
+  add_index "guard_salary_items", ["salary_base"], name: "index_guard_salary_items_on_salary_base", using: :btree
+  add_index "guard_salary_items", ["salary_deserve"], name: "index_guard_salary_items_on_salary_deserve", using: :btree
+  add_index "guard_salary_items", ["salary_in_fact"], name: "index_guard_salary_items_on_salary_in_fact", using: :btree
+  add_index "guard_salary_items", ["staff_account"], name: "index_guard_salary_items_on_staff_account", using: :btree
+  add_index "guard_salary_items", ["staff_name"], name: "index_guard_salary_items_on_staff_name", using: :btree
+  add_index "guard_salary_items", ["station"], name: "index_guard_salary_items_on_station", using: :btree
+  add_index "guard_salary_items", ["total_deduct"], name: "index_guard_salary_items_on_total_deduct", using: :btree
+  add_index "guard_salary_items", ["total_sum"], name: "index_guard_salary_items_on_total_sum", using: :btree
+  add_index "guard_salary_items", ["updated_at"], name: "index_guard_salary_items_on_updated_at", using: :btree
 
   create_table "guard_salary_tables", force: :cascade do |t|
     t.text     "name"
