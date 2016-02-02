@@ -24,6 +24,13 @@ ActiveAdmin.register EngineeringSalaryTable do
           crumbs << link_to(project.display_name, "/engineering_projects?q[id_eq]=#{project.id}")
         end
       end
+    elsif params[:action] == 'show'
+      st = EngineeringSalaryTable.where(id: params[:id]).first
+      project = st.try(:project)
+      if project.present?
+        crumbs << link_to(project.display_name, "/engineering_projects?q[id_eq]=#{project.id}")
+        crumbs << link_to('工资表', "/engineering_salary_tables?q[project_id_eq]=#{project.id}")
+      end
     end
 
     crumbs
