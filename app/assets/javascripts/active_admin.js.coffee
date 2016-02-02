@@ -344,6 +344,12 @@ $(document).on 'ready', ->
   query_string = url.split('?')[1]
 
 
+  # Salary Table
+  if $('.salary_tables, .guard_salary_tables, .non_full_day_salary_tables').length > 0
+    # Check salary table invoices sum
+    $('.col-invoices .invoice-valid').closest('td').css('background-color', 'rgba(125, 255, 125, 0.309804)')
+    $('.col-invoices .invoice-invalid').closest('td').css('background-color', 'rgba(255, 0, 0, 0.18)')
+
   # Salary Item
   if $('.salary_items, .non_full_day_salary_items, .guard_salary_items').length > 0
 
@@ -709,8 +715,9 @@ $(document).on 'ready', ->
 
               names = data['data']['names']
               ids = data['data']['ids']
+              types = data['data']['types']
               $.each names, (idx, ele) ->
-                select.append("<option value='#{ids[idx]}'>#{ele}</option>")
+                select.append("<option value='#{ids[idx]}' data-type='#{types[idx]}'>#{ele}</option>")
 
               $('#invoice_project_type').val('EngineeringProject')
       else
@@ -726,10 +733,16 @@ $(document).on 'ready', ->
 
               names = data['data']['names']
               ids = data['data']['ids']
+              types = data['data']['types']
               $.each names, (idx, ele) ->
-                select.append("<option value='#{ids[idx]}'>#{ele}</option>")
+                select.append("<option value='#{ids[idx]}' data-type='#{types[idx]}'>#{ele}</option>")
 
-              $('#invoice_project_type').val('EngineeringProject')
+              $('#invoice_project_type').val(types[0])
+
+    set_invoice_project_type = ->
+      $('#invoice_project_id').on 'change', ->
+        type = $(@).children(':selected').data('type')
+        $('#invoice_project_type').val(type)
 
     set_contact = (choice) ->
       scope = choice.find('input').val()
@@ -797,6 +810,9 @@ $(document).on 'ready', ->
     $('#invoice_contact').on 'change', ->
       set_payer( $(@).children(":selected") )
       load_projects()
+
+    # Change project
+    set_invoice_project_type()
 
     if $('.invoices.new').length > 0
       # Set default category

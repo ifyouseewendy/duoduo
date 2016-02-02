@@ -242,25 +242,28 @@ ActiveAdmin.register NormalCorporation do
   collection_action :query_salary_tables do
     corp = NormalCorporation.where(name: params[:name]).first
 
-    names, ids = [], []
+    names, ids, types = [], [], []
     if corp.present?
       corp.salary_tables.order(start_date: :desc).each do |st|
         names << "基础 - #{st.name}"
+        types << 'SalaryTable'
         ids << st.id
       end
 
       corp.guard_salary_tables.order(start_date: :desc).each do |st|
         names << "保安 - #{st.name}"
+        types << 'GuardSalaryTable'
         ids << st.id
       end
 
       corp.non_full_day_salary_tables.order(start_date: :desc).each do |st|
         names << "非全日制 - #{st.name}"
+        types << 'NonFullDaySalaryTable'
         ids << st.id
       end
     end
 
-    render json: { status: :ok, data: {names: names, ids: ids } }
+    render json: { status: :ok, data: {names: names, ids: ids, types: types } }
   end
 
   controller do
