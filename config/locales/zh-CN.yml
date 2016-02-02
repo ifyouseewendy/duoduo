@@ -647,6 +647,7 @@ zh-CN:
         url: '链接'
         created_at: "创建时间"
         updated_at: "更新时间"
+        remark: '备注'
       engineering_salary_table:
         id: '编号'
         name: '名称'

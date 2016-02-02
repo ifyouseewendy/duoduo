@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160202132033) do
+ActiveRecord::Schema.define(version: 20160202133050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 20160202132033) do
     t.datetime "updated_at",                  null: false
     t.integer  "engineering_salary_table_id"
     t.text     "name"
+    t.text     "remark"
   end
 
   add_index "engineering_big_table_salary_table_references", ["engineering_salary_table_id"], name: "idx_engineering_big_table_reference_of_salary_table", using: :btree
