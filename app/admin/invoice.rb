@@ -216,15 +216,15 @@ ActiveAdmin.register Invoice do
 
 
   # Collection actions
-  # collection_action :export_xlsx do
-  #   options = {}
-  #   options[:selected] = params[:selected].split('-') if params[:selected].present?
-  #   options[:columns] = params[:columns].split('-') if params[:columns].present?
-  #   options.update(params[:q]) if params[:q].present?
-  #
-  #   file = Invoice.export_xlsx(options: options)
-  #   send_file file, filename: file.basename
-  # end
+  collection_action :export_xlsx do
+    options = {}
+    options[:selected] = params[:selected].split('-') if params[:selected].present?
+    options[:columns] = params[:columns].split('-') if params[:columns].present?
+    options.update(params[:q]) if params[:q].present?
+
+    file = Invoice.export_xlsx(options: options)
+    send_file file, filename: file.basename
+  end
 
   collection_action :create, method: :post do
     attrs = params.require(:invoice).permit( resource_class.ordered_columns )

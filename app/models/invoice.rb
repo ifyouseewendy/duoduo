@@ -57,13 +57,16 @@ class Invoice < ActiveRecord::Base
     end
 
     def export_xlsx(options: {})
-      names = [self.model_name.human, self.invoicable.name, Time.stamp]
+      names = [self.model_name.human, Time.stamp]
       filename = "#{names.join('_')}.xlsx"
       filepath = EXPORT_PATH.join filename
 
-      st = SalaryTable.find(options[:salary_table_id])
-      collection = st.invoices
-      collection = collection.where(id: options[:selected]) if options[:selected].present?
+      collection = self.all
+      if options[:selected].present?
+        collection = collection.where(id: options[:selected])
+      else
+        collection = collection.ransack(options).result
+      end
 
       columns = columns_based_on(options: options)
 
@@ -74,7 +77,14 @@ class Invoice < ActiveRecord::Base
           collection.each do |item|
              stats = \
               columns.map do |col|
-                item.send(col)
+                case col
+                when :sub_company, :project
+                  item.send(col).try(:name)
+                when :category, :status, :scope
+                  item.send("#{col}_i18n")
+                else
+                  item.send(col)
+                end
              end
              sheet.add_row stats
           end
@@ -89,7 +99,7 @@ class Invoice < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        ordered_columns(without_foreign_keys: true)
+        [:sub_company, :category, :code, :encoding, :date, :status, :scope, :contact, :project, :payer, :management, :amount, :admin_amount, :total_amount, :income_date, :refund_date, :refund_person, :remark]
       end
     end
 
