@@ -35,6 +35,7 @@ class EngineeringSalaryTable < ActiveRecord::Base
       [
         EngineeringNormalSalaryTable,
         EngineeringNormalWithTaxSalaryTable,
+        EngineeringBigTableSalaryTable,
       ]
     end
 
