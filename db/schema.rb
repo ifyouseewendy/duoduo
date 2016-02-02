@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160202022752) do
+ActiveRecord::Schema.define(version: 20160202112039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -926,16 +926,18 @@ ActiveRecord::Schema.define(version: 20160202022752) do
   create_table "salary_tables", force: :cascade do |t|
     t.text     "name"
     t.text     "remark"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
     t.integer  "normal_corporation_id"
     t.text     "lai_table"
     t.text     "daka_table"
     t.date     "start_date"
-    t.integer  "status",                default: 0
-    t.hstore   "audition",              default: {}
+    t.integer  "status",                                        default: 0
+    t.hstore   "audition",                                      default: {}
+    t.decimal  "amount",                precision: 8, scale: 2
   end
 
+  add_index "salary_tables", ["amount"], name: "index_salary_tables_on_amount", using: :btree
   add_index "salary_tables", ["name"], name: "index_salary_tables_on_name", using: :btree
   add_index "salary_tables", ["normal_corporation_id"], name: "index_salary_tables_on_normal_corporation_id", using: :btree
   add_index "salary_tables", ["start_date"], name: "index_salary_tables_on_start_date", using: :btree
