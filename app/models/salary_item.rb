@@ -380,11 +380,15 @@ class SalaryItem < ActiveRecord::Base
       end
     end
 
-    if (self.changed & ['admin_amount', 'other_amount']).present?
+    if (self.changed & ['total_sum', 'admin_amount', 'other_amount']).present?
       set_total_sum_with_admin_amount
     end
 
     self.update_columns(self.attributes)
+
+    if (self.changed & ['total_sum_with_admin_amount']).present?
+      salary_table.validate_amount
+    end
   end
 
   def revise_nest_index

@@ -33,7 +33,7 @@ ActiveAdmin.register SalaryTable do
     record.active
   end
 
-  config.sort_order = 'start_date_desc'
+  config.sort_order = 'updated_at_desc'
 
   index do
     selectable_column
@@ -48,6 +48,7 @@ ActiveAdmin.register SalaryTable do
     column :status do |obj|
       status_tag obj.status_i18n, (obj.active? ? :yes : :no)
     end
+    column :amount
 
     column :remark
 
@@ -78,6 +79,7 @@ ActiveAdmin.register SalaryTable do
   filter :name
   filter :normal_corporation, as: :select, collection: -> { NormalCorporation.as_filter }
   filter :status, as: :check_boxes, collection: ->{ SalaryTable.statuses_option(filter: true) }
+  filter :amount
   preserve_default_filters!
   # remove_filter :invoices
   remove_filter :salary_items
@@ -116,6 +118,7 @@ ActiveAdmin.register SalaryTable do
       row :status do |obj|
         status_tag obj.status_i18n, (obj.active? ? :yes : :no)
       end
+      row :amount
 
       row :salary_items do |obj|
         link_to "工资条", salary_table_salary_items_path(obj), target: '_blank'

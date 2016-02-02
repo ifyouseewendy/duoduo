@@ -239,4 +239,9 @@ class SalaryTable < ActiveRecord::Base
       audit_finance: '财务',
     }
   end
+
+  def validate_amount
+    sum = salary_items.pluck(:total_sum_with_admin_amount).map(&:to_f).sum.round(2)
+    self.update_attribute(:amount, sum)
+  end
 end
