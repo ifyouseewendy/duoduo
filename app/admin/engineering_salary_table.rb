@@ -63,17 +63,20 @@ ActiveAdmin.register EngineeringSalaryTable do
     # column :audition_status, sortable: :id
 
     column :salary_item_detail, sortable: :updated_at do |obj|
-      parts = obj.class.name.underscore.pluralize.split('_')
-      parts[-1] = parts[-1].sub('table', 'item')
-      path = parts.join('_')
+      if obj.type == 'EngineeringBigTableSalaryTable'
+      else
+        parts = obj.class.name.underscore.pluralize.split('_')
+        parts[-1] = parts[-1].sub('table', 'item')
+        path = parts.join('_')
 
-      project_id = obj.project.id
+        project_id = obj.project.id
 
-      ul do
-        li( link_to "查看", "/#{path}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
-        unless obj.project.locked
-          li( link_to "导入", "/#{path}/import_new?engineering_salary_table_id=#{obj.id}", target: '_blank' )
-          li( link_to "添加", "/#{path}/new?project_id=#{project_id}&salary_table_id=#{obj.id}", target: "_blank" )
+        ul do
+          li( link_to "查看", "/#{path}?utf8=✓&q%5Bsalary_table_id_eq%5D=#{obj.id}&commit=过滤", target: '_blank' )
+          unless obj.project.locked
+            li( link_to "导入", "/#{path}/import_new?engineering_salary_table_id=#{obj.id}", target: '_blank' )
+            li( link_to "添加", "/#{path}/new?project_id=#{project_id}&salary_table_id=#{obj.id}", target: "_blank" )
+          end
         end
       end
     end
