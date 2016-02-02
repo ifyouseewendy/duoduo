@@ -337,13 +337,27 @@ ActiveAdmin.register GuardSalaryItem do
 
     stats = \
       (1..sheet.last_row).reduce([]) do |ar, i|
-        name, salary, identity_card = sheet.row(i)
-        next if name.nil? && salary.nil?
+        station, name, income, salary_base, festival, overtime, exam, duty, dress_deduct, physical_exam_deduct, pre_deduct, accident_insurance, identity_card = sheet.row(i)
+        next if name.nil?
 
         name.gsub!(/\s/, '')
-
         identity_card = identity_card.to_i.to_s if identity_card.is_a? Numeric
-        ar << { name: name, salary: salary, identity_card: "#{identity_card}" }
+
+        ar << {
+          station: station,
+          name: name,
+          income: income,
+          salary_base: salary_base,
+          festival: festival,
+          overtime: overtime,
+          exam: exam,
+          duty: duty,
+          dress_deduct: dress_deduct,
+          physical_exam_deduct: physical_exam_deduct,
+          pre_deduct: pre_deduct,
+          accident_insurance: accident_insurance,
+          identity_card: "#{identity_card}"
+        }
       end
 
     failed = []
@@ -367,8 +381,7 @@ ActiveAdmin.register GuardSalaryItem do
         end
 
         guard_salary_table.guard_salary_items.create!(
-          normal_staff: staff,
-          salary_deserve: ha[:salary]
+          ha.except(:name, :identity_card).merge({ normal_staff: staff })
         )
       rescue => e
         failed << (ha.values << e.message)
@@ -382,7 +395,8 @@ ActiveAdmin.register GuardSalaryItem do
       filepath = Pathname("tmp/#{filename}_#{Time.stamp}.xlsx")
       Axlsx::Package.new do |p|
         p.workbook.add_worksheet do |sheet|
-          failed.each{|stat| sheet.add_row stat, types: [:string, :string, :string]}
+          col_count = failed[0].count
+          failed.each{|stat| sheet.add_row stat, types: ([:string]*col_count)}
         end
         p.serialize(filepath.to_s)
       end

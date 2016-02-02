@@ -27,7 +27,7 @@ class GuardSalaryItem < ActiveRecord::Base
 
     def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
       if export
-        [:staff_name, :salary_deserve, :identity_card]
+        [:station, :staff_name, :income, :salary_base, :festival, :overtime, :exam, :duty, :dress_deduct, :physical_exam_deduct, :pre_deduct, :accident_insurance, :identity_card]
       else
         names = column_names.map(&:to_sym)
 
