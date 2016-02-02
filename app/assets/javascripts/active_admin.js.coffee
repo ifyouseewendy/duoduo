@@ -527,24 +527,51 @@ $(document).on 'ready', ->
 
       # Editable remark
       panel_contents = $('.index_as_table .panel .panel_contents')
-      $('.index_as_table .panel').append("<div class='edit_div'><a href='#' class='edit'>编辑</a></div>")
+      edit_div = """
+        <div class='edit_div'>
+          <a href='#' class='edit'>编辑</a>
+          <a href='#' class='cancel'>取消</a>&nbsp
+          <a href='#' class='submit'>保存</a>
+        </div>
+      """
+      $('.index_as_table .panel').append(edit_div)
+
+      $('.index_as_table .panel .edit_div .cancel').hide()
+      $('.index_as_table .panel .edit_div .submit').hide()
+
+      old_content = null
+
       $('.index_as_table .panel .edit').on 'click', (e) ->
         e.stopPropagation()
         e.preventDefault()
 
-        content = panel_contents.text()
-        panel_contents.empty().append("<input type='text' value=#{content}></input>")
-        $('.index_as_table .panel .edit_div').append("&nbsp<a href='#' class='submit'>保存</a>")
-        $('.index_as_table .panel .submit').on 'click', (e) ->
-          new_content = panel_contents.find('input').val()
-          $.ajax
-            url: "/#{salary_table_path}/#{salary_table_id}/update_remark"
-            data:
-              remark: new_content
-            success: (data, textStatus, jqXHR) =>
-              panel_contents.empty().text(new_content)
-              $('.index_as_table .panel .edit_div .submit').remove()
-              alert( data['message'] )
+        old_content = panel_contents.text()
+        panel_contents.empty().append("<textarea rows='5'>#{old_content}</textarea>")
+
+        $('.index_as_table .panel .edit_div .edit').hide()
+        $('.index_as_table .panel .edit_div .cancel').show()
+        $('.index_as_table .panel .edit_div .submit').show()
+
+      $('.index_as_table .panel .cancel').on 'click', (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+        content = panel_contents.empty().text(old_content)
+        $('.index_as_table .panel .edit_div .edit').show()
+        $('.index_as_table .panel .edit_div .cancel').hide()
+        $('.index_as_table .panel .edit_div .submit').hide()
+
+      $('.index_as_table .panel .submit').on 'click', (e) ->
+        new_content = panel_contents.find('textarea').val()
+        $.ajax
+          url: "/#{salary_table_path}/#{salary_table_id}/update_remark"
+          data:
+            remark: new_content
+          success: (data, textStatus, jqXHR) =>
+            panel_contents.empty().text(new_content)
+            $('.index_as_table .panel .edit_div .edit').show()
+            $('.index_as_table .panel .edit_div .cancel').hide()
+            $('.index_as_table .panel .edit_div .submit').hide()
+            alert( data['message'] )
 
 
   # Export XLSX
