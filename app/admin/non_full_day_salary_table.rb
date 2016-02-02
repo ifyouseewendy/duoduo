@@ -33,10 +33,16 @@ ActiveAdmin.register NonFullDaySalaryTable do
     record.active
   end
 
-  config.sort_order = 'start_date_desc'
+  config.sort_order = 'updated_at_desc'
 
-  index do
+  index has_footer: true do
     selectable_column
+
+    sum_fields = resource_class.sum_fields
+    sum = sum_fields.reduce({}) do |ha, field|
+      ha[field] = collection.sum(field)
+      ha
+    end
 
     column :start_date, sortable: :start_date do |obj|
       obj.month
@@ -49,6 +55,17 @@ ActiveAdmin.register NonFullDaySalaryTable do
     column :status do |obj|
       status_tag obj.status_i18n, (obj.active? ? :yes : :no)
     end
+
+    column :invoices, sortable: :id do |obj|
+      if obj.invoices.present?
+        if obj.has_equal_invoices?
+          link_to '发票', "/invoices?q[project_type_eq]=NonFullDaySalaryTable&&q[project_id_eq]=#{obj.id}", target: '_blank', class: 'invoice-valid'
+        else
+          link_to '发票', "/invoices?q[project_type_eq]=NonFullDaySalaryTable&&q[project_id_eq]=#{obj.id}", target: '_blank', class: 'invoice-invalid'
+        end
+      end
+    end
+    column :amount, footer: sum[:amount]
 
     column :remark
 
@@ -79,6 +96,7 @@ ActiveAdmin.register NonFullDaySalaryTable do
   filter :name
   filter :normal_corporation, as: :select, collection: -> { NormalCorporation.as_filter }
   filter :status, as: :check_boxes, collection: ->{ NonFullDaySalaryTable.statuses_option(filter: true) }
+  filter :amount
   preserve_default_filters!
   # remove_filter :invoices
   remove_filter :salary_items
@@ -117,6 +135,16 @@ ActiveAdmin.register NonFullDaySalaryTable do
       row :status do |obj|
         status_tag obj.status_i18n, (obj.active? ? :yes : :no)
       end
+      row :invoices do |obj|
+        if obj.invoices.present?
+          if obj.has_equal_invoices?
+            link_to '发票', "/invoices?q[project_type_eq]=NonFullDaySalaryTable&&q[project_id_eq]=#{obj.id}", target: '_blank', class: 'invoice-valid'
+          else
+            link_to '发票', "/invoices?q[project_type_eq]=NonFullDaySalaryTable&&q[project_id_eq]=#{obj.id}", target: '_blank', class: 'invoice-invalid'
+          end
+        end
+      end
+      row :amount
 
       row :salary_items do |obj|
         link_to "工资条", non_full_day_salary_table_non_full_day_salary_items_path(obj), target: '_blank'

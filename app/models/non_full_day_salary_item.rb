@@ -218,6 +218,10 @@ class NonFullDaySalaryItem < ActiveRecord::Base
     end
 
     self.update_columns(self.attributes)
+
+    if (self.changed & ['total_sum_with_admin_amount']).present?
+      salary_table.validate_amount
+    end
   end
 
   def revise_nest_index
