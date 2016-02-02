@@ -538,7 +538,7 @@ zh-CN:
         staff_name: '姓名'
         work_hour: '工作时间（小时）'
         work_wage: '工资额（每小时）'
-        salary_deserve: '应发'
+        salary_deserve: '应发工资'
         tax: '个税'
         other: '其他'
         salary_in_fact: '实发工资'

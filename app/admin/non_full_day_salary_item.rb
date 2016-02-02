@@ -320,13 +320,24 @@ ActiveAdmin.register NonFullDaySalaryItem do
 
     stats = \
       (1..sheet.last_row).reduce([]) do |ar, i|
-        name, salary, identity_card = sheet.row(i)
-        next if name.nil? && salary.nil?
+        department, station, name, work_hour, work_wage, salary_deserve, work_insurance, accident_insurance, other_amount, identity_card = sheet.row(i)
+        next if name.nil?
 
         name.gsub!(/\s/, '')
-
         identity_card = identity_card.to_i.to_s if identity_card.is_a? Numeric
-        ar << { name: name, salary: salary, identity_card: "#{identity_card}" }
+
+        ar << {
+          department: department,
+          station: station,
+          name: name,
+          work_hour: work_hour,
+          work_wage: work_wage,
+          salary_deserve: salary_deserve,
+          work_insurance: work_insurance,
+          accident_insurance: accident_insurance,
+          other_amount: other_amount,
+          identity_card: "#{identity_card}"
+        }
       end
 
     failed = []
@@ -350,8 +361,7 @@ ActiveAdmin.register NonFullDaySalaryItem do
         end
 
         non_full_day_salary_table.non_full_day_salary_items.create!(
-          normal_staff: staff,
-          salary_deserve: ha[:salary]
+          ha.except(:name, :identity_card).merge({ normal_staff: staff })
         )
       rescue => e
         failed << (ha.values << e.message)
@@ -365,7 +375,8 @@ ActiveAdmin.register NonFullDaySalaryItem do
       filepath = Pathname("tmp/#{filename}_#{Time.stamp}.xlsx")
       Axlsx::Package.new do |p|
         p.workbook.add_worksheet do |sheet|
-          failed.each{|stat| sheet.add_row stat, types: [:string, :string, :string]}
+          col_count = failed[0].count
+          failed.each{|stat| sheet.add_row stat, types: ([:string]*col_count)}
         end
         p.serialize(filepath.to_s)
       end

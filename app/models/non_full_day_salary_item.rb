@@ -29,7 +29,7 @@ class NonFullDaySalaryItem < ActiveRecord::Base
 
     def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
       if export
-        [:staff_name, :salary_deserve, :identity_card]
+        [:department, :station, :staff_name, :work_hour, :work_wage, :salary_deserve, :work_insurance, :accident_insurance, :other_amount, :identity_card]
       else
         names = column_names.map(&:to_sym)
 
