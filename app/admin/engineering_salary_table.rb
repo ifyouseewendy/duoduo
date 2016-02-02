@@ -122,7 +122,9 @@ ActiveAdmin.register EngineeringSalaryTable do
   remove_filter :project
   remove_filter :activities
 
-  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
+  permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
+    + [{references_attributes: [:id, :_destroy, :name, :url, :remark]}]
+  }
 
   action_item :edit, only: [:show] do
     unless resource.project.locked
@@ -199,34 +201,38 @@ ActiveAdmin.register EngineeringSalaryTable do
       row :type do |obj|
         obj.model_name.human
       end
-      if resource.type == 'EngineeringBigTableSalaryTable'
-        row :url do |obj|
-          obj.url
-        end
-      end
       row :remark
       row :created_at
       row :updated_at
     end
+
+    if resource.type == 'EngineeringBigTableSalaryTable'
+      panel "大表链接" do
+        table_for resource.references do
+          column :name do |obj|
+            url = obj.url
+            url = "http://#{url}" unless url.start_with?('http')
+            link_to obj.name, url, target: '_blank'
+          end
+          column :remark
+        end
+      end
+    end
+
     active_admin_comments
   end
 
-  member_action :update, method: :post do
-    attrs = params.require(:engineering_salary_table).permit( EngineeringSalaryTable.ordered_columns )
-
-    begin
-      obj = EngineeringSalaryTable.find(params[:id])
-
-      if obj.type == 'EngineeringBigTableSalaryTable'
-        obj.update_reference_url(params[:engineering_salary_table][:url])
-      else
-        obj.update! attrs
-      end
-      redirect_to engineering_salary_table_path(obj), notice: "成功更新工资表<#{obj.name}>"
-    rescue => e
-      redirect_to engineering_salary_table_path(obj), alert: "更新失败，#{e.message}"
-    end
-  end
+  # member_action :update, method: :post do
+  #   attrs = params.require(:engineering_salary_table).permit( EngineeringSalaryTable.ordered_columns )
+  #
+  #   begin
+  #     obj = EngineeringSalaryTable.find(params[:id])
+  #     obj.update! attrs
+  #     redirect_to engineering_salary_table_path(obj), notice: "成功更新工资表<#{obj.name}>"
+  #   rescue => e
+  #     redirect_to engineering_salary_table_path(obj), alert: "更新失败，#{e.message}"
+  #   end
+  # end
 
   collection_action :import_demo do
     # Check params
