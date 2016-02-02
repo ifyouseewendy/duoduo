@@ -48,7 +48,7 @@ zh-CN:
       engineering_normal_salary_table: '基础工资表'
       engineering_normal_with_tax_salary_table: '基础（带个税）工资表'
       engineering_big_table_salary_table: '大表工资表'
-      engineering_big_table_salary_table_reference: '大表工资条'
+      engineering_big_table_salary_table_reference: '大表链接'
       engineering_dong_fang_salary_table: '东方工资表'
       engineering_normal_salary_item: '基础工资条'
       engineering_normal_with_tax_salary_item: '基础（带个税）工资条'

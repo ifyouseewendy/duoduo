@@ -138,19 +138,49 @@ ActiveAdmin.register EngineeringSalaryTable do
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
 
-    f.inputs do
-      f.input :name, as: :string
-      if request.url.split('/')[-1] == 'new'
+    if request.url.split('/')[-1] == 'new'
+      f.inputs do
+        f.input :name, as: :string
+        # if request.url.split('/')[-1] == 'new'
         f.input :type, as: :radio, collection: ->{ EngineeringSalaryTable.new_record_types.map{|k| [k.model_name.human, k.to_s]} }.call
         f.input :project, collection: ->{ EngineeringProject.as_filter }.call
+        # end
+        f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
+        f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'
+        f.input :amount, as: :number
+        f.input :remark, as: :text
       end
-      f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
-      f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'
-      f.input :amount, as: :number
+    else
       if resource.type == 'EngineeringBigTableSalaryTable'
-        f.input :url, as: :string
+        tabs do
+          tab "基本信息" do
+            f.inputs do
+              f.input :name, as: :string
+              f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
+              f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'
+              f.input :amount, as: :number
+              f.input :remark, as: :text
+            end
+          end
+          tab "大表链接" do
+            f.inputs do
+              f.has_many :references, allow_destroy: true, new_record: true do |a|
+                a.input :name, as: :string
+                a.input :url, as: :string
+                a.input :remark, as: :string
+              end
+            end
+          end
+        end
+      else
+        f.inputs do
+          f.input :name, as: :string
+          f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
+          f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'
+          f.input :amount, as: :number
+          f.input :remark, as: :text
+        end
       end
-      f.input :remark, as: :text
     end
 
     f.actions
