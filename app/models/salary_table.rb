@@ -53,6 +53,10 @@ class SalaryTable < ActiveRecord::Base
       fields.each{|k| hash[ "#{k}_#{human_attribute_name(k)}" ] = :text }
       hash
     end
+
+    def sum_fields
+      [:amount]
+    end
   end
 
   def corporation

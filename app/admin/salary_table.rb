@@ -35,9 +35,16 @@ ActiveAdmin.register SalaryTable do
 
   config.sort_order = 'updated_at_desc'
 
-  index do
+  index has_footer: true do
     selectable_column
-    column :start_date, sortable: :start_date do |obj|
+
+    sum_fields = resource_class.sum_fields
+    sum = sum_fields.reduce({}) do |ha, field|
+      ha[field] = collection.sum(field)
+      ha
+    end
+
+    column :start_date, sortable: :start_date, footer: '合计' do |obj|
       obj.month
     end
     column :name
@@ -48,7 +55,7 @@ ActiveAdmin.register SalaryTable do
     column :status do |obj|
       status_tag obj.status_i18n, (obj.active? ? :yes : :no)
     end
-    column :amount
+    column :amount, footer: sum[:amount]
 
     column :remark
 
