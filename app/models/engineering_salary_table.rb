@@ -16,6 +16,8 @@ class EngineeringSalaryTable < ActiveRecord::Base
   has_many :references, class: EngineeringBigTableSalaryTableReference, dependent: :destroy
   accepts_nested_attributes_for :references, allow_destroy: true
 
+  mount_uploader :attachment, Attachment
+
   validates_presence_of :start_date, :end_date
 
   class << self

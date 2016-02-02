@@ -662,6 +662,7 @@ zh-CN:
         start_date: '起始日期'
         end_date: '结束日期'
         salary_item_detail: '工资条'
+        attachment: '附件'
       engineering_normal_salary_item:
         id: '序号'
         name: '姓名'
