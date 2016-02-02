@@ -135,6 +135,15 @@ ActiveAdmin.register SalaryTable do
       row :status do |obj|
         status_tag obj.status_i18n, (obj.active? ? :yes : :no)
       end
+      row :invoices do |obj|
+        if obj.invoices.present?
+          if obj.has_equal_invoices?
+            link_to '发票', "/invoices?q[project_type_eq]=SalaryTable&&q[project_id_eq]=#{obj.id}", target: '_blank', class: 'invoice-valid'
+          else
+            link_to '发票', "/invoices?q[project_type_eq]=SalaryTable&&q[project_id_eq]=#{obj.id}", target: '_blank', class: 'invoice-invalid'
+          end
+        end
+      end
       row :amount
 
       row :salary_items do |obj|
