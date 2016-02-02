@@ -8,7 +8,7 @@ class SalaryTable < ActiveRecord::Base
 
   belongs_to :normal_corporation
   has_many :salary_items, dependent: :destroy
-  # has_many :invoices, dependent: :destroy, as: :invoicable
+  has_many :invoices, as: :project
 
   mount_uploader :lai_table, Attachment
   mount_uploader :daka_table, Attachment
@@ -247,5 +247,14 @@ class SalaryTable < ActiveRecord::Base
   def validate_amount
     sum = salary_items.pluck(:total_sum_with_admin_amount).map(&:to_f).sum.round(2)
     self.update_attribute(:amount, sum)
+  end
+
+  def has_equal_invoices?
+    amount = 0
+    invoices.each do |inv|
+      amount += inv.total_amount.to_f
+    end
+
+    self.amount.to_f.round(2) == amount.round(2)
   end
 end
