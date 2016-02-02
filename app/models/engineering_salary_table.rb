@@ -11,9 +11,10 @@ class EngineeringSalaryTable < ActiveRecord::Base
     foreign_key: :engineering_project_id,
     required: true
 
-  has_one :reference, class_name: EngineeringBigTableSalaryTableReference, dependent: :destroy
-
   has_one :audition, as: :auditable, class_name: AuditionItem, dependent: :destroy
+
+  has_many :references, class: EngineeringBigTableSalaryTableReference, dependent: :destroy
+  accepts_nested_attributes_for :references, allow_destroy: true
 
   validates_presence_of :start_date, :end_date
 

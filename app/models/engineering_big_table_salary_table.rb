@@ -4,17 +4,4 @@ class EngineeringBigTableSalaryTable < EngineeringSalaryTable
     foreign_key: :engineering_salary_table_id,
     inverse_of: :salary_table,
     dependent: :destroy
-
-  def update_reference_url(url)
-    uri = URI(url)
-    url = [uri.path, uri.query].join('?')
-
-    self.reference ||= EngineeringBigTableSalaryTableReference.new(engineering_salary_table: self)
-    self.reference.url = url
-    self.reference.save!
-  end
-
-  def url
-    reference.try(:url)
-  end
 end
