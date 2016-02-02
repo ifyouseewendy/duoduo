@@ -121,6 +121,7 @@ ActiveAdmin.register EngineeringSalaryTable do
   remove_filter :reference
   remove_filter :project
   remove_filter :activities
+  remove_filter :attachment
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
     + [{references_attributes: [:id, :_destroy, :name, :url, :remark]}]
@@ -161,6 +162,7 @@ ActiveAdmin.register EngineeringSalaryTable do
               f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
               f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'
               f.input :amount, as: :number
+              f.input :attachment, as: :file
               f.input :remark, as: :text
             end
           end
@@ -200,6 +202,11 @@ ActiveAdmin.register EngineeringSalaryTable do
       row :amount
       row :type do |obj|
         obj.model_name.human
+      end
+      if resource.type == 'EngineeringBigTableSalaryTable'
+        row :attachment do |obj|
+          link_to (obj.attachment_identifier || '无'), (obj.attachment.try(:url) || '#')
+        end
       end
       row :remark
       row :created_at
