@@ -469,6 +469,7 @@ zh-CN:
         daka_table: '打卡表'
         salary_items_display: '工资条'
         attachment: '附件'
+        amount: '劳务费合计'
       guard_salary_item:
         id: '序号'
         nest_index: '编号'

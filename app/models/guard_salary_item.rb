@@ -184,6 +184,10 @@ class GuardSalaryItem < ActiveRecord::Base
     end
 
     self.update_columns(self.attributes)
+
+    if (self.changed & ['total_sum']).present?
+      salary_table.validate_amount
+    end
   end
 
   def revise_nest_index
