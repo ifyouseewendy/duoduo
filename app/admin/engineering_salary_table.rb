@@ -321,8 +321,9 @@ ActiveAdmin.register EngineeringSalaryTable do
           if row[0] == '合计'
             values = stat.map(&:values).transpose.map{|ar| ar.map(&:to_f).sum}
 
-            row[2..-1].each_with_index do |data, col_id|
-              raise "表#{sheet_id+1} - 合计数目不等：#{data}" unless \
+            sum_data = row[2..-1].compact
+            sum_data.each_with_index do |data, col_id|
+              raise "表#{sheet_id+1} - 合计数目不等：#{sheet[0][col_id+2]}" unless \
                 values[col_id+2].to_f.round(2) == data.to_f.round(2)
             end
             break
