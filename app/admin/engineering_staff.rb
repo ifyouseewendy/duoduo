@@ -53,6 +53,17 @@ ActiveAdmin.register EngineeringStaff do
   index do
     selectable_column
 
+    page = params[:page].to_i
+    if page == 0
+      $global_id = 0
+    else
+      $global_id = (page - 1)*50
+    end
+    column :id do |obj|
+      $global_id += 1
+      $global_id
+    end
+
     column :identity_card
     column :name
     column :enable, sortable: :enable do |obj|

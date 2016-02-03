@@ -34,6 +34,12 @@ ActiveAdmin.register EngineeringNormalSalaryItem do
   index has_footer: true do
     selectable_column
 
+    $global_id = 0
+    column :id do |obj|
+      $global_id += 1
+      $global_id
+    end
+
     sum_fields = resource_class.sum_fields
     sum = sum_fields.reduce({}) do |ha, field|
       ha[field] = collection.sum(field)
