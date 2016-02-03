@@ -26,6 +26,12 @@ ActiveAdmin.register EngineeringProject do
           crumbs << link_to(staff.name, "/engineering_staffs?q[id_eq]=#{staff.id}")
         end
       end
+    elsif params[:action] == 'show'
+      pr = EngineeringProject.where(id: params[:id]).first
+      if pr.present?
+        ec = pr.customer
+        crumbs << link_to('项目', "/engineering_projects?q[engineering_customer_id_eq]=#{ec.id}")
+      end
     end
 
     crumbs
