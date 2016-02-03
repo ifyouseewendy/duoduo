@@ -7,7 +7,7 @@ ActiveAdmin.register EngineeringSalaryTable do
 
   config.action_items.delete_if { |item|
     # item is an ActiveAdmin::ActionItem
-    item.display_on?(:show)
+    item.display_on?(:show) or item.display_on?(:index)
   }
 
   breadcrumb do
@@ -126,6 +126,14 @@ ActiveAdmin.register EngineeringSalaryTable do
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) \
     + [{references_attributes: [:id, :_destroy, :name, :url, :remark]}]
   }
+
+  action_item :new, only: [:index] do
+    if params['q'].present? && (pid=params['q']['project_id_eq']).present?
+      link_to '新建工资表', "/engineering_salary_tables/new?project_id=#{pid}"
+    else
+      link_to '新建工资表', "/engineering_salary_tables/new"
+    end
+  end
 
   action_item :edit, only: [:show] do
     unless resource.project.locked
