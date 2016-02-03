@@ -149,12 +149,20 @@ ActiveAdmin.register EngineeringSalaryTable do
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
 
-    if request.url.split('/')[-1] == 'new'
+    url, query_string = request.url.split('?')
+    if url.split('/')[-1] == 'new'
+      pid = query_string.split('=').last rescue nil
+      pr = EngineeringProject.where(id: pid).first
+
       f.inputs do
         f.input :name, as: :string
         # if request.url.split('/')[-1] == 'new'
         f.input :type, as: :radio, collection: ->{ EngineeringSalaryTable.new_record_types.map{|k| [k.model_name.human, k.to_s]} }.call
-        f.input :project, collection: ->{ EngineeringProject.as_filter }.call
+        if pr.present?
+          f.input :project, as: :select, collection: [ [pr.display_name_with_customer, pid, {selected: true}] ]
+        else
+          f.input :project, collection: ->{ EngineeringProject.as_filter }.call
+        end
         # end
         f.input :start_date, as: :datepicker, hint: '请确保在项目的起止日期内'
         f.input :end_date, as: :datepicker, hint: '请确保在项目的起止日期内'

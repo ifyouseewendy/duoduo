@@ -575,6 +575,10 @@ class EngineeringProject < ActiveRecord::Base
     [nest_index, name].join('、')
   end
 
+  def display_name_with_customer
+    "#{customer.display_name} - #{display_name}"
+  end
+
   def engineering_salary_tables
     salary_tables
   end
