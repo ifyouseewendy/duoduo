@@ -26,19 +26,53 @@ class LaborContract < ActiveRecord::Base
       BusinessPolicy
     end
 
-    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
-      names = column_names.map(&:to_sym)
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
+      if export
+        [
+          :id,
+          :normal_staff_id,
+          :sub_company_id,
+          :normal_corporation_id,
+          :nest_index,
+          :remark,
+          :in_contract,
+          :contract_type,
+          :contract_start_date,
+          :contract_end_date,
+          :arrive_current_company_at,
+          :has_social_insurance,
+          :has_medical_insurance,
+          :has_accident_insurance,
+          :current_social_insurance_start_date,
+          :current_medical_insurance_start_date,
+          :social_insurance_base,
+          :medical_insurance_base,
+          :house_accumulation_base,
+          :social_insurance_serial,
+          :medical_insurance_serial,
+          :medical_insurance_card,
+          :backup_date,
+          :backup_place,
+          :work_place,
+          :work_type,
+          :release_date,
+          :social_insurance_release_date,
+          :medical_insurance_release_date,
+        ]
+      else
+        names = column_names.map(&:to_sym)
 
-      # Fields added by later migration
-      polyfill = [:has_accident_insurance]
-      names -= polyfill
-      idx = names.index(:has_medical_insurance) + 1
-      names.insert(idx, *polyfill)
+        # Fields added by later migration
+        polyfill = [:has_accident_insurance]
+        names -= polyfill
+        idx = names.index(:has_medical_insurance) + 1
+        names.insert(idx, *polyfill)
 
-      names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(normal_corporation_id sub_company_id normal_staff_id) if without_foreign_keys
+        names -= %i(id created_at updated_at) if without_base_keys
+        names -= %i(normal_corporation_id sub_company_id normal_staff_id) if without_foreign_keys
 
-      names
+        names
+      end
     end
 
     def contract_types_option(filter: false)
@@ -95,6 +129,74 @@ class LaborContract < ActiveRecord::Base
         'contract_end_date_合同结束日期' => :text,
       }
       hash
+    end
+
+    def export_xlsx(options: {})
+      filename = "#{I18n.t("activerecord.models.labor_contract")}_#{Time.stamp}.xlsx"
+      filepath = EXPORT_PATH.join filename
+
+      collection = self.all
+      if options[:selected].present?
+        collection = collection.where(id: options[:selected])
+      else
+        collection = collection.ransack(options).result
+      end
+
+      if options[:order].present?
+        order = :asc
+        order = :desc if options[:order].end_with?('desc')
+        key = options[:order].split("_")[0..-2].join('_')
+        collection = collection.order("#{key} #{order}")
+      end
+
+      columns = columns_based_on(options: options)
+
+      data_types = columns.map do |col|
+        if [:identity_card, :account].include?(col)
+          :string
+        else
+          nil
+        end
+      end
+
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet(name: name) do |sheet|
+          sheet.add_row columns.map{|col| self.human_attribute_name(col)}
+
+          collection.each do |item|
+             stats = \
+              columns.map do |col|
+                if col == :normal_staff_id
+                  item.normal_staff.try(:name)
+                elsif col == :sub_company_id
+                  item.normal_corporation.try(:sub_company).try(:name)
+                elsif col == :normal_corporation_id
+                  item.normal_corporation.try(:name)
+                elsif col == :in_contract
+                  item.in_contract ? '活动' : '解除'
+                elsif col == :contract_type
+                  item.contract_type_i18n
+                elsif [:has_social_insurance, :has_medical_insurance, :has_accident_insurance].include?(col)
+                  item.send(col) ? '是的' : '无'
+                else
+                  item.send(col)
+                end
+              end
+              sheet.add_row stats, types: data_types
+          end
+        end
+        p.serialize(filepath.to_s)
+      end
+
+      filepath
+    end
+
+    def columns_based_on(options: {})
+      if options[:columns].present?
+        options[:columns].map(&:to_sym)
+      else
+        ordered_columns(export: true)
+      end
     end
   end
 

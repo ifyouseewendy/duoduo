@@ -54,8 +54,10 @@ ActiveAdmin.register LaborContract do
       link_to ns.name, "/normal_staffs?q[id_eq]=#{ns.id}", target: '_blank'
     end
     column :sub_company, sortable: :id do |obj|
-      sc = obj.normal_corporation.sub_company
-      link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+      sc = obj.normal_corporation.try(:sub_company)
+      if sc.present?
+        link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+      end
     end
     column :normal_corporation, sortable: :normal_corporation_id do |obj|
       corp = obj.normal_corporation
@@ -148,8 +150,10 @@ ActiveAdmin.register LaborContract do
         link_to ns.name, "/normal_staffs?q[id_eq]=#{ns.id}", target: '_blank'
       end
       row :sub_company do |obj|
-        sc = obj.normal_corporation.sub_company
-        link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+        sc = obj.normal_corporation.try(:sub_company)
+        if sc.present?
+          link_to sc.name, "/sub_companies/#{sc.id}", target: '_blank'
+        end
       end
       row :normal_corporation do |obj|
         corp = obj.normal_corporation
@@ -185,6 +189,18 @@ ActiveAdmin.register LaborContract do
       end
 
     end
+  end
+
+  # Collection actions
+  collection_action :export_xlsx do
+    options = {}
+    options[:selected] = params[:selected].split('-') if params[:selected].present?
+    options[:columns] = params[:columns].split('-') if params[:columns].present?
+    options[:order] = params[:order] if params[:order].present?
+    options.update(params[:q]) if params[:q].present?
+
+    file = LaborContract.export_xlsx(options: options)
+    send_file file, filename: file.basename
   end
 
   # Batch actions
