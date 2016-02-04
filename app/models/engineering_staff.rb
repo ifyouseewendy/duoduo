@@ -213,8 +213,8 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def check_schedule(project)
-    raise "<#{name}>已分配给项目<#{project.name}>，无法重复分配" if projects.pluck(:id).include?(project.id)
-    raise "<#{name}>已分配项目与项目<#{project.name}>时间重叠" unless accept_schedule?(*project.range)
+    raise "<#{name}>已分配给项目<#{project.display_name}>，无法重复分配" if projects.pluck(:id).include?(project.id)
+    raise "<#{name}>已分配项目与项目<#{project.display_name}>时间重叠" unless accept_schedule?(*project.range)
   end
 
   def accept_schedule?(start_date, end_date)
