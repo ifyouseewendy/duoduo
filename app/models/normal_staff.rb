@@ -32,13 +32,36 @@ class NormalStaff < ActiveRecord::Base
       BusinessPolicy
     end
 
-    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
-      names = column_names.map(&:to_sym)
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
+      if export
+        [
+          :id,
+          :name,
+          :identity_card,
+          :sub_company_id,
+          :normal_corporation_id,
+          :nest_index,
+          :in_contract,
+          :account,
+          :account_bank,
+          :birth,
+          :age,
+          :gender,
+          :nation,
+          :grade,
+          :address,
+          :telephone,
+          :social_insurance_start_date,
+          :remark
+        ]
+      else
+        names = column_names.map(&:to_sym)
 
-      names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(normal_corporation_id sub_company_id) if without_foreign_keys
+        names -= %i(id created_at updated_at) if without_base_keys
+        names -= %i(normal_corporation_id sub_company_id) if without_foreign_keys
 
-      names
+        names
+      end
     end
 
     def genders_option(filter: false)
@@ -73,6 +96,71 @@ class NormalStaff < ActiveRecord::Base
       # hash['normal_corporation_id_所属单位'] = NormalCorporation.reference_option
       hash
     end
+
+    def export_xlsx(options: {})
+      filename = "#{I18n.t("activerecord.models.normal_staff")}_#{Time.stamp}.xlsx"
+      filepath = EXPORT_PATH.join filename
+
+      collection = self.all
+      if options[:selected].present?
+        collection = collection.where(id: options[:selected])
+      else
+        collection = collection.ransack(options).result
+      end
+
+      if options[:order].present?
+        order = :asc
+        order = :desc if options[:order].end_with?('desc')
+        key = options[:order].split("_")[0..-2].join('_')
+        collection = collection.order("#{key} #{order}")
+      end
+
+      columns = columns_based_on(options: options)
+
+      data_types = columns.map do |col|
+        if [:identity_card, :account].include?(col)
+          :string
+        else
+          nil
+        end
+      end
+
+      Axlsx::Package.new do |p|
+        p.workbook.add_worksheet(name: name) do |sheet|
+          sheet.add_row columns.map{|col| self.human_attribute_name(col)}
+
+          collection.each do |item|
+             stats = \
+              columns.map do |col|
+                if col == :sub_company_id
+                  item.sub_company.try(:name)
+                elsif col == :normal_corporation_id
+                  item.normal_corporation.try(:name)
+                elsif col == :in_contract
+                  item.in_contract ? "有" : '无'
+                elsif col == :gender
+                  item.gender_i18n
+                else
+                  item.send(col)
+                end
+              end
+              sheet.add_row stats, types: data_types
+          end
+        end
+        p.serialize(filepath.to_s)
+      end
+
+      filepath
+    end
+
+    def columns_based_on(options: {})
+      if options[:columns].present?
+        options[:columns].map(&:to_sym)
+      else
+        ordered_columns(export: true)
+      end
+    end
+
   end
 
   def gender_i18n
