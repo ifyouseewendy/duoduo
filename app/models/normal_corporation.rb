@@ -43,13 +43,22 @@ class NormalCorporation < ActiveRecord::Base
       BusinessPolicy
     end
 
-    def ordered_columns(without_base_keys: false, without_foreign_keys: false)
-      names = column_names.map(&:to_sym)
+    def ordered_columns(without_base_keys: false, without_foreign_keys: false, export: false)
+      if export
+        [
+          :id, :name, :sub_company_id, :status, :admin_charge_type, :admin_charge_amount,
+          :full_name, :license, :taxpayer_serial, :organization_serial, :corporate_name, :address, :account,
+          :account_bank, :contact, :telephone, :expense_date, :contract_amount, :contract_start_date, :contract_end_date,
+          :remark
+        ]
+      else
+        names = column_names.map(&:to_sym)
 
-      names -= %i(id created_at updated_at) if without_base_keys
-      names -= %i(sub_company_id) if without_foreign_keys
+        names -= %i(id created_at updated_at) if without_base_keys
+        names -= %i(sub_company_id) if without_foreign_keys
 
-      names
+        names
+      end
     end
 
     def admin_charge_types_option(filter: false)
@@ -104,7 +113,18 @@ class NormalCorporation < ActiveRecord::Base
       filepath = EXPORT_PATH.join filename
 
       collection = self.all
-      collection = collection.where(id: options[:selected]) if options[:selected].present?
+      if options[:selected].present?
+        collection = collection.where(id: options[:selected])
+      else
+        collection = collection.ransack(options).result
+      end
+
+      if options[:order].present?
+        order = :asc
+        order = :desc if options[:order].end_with?('desc')
+        key = options[:order].split("_")[0..-2].join('_')
+        collection = collection.order("#{key} #{order}")
+      end
 
       columns = columns_based_on(options: options)
 
@@ -117,6 +137,10 @@ class NormalCorporation < ActiveRecord::Base
               columns.map do |col|
                 if col == :admin_charge_type
                   item.send(:admin_charge_type_i18n)
+                elsif col == :status
+                  item.send(:status_i18n)
+                elsif col == :sub_company_id
+                  item.sub_company.try(:name)
                 else
                   item.send(col)
                 end
@@ -134,9 +158,7 @@ class NormalCorporation < ActiveRecord::Base
       if options[:columns].present?
         options[:columns].map(&:to_sym)
       else
-        %i(id name) \
-          + %i(sub_company_id stuff_count stuff_has_insurance_count) \
-          + (NormalCorporation.ordered_columns(without_foreign_keys: true) - %i(id name) )
+        ordered_columns(export: true)
       end
     end
 

@@ -216,6 +216,8 @@ ActiveAdmin.register NormalCorporation do
     options = {}
     options[:selected] = params[:selected].split('-') if params[:selected].present?
     options[:columns] = params[:columns].split('-') if params[:columns].present?
+    options[:order] = params[:order] if params[:order].present?
+    options.update(params[:q]) if params[:q].present?
 
     file = NormalCorporation.export_xlsx(options: options)
     send_file file, filename: file.basename
