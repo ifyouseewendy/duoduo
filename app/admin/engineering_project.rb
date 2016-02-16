@@ -5,6 +5,8 @@ ActiveAdmin.register EngineeringProject do
     parent: I18n.t("activerecord.models.engineering_business"),
     priority: 3
 
+  # config.per_page = 50
+
   config.action_items.delete_if { |item|
     # item is an ActiveAdmin::ActionItem
     item.display_on?(:show)
@@ -585,8 +587,6 @@ ActiveAdmin.register EngineeringProject do
         .includes(:customer)
         .includes(:sub_company)
         .includes(:corporation)
-        .includes(:income_items)
-        .includes(:outcome_items)
     end
     private
 
