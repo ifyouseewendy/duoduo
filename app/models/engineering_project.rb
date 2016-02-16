@@ -210,7 +210,9 @@ class EngineeringProject < ActiveRecord::Base
     end
 
     if status_change == ['active', 'archive']
-      unless can_archive?
+      if can_archive?
+        self.locked = true
+      else
         errors.add(:status, "校验失败：来款金额需等于费用合计，回款金额需等于劳务费")
         return false
       end
