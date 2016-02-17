@@ -343,7 +343,7 @@ ActiveAdmin.register EngineeringProject do
 
       tab "回款记录" do
         resource.outcome_items.each_with_index do |oi, idx|
-          panel "第#{idx+1}次来款" do
+          panel "第#{idx+1}次回款" do
             attributes_table_for oi do
               row :date
               row :amount
