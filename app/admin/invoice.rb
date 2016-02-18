@@ -99,6 +99,7 @@ ActiveAdmin.register Invoice do
   filter :scope, as: :select, collection: -> { resource_class.scopes_option(filter: true) }
   preserve_default_filters!
   remove_filter :activities
+  remove_filter :project_type
 
   permit_params { resource_class.ordered_columns(without_base_keys: true, without_foreign_keys: false) }
 
