@@ -118,7 +118,7 @@ ActiveAdmin.register EngineeringSalaryTable do
   filter :end_date
   preserve_default_filters!
   remove_filter :audition
-  remove_filter :reference
+  remove_filter :references
   remove_filter :project
   remove_filter :activities
   remove_filter :attachment
