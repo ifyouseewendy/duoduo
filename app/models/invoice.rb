@@ -70,6 +70,14 @@ class Invoice < ActiveRecord::Base
 
       columns = columns_based_on(options: options)
 
+      data_types = columns.reduce([]) do |ar, col|
+        if [:encoding, :code].include? col
+          ar << :string
+        else
+          ar << nil
+        end
+      end
+
       Axlsx::Package.new do |p|
         p.workbook.add_worksheet(name: name) do |sheet|
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}
@@ -86,7 +94,7 @@ class Invoice < ActiveRecord::Base
                   item.send(col)
                 end
              end
-             sheet.add_row stats
+             sheet.add_row stats, types: data_types
           end
         end
         p.serialize(filepath.to_s)
