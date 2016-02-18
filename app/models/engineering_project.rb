@@ -245,7 +245,7 @@ class EngineeringProject < ActiveRecord::Base
       start_date += 1.month
     end
 
-    day = (end_date - start_date).to_i
+    day = (end_date - start_date + 1).to_i
 
     [month, day]
   end
