@@ -128,7 +128,7 @@ class SalaryTable < ActiveRecord::Base
         sz: 10
       })
       margins = {left: 0.1, right: 0.1, top: 0.1, bottom: 0.1}
-      setup = {fit_to_width: 1, orientation: :landscape}
+      setup = {fit_to_width: 1, orientation: :landscape, paper_size: 9}
 
       wb.add_worksheet(name: sheet_name, page_margins: margins, page_setup: setup) do |sheet|
         # Fit to page printing

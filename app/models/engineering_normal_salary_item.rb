@@ -146,6 +146,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
         wb.add_worksheet(name: sheet_name, page_margins: margins) do |sheet|
           # Fit to page printing
           sheet.page_setup.fit_to :width => 1
+          sheet.page_setup.paper_size = 9 # A4
 
           # Headers
           sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
