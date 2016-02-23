@@ -51,7 +51,7 @@ ActiveAdmin.register EngineeringNormalWithTaxSalaryItem do
       link_to staff.name, engineering_staff_path(staff)
     end
 
-    if params[:q][:staff_id_eq].present?
+    if params[:q].present? && params[:q][:staff_id_eq].present?
       column :salary_table, sortable: :engineering_salary_table_id do |obj|
         st = obj.salary_table
         link_to st.start_date.to_s, "/engineering_salary_tables?q[id_eq]=#{st.id}", target: '_blank'
