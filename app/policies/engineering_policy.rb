@@ -42,16 +42,12 @@ class EngineeringPolicy
     end
 
     def resolve
-      if user.visible_sub_company_ids.blank?
-        scope
+      if scope.class == EngineeringProject::ActiveRecord_Relation
+        scope.where(sub_company_id: user.visible_sub_company_ids)
+      elsif scope.class == EngineeringSalaryTable::ActiveRecord_Relation
+        scope.includes(:project).where(engineering_projects: {sub_company_id: user.visible_sub_company_ids})
       else
-        if scope.class == EngineeringProject::ActiveRecord_Relation
-          scope.where(sub_company_id: user.visible_sub_company_ids)
-        elsif scope.class == EngineeringSalaryTable::ActiveRecord_Relation
-          scope.includes(:project).where(engineering_projects: {sub_company_id: user.visible_sub_company_ids})
-        else
-          scope
-        end
+        scope
       end
     end
 
