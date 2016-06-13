@@ -11,7 +11,7 @@ class EngineeringCorp < ActiveRecord::Base
 
   class << self
     def policy_class
-      EngineeringPolicy
+      EngineeringCorpPolicy
     end
 
     def ordered_columns(without_base_keys: false, without_foreign_keys: false)
