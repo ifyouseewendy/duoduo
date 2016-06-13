@@ -65,27 +65,35 @@ ActiveAdmin.register AdminUser do
 
   form do |f|
     f.inputs do
-      if params[:field] == 'visible_sub_company'
+      if request.url.split('/')[-1] == 'new'
+        f.input :name, as: :string
+        f.input :role, as: :radio, collection: ->{ AdminUser.roles_option(user: current_admin_user) }.call
         f.input :visible_sub_company_ids, as: :check_boxes, collection: -> {
-          SubCompany.as_option.map{|ar|
-            if f.object.visible_sub_company_ids.map(&:to_i).include?(ar[1])
-              ar + [{checked: true}]
-            else
-              ar
-            end
-          }
+          SubCompany.as_option.map{|ar| ar + [{checked: true}]}
         }.call
       else
-        f.input :name, as: :string
-
-        if current_admin_user.admin? && current_admin_user.id != f.object.id
-          # Update others
-          # unless f.object.new_record?
-          f.input :role, as: :radio, collection: ->{ AdminUser.roles_option(user: current_admin_user) }.call
+        if params[:field] == 'visible_sub_company'
+          f.input :visible_sub_company_ids, as: :check_boxes, collection: -> {
+            SubCompany.as_option.map{|ar|
+              if f.object.visible_sub_company_ids.map(&:to_i).include?(ar[1])
+                ar + [{checked: true}]
+              else
+                ar
+              end
+            }
+          }.call
         else
-          # Update self
-          f.input :password
-          f.input :password_confirmation
+          f.input :name, as: :string
+
+          if current_admin_user.admin? && current_admin_user.id != f.object.id
+            # Update others
+            # unless f.object.new_record?
+            f.input :role, as: :radio, collection: ->{ AdminUser.roles_option(user: current_admin_user) }.call
+          else
+            # Update self
+            f.input :password
+            f.input :password_confirmation
+          end
         end
       end
     end
@@ -121,16 +129,14 @@ ActiveAdmin.register AdminUser do
         email: "#{name}@jiyi.com",
         password: new_password,
         password_confirmation: new_password,
-        role: params[:admin_user][:role]
+        role: params[:admin_user][:role],
+        visible_sub_company_ids: params[:admin_user][:visible_sub_company_ids].reject(&:blank?)
       )
 
       redirect_to admin_users_path, notice: "已创建用户：#{name}，初始密码为：#{new_password}，用户登录后可自行修改密码"
     rescue => e
       redirect_to :back, alert: "操作失败，请联系网络管理员（#{e.message}）"
     end
-  end
-
-  member_action :edit_sub_company_visible, method: :get do
   end
 
   # Ajax delete
