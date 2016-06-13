@@ -42,7 +42,16 @@ class EngineeringPolicy
     end
 
     def resolve
-      scope
+      if user.visible_sub_company_ids.blank?
+        scope
+      else
+        if scope.class == EngineeringProject::ActiveRecord_Relation
+          scope.where(sub_company_id: user.visible_sub_company_ids)
+        else
+          scope
+        end
+      end
     end
+
   end
 end
