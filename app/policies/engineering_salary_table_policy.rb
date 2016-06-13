@@ -11,6 +11,12 @@ class EngineeringSalaryTablePolicy < EngineeringPolicy
     user.finance_admin? or pass_audition
   end
 
+  class Scope < Scope
+    def resolve
+      scope.includes(:project).where(engineering_projects: {sub_company_id: user.visible_sub_company_ids})
+    end
+  end
+
   private
 
     def pass_audition
