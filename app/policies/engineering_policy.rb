@@ -42,9 +42,7 @@ class EngineeringPolicy
     end
 
     def resolve
-      if scope.class == EngineeringProject::ActiveRecord_Relation
-        scope.where(sub_company_id: user.visible_sub_company_ids)
-      elsif scope.class == EngineeringSalaryTable::ActiveRecord_Relation
+      if scope.class == EngineeringSalaryTable::ActiveRecord_Relation
         scope.includes(:project).where(engineering_projects: {sub_company_id: user.visible_sub_company_ids})
       else
         scope
