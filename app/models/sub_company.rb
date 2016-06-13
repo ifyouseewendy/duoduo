@@ -48,6 +48,10 @@ class SubCompany < ActiveRecord::Base
     def hr_options
       hr.select(:id,:name).map{|sc| [sc.name, sc.id]}
     end
+
+    def as_option
+      select(:id, :name).map{|sc| [sc.name, sc.id]}
+    end
   end
 
   def customers

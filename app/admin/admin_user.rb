@@ -8,7 +8,7 @@ ActiveAdmin.register AdminUser do
     if: ->{ current_active_admin_user.admin? },
     priority: 1
 
-  permit_params :name, :email, :password, :password_confirmation, :role
+  permit_params :name, :email, :password, :password_confirmation, :role, visible_sub_company_ids: []
 
   index do
     selectable_column
@@ -25,6 +25,8 @@ ActiveAdmin.register AdminUser do
     actions defaults: false do |obj|
       if obj.id != current_admin_user.id
         item "更改角色", edit_admin_user_path(obj)
+        text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+        item "更改可见子公司", edit_admin_user_path(obj) + "?field=visible_sub_company"
         text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       end
       item "重置密码", reset_password_admin_user_path(obj)
@@ -50,6 +52,10 @@ ActiveAdmin.register AdminUser do
     end
   end
 
+  sidebar '可见子公司说明', only: [:index] do
+    span "选择可见子公司，会影响该子公司关联的工程项目和工资表是否可见"
+  end
+
   sidebar '锁定与删除', only: [:index] do
     ul do
       li "锁定员工 - 员工不可再访问系统，但是会保留操作痕迹。建议有员工离职时使用。"
@@ -59,16 +65,28 @@ ActiveAdmin.register AdminUser do
 
   form do |f|
     f.inputs do
-      f.input :name, as: :string
-
-      if current_admin_user.admin? && current_admin_user.id != f.object.id
-        # Update others
-        # unless f.object.new_record?
-        f.input :role, as: :radio, collection: ->{ AdminUser.roles_option(user: current_admin_user) }.call
+      if params[:field] == 'visible_sub_company'
+        f.input :visible_sub_company_ids, as: :check_boxes, collection: -> {
+          SubCompany.as_option.map{|ar|
+            if f.object.visible_sub_company_ids.map(&:to_i).include?(ar[1])
+              ar + [{checked: true}]
+            else
+              ar
+            end
+          }
+        }.call
       else
-        # Update self
-        f.input :password
-        f.input :password_confirmation
+        f.input :name, as: :string
+
+        if current_admin_user.admin? && current_admin_user.id != f.object.id
+          # Update others
+          # unless f.object.new_record?
+          f.input :role, as: :radio, collection: ->{ AdminUser.roles_option(user: current_admin_user) }.call
+        else
+          # Update self
+          f.input :password
+          f.input :password_confirmation
+        end
       end
     end
     f.actions
@@ -110,6 +128,9 @@ ActiveAdmin.register AdminUser do
     rescue => e
       redirect_to :back, alert: "操作失败，请联系网络管理员（#{e.message}）"
     end
+  end
+
+  member_action :edit_sub_company_visible, method: :get do
   end
 
   # Ajax delete

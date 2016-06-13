@@ -780,6 +780,7 @@ zh-CN:
           is_finance_junior: '财务制作初级'
           is_business_admin: '业务'
           is_teller: '出纳'
+        visible_sub_company_ids: '可见子公司'
       audition_item:
         id: '编号'
         name: '表名称'
