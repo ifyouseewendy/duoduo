@@ -18,6 +18,8 @@ class AdminUser < ActiveRecord::Base
   scope :finance, -> { where(role: finance_enum_ids) }
   scope :business, -> { where(role: business_enum_ids) }
 
+  before_save :revise_fields
+
   class << self
 
     def finance_fields
@@ -99,4 +101,10 @@ class AdminUser < ActiveRecord::Base
   def email_changed?
     false
   end
+
+  private
+
+    def revise_fields
+      self.visible_sub_company_ids = self.visible_sub_company_ids.reject(&:blank?) + [nil]
+    end
 end
