@@ -543,6 +543,7 @@ class EngineeringProject < ActiveRecord::Base
 
         start_date += 1.month
       end
+      ret << [start_date, end_date] if ret.blank?
     else
       count.downto(1).each do |idx|
         if idx == 1
