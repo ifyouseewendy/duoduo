@@ -605,8 +605,9 @@ class EngineeringProject < ActiveRecord::Base
   end
 
   def check_schedule(staff)
-    raise "<#{staff.name}>已分配给项目<#{display_name}>，无法重复分配" if staffs.pluck(:id).include?(staff.id)
-    raise "<#{staff.name}>已分配项目与项目<#{display_name}>时间重叠" unless staff.accept_schedule?(*self.range)
+    staff.check_schedule(self)
+    # raise "<#{staff.name}>已分配给项目<#{display_name}>，无法重复分配" if staffs.pluck(:id).include?(staff.id)
+    # raise "<#{staff.name}>已分配项目与项目<#{display_name}>时间重叠" unless staff.accept_schedule?(*self.range)
   end
 
   def has_equal_invoices?
