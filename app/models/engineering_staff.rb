@@ -213,16 +213,41 @@ class EngineeringStaff < ActiveRecord::Base
     ].flat_map{|items| items.map{|item| item.salary_table.range} }.sort
   end
 
+  def busy_range_table
+    [
+      engineering_normal_salary_items,
+      engineering_normal_with_tax_salary_items,
+      engineering_big_table_salary_items,
+      engineering_dong_fang_salary_items
+    ].flat_map{|items| items.map{|item| item.salary_table} }.sort_by{|st| st.range}
+  end
+
   def check_schedule(project)
-    raise "<#{name}>已分配给项目<#{project.display_name}>，无法重复分配" if projects.pluck(:id).include?(project.id)
-    raise "<#{name}>已分配项目与项目<#{project.display_name}>时间重叠" unless accept_schedule?(*project.range)
+    raise "无法重复分配：<#{name}>已分配给当前项目" if projects.pluck(:id).include?(project.id)
+
+    ret = accept_schedule?( *project.range )
+    raise "时间检查失败：#{ret}" if ret.present?
   end
 
   def accept_schedule?(start_date, end_date)
-    if birth.present?
-      return false if start_date < birth + 18.years
+    if birth.present? && start_date < birth + 18.years
+      return "员工未满十八周岁，员工生日 #{birth}"
     end
-    busy_range.all?{|range| range[0] > end_date.to_date || range[1] < start_date.to_date }
+
+    invalid = []
+    busy_range_table.each do |st|
+      range = st.range
+
+      next if range[0] > end_date.to_date || range[1] < start_date.to_date
+
+      msg = st.project.display_name_with_customer + " - #{st.range.map(&:to_s).join(' ~ ')}"
+      invalid << msg
+    end
+
+    if invalid.present?
+      msg = invalid.map{|m| "<#{m}>"}.join(', ')
+      return "待分配项目与如下工资表时间重叠：#{msg}"
+    end
   end
 
   def revise_fields
