@@ -549,6 +549,7 @@ ActiveAdmin.register EngineeringProject do
       resource.auto_generate_salary_table
       redirect_to engineering_project_engineering_salary_tables_path(resource), notice: "成功自动生成工资表"
     rescue => e
+      logger.error e.backtrace
       redirect_to engineering_project_engineering_salary_tables_path(resource), alert: "生成失败 #{e.message}"
     end
   end
