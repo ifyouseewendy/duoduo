@@ -248,6 +248,8 @@ class EngineeringStaff < ActiveRecord::Base
       msg = invalid.map{|m| "<#{m}>"}.join(', ')
       return "待分配项目与如下工资表时间重叠：#{msg}"
     end
+
+    nil
   end
 
   def revise_fields

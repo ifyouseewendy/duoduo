@@ -98,13 +98,13 @@ class EngineeringCustomer < ActiveRecord::Base
       criteria = staffs.enabled.includes(:projects)
       criteria.lazy.select {|es|
         !(es.projects.select(:id).pluck(:id).include? exclude_project_id) \
-          && es.accept_schedule?(start_date, end_date)
+          && es.accept_schedule?(start_date, end_date).nil?
       }.first(count)
 
     else
       criteria = staffs.enabled
       criteria.lazy.select {|es|
-        es.accept_schedule?(start_date, end_date)
+        es.accept_schedule?(start_date, end_date).nil?
       }.first(count)
     end
   end
