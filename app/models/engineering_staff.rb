@@ -230,9 +230,9 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def accept_schedule?(start_date, end_date)
-    if birth.present? && start_date < birth + 18.years
-      return "员工未满十八周岁，员工生日 #{birth}"
-    end
+    # if birth.present? && start_date < birth + 18.years
+    #   return "员工未满十八周岁，员工生日 #{birth}"
+    # end
 
     invalid = []
     busy_range_table.each do |st|
@@ -257,13 +257,13 @@ class EngineeringStaff < ActiveRecord::Base
       id_card = self.identity_card
       begin
         self.birth = Date.parse(id_card[6,8])
-        if self.birth + 18.years > Date.today
-          errors.add(:birth, "员工未满十八周岁")
-          return false
-        elsif self.birth + 60.years < Date.today
-          errors.add(:birth, "员工超过六十岁")
-          return false
-        end
+        # if self.birth + 18.years > Date.today
+        #   errors.add(:birth, "员工未满十八周岁")
+        #   return false
+        # elsif self.birth + 60.years < Date.today
+        #   errors.add(:birth, "员工超过六十岁")
+        #   return false
+        # end
       rescue => _
         errors.add(:birth, "无法通过身份证号获取生日信息，请检查身份证号：#{id_card}")
         return false
