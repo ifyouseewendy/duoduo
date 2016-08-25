@@ -9,6 +9,10 @@
         <%= text_field_tag :corp_name, project.corporation.try(:name) %>
       </li>
       <li>
+        <%= label_tag '合作单位地址（顺势子公司项目必填）' %>
+        <%= text_field_tag :corp_address, '' %>
+      </li>
+      <li>
         <%= label_tag '项目名称' %>
         <%= text_field_tag :name, project.name %>
       </li>
