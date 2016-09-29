@@ -248,7 +248,11 @@ ActiveAdmin.register Invoice do
 
         raise '批量创建失败：请选择上传文件' if batch_file.blank?
         raise '批量创建失败：请上传 xls(x) 类型的文件' \
-          unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? batch_file.content_type
+          unless [
+            "application/vnd.ms-excel",
+            "application/octet-stream",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          ].include? file.content_type
 
         xls = Roo::Spreadsheet.open(batch_file.path)
         sheet = xls.sheet(0)

@@ -43,7 +43,11 @@ module ImportSupport
           if file.nil?
 
         redirect_to :back, alert: '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
-          unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
+          unless [
+            "application/vnd.ms-excel",
+            "application/octet-stream",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          ].include? file.content_type
 
         xls = Roo::Spreadsheet.open(file.path)
         sheet = xls.sheet(0)
@@ -128,8 +132,8 @@ module ImportSupport
           filename = Pathname(file.original_filename).basename.to_s.split('.')[0]
           filepath = Pathname("tmp/#{filename}.#{Time.stamp}.xlsx")
           Axlsx::Package.new do |p|
-            p.workbook.add_worksheet do |sheet|
-              failed.each{|stat| sheet.add_row stat}
+            p.workbook.add_worksheet do |_sheet|
+              failed.each{|stat| _sheet.add_row stat}
             end
             p.serialize(filepath.to_s)
           end

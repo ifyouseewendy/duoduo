@@ -300,7 +300,11 @@ ActiveAdmin.register EngineeringSalaryTable do
       if file.nil?
 
     redirect_to :back, alert: '导入失败（错误的文件类型），请上传 xls(x) 类型的文件' and return \
-      unless ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? file.content_type
+      unless [
+        "application/vnd.ms-excel",
+        "application/octet-stream",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ].include? file.content_type
 
     xls = Roo::Spreadsheet.open(file.path)
     count = xls.sheets.count
