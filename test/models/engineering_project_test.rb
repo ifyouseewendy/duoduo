@@ -24,6 +24,21 @@ class EngineeringProjectTest < ActiveSupport::TestCase
     assert_equal 3, @project_one.staffs.count
   end
 
+  def test_gennerate_random_salary_last_digit_is_5_or_0
+    (80000).step(115500, 500).each do |amount|
+      # puts "amount: #{amount}"
+      ar = @project.gennerate_random_salary(amount: amount, count: 33)
+
+      # puts "ar: #{ar}"
+
+      assert_equal amount, ar.sum.to_i
+      assert ar.detect{|i| i > 3500}.nil?
+
+      count = ar.select{|num| num % 5 == 0}.count
+      assert ( ar.count - count <= 1 )
+    end
+  end
+
   def test_gennerate_random_salary
     amount = 100000
     ar = @project.gennerate_random_salary(amount: amount, count: 33)
