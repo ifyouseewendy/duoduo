@@ -26,10 +26,10 @@ class EngineeringProjectTest < ActiveSupport::TestCase
 
   def test_gennerate_random_salary_last_digit_is_5_or_0
     (80000).step(115500, 500).each do |amount|
-      # puts "amount: #{amount}"
+      puts "amount: #{amount}"
       ar = @project.gennerate_random_salary(amount: amount, count: 33)
 
-      # puts "ar: #{ar}"
+      puts "ar: #{ar}"
 
       assert_equal amount, ar.sum.to_i
       assert ar.detect{|i| i > 3500}.nil?

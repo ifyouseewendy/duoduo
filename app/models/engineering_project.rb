@@ -343,7 +343,7 @@ class EngineeringProject < ActiveRecord::Base
     fraction_gap = amount.ceil - amount
     amount = amount.ceil
 
-    tax_limit = 3480
+    tax_limit = 3500
     # raise "Value of #{amount}<amount> is too big, higher than #{tax_limit*count} ( = #{count}<count> * #{tax_limit}<tax_limit> )" if amount > count*tax_limit
 
     lower_bound = EngineeringCompanySocialInsuranceAmount.order(amount: :desc).first.amount \
@@ -375,7 +375,7 @@ class EngineeringProject < ActiveRecord::Base
     wave_array = wave_array.map{|n| avg + n}
 
     # Adjust to ele % 5 == 0
-    total_gap = 0
+    base_ele = wave_array[0]
     (1..wave_array.count-1).each do |id|
       ele = wave_array[id]
 
@@ -383,21 +383,25 @@ class EngineeringProject < ActiveRecord::Base
 
       last_digit = ele % 10
 
-      if [1,2].include? last_digit
-        gap = 0 - last_digit
-      elsif [3,4].include? last_digit
-        gap = 5 - last_digit
-      elsif [6,7].include? last_digit
-        gap = 5 - last_digit
-      else
+      if base_ele + 5 > tax_limit
         gap = 10 - last_digit
+      else
+        if [1,2].include? last_digit
+          gap = 0 - last_digit
+        elsif [3,4].include? last_digit
+          gap = 5 - last_digit
+        elsif [6,7].include? last_digit
+          gap = 5 - last_digit
+        else
+          gap = 10 - last_digit
+        end
       end
 
-      wave_array[id] = ele + gap
-      total_gap -= gap
+      wave_array[id] += gap
+      base_ele -= gap
     end
 
-    wave_array[0] = (wave_array[0] + total_gap).round(2)
+    wave_array[0] = base_ele.round(2)
     wave_array.shuffle
   end
 
