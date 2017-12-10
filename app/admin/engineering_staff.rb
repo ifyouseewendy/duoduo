@@ -277,7 +277,7 @@ ActiveAdmin.register EngineeringStaff do
     options.update(params[:q]) if params[:q].present?
 
     file = EngineeringStaff.export_xlsx(options: options)
-    send_file file, filename: file.basename
+    send_file file, filename: ERB::Util.url_encode(file.basename)
   end
 
   collection_action :query_free do
