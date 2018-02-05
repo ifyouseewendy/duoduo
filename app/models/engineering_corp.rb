@@ -74,17 +74,11 @@ class EngineeringCorp < ActiveRecord::Base
   end
 
   def contract_start_date
-    contract = big_contracts.enable.first
-    return if contract.nil?
-
-    contract.start_date
+    big_contracts.enable.map(&:start_date).min
   end
 
   def contract_end_date
-    contract = big_contracts.enable.first
-    return if contract.nil?
-
-    contract.end_date
+    big_contracts.enable.map(&:end_date).max
   end
 
   def due?
