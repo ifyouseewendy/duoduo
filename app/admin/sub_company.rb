@@ -4,6 +4,7 @@ ActiveAdmin.register SubCompany do
   config.batch_actions = false
   config.filters = false
   config.sort_order = 'id_asc'
+  config.per_page = 20
 
   index download_links: false do
     selectable_column
