@@ -91,14 +91,49 @@ class EngineeringCustomer < ActiveRecord::Base
     end
   end
 
+  def pre_calculate_ranges(es_ids)
+    ranges = Hash.new { |h, k| h[k] = [] }
+    [
+      EngineeringNormalSalaryItem,
+      EngineeringNormalWithTaxSalaryItem,
+      EngineeringBigTableSalaryItem,
+      EngineeringDongFangSalaryItem
+    ].each do |klass|
+      klass.includes(:salary_table).where(engineering_staff_id: es_ids).each do |item|
+        ranges[item.engineering_staff_id] << item.salary_table.range
+      end
+    end
+
+    ranges.keys.each do |k|
+      ranges[k].sort!
+    end
+
+    ranges
+  end
+
+  def pre_calculate_project_ids(es_ids)
+    project_ids = Hash.new { |h, k| h[k] = [] }
+
+    EngineeringProjectsStaff.where(engineering_staff_id: es_ids).each do |eps|
+      project_ids[eps.engineering_staff_id] << eps.engineering_project_id
+    end
+
+    project_ids
+  end
+
   def free_staffs(start_date, end_date, exclude_project_id: nil, count: nil)
     count ||= staffs.enabled.count
 
     if exclude_project_id.present?
-      criteria = staffs.enabled.includes(:projects)
+      criteria = customer.staffs.enabled
+
+      es_ids = criteria.pluck(:id)
+      project_ids = pre_calculate_project_ids(es_ids)
+      ranges = pre_calculate_ranges(es_ids)
+
       criteria.lazy.select {|es|
-        !(es.projects.select(:id).pluck(:id).include? exclude_project_id) \
-          && es.accept_schedule?(start_date, end_date).nil?
+        !(project_ids[es.id].include? project_id) \
+          && es.accept_schedule_with_time_range?(start_date, end_date, ranges[es.id])
       }.first(count)
 
     else
