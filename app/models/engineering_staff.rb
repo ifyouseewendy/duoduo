@@ -229,6 +229,14 @@ class EngineeringStaff < ActiveRecord::Base
     raise "时间检查失败：#{ret}" if ret.present?
   end
 
+  def accept_schedule_with_time_range?(start_date, end_date, time_range)
+    time_range.each do |range|
+      return false unless range[0] > end_date.to_date || range[1] < start_date.to_date
+    end
+
+    return true
+  end
+
   def accept_schedule?(start_date, end_date)
     # if birth.present? && start_date < birth + 18.years
     #   return "员工未满十八周岁，员工生日 #{birth}"
