@@ -125,14 +125,14 @@ class EngineeringCustomer < ActiveRecord::Base
     count ||= staffs.enabled.count
 
     if exclude_project_id.present?
-      criteria = customer.staffs.enabled
+      criteria = staffs.enabled
 
       es_ids = criteria.pluck(:id)
       project_ids = pre_calculate_project_ids(es_ids)
       ranges = pre_calculate_ranges(es_ids)
 
       criteria.lazy.select {|es|
-        !(project_ids[es.id].include? project_id) \
+        !(project_ids[es.id].include? exclude_project_id) \
           && es.accept_schedule_with_time_range?(start_date, end_date, ranges[es.id])
       }.first(count)
 
