@@ -262,7 +262,7 @@ $(document).on 'ready', ->
 
     $.getJSON "/engineering_projects/#{project_id}/available_staff_count", (data) =>
       amount = project_ele.find('.col-project_amount').text()
-      upper_salary = 3500
+      upper_salary = 5000
       need_count = parseInt(amount/upper_salary)
       if need_count * upper_salary < amount
         need_count += 1
