@@ -343,7 +343,7 @@ class EngineeringProject < ActiveRecord::Base
     fraction_gap = amount.ceil - amount
     amount = amount.ceil
 
-    tax_limit = 3500
+    tax_limit = 5000
     # raise "Value of #{amount}<amount> is too big, higher than #{tax_limit*count} ( = #{count}<count> * #{tax_limit}<tax_limit> )" if amount > count*tax_limit
 
     lower_bound = EngineeringCompanySocialInsuranceAmount.order(amount: :desc).first.amount \
