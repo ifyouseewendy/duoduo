@@ -279,7 +279,8 @@ class EngineeringProject < ActiveRecord::Base
           name: "#{start_date} ~ #{end_date}"
         )
 
-        salaries = gennerate_random_salary(amount: amount, count: staffs.count)
+        tax_limit = start_date >= Date.parse("2018-10-01") ? 5000 : 3500
+        salaries = gennerate_random_salary(amount: amount, count: staffs.count, tax_limit: tax_limit)
         self.staffs.each_with_index do |staff, id|
           st.salary_items.create!(
             staff: staff,
@@ -294,6 +295,7 @@ class EngineeringProject < ActiveRecord::Base
     end
   end
 
+  # Unreachable code path
   def generate_salary_table(need_count:)
     month, day = calc_range
     table_count = month + ( day > 0 ? 1 : 0 )
@@ -339,11 +341,10 @@ class EngineeringProject < ActiveRecord::Base
     end
   end
 
-  def gennerate_random_salary(amount:, count:)
+  def gennerate_random_salary(amount:, count:, tax_limit: 3500)
     fraction_gap = amount.ceil - amount
     amount = amount.ceil
 
-    tax_limit = 5000
     # raise "Value of #{amount}<amount> is too big, higher than #{tax_limit*count} ( = #{count}<count> * #{tax_limit}<tax_limit> )" if amount > count*tax_limit
 
     lower_bound = EngineeringCompanySocialInsuranceAmount.order(amount: :desc).first.amount \
