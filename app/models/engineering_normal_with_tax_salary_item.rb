@@ -119,6 +119,13 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           height: 60,
           sz: 12
         })
+        wrap_header_fourth = wb.styles.add_style({
+          font_name: "新宋体",
+          alignment: {horizontal: :left, vertical: :center, wrap_text: true},
+          height: 30,
+          b: true,
+          sz: 14
+        })
         wrap_text = wb.styles.add_style({
           font_name: "新宋体",
           alignment: {horizontal: :center, vertical: :center, wrap_text: true},
@@ -152,7 +159,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
             height: 30, style: wrap_header_second
 
           sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
-            height: 30, style: wrap_header_second
+            height: 30, style: wrap_header_fourth
 
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
             height: 60, style: wrap_header_third
