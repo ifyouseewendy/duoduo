@@ -164,6 +164,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
           end_col = ('A'.ord + columns.count - 1).chr
           sheet.merge_cells("A1:#{end_col}1")
           sheet.merge_cells("A2:#{end_col}2")
+          sheet.merge_cells("A3:#{end_col}2")
 
           # Content
           collection.each_with_index do |item,idx|
