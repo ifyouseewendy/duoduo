@@ -192,7 +192,7 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
           stats[0] = '合计'
           sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*5+[wrap_text] ), height: 30
 
-          end_rol = 3 + collection.count + 1
+          end_rol = 4 + collection.count + 1
           sheet.merge_cells("A#{end_rol}:B#{end_rol}")
 
           # widths = Array.new(columns.count+1){8}
