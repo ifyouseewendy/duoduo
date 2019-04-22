@@ -82,7 +82,11 @@ class EngineeringSalaryTable < ActiveRecord::Base
   def month_display
     start_date.strftime('%Y.%m')
   end
+
   def month_display_zh
-    start_date.strftime('%Y年(%m)月')
+    year = start_date.year
+    range = [start_date.strftime("%m.%d"), end_date.strftime("%m.%d")].join("-")
+
+    "#{year}年(#{range})日"
   end
 end

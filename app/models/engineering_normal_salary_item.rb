@@ -149,10 +149,15 @@ class EngineeringNormalSalaryItem < ActiveRecord::Base
           sheet.page_setup.paper_size = 9 # A4
 
           # Headers
-          sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
-            height: 60, style: wrap_header_first
-          sheet.add_row [ salary_table.month_display_zh + "工资表" ], \
+          sheet.add_row [ "劳务费明细表" ], \
+            height: 30, style: wrap_header_first
+
+          sheet.add_row [ salary_table.month_display_zh ], \
             height: 30, style: wrap_header_second
+
+          sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
+            height: 30, style: wrap_header_second
+
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
             height: 60, style: wrap_header_third
 
