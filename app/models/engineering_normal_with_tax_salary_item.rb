@@ -143,17 +143,24 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           sheet.page_setup.fit_to width: 1
           sheet.page_setup.paper_size = 9 # A4
 
+
           # Headers
-          sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
-            height: 60, style: wrap_header_first
-          sheet.add_row [ salary_table.month_display_zh + "工资表" ], \
+          sheet.add_row [ "劳务费明细表" ], \
+            height: 30, style: wrap_header_first
+
+          sheet.add_row [ salary_table.month_display_zh ], \
             height: 30, style: wrap_header_second
+
+          sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
+            height: 30, style: wrap_header_second
+
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
             height: 60, style: wrap_header_third
 
           end_col = ('A'.ord + columns.count - 1).chr
           sheet.merge_cells("A1:#{end_col}1")
           sheet.merge_cells("A2:#{end_col}2")
+          sheet.merge_cells("A3:#{end_col}2")
 
           # Content
           # records = collection.includes(:staff).sort_by{|si| si.staff.seal_index.to_s}
@@ -182,7 +189,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           stats[0] = '合计'
           sheet.add_row stats, style: ( [wrap_text, wrap_text]+[wrap_float_text]*7+[wrap_text] ), height: 30
 
-          end_rol = 3 + collection.count + 1
+          end_rol = 4 + collection.count + 1
           sheet.merge_cells("A#{end_rol}:B#{end_rol}")
 
           # widths = Array.new(columns.count+1){10}
