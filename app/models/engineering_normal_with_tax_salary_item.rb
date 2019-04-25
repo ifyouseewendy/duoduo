@@ -158,7 +158,7 @@ class EngineeringNormalWithTaxSalaryItem < ActiveRecord::Base
           sheet.add_row [ salary_table.month_display_zh ], \
             height: 30, style: wrap_header_second
 
-          sheet.add_row [ salary_table.project.try(:corporation).try(:name) ], \
+          sheet.add_row [ salary_table.project.try(:name) ], \
             height: 30, style: wrap_header_fourth
 
           sheet.add_row columns.map{|col| self.human_attribute_name(col)}, \
