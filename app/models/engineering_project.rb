@@ -526,12 +526,16 @@ class EngineeringProject < ActiveRecord::Base
       #   unless outcome_item.amount.to_f.round(2) == amount.sum.round(2)
 
       persons = content[:persons].split(' ').map(&:strip)
+      id_numbers = content[:id_numbers].split(' ').map(&:strip)
       amount  = content[:amount].split(' ').map(&:to_f)
       account = content[:account].split(' ').map(&:strip)
       bank    = content[:bank].split(' ').map(&:strip)
       address = content[:address].split(' ').map(&:strip)
 
       raise "操作失败：未指定回款人" if persons.count == 0
+
+      raise "操作失败：身份证号无法与回款人一一对应" \
+        unless persons.count == id_numbers.count
 
       raise "操作失败：回款金额无法与回款人一一对应" \
         unless persons.count == amount.count
@@ -550,6 +554,7 @@ class EngineeringProject < ActiveRecord::Base
           gsub: {
             corp_name: content[:corp_name],
             person: person,
+            id_number: id_numbers[idx],
             amount: "%.2f" % amount[idx].to_f,
             money: RMB.new(amount[idx]).convert,
             bank: bank[idx],
@@ -632,6 +637,7 @@ class EngineeringProject < ActiveRecord::Base
       self.outcome_items.new(
         amount: self.project_amount,
         persons: oi.persons,
+        id_numbers: oi.id_numbers,
         bank: oi.bank,
         address: oi.address,
         account: oi.account

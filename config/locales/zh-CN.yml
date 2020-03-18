@@ -754,6 +754,7 @@ zh-CN:
         amount: '回款金额'
         each_amount: '回款金额（每人）'
         persons: '回款人'
+        id_numbers: '身份证号'
         bank: '银行名称'
         address: '开户地址'
         account: '银行账号'

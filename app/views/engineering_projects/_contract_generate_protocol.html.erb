@@ -15,6 +15,11 @@
         <%= content_tag(:p, '多个回款人请以空格分开', class:"inline-hints") %>
       </li>
       <li>
+        <%= label_tag '身份证号' %>
+        <%= text_field_tag :id_numbers, outcome_item.id_numbers.join(' ') %>
+        <%= content_tag(:p, '多个身份证号请以空格分开', class:"inline-hints") %>
+      </li>
+      <li>
         <%= label_tag '回款金额' %>
         <% default_amount = outcome_item.amount %>
         <% default_amount = outcome_item.each_amount.join(' ') if outcome_item.each_amount.count > 1%>
