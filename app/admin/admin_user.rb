@@ -23,12 +23,10 @@ ActiveAdmin.register AdminUser do
     column :current_sign_in_at
     column :created_at
     actions defaults: false do |obj|
-      if obj.id != current_admin_user.id
-        item "更改角色", edit_admin_user_path(obj)
-        text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-        item "更改可见子公司", edit_admin_user_path(obj) + "?field=visible_sub_company"
-        text_node "&nbsp;|&nbsp;&nbsp;".html_safe
-      end
+      item "更改角色", edit_admin_user_path(obj)
+      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
+      item "更改可见子公司", edit_admin_user_path(obj) + "?field=visible_sub_company"
+      text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       item "重置密码", reset_password_admin_user_path(obj)
       text_node "&nbsp;|&nbsp;&nbsp;".html_safe
       item "锁定", lock_admin_user_path(obj)
