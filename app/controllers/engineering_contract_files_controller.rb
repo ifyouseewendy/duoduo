@@ -24,7 +24,7 @@ class EngineeringContractFilesController < ApplicationController
         when :normal
           %i(corp_name name start_date end_date range need_count admin_rate)
         when :proxy
-          %i(corp_name amount bank account address persons)
+          %i(corp_name amount bank account address persons id_numbers)
         end
 
       project.generate_contract_file(
