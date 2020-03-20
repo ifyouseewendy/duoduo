@@ -230,10 +230,8 @@ class EngineeringStaff < ActiveRecord::Base
   end
 
   def accept_schedule_with_time_range?(start_date, end_date, time_range)
-    mod_end_date = end_date.to_date + 1.month
-    mod_start_date = start_date.to_date - 1.month
     time_range.each do |range|
-      return false unless range[0] >= mod_end_date || range[1] <= mod_start_date
+      return false unless range[0] > end_date.to_date || range[1] < start_date.to_date
     end
 
     return true
@@ -244,14 +242,11 @@ class EngineeringStaff < ActiveRecord::Base
     #   return "员工未满十八周岁，员工生日 #{birth}"
     # end
 
-    mod_end_date = end_date.to_date + 1.month
-    mod_start_date = start_date.to_date - 1.month
-
     invalid = []
     busy_range_table.each do |st|
       range = st.range
 
-      next if range[0] >= mod_end_date || range[1] <= mod_start_date
+      next if range[0] > end_date.to_date || range[1] < start_date.to_date
 
       msg = st.project.display_name_with_customer + " - #{st.range.map(&:to_s).join(' ~ ')}"
       invalid << msg
