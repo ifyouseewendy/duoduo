@@ -8,7 +8,8 @@ require 'mina/puma'
 require 'dotenv'
 Dotenv.load
 
-set :domain, 'duoduo'
+set :domain, 'localhost'
+set :port, 10081
 set :deploy_to, '/home/deploy/apps/duoduo'
 set :repository, 'git@github.com:ifyouseewendy/duoduo.git'
 set :branch, 'production'
@@ -78,8 +79,8 @@ task :deploy => :environment do
     to :launch do
       invoke :'whenever:update'
       invoke :'deploy:link_files'
-      invoke :'puma:phased_restart'
-      # invoke :'unicorn:restart'
+      # invoke :'puma:phased_restart'
+      invoke :'puma:restart'
       invoke :'rollbar:notify'
     end
   end
