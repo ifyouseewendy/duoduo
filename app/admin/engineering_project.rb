@@ -213,7 +213,7 @@ ActiveAdmin.register EngineeringProject do
           f.input :name, as: :string
           f.input :customer, as: :select, collection: ->{ EngineeringCustomer.as_option }.call
           f.input :nest_index, as: :number, hint: '根据客户自动分配项目编号'
-          f.input :corporation
+          f.input :corporation, as: :select, collection: ->{ EngineeringCorp.as_option }.call
           f.input :sub_company, as: :select, collection: -> { SubCompany.hr }.call
           f.input :status, as: :radio, collection: ->{ EngineeringProject.statuses_option }.call
           f.input :start_date, as: :datepicker
